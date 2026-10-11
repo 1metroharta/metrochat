@@ -523,6 +523,7 @@ input, textarea { font-family: inherit; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, setPersistence, browserLocalPersistence, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDIpe10bCclSO4C3KmYWT6vseRdR5wOnRA",
@@ -537,6 +538,12 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/metrochat/service-worker.js')
+    .then(reg => console.log('✅ SW registered:', reg.scope))
+    .catch(err => console.error('❌ SW error:', err));
+}
 
 const THEMES = [
   { id: 'crimson',  name: 'Багровый',   accent: '#e63946', grad: ['#e63946','#b91c26'], dark: false },
@@ -1026,6 +1033,7 @@ function startApp() {
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
   setupKeyboardHandling();
+  setupFCM();
 }
 function stopApp() {
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = [];
@@ -1074,6 +1082,38 @@ function setupPresence() {
   if (state.presenceTimer) clearInterval(state.presenceTimer);
   state.presenceTimer = setInterval(() => { if (state.user) set(pRef, { online: isOn(), lastSeen: now() }).catch(()=>{}); }, 30000);
 }
+async function setupFCM() {
+  if (!('Notification' in window) || !state.user) return;
+  if (Notification.permission === 'default') {
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') return;
+    } catch (e) { return; }
+  }
+  if (Notification.permission !== 'granted') return;
+
+  try {
+    const messaging = getMessaging(fbApp);
+    const VAPID_KEY = 'BILnQ1TBbwSyOmmNBsmsmEq5iXMKhPaHoIc0sUbh1Ya0DhUlE0ii4EsMJlyuXAY21qAo67Nae8nlW-a65TMDtEg';
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+    if (token) {
+      await set(ref(db, 'user_tokens/' + state.user.uid), {
+        token: token,
+        updatedAt: now()
+      });
+      console.log('✅ FCM token saved');
+    }
+    onMessage(messaging, (payload) => {
+      console.log('📩 Foreground message:', payload);
+      if (payload.notification) {
+        toast(payload.notification.body || 'Новое сообщение', '🔔');
+      }
+    });
+  } catch (e) {
+    console.error('FCM setup error:', e);
+  }
+}
+
 function subscribeAll() {
   if (!state.user) return;
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = []; // FIX: двойной startApp создавал дубликаты подписок
