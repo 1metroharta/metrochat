@@ -1033,7 +1033,7 @@ function startApp() {
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
   setupKeyboardHandling();
-  setupFCM();
+  // setupFCM();
 }
 function stopApp() {
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = [];
