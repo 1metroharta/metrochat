@@ -1095,7 +1095,11 @@ async function setupFCM() {
   try {
     const messaging = getMessaging(fbApp);
     const VAPID_KEY = 'BILnQ1TBbwSyOmmNBsmsmEq5iXMKhPaHoIc0sUbh1Ya0DhUlE0ii4EsMJlyuXAY21qAo67Nae8nlW-a65TMDtEg';
-    const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+    const token = await getToken(messaging, {
+     const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: await navigator.serviceWorker.register('/metrochat/service-worker.js')
+    });
     if (token) {
       await set(ref(db, 'user_tokens/' + state.user.uid), {
         token: token,
