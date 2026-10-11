@@ -4,12 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#e63946">
-<link rel="manifest" href="/metrochat/manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="/metrochat/icon-192.png">
-<link rel="apple-touch-icon" href="/metrochat/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MetroChat">
 <title>MetroChat</title>
 <style>
 :root {
@@ -172,7 +166,7 @@ input, textarea { font-family: inherit; }
 .pinned-bar .pin-text { font-size: 13px; color: var(--text-2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 4px; z-index: 1; }
 .msg-author { font-size: 12px; font-weight: 700; color: var(--accent); margin: 8px 12px 4px; }
-.msg { max-width: 68%; padding: 10px 14px; font-size: var(--font-size); line-height: 1.45; border-radius: 16px; word-wrap: break-word; position: relative; user-select: text; }
+.msg { contain: layout style; max-width: 68%; padding: 10px 14px; font-size: var(--font-size); line-height: 1.45; border-radius: 16px; word-wrap: break-word; position: relative; user-select: text; }
 .msg.in { align-self: flex-start; background: var(--surface); color: var(--text); border-bottom-left-radius: 6px; box-shadow: 0 1px 3px rgba(15,23,42,0.06); }
 .msg.out { align-self: flex-end; background: var(--header-grad); color: white; border-bottom-right-radius: 6px; box-shadow: 0 3px 12px rgba(230,57,70,0.3); }
 .msg .time { font-size: 10px; opacity: 0.7; margin-top: 5px; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
@@ -204,6 +198,8 @@ input, textarea { font-family: inherit; }
 .msg .poll .poll-content { position: relative; z-index: 1; flex: 1; display: flex; justify-content: space-between; }
 .msg .poll .poll-count { opacity: 0.75; font-weight: 600; }
 .msg .poll .poll-footer { font-size: 11.5px; opacity: 0.7; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.08); }
+.msg-react-btn { display: inline-flex; align-items: center; justify-content: center; margin: 2px 5px 0 0; padding: 2px 6px; border-radius: 10px; color: var(--text-2); font-size: 13px; opacity: .7; vertical-align: middle; }
+.msg-react-btn:hover { background: var(--surface-2); opacity: 1; }
 .msg .reactions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
 .msg .reaction-chip { background: rgba(0,0,0,0.08); padding: 2px 8px; border-radius: 10px; font-size: 12px; cursor: pointer; border: 1.5px solid transparent; display: flex; align-items: center; gap: 4px; }
 .msg.out .reaction-chip { background: rgba(255,255,255,0.2); }
@@ -340,20 +336,18 @@ input, textarea { font-family: inherit; }
   .chat-back { display: flex; }
   .chat-empty { display: none; }
   .mobile-nav { display: block; }
+  body.chat-open .mobile-nav { display: none !important; }
+  body.chat-open .chat { bottom: 0; }
+  .chat:not(.show-mobile) { bottom: calc(62px + env(safe-area-inset-bottom)); }
   .messages { padding: 12px 10px 8px; }
-  .msg { max-width: 85%; font-size: 15px; }
+  .msg { contain: layout style; max-width: 85%; font-size: 15px; }
   .chat-input-bar { padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
   .chat-input { font-size: 16px; }
   .modal { padding: 20px 16px; max-height: 88vh; }
-  .settings-panel { padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
+  .settings-panel { position: absolute; inset: 0; z-index: 12; width: 100%; padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
   .settings-wrap { padding: 16px 12px; }
   /* Клавиатура: увеличиваем padding-bottom */
   body.keyboard-open .chat-input-bar { padding-bottom: 12px; }
-  /* FIX: нижняя навигация перекрывала поле ввода открытого чата */
-  .app.chat-open .mobile-nav { display: none; }
-  /* FIX: панель настроек пряталась под боковой панелью */
-  .app.settings-open .sidebar { display: none; }
-  .app.settings-open .settings-panel { position: absolute; inset: 0; z-index: 12; padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
 }
 </style>
 </head>
@@ -369,7 +363,7 @@ input, textarea { font-family: inherit; }
       <button class="auth-tab" data-tab="register" type="button">Регистрация</button>
     </div>
     <div class="auth-error" id="authError"></div>
-    <form id="authForm" autocomplete="on" novalidate>
+    <form id="authForm" autocomplete="on">
       <div class="auth-field"><label>Email</label><div class="input-wrap"><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" autocapitalize="off" spellcheck="false"></div><div class="field-err" id="errEmail"></div></div>
       <div class="auth-field"><label>Пароль</label><div class="input-wrap"><input type="password" id="authPass" placeholder="Минимум 6 символов" autocomplete="current-password"><button type="button" class="pw-toggle" id="pwToggle">👁</button></div><div class="field-err" id="errPass"></div></div>
       <div id="privacyConsentWrap" style="display:none; margin: 4px 0 16px; font-size: 13px; line-height: 1.5; color: var(--text-2);">
@@ -519,11 +513,26 @@ input, textarea { font-family: inherit; }
 </div>
 <div class="toast" id="toast"></div>
 
+<script>
+// Emergency boot fallback: module imports can fail when offline or blocked.
+(function(){
+  window.setTimeout(function(){
+    var splash=document.getElementById('splash');
+    var auth=document.getElementById('authScreen');
+    if(splash && !splash.classList.contains('hide')) {
+      splash.classList.add('hide');
+      window.setTimeout(function(){ if(splash.isConnected) splash.remove(); }, 450);
+      if(auth) auth.classList.remove('hidden');
+      var error=document.getElementById('authError');
+      if(error && !navigator.onLine){ error.textContent='Нет подключения к интернету. Проверьте сеть и обновите страницу.'; error.style.display='block'; }
+    }
+  }, 7000);
+})();
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, setPersistence, browserLocalPersistence, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDIpe10bCclSO4C3KmYWT6vseRdR5wOnRA",
@@ -538,12 +547,6 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/metrochat/service-worker.js')
-    .then(reg => console.log('✅ SW registered:', reg.scope))
-    .catch(err => console.error('❌ SW error:', err));
-}
 
 const THEMES = [
   { id: 'crimson',  name: 'Багровый',   accent: '#e63946', grad: ['#e63946','#b91c26'], dark: false },
@@ -571,22 +574,20 @@ const GROUP_DEFAULTS = {
 
 const STICKERS = ['😀','😂','🤣','😊','😍','🥰','😎','🤩','🥳','😏','😢','😭','😡','🤬','🤯','😱','🥶','🤔','🤗','🤭','😴','🤤','🥴','🤢','🤮','🤧','😷','🤠','😈','👿','👻','💀','👽','🤖','🎃','💩','❤️','💔','💯','🔥','✨','🎉','🎊','👏','👍','👎','🙏','💪','🤝','✌️'];
 
-const DEFAULT_SETTINGS = {
+const state = {
+  user: null, profile: null, chat: null, tab: 'chats',
+  chats: {}, users: {}, presence: {}, typing: {},
+  messages: [], replyTo: null, pendingAttachment: null,
+  blocked: {},
+  settings: {
     themeId: 'crimson', darkMode: false, fontSize: '14px',
     notifications: true, sound: true, vibration: true, messagePreview: true,
     readReceipts: true, onlineStatus: true, showLastSeen: true,
     typingIndicator: true, showTimestamps: true, showAvatarsInGroups: true,
     hapticFeedback: true, confirmDeleteChat: true, saveDrafts: true, enterToSend: true,
     linkPreview: true, autoPlayVoice: false
-};
-
-const state = {
-  user: null, profile: null, chat: null, tab: 'chats',
-  chats: {}, users: {}, presence: {}, typing: {},
-  messages: [], replyTo: null, pendingAttachment: null,
-  blocked: {},
-  settings: { ...DEFAULT_SETTINGS },
-  subs: [], onboarding: null, chatUnsub: null, chatMetaUnsub: null, chatsLoaded: false, presenceTimer: null,
+  },
+  subs: [], onboarding: null, chatUnsub: null, presenceTimer: null,
   booted: false, cacheUsers: {},
   mediaRecorder: null, audioChunks: [], recordingStart: 0, recordingTimer: null,
   searchMatches: [], searchIndex: 0,
@@ -600,20 +601,6 @@ const $ = id => document.getElementById(id);
 const qsa = s => document.querySelectorAll(s);
 const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const now = () => Date.now();
-// Безопасная вставка значения в inline-обработчик: onclick="fn(${j(value)})"
-const j = v => esc(JSON.stringify(v));
-// Разрешаем только data:...;base64 и http(s) ссылки (блокирует javascript: и выход из атрибута)
-const SAFE_DATA_URL = /^data:(?:[\w.+-]+\/[\w.+-]+)?(?:;[\w.-]+=[\w.-]+)*;base64,[A-Za-z0-9+\/=]+$/;
-const SAFE_HTTP_URL = /^https?:\/\/[^\s"'<>`\\]+$/;
-const safeUrl = u => { u = String(u || ''); return (SAFE_DATA_URL.test(u) || SAFE_HTTP_URL.test(u)) ? u : ''; };
-function msgVisible(m) {
-  const me = state.user && state.user.uid;
-  if (m.deleted) return false;
-  if (m.deletedFor && m.deletedFor[me]) return false;
-  if (m.system) return true;
-  return !(m.senderId !== me && state.blocked[m.senderId]);
-}
-const PREVIEW_MAP = { image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', geo: '📍 Геолокация', sticker: '😀 Стикер', videoCircle: '⭕ Видеокружок' };
 
 function timeShort(ts) { const d = new Date(ts); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 function timeList(ts) {
@@ -636,19 +623,18 @@ function isGroupOwner(chat, uid) { return chat?.ownerId === uid; }
 function getGroupSetting(chat, key) { if (!chat || !chat.settings) return GROUP_DEFAULTS[key]; const v = chat.settings[key]; return v === undefined ? GROUP_DEFAULTS[key] : v; }
 function peerStatusText(peer, uid) {
   if (isOnline(uid)) return '<span style="color: var(--green); font-weight: 600;">● в сети</span>';
-  if (!state.settings.showLastSeen) return 'не в сети';
-  return esc(peer?.status || 'не в сети');
+  if (!state.settings.showLastSeen) return 'недавно';
+  return esc(peer?.status || 'недавно');
 }
 
 // === AVATAR RENDER (FIXED) ===
 function avatarHTML(opts) {
   const { name, avatar, size = '', square = false, online = false } = opts;
   const cls = `avatar${square ? ' square' : ''}${size ? ' ' + size : ''}`;
-  const au = safeUrl(avatar); // FIX: XSS через поле avatar
-  const bg = au
-    ? `background: url('${au}') center/cover no-repeat;`
+  const bg = avatar
+    ? `background: url('${avatar}') center/cover no-repeat;`
     : `background: ${avatarColor(name || '?')};`;
-  const init = au ? '' : `<span class="avatar-init">${esc(initials(name))}</span>`;
+  const init = avatar ? '' : `<span class="avatar-init">${esc(initials(name))}</span>`;
   const dot = online ? '<span class="online-dot"></span>' : '';
   return `<div class="${cls}" style="${bg}">${init}${dot}</div>`;
 }
@@ -670,7 +656,7 @@ const EN_ADJ = ['happy','brave','swift','silent','bright','kind','bold','smart',
 const EN_NOUN = ['cat','wolf','fox','bear','tiger','lion','falcon','eagle','dragon','phoenix','hedgehog','hare','leopard','lynx','mole','beaver','raven','owl','penguin','whale','dolphin','pilot','captain','knight','mage','monk','bard','archer','racer'];
 const SUFFIX = ['', '', '', '_', 'x', 'pro', '777', '2024', '2025', '_ru'];
 function generateRandomUsername() {
-  const useRu = false; // кириллица вырезалась из ника и давала невалидные значения
+  const useRu = Math.random() < 0.5;
   const adj = useRu ? RU_ADJ[Math.floor(Math.random()*RU_ADJ.length)] : EN_ADJ[Math.floor(Math.random()*EN_ADJ.length)];
   const noun = useRu ? RU_NOUN[Math.floor(Math.random()*RU_NOUN.length)] : EN_NOUN[Math.floor(Math.random()*EN_NOUN.length)];
   const suf = SUFFIX[Math.floor(Math.random()*SUFFIX.length)];
@@ -686,12 +672,12 @@ async function randomUsername() {
   for (let i = 0; i < 8; i++) {
     const candidate = generateRandomUsername();
     if (!validateUsername(candidate).ok) continue;
-    if (!await isUsernameTaken(candidate)) { input.value = candidate; setUsernameStatus($('onbUsernameStatus'), 'ok', '✓ Свободен!'); state.usernameCurrentValid = candidate; return; }
+    if (await isUsernameTaken(candidate) === false) { input.value = candidate; setUsernameStatus($('onbUsernameStatus'), 'ok', '✓ Свободен!'); state.usernameCurrentValid = candidate; return; }
   }
   setUsernameStatus($('onbUsernameStatus'), 'err', 'Введите вручную');
 }
 function setUsernameStatus(el, kind, msg) { if (!el) return; el.className = 'uname-status ' + (kind || ''); el.textContent = msg || ''; }
-async function isUsernameTaken(uname) { try { const snap = await get(ref(db, 'usernames/' + uname)); return snap.exists(); } catch (e) { return false; } }
+async function isUsernameTaken(uname) { try { const snap = await get(ref(db, 'usernames/' + uname)); return snap.exists(); } catch (e) { return null; } }
 async function checkUsernameInput(inputEl, statusEl, currentUid) {
   const v = normalizeUsername(inputEl.value);
   if (inputEl.value !== v) inputEl.value = v;
@@ -728,19 +714,17 @@ async function fetchUserIfMissing(uid) {
   } catch(e) { console.warn('fetchUserIfMissing', uid, e); }
   return null;
 }
-function compressImage(file, maxBytes = 900 * 1024, maxDim = 1400) {
+function compressImage(file, maxBytes = 900 * 1024) {
   return new Promise(resolve => {
     const reader = new FileReader();
-    reader.onerror = () => resolve(null);
     reader.onload = ev => {
       const img = new Image();
-      img.onerror = () => resolve(null); // FIX: раньше promise зависал на битом файле
       img.onload = () => {
         let { width, height } = img;
+        const maxDim = 1400;
         if (width > maxDim || height > maxDim) { const r = Math.min(maxDim / width, maxDim / height); width = Math.round(width * r); height = Math.round(height * r); }
         const c = document.createElement('canvas'); c.width = width; c.height = height;
-        const cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, width, height); // FIX: прозрачный PNG не становится чёрным
-        cx.drawImage(img, 0, 0, width, height);
+        c.getContext('2d').drawImage(img, 0, 0, width, height);
         let q = 0.85; let out = c.toDataURL('image/jpeg', q);
         while (out.length * 0.75 > maxBytes && q > 0.3) { q -= 0.1; out = c.toDataURL('image/jpeg', q); }
         resolve(out);
@@ -880,13 +864,7 @@ function hideSplash() {
   const s = $('splash');
   if (s) { s.classList.add('hide'); setTimeout(() => s.remove(), 400); }
 }
-setTimeout(() => {
-  hideSplash();
-  // Страховка от вечной заставки при медленной сети/ошибке инициализации Firebase.
-  if (!state.user && !state.onboarding && $('verifyScreen').classList.contains('hidden') && $('app').classList.contains('hidden')) {
-    authScreen.classList.remove('hidden');
-  }
-}, 2500);
+setTimeout(() => { hideSplash(); if (!state.user && !state.onboarding) authScreen.classList.remove('hidden'); }, 2500);
 
 async function bootstrapUser(user) {
   if (!user) return;
@@ -969,8 +947,7 @@ async function onbAvatarChange(e) {
   const file = e.target.files?.[0]; e.target.value = '';
   if (!file) return;
   if (file.size > 3 * 1024 * 1024) return toast('Фото до 3 МБ', '⚠');
-  const data = await compressImage(file, 60 * 1024, 256);
-  if (!data) return toast('Не удалось обработать фото', '⚠');
+  const data = await compressImage(file, 400 * 1024);
   const el = $('onbAvatar'); el.style.backgroundImage = `url('${data}')`; el.style.backgroundSize = 'cover'; el.textContent = ''; el.dataset.avatar = data;
 }
 async function onbFinish() {
@@ -1033,32 +1010,15 @@ function startApp() {
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
   setupKeyboardHandling();
-  // setupFCM();
 }
 function stopApp() {
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = [];
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(_) {} state.chatUnsub = null; }
-  if (state.chatMetaUnsub) { try { state.chatMetaUnsub(); } catch(_) {} state.chatMetaUnsub = null; }
   if (state.presenceTimer) { clearInterval(state.presenceTimer); state.presenceTimer = null; }
-  try { cancelRecording(); cancelVideoCircle(); } catch(_) {}
-  // FIX: данные и интерфейс прошлого пользователя оставались после выхода
-  state.messages = []; state.chats = {}; state.chat = null; state.booted = false; state.chatsLoaded = false;
-  state.users = {}; state.cacheUsers = {}; state.presence = {}; state.typing = {}; state.blocked = {};
-  state.replyTo = null; state.pendingAttachment = null; state.profile = null;
-  state.settings = { ...DEFAULT_SETTINGS };
-  try {
-    closeAllMenus();
-    qsa('.modal-overlay').forEach(mo => mo.classList.add('hidden'));
-    $('chatInput').value = ''; $('sbSearch').value = '';
-    showChatPlaceholder();
-    $('settingsPanel').classList.add('hidden'); $('chatPanel').classList.remove('hidden');
-    $('app').classList.remove('settings-open', 'chat-open');
-    $('sbList').style.display = 'block'; $('sbNav').style.display = 'flex';
-    applySettings();
-  } catch(_) {}
+  state.messages = []; state.chats = {}; state.chat = null; state.booted = false;
 }
 function setupKeyboardHandling() {
-  if (!window.visualViewport || window._kbBound) return; window._kbBound = true; // FIX: слушатели дублировались при повторном входе
+  if (!window.visualViewport) return;
   const body = document.body;
   function update() {
     const vv = window.visualViewport;
@@ -1076,101 +1036,24 @@ function setupKeyboardHandling() {
 function setupPresence() {
   if (!state.user) return;
   const pRef = ref(db, 'presence/' + state.user.uid);
-  const isOn = () => state.settings.onlineStatus !== false; // FIX: настройка «Показывать в сети» не учитывалась
-  set(pRef, { online: isOn(), lastSeen: now() }).catch(()=>{});
+  set(pRef, { online: true, lastSeen: now() }).catch(()=>{});
   onDisconnect(pRef).set({ online: false, lastSeen: now() }).catch(()=>{});
   if (state.presenceTimer) clearInterval(state.presenceTimer);
-  state.presenceTimer = setInterval(() => { if (state.user) set(pRef, { online: isOn(), lastSeen: now() }).catch(()=>{}); }, 30000);
+  state.presenceTimer = setInterval(() => { if (state.user) set(pRef, { online: true, lastSeen: now() }).catch(()=>{}); }, 30000);
 }
-async function setupFCM() {
-  if (!('Notification' in window) || !state.user) return;
-  if (Notification.permission === 'default') {
-    try {
-      const perm = await Notification.requestPermission();
-      if (perm !== 'granted') return;
-    } catch (e) { return; }
-  }
-  if (Notification.permission !== 'granted') return;
-
-  try {
-    const messaging = getMessaging(fbApp);
-    const VAPID_KEY = 'BILnQ1TBbwSyOmmNBsmsmEq5iXMKhPaHoIc0sUbh1Ya0DhUlE0ii4EsMJlyuXAY21qAo67Nae8nlW-a65TMDtEg';
-    const token = await getToken(messaging, {
-     const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY,
-      serviceWorkerRegistration: await navigator.serviceWorker.register('/metrochat/service-worker.js')
-    });
-    if (token) {
-      await set(ref(db, 'user_tokens/' + state.user.uid), {
-        token: token,
-        updatedAt: now()
-      });
-      console.log('✅ FCM token saved');
-    }
-    onMessage(messaging, (payload) => {
-      console.log('📩 Foreground message:', payload);
-      if (payload.notification) {
-        toast(payload.notification.body || 'Новое сообщение', '🔔');
-      }
-    });
-  } catch (e) {
-    console.error('FCM setup error:', e);
-  }
-}
-
 function subscribeAll() {
   if (!state.user) return;
-  state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = []; // FIX: двойной startApp создавал дубликаты подписок
-  state.chatsLoaded = false;
   const uid = state.user.uid;
-  state.subs.push(onValue(ref(db, 'users'), snap => { state.users = snap.val() || {}; renderList(); if (state.chat) { renderMessages(); renderChatHeader(); } }, () => {}));
-  state.subs.push(onValue(ref(db, 'presence'), snap => { state.presence = snap.val() || {}; updateUserStrip(); renderList(); if (state.chat) renderChatHeader(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'users'), snap => { state.users = snap.val() || {}; renderList(); if (state.chat) renderChatHeader(); }, err => console.warn('Users subscription:', err)));
+  state.subs.push(onValue(ref(db, 'presence'), snap => { state.presence = snap.val() || {}; updateUserStrip(); renderList(); if (state.chat) renderChatHeader(); }, err => console.warn('Presence subscription:', err)));
   state.subs.push(onValue(ref(db, 'typing'), snap => {
     const d = snap.val() || {}; const t = now(); state.typing = {};
     for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v;
     if (state.chat) renderMessages();
   }, () => {}));
-  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => {
-    const prev = state.chats; const next = snap.val() || {};
-    state.chats = next;
-    if (state.chatsLoaded) notifyNewMessages(prev, next);
-    state.chatsLoaded = true;
-    if (state.chat) {
-      const cur = next[state.chat.id];
-      if (!cur) showChatPlaceholder(); // чат удалён / нас исключили
-      // FIX: счётчик непрочитанных рос, пока чат открыт
-      else if ((cur.unread || 0) > 0 && !document.hidden) update(ref(db, 'user_chats/' + uid + '/' + state.chat.id), { unread: 0 }).catch(()=>{});
-    }
-    renderList(); updateBadges();
-  }, () => {}));
-  state.subs.push(onValue(ref(db, 'user_blocked/' + uid), snap => {
-    state.blocked = snap.exists() ? snap.val() : {};
-    renderList(); updateBadges(); if (state.chat) renderMessages();
-  }, () => {}));
+  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; renderList(); updateBadges(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'user_blocked/' + uid), snap => { state.blocked = snap.exists() ? snap.val() : {}; }, () => {}));
 }
-function notifyNewMessages(prev, next) {
-  const me = state.user && state.user.uid; if (!me) return;
-  for (const [id, c] of Object.entries(next)) {
-    if (!c || !c.lastMessage) continue;
-    const before = (prev[id] && prev[id].unread) || 0;
-    if ((c.unread || 0) <= before) continue;
-    const lm = c.lastMessage;
-    if (lm.senderId === me || c.muted) continue; // FIX: «Выкл звук» игнорировался
-    if (c.type === 'dm' && state.blocked[c.peerId]) continue;
-    if (state.settings.sound) playNotifSound();
-    if (state.settings.vibration && navigator.vibrate) navigator.vibrate(80);
-    if (document.hidden && state.settings.notifications) {
-      const sender = getUser(lm.senderId);
-      const title = c.type === 'dm' ? (sender?.firstName || sender?.displayName || 'MetroChat') : (c.name || 'Группа');
-      showNotif(title, state.settings.messagePreview ? (lm.text || '📎 Вложение') : 'Новое сообщение');
-    }
-  }
-}
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden || !state.chat || !state.user) return;
-  const cur = state.chats[state.chat.id];
-  if (cur && (cur.unread || 0) > 0) update(ref(db, 'user_chats/' + state.user.uid + '/' + state.chat.id), { unread: 0 }).catch(()=>{});
-});
 function updateUserStrip() {
   if (!state.profile) return;
   const name = state.profile.displayName || state.profile.firstName || 'Пользователь';
@@ -1193,8 +1076,12 @@ function switchTab(tab) {
   qsa('.mobile-nav-item').forEach(t => t.classList.toggle('active', t.dataset.nav === tab));
   const isSettings = tab === 'settings', isContacts = tab === 'contacts';
   const mobile = window.innerWidth <= 760;
-  if (mobile) setChatPanelOpen(false);
-  $('app').classList.toggle('settings-open', isSettings);
+  if (mobile) {
+    document.body.classList.remove('chat-open');
+    $('chatPanel').classList.remove('show-mobile');
+    // На телефоне экран настроек должен быть поверх списка чатов, а не под боковой панелью.
+    $('sidebar').classList.toggle('hide-mobile', isSettings);
+  }
   $('settingsBtn').classList.toggle('active', isSettings);
   $('sbSearchWrap').style.display = (isSettings || isContacts) ? 'none' : 'block';
   $('sbNav').style.display = isSettings ? 'none' : 'flex';
@@ -1205,7 +1092,7 @@ function switchTab(tab) {
 }
 function updateBadges() {
   let total = 0;
-  for (const c of Object.values(state.chats)) { if (c.type === 'dm' && state.blocked[c.peerId]) continue; total += c.unread || 0; }
+  for (const c of Object.values(state.chats)) total += c.unread || 0;
   const el = $('cntChats');
   if (total > 0) {
     el.textContent = total > 99 ? '99+' : total; el.classList.remove('hidden');
@@ -1225,7 +1112,7 @@ function getAllChatsList() {
     if (info.type === 'dm') {
       const peer = getUser(info.peerId);
       const name = peer ? (peer.displayName || peer.firstName || peer.email?.split('@')[0] || 'Пользователь') : 'Загрузка...';
-      items.push({ id: chatId, type: 'dm', name, avatar: peer?.avatar, peerId: info.peerId, online: isOnline(info.peerId), lastMessage: info.lastMessage, lastTs: info.lastTs || 0, unread: state.blocked[info.peerId] ? 0 : (info.unread || 0), pinned: info.pinned, muted: info.muted });
+      items.push({ id: chatId, type: 'dm', name, avatar: peer?.avatar, peerId: info.peerId, online: isOnline(info.peerId), lastMessage: info.lastMessage, lastTs: info.lastTs || 0, unread: info.unread || 0, pinned: info.pinned, muted: info.muted });
       if (!peer) fetchUserIfMissing(info.peerId);
     } else if (info.type === 'group') {
       items.push({ id: chatId, type: 'group', name: info.name || 'Группа', avatar: info.avatar, code: info.code, lastMessage: info.lastMessage, lastTs: info.lastTs || 0, unread: info.unread || 0, pinned: info.pinned, muted: info.muted });
@@ -1277,7 +1164,7 @@ async function doContactSearch(uname) {
   const online = isOnline(uid);
   resultsEl.innerHTML = `
     <div style="padding: 8px;">
-      <div class="list-item" style="background: var(--accent-light); border: 2px solid var(--accent);" onclick="openOrCreateDM(${j(uid)})">
+      <div class="list-item" style="background: var(--accent-light); border: 2px solid var(--accent);" onclick="openOrCreateDM('${uid}')">
         ${avatarHTML({ name, avatar: u.avatar, online })}
         <div class="list-info"><div class="list-name">${esc(name)} <span class="uname">@${esc(u.username || uname)}</span></div><div class="list-last">${online ? '<span style="color:var(--green);font-weight:600;">● в сети</span>' : esc(u.status || 'недавно')}</div></div>
         <div class="list-meta"><div style="font-size: 22px;">💬</div></div>
@@ -1301,7 +1188,7 @@ function renderItems(items, emptyKind = 'chats') {
       else if (it.lastMessage.senderId) { const su = getUser(it.lastMessage.senderId); author = su?.firstName || su?.displayName || ''; }
     }
     const isActive = state.chat && state.chat.id === it.id;
-    return `<div class="list-item ${isActive ? 'active' : ''} ${it.pinned ? 'pinned' : ''}" onclick="openChat(${j(it.id)}, ${j(it.type)})" oncontextmenu="return chatCtxFromEvent(event, ${j(it.id)})">
+    return `<div class="list-item ${isActive ? 'active' : ''} ${it.pinned ? 'pinned' : ''}" onclick="openChat('${it.id}', '${it.type}')" oncontextmenu="return chatCtxFromEvent(event, '${it.id}')">
       ${avatarHTML({ name: it.name, avatar: it.avatar, square: it.type !== 'dm', online: it.type === 'dm' && it.online })}
       <div class="list-info"><div class="list-name">${it.pinned ? '📌' : ''}${esc(it.name)}${it.muted ? '🔕' : ''}</div><div class="list-last">${author ? `<span class="author">${esc(author)}:</span>` : ''}${esc(preview || 'Нет сообщений')}</div></div>
       <div class="list-meta"><div class="list-time">${it.lastTs ? timeList(it.lastTs) : ''}</div>${it.unread > 0 ? `<div class="list-unread">${it.unread > 99 ? '99+' : it.unread}</div>` : ''}</div>
@@ -1315,7 +1202,6 @@ async function openChat(chatId, type) {
   const info = state.chats[chatId];
   if (!info) return;
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} state.chatUnsub = null; }
-  cancelReply(); closeChatSearch(); // FIX: ответ/поиск из прошлого чата переезжали в новый
   state.chat = { id: chatId, type, ...info };
   state.messages = [];
   if (type === 'dm') { const peer = getUser(info.peerId); state.chat.name = peer?.displayName || peer?.firstName || 'Пользователь'; state.chat.peerId = info.peerId; }
@@ -1323,45 +1209,22 @@ async function openChat(chatId, type) {
   update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), { unread: 0 }).catch(()=>{});
   $('chatEmpty').classList.add('hidden'); $('chatHeader').classList.remove('hidden'); $('chatInputBar').classList.remove('hidden');
   $('messages').innerHTML = '<div class="empty" style="padding: 40px;"><div class="empty-icon">⏳</div><p>Загрузка...</p></div>';
-  setChatPanelOpen(true);
+  if (window.innerWidth <= 760) { document.body.classList.add('chat-open'); $('mobileNav').classList.add('hidden'); $('sidebar').classList.add('hide-mobile'); $('chatPanel').classList.add('show-mobile'); }
   state.messagesAtBottom = true;
-  // FIX: черновик прошлого чата оставался в поле ввода
-  let draft = '';
-  if (state.settings.saveDrafts) { try { draft = localStorage.getItem('metro_draft_' + chatId) || ''; } catch(_) {} }
-  const inp = $('chatInput'); inp.value = draft; inp.style.height = 'auto';
-  if (draft) inp.style.height = Math.min(inp.scrollHeight, 120) + 'px';
-  renderChatHeader(); subscribeMessages(chatId); subscribeGroupMeta(chatId); renderList(); updateSendBtn();
+  $('chatInput').value = ''; if (state.settings.saveDrafts) { try { const draft = localStorage.getItem('metro_draft_' + chatId); if (draft) $('chatInput').value = draft; } catch(_) {} }
+  renderChatHeader(); subscribeMessages(chatId); renderList(); updateSendBtn();
 }
-function setChatPanelOpen(open) {
-  $('sidebar').classList.toggle('hide-mobile', open);
-  $('chatPanel').classList.toggle('show-mobile', open);
-  $('app').classList.toggle('chat-open', open);
-}
-// FIX: права/участники/настройки группы брались из устаревшей копии user_chats — теперь живая подписка на chats/{id}
-function subscribeGroupMeta(chatId) {
-  if (state.chatMetaUnsub) { try { state.chatMetaUnsub(); } catch(e) {} state.chatMetaUnsub = null; }
-  if (!state.chat || state.chat.type !== 'group') return;
-  state.chatMetaUnsub = onValue(ref(db, 'chats/' + chatId), snap => {
-    if (!state.chat || state.chat.id !== chatId || !snap.exists()) return;
-    const g = snap.val();
-    Object.assign(state.chat, { name: g.name || state.chat.name, code: g.code || state.chat.code, ownerId: g.ownerId, members: g.members || {}, admins: g.admins || {}, settings: g.settings || {}, desc: g.desc || '', avatar: g.avatar || null });
-    renderChatHeader();
-  }, () => {});
-}
-function closeChatMobile() { setChatPanelOpen(false); }
+function closeChatMobile() { document.body.classList.remove('chat-open'); $('mobileNav').classList.toggle('hidden', window.innerWidth > 760); $('sidebar').classList.remove('hide-mobile'); $('chatPanel').classList.remove('show-mobile'); }
 function showChatPlaceholder() {
   state.chat = null; state.messages = [];
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} state.chatUnsub = null; }
   $('chatEmpty').classList.remove('hidden'); $('chatHeader').classList.add('hidden'); $('chatInputBar').classList.add('hidden');
   $('replyBar').classList.add('hidden'); $('pinnedBar').classList.add('hidden'); $('chatSearchBar').classList.add('hidden'); $('recordingBar').classList.add('hidden');
   $('messages').innerHTML = ''; renderList();
-  if (state.chatMetaUnsub) { try { state.chatMetaUnsub(); } catch(e) {} state.chatMetaUnsub = null; }
-  setChatPanelOpen(false);
 }
 function renderChatHeader() {
   if (!state.chat) return;
   const c = state.chat;
-  if (c.type === 'dm') { const pr = getUser(c.peerId); if (pr) c.name = pr.displayName || pr.firstName || c.name; }
   $('chatName').textContent = c.name;
   const av = $('chatAvatar');
   let peerAvatar = null;
@@ -1370,18 +1233,15 @@ function renderChatHeader() {
   else { av.style.background = avatarColor(c.name); av.textContent = initials(c.name); }
   const sub = $('chatSub');
   if (c.type === 'dm') { const peer = getUser(c.peerId); sub.innerHTML = peerStatusText(peer, c.peerId); }
-  else if (c.type === 'group') {
-    const memberCount = Object.keys(c.members || {}).filter(uid => !!c.members[uid]).length;
-    sub.innerHTML = `<span class="group-member-count">${memberCount} ${memberCount === 1 ? 'участник' : 'участников'}</span><span class="code" onclick="copyCode(event)">${esc(c.code || '')}</span>`;
-  }
+  else if (c.type === 'group') { sub.innerHTML = `<span>${Object.keys(c.members || {}).length} участников</span><span class="code" onclick="copyCode(event)">${c.code}</span>`; }
   const actions = $('chatActions');
-  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" title="Поиск в чате" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" title="Избранное" onclick="openFavorites()">⭐</button>`;
-  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" title="Поиск в чате" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" title="Избранное" onclick="openFavorites()">⭐</button><button class="chat-icon-btn" title="Информация о группе" onclick="openChatInfo()">ℹ️</button>`;
+  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button>`;
+  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" onclick="openChatInfo()">ℹ️</button>`;
   renderPinnedBar();
 }
 function renderPinnedBar() {
   if (!state.chat) return;
-  const pinned = state.messages.find(m => m.pinned && msgVisible(m));
+  const pinned = state.messages.find(m => m.pinned);
   if (!pinned) { $('pinnedBar').classList.add('hidden'); return; }
   const author = getUser(pinned.senderId);
   $('pinAuthor').textContent = pinned.senderId === state.user.uid ? 'Вы' : (author?.firstName || 'Кто-то');
@@ -1390,95 +1250,95 @@ function renderPinnedBar() {
 }
 function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
-  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(400));
+  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(150));
   state.chatUnsub = onValue(q, snap => {
-    if (!state.chat || state.chat.id !== chatId) return;
     const prevLen = state.messages.length;
     const data = snap.val() || {};
     state.messages = Object.entries(data).map(([id, m]) => ({ id, ...m })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
     state.messages.forEach(m => { if (m.senderId && !getUser(m.senderId)) fetchUserIfMissing(m.senderId); });
     renderMessages(); renderPinnedBar();
-    if (prevLen > 0 && state.messages.length > prevLen && state.settings.autoPlayVoice) {
-      const nv = state.messages.slice(prevLen).find(m => m.type === 'voice' && m.senderId !== state.user.uid && msgVisible(m));
-      if (nv) setTimeout(() => { const btn = document.querySelector(`[data-msgid="${CSS.escape(nv.id)}"]`); if (btn) toggleVoice(nv.id, btn); }, 500);
+    if (prevLen > 0 && state.messages.length > prevLen) {
+      const newMsgs = state.messages.slice(prevLen);
+      const last = newMsgs[newMsgs.length - 1];
+      if (last && last.senderId !== state.user.uid) {
+        if (state.settings.sound) playNotifSound();
+        if (state.settings.vibration && navigator.vibrate) navigator.vibrate(80);
+        if (document.hidden && state.settings.notifications) {
+          const sender = getUser(last.senderId);
+          const title = state.chat.type === 'dm' ? (sender?.firstName || 'MetroChat') : state.chat.name;
+          showNotif(title, state.settings.messagePreview ? (last.text || '📎 Вложение') : 'Новое сообщение');
+        }
+      }
+      if (state.settings.autoPlayVoice) {
+        const nv = newMsgs.find(m => m.type === 'voice' && m.senderId !== state.user.uid);
+        if (nv) setTimeout(() => { const btn = document.querySelector(`[data-msgid="${nv.id}"]`); if (btn) toggleVoice(nv.id, btn); }, 500);
+      }
     }
   }, err => { console.error('Messages:', err); $('messages').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>Нет доступа</h3><p>${esc(humanErr(err))}</p></div>`; });
 }
-function linkifyMentions(text) { return text.replace(/(^|[^\w@])@([a-zA-Z0-9_]{3,20})/g, '$1<span class="mention">@$2</span>'); }
-// FIX: упоминания теперь не ломают href внутри ссылок (раньше https://x.com/@user превращалось в битую разметку)
-function renderText(raw) {
-  return String(raw).split(/(https?:\/\/[^\s]+)/g).map((part, i) => {
-    if (i % 2 === 0) return linkifyMentions(esc(part));
-    let url = part, tail = '';
-    const t = url.match(/[.,!?;:)\]}'"»>]+$/);
-    if (t) { tail = t[0]; url = url.slice(0, -tail.length); }
-    let extra = '';
-    if (state.settings.linkPreview) {
-      try { const u = new URL(url); extra = `<img src="https://www.google.com/s2/favicons?domain=${esc(u.hostname)}&sz=32" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;border-radius:3px;" onerror="this.style.display='none'">`; } catch(_) {}
-    }
-    return extra + `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" class="link">${esc(url)}</a>` + esc(tail);
-  }).join('');
-}
+function linkifyMentions(text) { return text.replace(/@([a-zA-Z0-9_]{2,30})/g, '<span class="mention">@$1</span>'); }
 function renderMessages() {
   const box = $('messages');
   if (!box || !state.chat) return;
-  const me = state.user.uid;
   const atBottom = state.messagesAtBottom;
-  const prevTop = box.scrollTop;
-  const visible = state.messages.filter(msgVisible); // FIX: «удалить у себя» / заблокированные
-  if (visible.length === 0) { box.innerHTML = `<div class="empty"><div class="empty-icon">💬</div><h3>Нет сообщений</h3><p>Начните общение первым!</p></div>`; return; }
+  if (state.messages.length === 0) { box.innerHTML = `<div class="empty"><div class="empty-icon">💬</div><h3>Нет сообщений</h3><p>Начните общение первым!</p></div>`; return; }
   let html = ''; let lastSender = null;
-  visible.forEach(m => {
+  state.messages.forEach(m => {
+    if (m.deleted) return;
     if (m.system) { html += `<div class="sys-msg">${esc(m.text)}</div>`; lastSender = null; return; }
-    const isOwn = m.senderId === me;
+    const isOwn = m.senderId === state.user.uid;
     const sender = getUser(m.senderId);
     const showAuthor = state.chat.type !== 'dm' && !isOwn && m.senderId !== lastSender;
-    const mid = esc(m.id);
-    const imgUrl = safeUrl(m.imageData), fileUrl = safeUrl(m.fileData), vidUrl = safeUrl(m.videoData), audUrl = safeUrl(m.voiceData);
     let inner = '';
-    if (m.forwarded) inner += `<div style="font-size:11.5px;opacity:.8;margin-bottom:4px;">↪️ Переслано</div>`;
-    if (m.replyTo) inner += `<div class="reply-quote" onclick="scrollToMsg(${j(m.replyTo.id)})"><div class="reply-author">${esc(m.replyTo.author)}</div><div>${esc((m.replyTo.text || '').slice(0, 80))}</div></div>`;
+    if (m.replyTo) inner += `<div class="reply-quote" onclick="scrollToMsg('${m.replyTo.id}')"><div class="reply-author">${esc(m.replyTo.author)}</div><div>${esc((m.replyTo.text || '').slice(0, 80))}</div></div>`;
     if (m.type === 'sticker' && m.sticker) inner += `<span class="sticker-img">${esc(m.sticker)}</span>`;
-    else if (m.type === 'image' && imgUrl) inner += `<img class="msg-image" src="${imgUrl}" onclick="openViewer(${j(m.id)})">`;
-    else if (m.type === 'file' && fileUrl) inner += `<a class="msg-file" href="${fileUrl}" download="${esc(m.fileName || 'file')}" onclick="event.stopPropagation()"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">${esc(m.fileName)}</div><div class="file-size">${formatBytes(m.fileSize)}</div></div></a>`;
-    else if (m.type === 'voice' && audUrl) inner += `<div class="voice-msg"><button class="voice-play" data-msgid="${mid}" onclick="toggleVoice(${j(m.id)}, this)">▶</button><div class="voice-wave"><div class="voice-progress" id="vp-${mid}"></div></div><div class="voice-duration">${formatDuration(m.voiceDuration || 0)}</div></div>`;
-    else if (m.type === 'videoCircle' && vidUrl) inner += `<div class="video-circle-msg" id="vc-${mid}" onclick="toggleVideoCircle(${j(m.id)})"><video src="${vidUrl}" preload="metadata" playsinline></video><div class="play-overlay">▶</div></div>`;
-    else if (m.type === 'geo' && m.geo && isFinite(Number(m.geo.lat)) && isFinite(Number(m.geo.lng))) inner += `<div class="geo-msg" onclick="window.open('https://www.google.com/maps?q=${Number(m.geo.lat)},${Number(m.geo.lng)}','_blank','noopener')">📍 Показать на карте</div>`;
+    else if (m.type === 'image' && m.imageData) inner += `<img class="msg-image" src="${m.imageData}" onclick="openViewer('${m.id}')">`;
+    else if (m.type === 'file' && m.fileData) inner += `<a class="msg-file" href="${m.fileData}" download="${esc(m.fileName)}" onclick="event.stopPropagation()"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">${esc(m.fileName)}</div><div class="file-size">${formatBytes(m.fileSize)}</div></div></a>`;
+    else if (m.type === 'voice' && m.voiceData) inner += `<div class="voice-msg"><button class="voice-play" data-msgid="${m.id}" onclick="toggleVoice('${m.id}', this)">▶</button><div class="voice-wave"><div class="voice-progress" id="vp-${m.id}"></div></div><div class="voice-duration">${formatDuration(m.voiceDuration || 0)}</div></div>`;
+    else if (m.type === 'videoCircle' && m.videoData) inner += `<div class="video-circle-msg" id="vc-${m.id}" onclick="toggleVideoCircle('${m.id}')"><video src="${m.videoData}" preload="metadata" playsinline></video><div class="play-overlay">▶</div></div>`;
+    else if (m.type === 'geo' && m.geo) inner += `<div class="geo-msg" onclick="window.open('https://www.google.com/maps?q=${m.geo.lat},${m.geo.lng}','_blank')">📍 Показать на карте</div>`;
     else if (m.type === 'poll' && m.poll) {
-      const opts = Array.isArray(m.poll.options) ? m.poll.options : Object.values(m.poll.options || {});
-      const voteVals = m.poll.votes ? Object.values(m.poll.votes) : [];
-      const total = voteVals.length;
-      const myVote = m.poll.votes ? m.poll.votes[me] : null;
-      const optionsHtml = opts.map((opt, i) => {
-        const votes = voteVals.filter(v => v === i).length;
+      const total = (m.poll.votes ? Object.values(m.poll.votes).length : 0);
+      const myVote = m.poll.votes ? m.poll.votes[state.user.uid] : null;
+      const optionsHtml = m.poll.options.map((opt, i) => {
+        const votes = m.poll.votes ? Object.values(m.poll.votes).filter(v => v === i).length : 0;
         const pct = total ? (votes / total * 100) : 0;
-        return `<div class="poll-option" onclick="votePoll(${j(m.id)}, ${i})"><div class="poll-bar" style="width: ${pct}%"></div><div class="poll-content"><span>${esc(opt)} ${myVote === i ? '✓' : ''}</span><span class="poll-count">${votes}</span></div></div>`;
+        return `<div class="poll-option" onclick="votePoll('${m.id}', ${i})"><div class="poll-bar" style="width: ${pct}%"></div><div class="poll-content"><span>${esc(opt)} ${myVote === i ? '✓' : ''}</span><span class="poll-count">${votes}</span></div></div>`;
       }).join('');
       inner += `<div class="poll"><div class="poll-q">${esc(m.poll.question)}</div>${optionsHtml}<div class="poll-footer">Всего: ${total}</div></div>`;
     }
-    if (m.text) inner += renderText(m.text);
+    if (m.text) {
+      let t = esc(m.text).replace(/(https?:\/\/[^\s]+)/g, (url) => {
+        let extra = '';
+        if (state.settings.linkPreview) {
+          try { const u = new URL(url); extra = `<img src="https://www.google.com/s2/favicons?domain=${u.hostname}&sz=32" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;border-radius:3px;" onerror="this.style.display='none'">`; } catch(_) {}
+        }
+        return extra + `<a href="${url}" target="_blank" rel="noopener" class="link">${url}</a>`;
+      });
+      t = linkifyMentions(t);
+      inner += t;
+    }
     let reactionsHtml = '';
     if (m.reactions && Object.keys(m.reactions).length) {
       const grouped = {};
-      for (const [uid, emoji] of Object.entries(m.reactions)) { if (typeof emoji === 'string' && emoji.length > 0 && emoji.length <= 16) (grouped[emoji] ||= []).push(uid); }
-      const chips = Object.entries(grouped).map(([emoji, uids]) => {
-        const mine = uids.includes(me);
-        return `<span class="reaction-chip ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleReaction(${j(m.id)}, ${j(emoji)})">${esc(emoji)} ${uids.length}</span>`;
-      }).join('');
-      if (chips) reactionsHtml = '<div class="reactions">' + chips + '</div>';
+      for (const [uid, emoji] of Object.entries(m.reactions)) (grouped[emoji] ||= []).push(uid);
+      reactionsHtml = '<div class="reactions">' + Object.entries(grouped).map(([emoji, uids]) => {
+        const mine = uids.includes(state.user.uid);
+        return `<span class="reaction-chip ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleReaction('${m.id}','${emoji}')">${emoji} ${uids.length}</span>`;
+      }).join('') + '</div>';
     }
     const timeHtml = state.settings.showTimestamps ? timeShort(m.createdAt) : '';
     const authorRow = (showAuthor && state.settings.showAvatarsInGroups && sender) ? `<div class="msg-author">${esc(sender?.firstName || sender?.displayName || 'Участник')}</div>` : '';
     const stickerCls = (m.type === 'sticker' || m.type === 'videoCircle') ? ' sticker' : '';
-    html += `${authorRow}<div class="msg ${isOwn ? 'out' : 'in'}${stickerCls}" id="msg-${mid}" oncontextmenu="return msgCtxFromEvent(event,${j(m.id)})" ondblclick="setReply(${j(m.id)})" ontouchstart="msgTouchStart(event,${j(m.id)})" ontouchmove="msgTouchMove(event)" ontouchend="msgTouchEnd(event)">${inner}<span class="time">${m.pinned ? '📌 ' : ''}${m.edited ? '<span class="edited-tag">изм.</span>' : ''}${timeHtml}${isOwn && state.settings.readReceipts ? ' ✓✓' : ''}</span>${reactionsHtml}</div>`;
+    html += `${authorRow}<div class="msg ${isOwn ? 'out' : 'in'}${stickerCls}" id="msg-${m.id}" oncontextmenu="return msgCtxFromEvent(event,'${m.id}')" ondblclick="setReply('${m.id}')" ontouchstart="msgTouchStart(event,'${m.id}')" ontouchmove="msgTouchMove(event)" ontouchend="msgTouchEnd(event)">${inner}<button type="button" class="msg-react-btn" title="Добавить реакцию" aria-label="Добавить реакцию" onclick="event.stopPropagation(); showReactionPicker(event,'${m.id}')">☺+</button><span class="time">${m.pinned ? '📌 ' : ''}${m.edited ? '<span class="edited-tag">изм.</span>' : ''}${timeHtml}${isOwn && state.settings.readReceipts ? ' ✓✓' : ''}</span>${reactionsHtml}</div>`;
     lastSender = m.senderId;
   });
   if (state.settings.typingIndicator) {
-    const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== me && now() - (t.ts || 0) < 5000 && !state.blocked[t.uid]);
+    const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== state.user.uid);
     if (tu.length) { const names = tu.map(t => getUser(t.uid)?.firstName || 'Кто-то').join(', '); html += `<div class="typing">${esc(names)} печатает...</div>`; }
   }
   box.innerHTML = html;
-  box.scrollTop = atBottom ? box.scrollHeight : prevTop;
+  if (atBottom) box.scrollTop = box.scrollHeight;
 }
 function formatDuration(sec) { const m = Math.floor(sec / 60); const s = Math.floor(sec % 60); return m + ':' + String(s).padStart(2, '0'); }
 function scrollToMsg(msgId) { const el = $('msg-' + msgId); if (!el) return; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('highlight'); setTimeout(() => el.classList.remove('highlight'), 1600); }
@@ -1487,16 +1347,14 @@ $('messages').addEventListener('scroll', () => { const el = $('messages'); if (!
 
 async function toggleVoiceRecording() {
   if (state.mediaRecorder) { stopRecording(); return; }
-  if (!state.chat) return toast('Откройте чат', '⚠');
-  { const perr = groupPostError(state.chat, { type: 'voice' }); if (perr) return toast(perr, '🔒'); }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     state.audioChunks = [];
-    const rec = state.mediaRecorder = new MediaRecorder(stream);
+    state.mediaRecorder = new MediaRecorder(stream);
     state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) state.audioChunks.push(e.data); };
     state.mediaRecorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
-      const blob = new Blob(state.audioChunks, { type: (rec.mimeType || 'audio/webm').split(';')[0] });
+      const blob = new Blob(state.audioChunks, { type: 'audio/webm' });
       const duration = (Date.now() - state.recordingStart) / 1000;
       if (blob.size < 500 || duration < 0.5) { toast('Слишком коротко', '⚠'); return; }
       const reader = new FileReader();
@@ -1507,7 +1365,7 @@ async function toggleVoiceRecording() {
     state.recordingStart = Date.now();
     $('recordingBar').classList.remove('hidden'); $('chatInputBar').classList.add('hidden'); $('replyBar').classList.add('hidden');
     $('voiceBtn').classList.add('recording');
-    state.recordingTimer = setInterval(() => { const sec = Math.floor((Date.now() - state.recordingStart) / 1000); $('recordingText').textContent = formatDuration(sec); if (sec >= 300) stopRecording(); }, 200);
+    state.recordingTimer = setInterval(() => { const sec = Math.floor((Date.now() - state.recordingStart) / 1000); $('recordingText').textContent = formatDuration(sec); }, 200);
   } catch (e) { toast('Нет доступа к микрофону', '⚠'); }
 }
 function stopRecording() {
@@ -1519,7 +1377,7 @@ function stopRecording() {
   $('voiceBtn').classList.remove('recording');
 }
 function cancelRecording() {
-  if (state.mediaRecorder) { state.mediaRecorder.onstop = null; try { state.mediaRecorder.stream.getTracks().forEach(t => t.stop()); } catch(_) {} try { if (state.mediaRecorder.state !== 'inactive') state.mediaRecorder.stop(); } catch(_) {} }
+  if (state.mediaRecorder) { state.mediaRecorder.onstop = null; try { state.mediaRecorder.stream.getTracks().forEach(t => t.stop()); } catch(_) {} state.mediaRecorder.stop(); }
   if (state.recordingTimer) { clearInterval(state.recordingTimer); state.recordingTimer = null; }
   state.mediaRecorder = null; state.audioChunks = [];
   $('recordingBar').classList.add('hidden'); $('chatInputBar').classList.remove('hidden');
@@ -1529,47 +1387,46 @@ function cancelRecording() {
 const voiceAudios = {};
 function toggleVoice(msgId, btn) {
   const m = state.messages.find(x => x.id === msgId);
-  const url = safeUrl(m?.voiceData);
-  if (!url) return;
-  const q = id => document.querySelector(`[data-msgid="${CSS.escape(id)}"]`);
-  if (voiceAudios[msgId]) { voiceAudios[msgId].pause(); delete voiceAudios[msgId]; const b = q(msgId); if (b) b.textContent = '▶'; return; }
-  Object.keys(voiceAudios).forEach(id => { try { voiceAudios[id].pause(); } catch(_) {} delete voiceAudios[id]; const b = q(id); if (b) b.textContent = '▶'; });
-  const audio = new Audio(url);
+  if (!m?.voiceData) return;
+  if (voiceAudios[msgId]) { voiceAudios[msgId].pause(); delete voiceAudios[msgId]; btn.textContent = '▶'; return; }
+  const audio = new Audio(m.voiceData);
   voiceAudios[msgId] = audio;
-  if (btn) btn.textContent = '⏸';
-  // FIX: после перерисовки чата ссылки на кнопку/полосу устаревали — ищем элементы заново
-  audio.ontimeupdate = () => { const p = document.getElementById('vp-' + msgId); if (p && audio.duration) p.style.width = (audio.currentTime / audio.duration * 100) + '%'; };
-  audio.onended = () => { const b = q(msgId); if (b) b.textContent = '▶'; const p = document.getElementById('vp-' + msgId); if (p) p.style.width = '0%'; delete voiceAudios[msgId]; };
+  btn.textContent = '⏸';
+  const progress = $('vp-' + msgId);
+  audio.ontimeupdate = () => { if (progress && audio.duration) progress.style.width = (audio.currentTime / audio.duration * 100) + '%'; };
+  audio.onended = () => { btn.textContent = '▶'; if (progress) progress.style.width = '0%'; delete voiceAudios[msgId]; };
   audio.play().catch(() => {});
 }
 const vcState = { stream: null, recorder: null, chunks: [], startTime: 0, timer: null };
 async function startVideoCircle() {
   if (!state.chat || !state.user) return toast('Откройте чат', '⚠');
-  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') return toast('Камера недоступна', '⚠');
-  const chat = state.chat; // FIX: отправляем в тот чат, где начали запись
-  { const perr = groupPostError(chat, { type: 'videoCircle' }); if (perr) return toast(perr, '🔒'); }
+  if (!navigator.mediaDevices?.getUserMedia) return toast('Камера недоступна', '⚠');
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 480, height: 480 }, audio: true });
     vcState.stream = stream; vcState.chunks = []; vcState.startTime = Date.now();
     $('videoCirclePreview').srcObject = stream;
     $('videoCircleRecorder').classList.remove('hidden');
-    let mime = '';
-    for (const c of ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4']) { if (MediaRecorder.isTypeSupported(c)) { mime = c; break; } } // FIX: Safari
-    const rec = vcState.recorder = new MediaRecorder(stream, Object.assign({ videoBitsPerSecond: 600000, audioBitsPerSecond: 32000 }, mime ? { mimeType: mime } : {}));
-    rec.ondataavailable = e => { if (e.data.size > 0) vcState.chunks.push(e.data); };
-    rec.onstop = async () => {
+    let mime = 'video/webm;codecs=vp9,opus';
+    if (!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm;codecs=vp8,opus';
+    if (!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm';
+    vcState.recorder = new MediaRecorder(stream, { mimeType: mime });
+    vcState.recorder.ondataavailable = e => { if (e.data.size > 0) vcState.chunks.push(e.data); };
+    vcState.recorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
-      const blob = new Blob(vcState.chunks, { type: (rec.mimeType || mime || 'video/webm').split(';')[0] });
+      const blob = new Blob(vcState.chunks, { type: 'video/webm' });
       const duration = (Date.now() - vcState.startTime) / 1000;
       if (blob.size < 1000 || duration < 0.5) { toast('Слишком коротко', '⚠'); return; }
       const reader = new FileReader();
       reader.onload = async () => {
-        try { await postMessage(chat.id, chat, { senderId: state.user.uid, text: '', type: 'videoCircle', videoData: reader.result, videoDuration: duration, createdAt: now() }); }
-        catch(e) { toast('Не удалось отправить видео', '⚠'); }
+        try {
+          await push(ref(db, 'messages/' + state.chat.id), { senderId: state.user.uid, text: '', type: 'videoCircle', videoData: reader.result, videoDuration: duration, createdAt: now() });
+          const preview = { text: '⭕ Видеокружок', senderId: state.user.uid, type: 'videoCircle' };
+          await update(ref(db, 'user_chats/' + state.user.uid + '/' + state.chat.id), { lastTs: now(), lastMessage: preview, unread: 0 });
+        } catch(e) {}
       };
       reader.readAsDataURL(blob);
     };
-    rec.start();
+    vcState.recorder.start();
     vcState.timer = setInterval(() => {
       const sec = Math.floor((Date.now() - vcState.startTime) / 1000);
       $('videoCircleTimer').textContent = formatDuration(sec);
@@ -1636,11 +1493,11 @@ function openStickerPicker() {
 }
 async function sendSticker(sticker) {
   if (!state.chat || !state.user) return;
-  const perr = groupPostError(state.chat, { type: 'sticker' });
-  if (perr) { closeAllMenus(); return toast(perr, '🔒'); }
   try {
-    await postMessage(state.chat.id, state.chat, { senderId: state.user.uid, text: '', type: 'sticker', sticker, createdAt: now() });
-    state.messagesAtBottom = true;
+    const msg = { senderId: state.user.uid, text: '', type: 'sticker', sticker, createdAt: now() };
+    await push(ref(db, 'messages/' + state.chat.id), msg);
+    const preview = { text: '😀 Стикер', senderId: state.user.uid, type: 'sticker' };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + state.chat.id), { lastTs: msg.createdAt, lastMessage: preview, unread: 0 });
     closeAllMenus();
   } catch(e) { toast('Ошибка стикера', '⚠'); }
 }
@@ -1655,101 +1512,75 @@ async function refreshChatPreview(chatId) {
     const snap = await get(query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(1)));
     const data = snap.val() || {};
     const entries = Object.entries(data);
-    let preview = { text: '', senderId: '', type: 'text' };
-    let lastTs = 0;
+    let preview = { text: 'Нет сообщений', senderId: '', type: 'text' };
+    let lastTs = now();
     if (entries.length > 0) {
       const [, last] = entries[0];
       if (!last.deleted) {
-        preview = { text: String(last.text || (last.poll && '📊 ' + last.poll.question) || PREVIEW_MAP[last.type] || '').slice(0, 120), senderId: last.senderId || '', type: last.type || 'text' };
-        lastTs = last.createdAt || 0;
+        const map = { image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', sticker: '😀 Стикер', videoCircle: '⭕ Видеокружок', geo: '📍 Геолокация' };
+        preview = { text: last.text || map[last.type] || '', senderId: last.senderId, type: last.type || 'text' };
+        lastTs = last.createdAt || now();
       }
     }
     const info = state.chats[chatId];
-    const patch = { lastTs, lastMessage: preview.text || preview.senderId ? preview : null };
     if (info && info.type === 'dm') {
-      await update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), patch);
-      await update(ref(db, 'user_chats/' + info.peerId + '/' + chatId), patch).catch(()=>{});
+      await update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), { lastTs, lastMessage: preview });
+      await update(ref(db, 'user_chats/' + info.peerId + '/' + chatId), { lastTs, lastMessage: preview }).catch(()=>{});
     } else if (info && info.type === 'group') {
-      for (const uid of Object.keys((state.chat && state.chat.id === chatId ? state.chat.members : info.members) || {})) await update(ref(db, 'user_chats/' + uid + '/' + chatId), patch).catch(()=>{});
+      for (const uid of Object.keys(info.members || {})) await update(ref(db, 'user_chats/' + uid + '/' + chatId), { lastTs, lastMessage: preview }).catch(()=>{});
     }
   } catch(e) {}
 }
-// Проверка прав на отправку в группе (раньше проверялась только часть, и только для текста)
-function groupPostError(chat, msg) {
-  if (!chat || chat.type !== 'group') return null;
-  const uid = state.user.uid;
-  if (isGroupOwner(chat, uid) || isGroupAdmin(chat, uid)) return null;
-  const kind = msg.type || 'text';
-  if (getGroupSetting(chat, 'onlyAdminsPost')) return 'Только админы';
-  if (getGroupSetting(chat, 'muteAll')) return 'Все замучены';
-  if (kind === 'poll' && !getGroupSetting(chat, 'membersCanCreatePolls')) return 'Опросы запрещены';
-  if (['image', 'file', 'videoCircle'].includes(kind) && !getGroupSetting(chat, 'membersCanSendMedia')) return 'Медиа запрещены';
-  if (kind === 'voice' && !getGroupSetting(chat, 'membersCanSendVoice')) return 'Голосовые запрещены';
-  if (kind === 'geo' && !getGroupSetting(chat, 'membersCanSendGeo')) return 'Геолокация запрещена';
-  if (/https?:\/\//i.test(msg.text || '') && !getGroupSetting(chat, 'membersCanSendLinks')) return 'Ссылки запрещены';
-  const slow = getGroupSetting(chat, 'slowModeSeconds') || 0;
-  if (slow > 0 && state.chat && state.chat.id === chat.id) {
-    const myLast = [...state.messages].reverse().find(m => m.senderId === uid && !m.system);
-    if (myLast && (now() - myLast.createdAt) < slow * 1000) return `Подождите ${Math.ceil((slow * 1000 - (now() - myLast.createdAt)) / 1000)} сек`;
-  }
-  return null;
-}
-// Единая доставка: само сообщение + превью/счётчики у всех получателей
-async function postMessage(chatId, chat, msg) {
-  const uid = state.user.uid;
-  const clean = JSON.parse(JSON.stringify(msg)); // FIX: undefined-поля роняли push/set в Firebase (пересылка, избранное)
-  let ptxt = clean.text || PREVIEW_MAP[clean.type] || '';
-  if (clean.type === 'poll' && clean.poll) ptxt = '📊 ' + clean.poll.question;
-  const preview = { text: String(ptxt).slice(0, 120), senderId: uid, type: clean.type || 'text' };
-  let peerBlocked = false;
-  if (chat.type === 'dm') { try { peerBlocked = (await get(ref(db, 'user_blocked/' + chat.peerId + '/' + uid))).exists(); } catch(_) {} }
-  await push(ref(db, 'messages/' + chatId), clean);
-  await update(ref(db, 'user_chats/' + uid + '/' + chatId), { lastTs: clean.createdAt, lastMessage: preview, unread: 0 });
-  if (chat.type === 'dm') {
-    if (peerBlocked) return true; // заблокировавший не получает уведомлений и счётчиков
-    const peerRef = ref(db, 'user_chats/' + chat.peerId + '/' + chatId);
-    const s = await get(peerRef);
-    if (!s.exists()) await set(peerRef, { type: 'dm', peerId: uid, lastTs: clean.createdAt, lastMessage: preview, unread: 1 });
-    else await update(peerRef, { lastTs: clean.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
-  } else if (chat.type === 'group') {
-    await Promise.all(Object.keys(chat.members || {}).filter(u => u !== uid).map(async u => {
-      try {
-        const r = ref(db, 'user_chats/' + u + '/' + chatId);
-        const s = await get(r);
-        if (s.exists()) await update(r, { lastTs: clean.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
-        else await set(r, JSON.parse(JSON.stringify({ type: 'group', name: chat.name, code: chat.code, members: chat.members, ownerId: chat.ownerId, admins: chat.admins, lastTs: clean.createdAt, lastMessage: preview, unread: 1 })));
-      } catch(_) {}
-    }));
-  }
-  return true;
-}
 async function sendMessage() {
-  if (state.sending) { if (state.pendingAttachment) setTimeout(sendMessage, 300); return; } // FIX: вложение молча терялось
+  if (state.sending) return;
   const input = $('chatInput');
   const text = (input?.value || '').trim();
   if (!text && !state.pendingAttachment) { toast('Введите сообщение', '⚠'); return; }
-  if (!state.chat || !state.user) { state.pendingAttachment = null; toast('Откройте чат', '⚠'); return; }
-  const chat = state.chat; const chatId = chat.id;
-  const perr = groupPostError(chat, { type: state.pendingAttachment?.type, text });
-  if (perr) { state.pendingAttachment = null; return toast(perr, '🔒'); } // FIX: вложение оставалось и уходило со следующим сообщением
+  if (!state.chat || !state.user) { toast('Откройте чат', '⚠'); return; }
+  if (state.chat.type === 'group') {
+    const isOwner = isGroupOwner(state.chat, state.user.uid);
+    const isAdmin = isGroupAdmin(state.chat, state.user.uid);
+    if (getGroupSetting(state.chat, 'onlyAdminsPost') && !isOwner && !isAdmin) return toast('Только админы', '🔒');
+    if (getGroupSetting(state.chat, 'muteAll') && !isOwner && !isAdmin) return toast('Все замучены', '🔇');
+    const slow = getGroupSetting(state.chat, 'slowModeSeconds') || 0;
+    if (slow > 0 && !isOwner && !isAdmin) {
+      const myLast = [...state.messages].reverse().find(m => m.senderId === state.user.uid && !m.system);
+      if (myLast && (now() - myLast.createdAt) < slow * 1000) {
+        const wait = Math.ceil((slow * 1000 - (now() - myLast.createdAt)) / 1000);
+        return toast(`Подождите ${wait} сек`, '⏳');
+      }
+    }
+  }
   state.sending = true;
-  const attachment = state.pendingAttachment; state.pendingAttachment = null;
-  const replyTo = state.replyTo;
-  const prevText = input ? input.value : '';
   try {
     const msg = { senderId: state.user.uid, text: text || '', createdAt: now() };
-    if (attachment) Object.assign(msg, attachment);
-    if (replyTo) msg.replyTo = { id: replyTo.id, author: replyTo.author, text: replyTo.text || '' };
+    if (state.pendingAttachment) { Object.assign(msg, state.pendingAttachment); state.pendingAttachment = null; }
+    if (state.replyTo) msg.replyTo = { id: state.replyTo.id, author: state.replyTo.author, text: state.replyTo.text };
     if (input) { input.value = ''; input.style.height = 'auto'; }
     cancelReply(); updateSendBtn();
-    state.messagesAtBottom = true;
+    const chatId = state.chat.id;
     try { localStorage.removeItem('metro_draft_' + chatId); } catch(_) {}
-    await postMessage(chatId, chat, msg);
+    await push(ref(db, 'messages/' + chatId), msg);
+    const map = { image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', geo: '📍 Геолокация', sticker: '😀 Стикер', videoCircle: '⭕ Видеокружок' };
+    const preview = { text: msg.text || map[msg.type] || '', senderId: state.user.uid, type: msg.type || 'text' };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), { lastTs: msg.createdAt, lastMessage: preview, unread: 0 });
+    if (state.chat.type === 'dm') {
+      const peerId = state.chat.peerId;
+      const peerRef = ref(db, 'user_chats/' + peerId + '/' + chatId);
+      const s = await get(peerRef);
+      if (!s.exists()) await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
+      else await update(peerRef, { lastTs: msg.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
+    } else if (state.chat.type === 'group') {
+      for (const uid of Object.keys(state.chat.members || {})) {
+        if (uid === state.user.uid) continue;
+        const r = ref(db, 'user_chats/' + uid + '/' + chatId);
+        const s = await get(r);
+        if (s.exists()) await update(r, { lastTs: msg.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
+        else await set(r, { type: 'group', name: state.chat.name, code: state.chat.code, members: state.chat.members, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
+      }
+    }
     set(ref(db, 'typing/' + state.user.uid), null).catch(()=>{});
-  } catch (e) {
-    toast('Ошибка: ' + humanErr(e), '⚠');
-    if (input && !input.value && state.chat && state.chat.id === chatId) { input.value = prevText; updateSendBtn(); } // FIX: текст пропадал при ошибке
-  }
+  } catch (e) { toast('Ошибка: ' + humanErr(e), '⚠'); }
   finally { state.sending = false; }
 }
 function bindChatInputs() {
@@ -1757,7 +1588,7 @@ function bindChatInputs() {
   if (inp) {
     inp.addEventListener('input', () => {
       if (!state.chat || !state.user) return;
-      if (!window._typingLast || now() - window._typingLast > 2000) { window._typingLast = now(); set(ref(db, 'typing/' + state.user.uid), { chatId: state.chat.id, uid: state.user.uid, ts: now() }).catch(()=>{}); } // throttle
+      set(ref(db, 'typing/' + state.user.uid), { chatId: state.chat.id, uid: state.user.uid, ts: now() }).catch(()=>{});
       clearTimeout(window._typingTimer);
       window._typingTimer = setTimeout(() => set(ref(db, 'typing/' + state.user.uid), null).catch(()=>{}), 3000);
       updateSendBtn();
@@ -1843,7 +1674,6 @@ function showMsgCtx(e, msgId) {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault(); ev.stopPropagation();
       try { it.fn(ev); } catch(err) { console.error(err); toast('Ошибка', '⚠'); }
-      // Не закрываем меню повторно после открытия выбора реакции.
       if (it.text !== 'Реакция') setTimeout(closeAllMenus, 50);
     });
     menu.appendChild(btn);
@@ -1853,9 +1683,8 @@ function showMsgCtx(e, msgId) {
 }
 function positionMenu(menu, e) {
   const rect = menu.getBoundingClientRect();
-  const touch = e && e.changedTouches && e.changedTouches[0];
-  const cx = (e && e.clientX) || (touch && touch.clientX) || window.innerWidth / 2;
-  const cy = (e && e.clientY) || (touch && touch.clientY) || window.innerHeight / 2;
+  const cx = (e && e.clientX) || window.innerWidth / 2;
+  const cy = (e && e.clientY) || window.innerHeight / 2;
   const x = Math.min(Math.max(10, cx - rect.width / 2), window.innerWidth - rect.width - 10);
   const y = Math.min(Math.max(10, cy - rect.height - 10), window.innerHeight - rect.height - 10);
   menu.style.left = x + 'px'; menu.style.top = y + 'px';
@@ -1894,21 +1723,16 @@ function startEditMsg(msgId) {
   if (!m || m.senderId !== state.user.uid) return;
   const t = prompt('Редактировать:', m.text || '');
   if (t === null) return;
-  const v = t.trim();
-  if (!v && !m.type) return toast('Сообщение не может быть пустым', '⚠');
-  if (v === (m.text || '')) return;
-  update(ref(db, 'messages/' + state.chat.id + '/' + msgId), { text: v, edited: true }).catch(()=>{});
+  update(ref(db, 'messages/' + state.chat.id + '/' + msgId), { text: t.trim(), edited: true }).catch(()=>{});
 }
 function deleteMsg(msgId, forAll) {
-  const chatId = state.chat.id;
   showConfirm(forAll ? 'Удалить у всех?' : 'Удалить у себя?', forAll ? 'Сообщение исчезнет у всех' : 'Сообщение исчезнет только у вас', async () => {
     try {
       if (forAll) {
-        await remove(ref(db, 'messages/' + chatId + '/' + msgId));
-        setTimeout(() => refreshChatPreview(chatId), 300);
+        await remove(ref(db, 'messages/' + state.chat.id + '/' + msgId));
+        setTimeout(() => refreshChatPreview(state.chat.id), 300);
       } else {
-        // FIX: раньше ставился общий флаг deleted → сообщение пропадало у всех
-        await set(ref(db, 'messages/' + chatId + '/' + msgId + '/deletedFor/' + state.user.uid), true);
+        await update(ref(db, 'messages/' + state.chat.id + '/' + msgId), { deleted: true });
       }
       toast('Удалено', '🗑️');
     } catch(e) { toast('Ошибка', '⚠'); }
@@ -1927,55 +1751,16 @@ async function togglePin(msgId) {
   } catch(e) {}
 }
 async function unpinMessage() { const p = state.messages.find(m => m.pinned); if (!p) return; try { await remove(ref(db, 'messages/' + state.chat.id + '/' + p.id + '/pinned')); toast('Откреплено', '📌'); } catch(e) {} }
-async function openFavorites() {
-  if (!state.user) return;
-  closeAllMenus();
-  const id = 'favoritesModal';
-  let overlay = $(id);
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = id; overlay.className = 'modal-overlay';
-    overlay.innerHTML = `<div class="modal modal-lg"><h3>⭐ Избранное</h3><p class="modal-desc">Сохранённые сообщения доступны только в вашем аккаунте.</p><div id="favoritesList"><div class="empty" style="padding:20px">Загрузка…</div></div><div class="modal-actions"><button class="btn btn-primary" type="button" onclick="closeModal('favoritesModal')">Закрыть</button></div></div>`;
-    overlay.addEventListener('click', ev => { if (ev.target === overlay) overlay.classList.add('hidden'); });
-    document.body.appendChild(overlay);
-  }
-  overlay.classList.remove('hidden');
-  const list = $('favoritesList');
-  list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-2)">Загрузка…</div>';
-  try {
-    const snap = await get(ref(db, 'user_saved/' + state.user.uid));
-    const saved = Object.entries(snap.val() || {}).map(([id, item]) => ({id, ...item})).sort((a,b) => (b.savedAt || 0) - (a.savedAt || 0));
-    if (!saved.length) {
-      list.innerHTML = '<div class="empty" style="padding:28px"><div class="empty-icon">⭐</div><h3>Пока пусто</h3><p>Зажмите сообщение и выберите «В избранное».</p></div>';
-      return;
-    }
-    list.innerHTML = saved.map(item => {
-      const text = item.text || (item.type === 'image' ? '🖼️ Фото' : item.type === 'voice' ? '🎤 Голосовое сообщение' : item.type === 'file' ? '📎 ' + (item.fileName || 'Файл') : item.type === 'sticker' ? (item.sticker || '🙂') : item.type === 'geo' ? '📍 Геолокация' : '📎 Вложение');
-      return `<div class="set-row" style="cursor:default"><div class="set-icon">⭐</div><div class="set-info"><div class="set-label">${esc(item.chatName || 'Сообщение')}</div><div class="set-sub" style="white-space:normal;overflow-wrap:anywhere">${esc(text)}</div><div class="set-sub">${esc(item.fromUser || 'Пользователь')} · ${item.savedAt ? esc(new Date(item.savedAt).toLocaleString()) : ''}</div></div><button class="mini-btn danger" title="Удалить из избранного" onclick="removeFavorite(${j(item.id)})">🗑️</button></div>`;
-    }).join('');
-  } catch (e) {
-    console.error('openFavorites', e);
-    list.innerHTML = '<div style="padding:20px;color:var(--red)">Не удалось загрузить избранное. Проверьте подключение.</div>';
-  }
-}
-async function removeFavorite(savedId) {
-  if (!state.user || !savedId) return;
-  try {
-    await remove(ref(db, 'user_saved/' + state.user.uid + '/' + savedId));
-    openFavorites();
-  } catch (e) { toast('Не удалось удалить сохранённое сообщение', '⚠️'); }
-}
 async function saveMsg(msgId) {
   const m = state.messages.find(x => x.id === msgId);
   if (!m) return;
   try {
     const id = 'sv_' + now();
-    // FIX: undefined-поля (imageData и т.п.) → Firebase бросал исключение, «В избранное» не работало
-    await set(ref(db, 'user_saved/' + state.user.uid + '/' + id), JSON.parse(JSON.stringify({
-      text: m.text || '', type: m.type || 'text', imageData: m.imageData, fileData: m.fileData, fileName: m.fileName,
+    await set(ref(db, 'user_saved/' + state.user.uid + '/' + id), {
+      text: m.text || '', type: m.type, imageData: m.imageData, fileData: m.fileData, fileName: m.fileName,
       voiceData: m.voiceData, voiceDuration: m.voiceDuration, videoData: m.videoData, sticker: m.sticker,
-      geo: m.geo, chatName: state.chat.name || '', fromUser: getUser(m.senderId)?.firstName || 'Вы', savedAt: now()
-    })));
+      geo: m.geo, chatName: state.chat.name, fromUser: getUser(m.senderId)?.firstName || 'Вы', savedAt: now()
+    });
     toast('В избранное', '⭐');
   } catch(e) { toast('Ошибка', '⚠'); }
 }
@@ -2011,20 +1796,18 @@ function forwardMsg(msgId) {
 }
 async function doForward(targetId, msgId) {
   const m = state.messages.find(x => x.id === msgId);
-  const info = state.chats[targetId];
-  if (!m || !info) return;
-  const target = { id: targetId, ...info };
-  const perr = groupPostError(target, { type: m.type, text: m.text });
-  if (perr) return toast(perr, '🔒');
+  if (!m) return;
   try {
     const newMsg = {
       senderId: state.user.uid, text: m.text || '', type: m.type,
       imageData: m.imageData, fileData: m.fileData, fileName: m.fileName, fileSize: m.fileSize,
       voiceData: m.voiceData, voiceDuration: m.voiceDuration, videoData: m.videoData,
-      sticker: m.sticker, geo: m.geo, forwarded: true, createdAt: now()
+      sticker: m.sticker, geo: m.geo, poll: m.poll, forwarded: true, createdAt: now()
     };
-    if (m.poll) newMsg.poll = { question: m.poll.question, options: Array.isArray(m.poll.options) ? m.poll.options : Object.values(m.poll.options || {}), votes: {} };
-    await postMessage(targetId, target, newMsg);
+    await push(ref(db, 'messages/' + targetId), newMsg);
+    const map = { image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', sticker: '😀 Стикер', videoCircle: '⭕ Видеокружок', geo: '📍 Геолокация' };
+    const preview = { text: newMsg.text || map[newMsg.type] || '', senderId: state.user.uid, type: newMsg.type || 'text' };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + targetId), { lastTs: now(), lastMessage: preview });
     toast('Переслано', '↪️');
   } catch(e) { toast('Ошибка', '⚠'); }
 }
@@ -2039,6 +1822,7 @@ function showReactionPicker(e, msgId) {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = em;
+    btn.setAttribute('aria-label', 'Поставить реакцию ' + em);
     btn.addEventListener('click', (ev) => {
       ev.preventDefault(); ev.stopPropagation();
       toggleReaction(msgId, em);
@@ -2047,7 +1831,6 @@ function showReactionPicker(e, msgId) {
     picker.appendChild(btn);
   });
   document.body.appendChild(picker);
-  // При открытии из контекстного меню координаты события могут отсутствовать.
   const rect = picker.getBoundingClientRect();
   const cx = (e && e.clientX) || window.innerWidth / 2;
   const cy = (e && e.clientY) || window.innerHeight / 2;
@@ -2057,7 +1840,7 @@ function showReactionPicker(e, msgId) {
 }
 async function toggleReaction(msgId, emoji) {
   const m = state.messages.find(x => x.id === msgId);
-  if (!m || !state.chat || typeof emoji !== 'string' || !emoji || emoji.length > 16) return;
+  if (!m || !state.chat) return;
   try {
     const rref = ref(db, `messages/${state.chat.id}/${msgId}/reactions/${state.user.uid}`);
     if (m.reactions?.[state.user.uid] === emoji) await remove(rref);
@@ -2068,16 +1851,15 @@ function openPollModal() { closeAllMenus(); $('pollQuestion').value = ''; $('pol
 function addPollOption() { const wrap = $('pollOptions'); const n = wrap.querySelectorAll('.poll-option').length + 1; if (n > 10) return toast('Максимум 10', '⚠'); const div = document.createElement('div'); div.className = 'auth-field'; div.innerHTML = `<label>Вариант ${n}</label><input type="text" class="poll-option" maxlength="80">`; wrap.appendChild(div); }
 async function sendPoll() {
   const q = $('pollQuestion').value.trim();
-  // FIX: querySelectorAll('.poll-option') захватывал и опросы в чате → TypeError на .value.trim()
-  const options = Array.from($('pollOptions').querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean);
+  const options = Array.from(document.querySelectorAll('.poll-option')).map(i => i.value.trim()).filter(Boolean);
   if (!q) return toast('Введите вопрос', '⚠');
   if (options.length < 2) return toast('Минимум 2 варианта', '⚠');
   if (!state.chat) return;
-  const perr = groupPostError(state.chat, { type: 'poll' });
-  if (perr) return toast(perr, '🔒');
   try {
-    await postMessage(state.chat.id, state.chat, { senderId: state.user.uid, text: '', type: 'poll', poll: { question: q, options, votes: {} }, createdAt: now() });
-    state.messagesAtBottom = true;
+    const msg = { senderId: state.user.uid, text: '', type: 'poll', poll: { question: q, options, votes: {} }, createdAt: now() };
+    await push(ref(db, 'messages/' + state.chat.id), msg);
+    const preview = { text: '📊 Опрос: ' + q, senderId: state.user.uid, type: 'poll' };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + state.chat.id), { lastTs: now(), lastMessage: preview });
     closeModal('pollModal'); toast('Опрос отправлен', '📊');
   } catch(e) { toast('Ошибка', '⚠'); }
 }
@@ -2114,7 +1896,7 @@ function openAttachmentMenu(e) {
   document.body.appendChild(menu);
   setTimeout(() => document.addEventListener('click', closeAllMenus, { once: true }), 100);
 }
-function pickPhoto() { const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.onchange = async e => { const f = e.target.files?.[0]; if (!f) return; if (f.size > 5 * 1024 * 1024) return toast('Фото до 5 МБ', '⚠'); const data = await compressImage(f, 900 * 1024); if (!data) return toast('Не удалось обработать фото', '⚠'); state.pendingAttachment = { type: 'image', imageData: data }; sendMessage(); }; input.click(); }
+function pickPhoto() { const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.onchange = async e => { const f = e.target.files?.[0]; if (!f) return; if (f.size > 5 * 1024 * 1024) return toast('Фото до 5 МБ', '⚠'); const data = await compressImage(f, 900 * 1024); state.pendingAttachment = { type: 'image', imageData: data }; sendMessage(); }; input.click(); }
 function pickFile() { const input = document.createElement('input'); input.type = 'file'; input.onchange = e => { const f = e.target.files?.[0]; if (!f) return; if (f.size > 900 * 1024) return toast('Файл до 900 КБ', '⚠'); const reader = new FileReader(); reader.onload = ev => { state.pendingAttachment = { type: 'file', fileData: ev.target.result, fileName: f.name, fileSize: f.size }; sendMessage(); }; reader.readAsDataURL(f); }; input.click(); }
 function sendGeo() {
   if (!navigator.geolocation) return toast('Геолокация недоступна', '⚠');
@@ -2130,7 +1912,7 @@ function runChatSearch() {
   const q = $('chatSearchInput').value.trim().toLowerCase();
   qsa('.msg.highlight').forEach(el => el.classList.remove('highlight'));
   if (!q) { $('searchCount').textContent = ''; state.searchMatches = []; return; }
-  state.searchMatches = state.messages.filter(m => msgVisible(m) && !m.system && (m.text || '').toLowerCase().includes(q));
+  state.searchMatches = state.messages.filter(m => !m.deleted && !m.system && (m.text || '').toLowerCase().includes(q));
   state.searchIndex = 0;
   $('searchCount').textContent = state.searchMatches.length ? `1 / ${state.searchMatches.length}` : '0 / 0';
   if (state.searchMatches.length > 0) scrollToMsg(state.searchMatches[0].id);
@@ -2154,7 +1936,7 @@ async function createGroup() {
     window.createdGroupId = chatId; $('createdGroupCode').textContent = code; closeModal('createGroupModal'); $('groupCreatedModal').classList.remove('hidden');
   } catch(e) { toast(humanErr(e), '⚠'); }
 }
-function copyCreatedCode() { navigator.clipboard?.writeText($('createdGroupCode').textContent).then(() => toast('Код скопирован', '📋')); }
+async function copyCreatedCode() { const code = $('createdGroupCode')?.textContent || ''; try { if (!navigator.clipboard?.writeText) throw new Error('Копирование недоступно'); await navigator.clipboard.writeText(code); toast('Код скопирован', '📋'); } catch(e) { toast('Не удалось скопировать код', '⚠'); } }
 async function joinByCode() {
   const code = $('joinCode').value.trim();
   if (!/^\d{8}$/.test(code)) return toast('Код из 8 цифр', '⚠');
@@ -2166,17 +1948,15 @@ async function joinByCode() {
       const newMembers = { ...(g.members || {}), [uid]: true };
       await update(ref(db, 'chats/grp_' + code), { members: newMembers });
       g.members = newMembers;
-      await push(ref(db, 'messages/grp_' + code), { senderId: uid, system: true, text: `${state.profile.displayName || state.profile.firstName || 'Участник'} присоединился`, createdAt: now() });
+      await push(ref(db, 'messages/grp_' + code), { senderId: uid, system: true, text: `${state.profile.displayName} присоединился`, createdAt: now() });
     }
-    const entry = JSON.parse(JSON.stringify({ type: 'group', name: g.name, code: g.code, members: g.members, ownerId: g.ownerId, admins: g.admins, settings: g.settings, lastTs: now(), unread: 0 }));
     const existing = await get(ref(db, 'user_chats/' + uid + '/grp_' + code));
-    if (!existing.exists()) await set(ref(db, 'user_chats/' + uid + '/grp_' + code), entry);
-    if (!state.chats['grp_' + code]) state.chats['grp_' + code] = entry;
+    if (!existing.exists()) await set(ref(db, 'user_chats/' + uid + '/grp_' + code), { type: 'group', name: g.name, code: g.code, members: g.members, ownerId: g.ownerId, admins: g.admins, settings: g.settings, lastTs: now(), unread: 0 });
     closeModal('joinGroupModal'); switchTab('chats'); toast('Вы вошли', '✓');
-    openChat('grp_' + code, 'group'); // FIX: убран setTimeout — чат мог не открыться, если подписка ещё не доставила запись
+    setTimeout(() => openChat('grp_' + code, 'group'), 300);
   } catch(e) { toast(humanErr(e), '⚠'); }
 }
-function copyCode(e) { e.stopPropagation(); navigator.clipboard?.writeText(e.currentTarget.textContent).then(() => toast('Код скопирован', '📋')); }
+async function copyCode(e) { e.stopPropagation(); try { if (!navigator.clipboard?.writeText) throw new Error('Копирование недоступно'); await navigator.clipboard.writeText(e.currentTarget.textContent); toast('Код скопирован', '📋'); } catch(err) { toast('Не удалось скопировать код', '⚠'); } }
 async function openOrCreateDM(peerId) {
   if (!peerId || peerId === state.user.uid) return;
   const chatId = dmId(state.user.uid, peerId);
@@ -2189,9 +1969,8 @@ async function openOrCreateDM(peerId) {
     const peerRef = ref(db, 'user_chats/' + peerId + '/' + chatId);
     const peerSnap = await get(peerRef);
     if (!peerSnap.exists()) await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: now(), unread: 0 });
-  } catch(e) { return toast(humanErr(e), '⚠'); }
-  if (!state.chats[chatId]) state.chats[chatId] = { type: 'dm', peerId, lastTs: now(), unread: 0 };
-  switchTab('chats'); openChat(chatId, 'dm'); // FIX: убран setTimeout(200) — гонка с подпиской
+  } catch(e) { toast(humanErr(e), '⚠'); return; }
+  switchTab('chats'); setTimeout(() => openChat(chatId, 'dm'), 200);
 }
 
 function openAddMemberModal() {
@@ -2212,7 +1991,7 @@ function renderContactPickList() {
   wrap.innerHTML = contacts.map(c => {
     const already = state.chat?.members?.[c.peerId];
     return `<label class="contact-pick-item" style="${already ? 'opacity: 0.5; pointer-events: none;' : ''}">
-      <input type="checkbox" data-uid="${esc(c.peerId)}" ${already ? 'checked disabled' : ''}>
+      <input type="checkbox" data-uid="${c.peerId}" ${already ? 'checked disabled' : ''}>
       ${avatarHTML({ name: c.name, avatar: c.avatar, size: 'small' })}
       <div class="list-info"><div class="list-name">${esc(c.name)}</div><div class="list-last" style="font-size: 11px;">${already ? 'Уже в группе' : 'Выбрать'}</div></div>
     </label>`;
@@ -2220,28 +1999,30 @@ function renderContactPickList() {
 }
 async function addSelectedContactsToGroup() {
   if (!state.chat || state.chat.type !== 'group') return;
+  const groupId = state.chat.id;
   const checkboxes = document.querySelectorAll('#contactPickList input[type="checkbox"]:checked:not([disabled])');
   if (checkboxes.length === 0) return toast('Никто не выбран', '⚠');
   const uids = Array.from(checkboxes).map(cb => cb.dataset.uid);
   try {
-    const groupId = state.chat.id;
-    const gSnap = await get(ref(db, 'chats/' + groupId));
+    const groupRef = ref(db, 'chats/' + groupId);
+    const gSnap = await get(groupRef);
     if (!gSnap.exists()) throw new Error('Группа не найдена');
     const g = gSnap.val() || {};
-    const actuallyAdded = [...new Set(uids)].filter(uid => !(g.members || {})[uid]);
+    const freshMembers = { ...(g.members || {}) };
+    const actuallyAdded = uids.filter(uid => !freshMembers[uid]);
     if (!actuallyAdded.length) return toast('Все выбранные пользователи уже в группе', '⚠');
+    // Update child paths individually so concurrent joins cannot overwrite each other.
     for (const uid of actuallyAdded) await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
-    const latestSnap = await get(ref(db, 'chats/' + groupId));
-    const latest = latestSnap.val() || g;
-    Object.assign(state.chat, { members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {} });
+    const newMembers = { ...freshMembers, ...Object.fromEntries(actuallyAdded.map(uid => [uid, true])) };
+    state.chat = { ...state.chat, ...g, id: groupId, type: 'group', members: newMembers };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + groupId), { members: newMembers });
     for (const uid of actuallyAdded) {
-      await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: latest.name, code: latest.code, members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {}, lastTs: now(), unread: 0 });
+      await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins || {}, settings: g.settings || {}, lastTs: now(), unread: 0 });
       const u = getUser(uid) || await fetchUserIfMissing(uid);
       await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
     }
-    renderChatHeader();
     toast(`Добавлено: ${actuallyAdded.length}`, '✓');
-    closeModal('addMemberModal'); openChatInfo();
+    closeModal('addMemberModal'); await openChatInfo();
   } catch(e) { toast(humanErr(e), '⚠'); }
 }
 async function doAddMemberToGroup() {
@@ -2272,15 +2053,15 @@ async function doAddMemberToGroup() {
     const g = gSnap.val() || {};
     if (g.members?.[uid]) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Уже в группе'; return; }
     await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
-    const latestSnap = await get(ref(db, 'chats/' + groupId));
-    const latest = latestSnap.val() || g;
-    Object.assign(state.chat, { members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {} });
-    await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: latest.name, code: latest.code, members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {}, lastTs: now(), unread: 0 });
+    const newMembers = { ...(g.members || {}), [uid]: true };
+    state.chat = { ...state.chat, ...g, id: groupId, type: 'group', members: newMembers };
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + groupId), { members: newMembers });
+    await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins || {}, settings: g.settings || {}, lastTs: now(), unread: 0 });
     const u = getUser(uid) || await fetchUserIfMissing(uid);
     await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
-    renderChatHeader();
     statusEl.className = 'uname-status ok'; statusEl.textContent = '✓ Добавлен!';
     $('addMemberUsername').value = '';
+    renderContactPickList();
     setTimeout(() => renderContactPickList(), 400);
   } catch(e) { statusEl.className = 'uname-status err'; statusEl.textContent = humanErr(e); }
 }
@@ -2371,8 +2152,7 @@ function openEditGroupModal() {
 }
 async function editGroupAvatarChange(e) {
   const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
-  const data = await compressImage(f, 60 * 1024, 256);
-  if (!data) return toast('Не удалось обработать фото', '⚠');
+  const data = await compressImage(f, 400 * 1024);
   const av = $('editGroupAvatar');
   av.style.background = `url('${data}') center/cover`; av.textContent = '';
   av.dataset.newAvatar = data;
@@ -2386,8 +2166,7 @@ async function saveGroupInfo() {
   if (!name) return toast('Введите название', '⚠');
   try {
     await update(ref(db, 'chats/' + state.chat.id), { name, desc, avatar: newAvatar });
-    // FIX: название/аватар обновлялись только в списке владельца, у остальных оставались старые
-    await Promise.all(Object.keys(state.chat.members || { [state.user.uid]: true }).map(u => update(ref(db, 'user_chats/' + u + '/' + state.chat.id), { name, desc, avatar: newAvatar }).catch(()=>{})));
+    await update(ref(db, 'user_chats/' + state.user.uid + '/' + state.chat.id), { name, desc, avatar: newAvatar });
     state.chat.name = name; state.chat.desc = desc; state.chat.avatar = newAvatar;
     renderChatHeader(); closeModal('editGroupModal'); toast('Сохранено', '✓');
   } catch(e) { toast(humanErr(e), '⚠'); }
@@ -2395,15 +2174,16 @@ async function saveGroupInfo() {
 
 async function openChatInfo() {
   if (!state.chat) return;
+  // chats/<id> is the canonical record; user_chats is only a per-user preview
+  // and its members map can be stale after another user joins.
   if (state.chat.type === 'group') {
-    const groupId = state.chat.id;
     try {
-      const fresh = await get(ref(db, 'chats/' + groupId));
-      if (fresh.exists() && state.chat && state.chat.id === groupId) {
-        const g = fresh.val() || {};
-        Object.assign(state.chat, { name: g.name || state.chat.name, code: g.code || state.chat.code, ownerId: g.ownerId, members: g.members || {}, admins: g.admins || {}, settings: g.settings || {}, desc: g.desc || '', avatar: g.avatar || null });
+      const groupId = state.chat.id;
+      const freshSnap = await get(ref(db, 'chats/' + groupId));
+      if (freshSnap.exists() && state.chat && state.chat.id === groupId) {
+        state.chat = { ...state.chat, ...(freshSnap.val() || {}), id: groupId, type: 'group' };
       }
-    } catch (e) { console.warn('Group info refresh failed:', e); }
+    } catch (e) { console.warn('Could not refresh group details:', e); }
   }
   if (!state.chat) return;
   const c = state.chat;
@@ -2423,7 +2203,7 @@ async function openChatInfo() {
       </div>
       <div class="settings-group">
         <div class="set-row" onclick="clearChatHistory()"><div class="set-icon">🧹</div><div class="set-info"><div class="set-label">Очистить историю</div></div></div>
-        <div class="set-row" onclick="blockUser(${j(c.peerId)})"><div class="set-icon">🚫</div><div class="set-info"><div class="set-label">${state.blocked[c.peerId] ? 'Разблокировать' : 'Заблокировать'}</div></div></div>
+        <div class="set-row" onclick="blockUser('${c.peerId}')"><div class="set-icon">🚫</div><div class="set-info"><div class="set-label">${state.blocked[c.peerId] ? 'Разблокировать' : 'Заблокировать'}</div></div></div>
         <div class="set-row danger" onclick="deleteChatFromInfo()"><div class="set-icon">🗑️</div><div class="set-info"><div class="set-label">Удалить чат</div></div></div>
       </div>
       <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
@@ -2460,7 +2240,7 @@ async function openChatInfo() {
       return `<div class="member-row">
         ${avatarHTML({ name, avatar: av, size: 'small' })}
         <div class="member-info"><div class="member-name">${esc(name)}${uid === state.user.uid ? ' (вы)' : ''}</div><div class="member-sub"><span class="role-chip role-${role}">${roleLabel}</span></div></div>
-        <div class="member-actions">${isOwner && uid !== state.user.uid ? `<button class="mini-btn" title="Передать владение" aria-label="Передать владение" onclick="transferGroupOwner(${j(uid)})">👑</button>` : ''}${canPromote ? `<button class="mini-btn" title="Сделать администратором" onclick="promoteAdmin(${j(uid)})">⬆️</button>` : ''}${canDemote ? `<button class="mini-btn" title="Снять администратора" onclick="demoteAdmin(${j(uid)})">⬇️</button>` : ''}${canKick ? `<button class="mini-btn danger" title="Исключить" onclick="kickMember(${j(uid)})">🚫</button>` : ''}</div>
+        <div class="member-actions">${canPromote ? `<button class="mini-btn" onclick="promoteAdmin('${uid}')">⬆️</button>` : ''}${canDemote ? `<button class="mini-btn" onclick="demoteAdmin('${uid}')">⬇️</button>` : ''}${canKick ? `<button class="mini-btn danger" onclick="kickMember('${uid}')">🚫</button>` : ''}</div>
       </div>`;
     }).join('');
 
@@ -2480,30 +2260,6 @@ async function openChatInfo() {
     return;
   }
 }
-async function transferGroupOwner(uid) {
-  const c = state.chat;
-  if (!c || c.type !== 'group' || !state.user || c.ownerId !== state.user.uid || uid === state.user.uid || !c.members?.[uid]) {
-    toast('Передать владение может только текущий владелец участнику группы', '⚠️'); return;
-  }
-  const user = getUser(uid);
-  const name = user?.displayName || user?.firstName || user?.username || 'этот участник';
-  showConfirm('Передать владение?', `Вы точно хотите передать владение группой «${c.name || 'Группа'}» пользователю ${name}? После передачи владельцем станете не вы.`, async () => {
-    try {
-      // Одним обновлением меняем владельца и сохраняем прежнего владельца администратором.
-      const updates = {};
-      updates['chats/' + c.id + '/ownerId'] = uid;
-      updates['chats/' + c.id + '/admins/' + state.user.uid] = true;
-      updates['chats/' + c.id + '/admins/' + uid] = null;
-      await update(ref(db), updates);
-      closeModal('chatInfoModal');
-      toast('Владение группой передано', '👑');
-      openChatInfo();
-    } catch (e) {
-      console.error('transferGroupOwner', e);
-      toast('Не удалось передать владение. Проверьте права доступа.', '⚠️');
-    }
-  });
-}
 async function promoteAdmin(uid) { try { await set(ref(db, 'chats/' + state.chat.id + '/admins/' + uid), true); toast('Админ', '⬆️'); closeModal('chatInfoModal'); openChatInfo(); } catch(e) {} }
 async function demoteAdmin(uid) { try { await remove(ref(db, 'chats/' + state.chat.id + '/admins/' + uid)); toast('Снят', '⬇️'); closeModal('chatInfoModal'); openChatInfo(); } catch(e) {} }
 function kickMember(uid) {
@@ -2521,20 +2277,17 @@ function kickMember(uid) {
 async function leaveGroup() {
   showConfirm('Выйти из группы?', 'Для возврата потребуется код.', async () => {
     try {
-      const groupId = state.chat.id; const info = state.chat; const uid = state.user.uid;
-      const others = Object.keys(info.members || {}).filter(u => u !== uid);
-      if (others.length === 0) {
-        // FIX: последний участник оставлял «осиротевшую» группу и сообщения в базе
-        await remove(ref(db, 'messages/' + groupId)).catch(()=>{});
-        await remove(ref(db, 'chats/' + groupId)).catch(()=>{});
-      } else {
-        try { await push(ref(db, 'messages/' + groupId), { senderId: uid, system: true, text: `${state.profile.displayName || 'Участник'} покинул группу`, createdAt: now() }); } catch(e) {}
-        if (info.ownerId === uid) { await update(ref(db, 'chats/' + groupId), { ownerId: others[0] }); await set(ref(db, 'chats/' + groupId + '/admins/' + others[0]), true); }
-        await remove(ref(db, 'chats/' + groupId + '/members/' + uid));
-        await remove(ref(db, 'chats/' + groupId + '/admins/' + uid));
+      const groupId = state.chat.id; const info = state.chat;
+      if (info.ownerId === state.user.uid) {
+        const others = Object.keys(info.members || {}).filter(u => u !== state.user.uid);
+        if (others.length > 0) { await update(ref(db, 'chats/' + groupId), { ownerId: others[0] }); await set(ref(db, 'chats/' + groupId + '/admins/' + others[0]), true); }
       }
-      await remove(ref(db, 'user_chats/' + uid + '/' + groupId));
+      await remove(ref(db, 'chats/' + groupId + '/members/' + state.user.uid));
+      await remove(ref(db, 'chats/' + groupId + '/admins/' + state.user.uid));
+      await remove(ref(db, 'user_chats/' + state.user.uid + '/' + groupId));
+      try { await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${state.profile.displayName} покинул группу`, createdAt: now() }); } catch(e) {}
       closeModal('chatInfoModal'); delete state.chats[groupId]; showChatPlaceholder();
+      if (window.innerWidth <= 760) closeChatMobile();
       toast('Вы вышли', '🚪');
     } catch(e) { toast('Ошибка', '⚠'); }
   });
@@ -2552,11 +2305,7 @@ async function deleteGroupForAll() {
     } catch(e) { toast('Ошибка', '⚠'); }
   });
 }
-async function clearChatHistory() {
-  showConfirm('Очистить историю?', 'Сообщения удалятся.', async () => {
-    try { const id = state.chat.id; await remove(ref(db, 'messages/' + id)); await refreshChatPreview(id); closeModal('chatInfoModal'); toast('Очищено', '🧹'); } catch(e) {}
-  });
-}
+async function clearChatHistory() { const chatId = state.chat?.id; if (!chatId) return; showConfirm('Очистить историю?', 'Сообщения удалятся.', async () => { try { await remove(ref(db, 'messages/' + chatId)); closeModal('chatInfoModal'); toast('Очищено', '🧹'); } catch(e) { toast(humanErr(e), '⚠'); } }); }
 function deleteChatFromInfo() { closeModal('chatInfoModal'); deleteChat(state.chat.id); }
 async function togglePinChat(chatId) { const cur = state.chats[chatId]?.pinned; try { await update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), { pinned: !cur }); toast(cur ? 'Откреплено' : 'Закреплено', '📌'); } catch(e) {} }
 async function toggleMuteChat(chatId) { const cur = state.chats[chatId]?.muted; try { await update(ref(db, 'user_chats/' + state.user.uid + '/' + chatId), { muted: !cur }); toast(cur ? 'Звук вкл' : 'Звук выкл', '🔔'); } catch(e) {} }
@@ -2603,8 +2352,7 @@ function openProfileModal() {
 async function profileAvatarChange(e) {
   const f = e.target.files?.[0]; e.target.value = ''; if (!f) return;
   try {
-    const data = await compressImage(f, 60 * 1024, 256);
-    if (!data) throw new Error('img');
+    const data = await compressImage(f, 400 * 1024);
     const av = $('profileAvatar');
     av.style.background = `url('${data}') center/cover`;
     av.textContent = '';
@@ -2697,11 +2445,12 @@ function renderSettings() {
 }
 function setTheme(id) { const t = getTheme(id); state.settings.themeId = id; state.settings.darkMode = t.dark; applySettings(); saveSettings(); renderSettings(); }
 function toggleDarkMode() { state.settings.darkMode = !state.settings.darkMode; applySettings(); saveSettings(); renderSettings(); }
-function toggleAppSetting(key) {
-  state.settings[key] = !state.settings[key]; applySettings(); saveSettings(); renderSettings();
-  if (key === 'onlineStatus') setupPresence();
+function toggleAppSetting(key) { state.settings[key] = !state.settings[key]; applySettings(); saveSettings(); renderSettings(); }
+async function saveSettings() {
+  if (!state.user) return;
+  try { await set(ref(db, 'user_settings/' + state.user.uid), state.settings); }
+  catch(e) { console.warn('Не удалось сохранить настройки:', e); toast('Настройки сохранены только на этом экране', '⚠'); }
 }
-async function saveSettings() { if (!state.user) return; try { await set(ref(db, 'user_settings/' + state.user.uid), state.settings); } catch(e) {} }
 function applySettings() {
   const t = getTheme(state.settings.themeId);
   const isDark = !!state.settings.darkMode;
@@ -2722,21 +2471,9 @@ async function changePassword() {
   if (newP !== newP2) return toast('Пароли не совпадают', '⚠');
   try { const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP); await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); closeModal('changePasswordModal'); toast('Пароль изменён', '🔐'); } catch(e) { toast(humanErr(e), '⚠'); }
 }
-function confirmLogout() {
-  showConfirm('Выйти из аккаунта?', 'Вы сможете войти снова.', async () => {
-    const uid = state.user && state.user.uid;
-    // FIX: после выхода пользователь оставался «в сети» (onDisconnect срабатывает только при обрыве соединения)
-    if (uid) { try { await set(ref(db, 'presence/' + uid), { online: false, lastSeen: now() }); await set(ref(db, 'typing/' + uid), null); } catch(_) {} }
-    stopApp(); auth.signOut();
-  });
-}
+function confirmLogout() { showConfirm('Выйти из аккаунта?', 'Вы сможете войти снова.', () => { stopApp(); auth.signOut(); }); }
 function confirmDeleteAccount() {
   showConfirm('Удалить аккаунт?', 'Все данные будут удалены безвозвратно.', async () => {
-    // FIX: сначала повторная аутентификация — иначе при requires-recent-login данные стирались, а аккаунт оставался
-    const pw = prompt('Для удаления введите текущий пароль:');
-    if (!pw) return;
-    try { await reauthenticateWithCredential(auth.currentUser, EmailAuthProvider.credential(auth.currentUser.email, pw)); }
-    catch (e) { return toast(humanErr(e), '⚠'); }
     const uid = state.user.uid;
     const uname = state.profile?.username;
     const chats = state.chats || {};
@@ -2805,14 +2542,14 @@ qsa('.modal-overlay').forEach(ov => { ov.addEventListener('click', (e) => { if (
 function openViewer(msgId) { const m = state.messages.find(x => x.id === msgId); if (!m?.imageData) return; $('viewerImg').src = m.imageData; $('viewer').classList.remove('hidden'); }
 function closeViewer(e) { if (e && e.target.id !== 'viewer' && !e.target.classList.contains('viewer-close')) return; $('viewer').classList.add('hidden'); }
 async function requestNotifPermission(force = false) {
-  if (!('Notification' in window)) return toast('Не поддерживается', '⚠');
-  if (Notification.permission === 'denied') return toast('Разрешите в браузере', '⚠');
-  if (Notification.permission === 'granted') return toast('Уже включены', '✓');
+  if (!('Notification' in window)) { toast('Не поддерживается', '⚠'); if (force) renderSettings(); return; }
+  if (Notification.permission === 'denied') { toast('Разрешите в браузере', '⚠'); if (force) renderSettings(); return; }
+  if (Notification.permission === 'granted') { toast('Уже включены', '✓'); if (force) renderSettings(); return; }
   try {
     const result = await Notification.requestPermission();
     if (result === 'granted') { toast('Включены', '🔔'); try { new Notification('MetroChat', { body: 'Уведомления включены' }); } catch(_) {} }
     if (force) renderSettings();
-  } catch(e) {}
+  } catch(e) { if (force) renderSettings(); }
 }
 async function showNotif(title, body) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
@@ -2823,23 +2560,12 @@ async function showNotif(title, body) {
     n.onclick = () => { window.focus(); n.close(); };
   } catch(e) {}
 }
-function playNotifSound() {
-  try {
-    const ac = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ac.createOscillator(); const gain = ac.createGain();
-    osc.connect(gain); gain.connect(ac.destination); osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.0001, ac.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.12, ac.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.25);
-    osc.start(); osc.stop(ac.currentTime + 0.3);
-    setTimeout(() => { try { ac.close(); } catch(_) {} }, 600); // FIX: утечка AudioContext (лимит в браузере)
-  } catch(e) {}
-}
+function playNotifSound() { try { const ac = new (window.AudioContext || window.webkitAudioContext)(); const osc = ac.createOscillator(); const gain = ac.createGain(); osc.connect(gain); gain.connect(ac.destination); osc.frequency.value = 880; gain.gain.setValueAtTime(0.0001, ac.currentTime); gain.gain.exponentialRampToValueAtTime(0.12, ac.currentTime + 0.02); gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.25); osc.start(); osc.stop(ac.currentTime + 0.3); } catch(e) {} }
 
 window.addEventListener('resize', () => {
   const mobile = window.innerWidth <= 760;
   $('mobileNav').classList.toggle('hidden', !mobile);
-  if (!mobile) { $('sidebar').classList.remove('hide-mobile'); $('chatPanel').classList.remove('show-mobile'); }
+  if (!mobile) { document.body.classList.remove('chat-open'); $('sidebar').classList.remove('hide-mobile'); $('chatPanel').classList.remove('show-mobile'); }
 });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeAllMenus(); qsa('.modal-overlay').forEach(m => m.classList.add('hidden')); $('viewer').classList.add('hidden'); }
@@ -2857,11 +2583,11 @@ Object.assign(window, {
   openCreateGroupModal, openJoinGroupModal, createGroup, joinByCode,
   copyCreatedCode, copyCode, showChatCtx, showMsgCtx, closeAllMenus, chatCtxFromEvent, msgCtxFromEvent,
   setReply, cancelReply, toggleReaction, showReactionPicker,
-  copyMsgText, startEditMsg, deleteMsg, togglePin, unpinMessage, saveMsg, openFavorites, removeFavorite,
+  copyMsgText, startEditMsg, deleteMsg, togglePin, unpinMessage, saveMsg,
   forwardMsg, doForward, scrollToMsg, scrollToFirstPinned,
   openOrCreateDM, renderList, renderSettings, openGroupSettings, toggleGroupSettingByKey, updateGroupNumberSetting,
   togglePinChat, toggleMuteChat, markRead, deleteChat, blockChat, blockUser,
-  promoteAdmin, demoteAdmin, transferGroupOwner, kickMember, leaveGroup, deleteGroupForAll,
+  promoteAdmin, demoteAdmin, kickMember, leaveGroup, deleteGroupForAll,
   clearChatHistory, deleteChatFromInfo,
   openProfileModal, profileAvatarChange, saveProfile,
   setTheme, toggleDarkMode, toggleAppSetting,
