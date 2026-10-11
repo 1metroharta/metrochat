@@ -366,6 +366,10 @@ input, textarea { font-family: inherit; }
     <form id="authForm" autocomplete="on" novalidate>
       <div class="auth-field"><label>Email</label><div class="input-wrap"><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" autocapitalize="off" spellcheck="false"></div><div class="field-err" id="errEmail"></div></div>
       <div class="auth-field"><label>Пароль</label><div class="input-wrap"><input type="password" id="authPass" placeholder="Минимум 6 символов" autocomplete="current-password"><button type="button" class="pw-toggle" id="pwToggle">👁</button></div><div class="field-err" id="errPass"></div></div>
+      <div id="privacyConsentWrap" style="display:none; margin: 4px 0 16px; font-size: 13px; line-height: 1.5; color: var(--text-2);">
+        <label style="display:flex; align-items:flex-start; gap:9px; cursor:pointer;"><input type="checkbox" id="privacyConsent" style="margin-top:3px; flex:0 0 auto; accent-color:var(--accent);"><span>Я прочитал(а) и принимаю <a href="https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline;">Политику конфиденциальности</a>.</span></label>
+        <div class="field-err" id="errPrivacyConsent" style="min-height:0;"></div>
+      </div>
       <button type="submit" id="authSubmit" class="btn btn-primary">Войти</button>
     </form>
   </div>
@@ -619,8 +623,8 @@ function isGroupOwner(chat, uid) { return chat?.ownerId === uid; }
 function getGroupSetting(chat, key) { if (!chat || !chat.settings) return GROUP_DEFAULTS[key]; const v = chat.settings[key]; return v === undefined ? GROUP_DEFAULTS[key] : v; }
 function peerStatusText(peer, uid) {
   if (isOnline(uid)) return '<span style="color: var(--green); font-weight: 600;">● в сети</span>';
-  if (!state.settings.showLastSeen) return 'недавно';
-  return esc(peer?.status || 'недавно');
+  if (!state.settings.showLastSeen) return 'не в сети';
+  return esc(peer?.status || 'не в сети');
 }
 
 // === AVATAR RENDER (FIXED) ===
@@ -769,6 +773,10 @@ qsa('.auth-tab').forEach(t => {
     authSubmit.textContent = state.authMode === 'login' ? 'Войти' : 'Создать аккаунт';
     authPass.autocomplete = state.authMode === 'login' ? 'current-password' : 'new-password';
     authPass.placeholder = state.authMode === 'login' ? 'Пароль' : 'Минимум 6 символов';
+    const consentWrap = $('privacyConsentWrap'); const consent = $('privacyConsent');
+    if (consentWrap) consentWrap.style.display = state.authMode === 'register' ? 'block' : 'none';
+    if (consent) { consent.required = state.authMode === 'register'; if (state.authMode === 'login') consent.checked = false; }
+    const consentErr = $('errPrivacyConsent'); if (consentErr) consentErr.textContent = '';
     authError.classList.remove('show'); errEmail.textContent = ''; errPass.textContent = '';
   });
 });
@@ -789,6 +797,11 @@ function validateAuth() {
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { errEmail.textContent = 'Некорректный email'; ok = false; }
   if (!pass) { errPass.textContent = 'Введите пароль'; ok = false; }
   else if (pass.length < 6) { errPass.textContent = 'Минимум 6 символов'; ok = false; }
+  const consent = $('privacyConsent'); const consentErr = $('errPrivacyConsent');
+  if (state.authMode === 'register' && consent && !consent.checked) {
+    if (consentErr) consentErr.textContent = 'Чтобы создать аккаунт, подтвердите согласие с политикой конфиденциальности.';
+    ok = false;
+  } else if (consentErr) consentErr.textContent = '';
   return ok;
 }
 authForm.addEventListener('submit', async e => {
@@ -805,7 +818,7 @@ authForm.addEventListener('submit', async e => {
       await signInWithEmailAndPassword(auth, email, pass);
     } else {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      try { await set(ref(db, 'users/' + cred.user.uid), { email, createdAt: now(), onboardingComplete: false }); }
+      try { await set(ref(db, 'users/' + cred.user.uid), { email, createdAt: now(), onboardingComplete: false, privacyPolicyAcceptedAt: now() }); }
       catch (dbErr) { try { await deleteUser(cred.user); } catch(_) {} throw dbErr; }
       try { await sendEmailVerification(cred.user); toast('Письмо отправлено (проверьте спам)', '📧'); } catch(e) {}
     }
@@ -813,6 +826,8 @@ authForm.addEventListener('submit', async e => {
     setBusy(false);
   } catch (err) { setBusy(false); showAuthError(humanErr(err)); }
 });
+const initialPrivacyConsent = $('privacyConsent');
+if (initialPrivacyConsent) initialPrivacyConsent.required = false;
 try { const e = localStorage.getItem('metro_last_email'); if (e) authEmail.value = e; } catch(_) {}
 
 function showVerifyEmailScreen(user) {
@@ -852,7 +867,13 @@ function hideSplash() {
   const s = $('splash');
   if (s) { s.classList.add('hide'); setTimeout(() => s.remove(), 400); }
 }
-setTimeout(() => { hideSplash(); if (!state.user && !state.onboarding && $('verifyScreen').classList.contains('hidden')) authScreen.classList.remove('hidden'); }, 2500);
+setTimeout(() => {
+  hideSplash();
+  // Страховка от вечной заставки при медленной сети/ошибке инициализации Firebase.
+  if (!state.user && !state.onboarding && $('verifyScreen').classList.contains('hidden') && $('app').classList.contains('hidden')) {
+    authScreen.classList.remove('hidden');
+  }
+}, 2500);
 
 async function bootstrapUser(user) {
   if (!user) return;
@@ -1299,10 +1320,13 @@ function renderChatHeader() {
   else { av.style.background = avatarColor(c.name); av.textContent = initials(c.name); }
   const sub = $('chatSub');
   if (c.type === 'dm') { const peer = getUser(c.peerId); sub.innerHTML = peerStatusText(peer, c.peerId); }
-  else if (c.type === 'group') { sub.innerHTML = `<span>${Object.keys(c.members || {}).length} участников</span><span class="code" onclick="copyCode(event)">${c.code}</span>`; }
+  else if (c.type === 'group') {
+    const memberCount = Object.keys(c.members || {}).filter(uid => !!c.members[uid]).length;
+    sub.innerHTML = `<span class="group-member-count">${memberCount} ${memberCount === 1 ? 'участник' : 'участников'}</span><span class="code" onclick="copyCode(event)">${esc(c.code || '')}</span>`;
+  }
   const actions = $('chatActions');
-  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button>`;
-  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" onclick="openChatInfo()">ℹ️</button>`;
+  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" title="Поиск в чате" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" title="Избранное" onclick="openFavorites()">⭐</button>`;
+  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" title="Поиск в чате" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" title="Избранное" onclick="openFavorites()">⭐</button><button class="chat-icon-btn" title="Информация о группе" onclick="openChatInfo()">ℹ️</button>`;
   renderPinnedBar();
 }
 function renderPinnedBar() {
@@ -1769,7 +1793,8 @@ function showMsgCtx(e, msgId) {
     btn.addEventListener('click', (ev) => {
       ev.preventDefault(); ev.stopPropagation();
       try { it.fn(ev); } catch(err) { console.error(err); toast('Ошибка', '⚠'); }
-      setTimeout(closeAllMenus, 50);
+      // Не закрываем меню повторно после открытия выбора реакции.
+      if (it.text !== 'Реакция') setTimeout(closeAllMenus, 50);
     });
     menu.appendChild(btn);
   });
@@ -1778,8 +1803,9 @@ function showMsgCtx(e, msgId) {
 }
 function positionMenu(menu, e) {
   const rect = menu.getBoundingClientRect();
-  const cx = (e && e.clientX) || window.innerWidth / 2;
-  const cy = (e && e.clientY) || window.innerHeight / 2;
+  const touch = e && e.changedTouches && e.changedTouches[0];
+  const cx = (e && e.clientX) || (touch && touch.clientX) || window.innerWidth / 2;
+  const cy = (e && e.clientY) || (touch && touch.clientY) || window.innerHeight / 2;
   const x = Math.min(Math.max(10, cx - rect.width / 2), window.innerWidth - rect.width - 10);
   const y = Math.min(Math.max(10, cy - rect.height - 10), window.innerHeight - rect.height - 10);
   menu.style.left = x + 'px'; menu.style.top = y + 'px';
@@ -1851,6 +1877,44 @@ async function togglePin(msgId) {
   } catch(e) {}
 }
 async function unpinMessage() { const p = state.messages.find(m => m.pinned); if (!p) return; try { await remove(ref(db, 'messages/' + state.chat.id + '/' + p.id + '/pinned')); toast('Откреплено', '📌'); } catch(e) {} }
+async function openFavorites() {
+  if (!state.user) return;
+  closeAllMenus();
+  const id = 'favoritesModal';
+  let overlay = $(id);
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = id; overlay.className = 'modal-overlay';
+    overlay.innerHTML = `<div class="modal modal-lg"><h3>⭐ Избранное</h3><p class="modal-desc">Сохранённые сообщения доступны только в вашем аккаунте.</p><div id="favoritesList"><div class="empty" style="padding:20px">Загрузка…</div></div><div class="modal-actions"><button class="btn btn-primary" type="button" onclick="closeModal('favoritesModal')">Закрыть</button></div></div>`;
+    overlay.addEventListener('click', ev => { if (ev.target === overlay) overlay.classList.add('hidden'); });
+    document.body.appendChild(overlay);
+  }
+  overlay.classList.remove('hidden');
+  const list = $('favoritesList');
+  list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-2)">Загрузка…</div>';
+  try {
+    const snap = await get(ref(db, 'user_saved/' + state.user.uid));
+    const saved = Object.entries(snap.val() || {}).map(([id, item]) => ({id, ...item})).sort((a,b) => (b.savedAt || 0) - (a.savedAt || 0));
+    if (!saved.length) {
+      list.innerHTML = '<div class="empty" style="padding:28px"><div class="empty-icon">⭐</div><h3>Пока пусто</h3><p>Зажмите сообщение и выберите «В избранное».</p></div>';
+      return;
+    }
+    list.innerHTML = saved.map(item => {
+      const text = item.text || (item.type === 'image' ? '🖼️ Фото' : item.type === 'voice' ? '🎤 Голосовое сообщение' : item.type === 'file' ? '📎 ' + (item.fileName || 'Файл') : item.type === 'sticker' ? (item.sticker || '🙂') : item.type === 'geo' ? '📍 Геолокация' : '📎 Вложение');
+      return `<div class="set-row" style="cursor:default"><div class="set-icon">⭐</div><div class="set-info"><div class="set-label">${esc(item.chatName || 'Сообщение')}</div><div class="set-sub" style="white-space:normal;overflow-wrap:anywhere">${esc(text)}</div><div class="set-sub">${esc(item.fromUser || 'Пользователь')} · ${item.savedAt ? esc(new Date(item.savedAt).toLocaleString()) : ''}</div></div><button class="mini-btn danger" title="Удалить из избранного" onclick="removeFavorite(${j(item.id)})">🗑️</button></div>`;
+    }).join('');
+  } catch (e) {
+    console.error('openFavorites', e);
+    list.innerHTML = '<div style="padding:20px;color:var(--red)">Не удалось загрузить избранное. Проверьте подключение.</div>';
+  }
+}
+async function removeFavorite(savedId) {
+  if (!state.user || !savedId) return;
+  try {
+    await remove(ref(db, 'user_saved/' + state.user.uid + '/' + savedId));
+    openFavorites();
+  } catch (e) { toast('Не удалось удалить сохранённое сообщение', '⚠️'); }
+}
 async function saveMsg(msgId) {
   const m = state.messages.find(x => x.id === msgId);
   if (!m) return;
@@ -1933,6 +1997,7 @@ function showReactionPicker(e, msgId) {
     picker.appendChild(btn);
   });
   document.body.appendChild(picker);
+  // При открытии из контекстного меню координаты события могут отсутствовать.
   const rect = picker.getBoundingClientRect();
   const cx = (e && e.clientX) || window.innerWidth / 2;
   const cy = (e && e.clientY) || window.innerHeight / 2;
@@ -2109,17 +2174,23 @@ async function addSelectedContactsToGroup() {
   if (checkboxes.length === 0) return toast('Никто не выбран', '⚠');
   const uids = Array.from(checkboxes).map(cb => cb.dataset.uid);
   try {
-    const gSnap = await get(ref(db, 'chats/' + state.chat.id));
-    const g = gSnap.val();
-    const newMembers = { ...(g.members || {}) };
-    for (const uid of uids) newMembers[uid] = true;
-    await update(ref(db, 'chats/' + state.chat.id), { members: newMembers });
-    for (const uid of uids) {
-      await set(ref(db, 'user_chats/' + uid + '/' + state.chat.id), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins, settings: g.settings, lastTs: now(), unread: 0 });
+    const groupId = state.chat.id;
+    const gSnap = await get(ref(db, 'chats/' + groupId));
+    if (!gSnap.exists()) throw new Error('Группа не найдена');
+    const g = gSnap.val() || {};
+    const actuallyAdded = [...new Set(uids)].filter(uid => !(g.members || {})[uid]);
+    if (!actuallyAdded.length) return toast('Все выбранные пользователи уже в группе', '⚠');
+    for (const uid of actuallyAdded) await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
+    const latestSnap = await get(ref(db, 'chats/' + groupId));
+    const latest = latestSnap.val() || g;
+    Object.assign(state.chat, { members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {} });
+    for (const uid of actuallyAdded) {
+      await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: latest.name, code: latest.code, members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {}, lastTs: now(), unread: 0 });
       const u = getUser(uid) || await fetchUserIfMissing(uid);
-      await push(ref(db, 'messages/' + state.chat.id), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
+      await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
     }
-    toast(`Добавлено: ${uids.length}`, '✓');
+    renderChatHeader();
+    toast(`Добавлено: ${actuallyAdded.length}`, '✓');
     closeModal('addMemberModal'); openChatInfo();
   } catch(e) { toast(humanErr(e), '⚠'); }
 }
@@ -2144,15 +2215,20 @@ async function doAddMemberToGroup() {
   } catch(e) {}
   if (!uid) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Не найден'; return; }
   if (uid === state.user.uid) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Это вы'; return; }
-  if (state.chat.members?.[uid]) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Уже в группе'; return; }
   try {
-    const gSnap = await get(ref(db, 'chats/' + state.chat.id));
-    const g = gSnap.val();
-    const newMembers = { ...(g.members || {}), [uid]: true };
-    await update(ref(db, 'chats/' + state.chat.id), { members: newMembers });
-    await set(ref(db, 'user_chats/' + uid + '/' + state.chat.id), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins, settings: g.settings, lastTs: now(), unread: 0 });
+    const groupId = state.chat.id;
+    const gSnap = await get(ref(db, 'chats/' + groupId));
+    if (!gSnap.exists()) throw new Error('Группа не найдена');
+    const g = gSnap.val() || {};
+    if (g.members?.[uid]) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Уже в группе'; return; }
+    await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
+    const latestSnap = await get(ref(db, 'chats/' + groupId));
+    const latest = latestSnap.val() || g;
+    Object.assign(state.chat, { members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {} });
+    await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: latest.name, code: latest.code, members: latest.members || {}, ownerId: latest.ownerId, admins: latest.admins || {}, settings: latest.settings || {}, lastTs: now(), unread: 0 });
     const u = getUser(uid) || await fetchUserIfMissing(uid);
-    await push(ref(db, 'messages/' + state.chat.id), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
+    await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
+    renderChatHeader();
     statusEl.className = 'uname-status ok'; statusEl.textContent = '✓ Добавлен!';
     $('addMemberUsername').value = '';
     setTimeout(() => renderContactPickList(), 400);
@@ -2269,6 +2345,17 @@ async function saveGroupInfo() {
 
 async function openChatInfo() {
   if (!state.chat) return;
+  if (state.chat.type === 'group') {
+    const groupId = state.chat.id;
+    try {
+      const fresh = await get(ref(db, 'chats/' + groupId));
+      if (fresh.exists() && state.chat && state.chat.id === groupId) {
+        const g = fresh.val() || {};
+        Object.assign(state.chat, { name: g.name || state.chat.name, code: g.code || state.chat.code, ownerId: g.ownerId, members: g.members || {}, admins: g.admins || {}, settings: g.settings || {}, desc: g.desc || '', avatar: g.avatar || null });
+      }
+    } catch (e) { console.warn('Group info refresh failed:', e); }
+  }
+  if (!state.chat) return;
   const c = state.chat;
   const wrap = $('chatInfoContent');
   wrap.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-2);">Загрузка...</div>';
@@ -2323,7 +2410,7 @@ async function openChatInfo() {
       return `<div class="member-row">
         ${avatarHTML({ name, avatar: av, size: 'small' })}
         <div class="member-info"><div class="member-name">${esc(name)}${uid === state.user.uid ? ' (вы)' : ''}</div><div class="member-sub"><span class="role-chip role-${role}">${roleLabel}</span></div></div>
-        <div class="member-actions">${canPromote ? `<button class="mini-btn" onclick="promoteAdmin(${j(uid)})">⬆️</button>` : ''}${canDemote ? `<button class="mini-btn" onclick="demoteAdmin(${j(uid)})">⬇️</button>` : ''}${canKick ? `<button class="mini-btn danger" onclick="kickMember(${j(uid)})">🚫</button>` : ''}</div>
+        <div class="member-actions">${isOwner && uid !== state.user.uid ? `<button class="mini-btn" title="Передать владение" aria-label="Передать владение" onclick="transferGroupOwner(${j(uid)})">👑</button>` : ''}${canPromote ? `<button class="mini-btn" title="Сделать администратором" onclick="promoteAdmin(${j(uid)})">⬆️</button>` : ''}${canDemote ? `<button class="mini-btn" title="Снять администратора" onclick="demoteAdmin(${j(uid)})">⬇️</button>` : ''}${canKick ? `<button class="mini-btn danger" title="Исключить" onclick="kickMember(${j(uid)})">🚫</button>` : ''}</div>
       </div>`;
     }).join('');
 
@@ -2342,6 +2429,30 @@ async function openChatInfo() {
       <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
     return;
   }
+}
+async function transferGroupOwner(uid) {
+  const c = state.chat;
+  if (!c || c.type !== 'group' || !state.user || c.ownerId !== state.user.uid || uid === state.user.uid || !c.members?.[uid]) {
+    toast('Передать владение может только текущий владелец участнику группы', '⚠️'); return;
+  }
+  const user = getUser(uid);
+  const name = user?.displayName || user?.firstName || user?.username || 'этот участник';
+  showConfirm('Передать владение?', `Вы точно хотите передать владение группой «${c.name || 'Группа'}» пользователю ${name}? После передачи владельцем станете не вы.`, async () => {
+    try {
+      // Одним обновлением меняем владельца и сохраняем прежнего владельца администратором.
+      const updates = {};
+      updates['chats/' + c.id + '/ownerId'] = uid;
+      updates['chats/' + c.id + '/admins/' + state.user.uid] = true;
+      updates['chats/' + c.id + '/admins/' + uid] = null;
+      await update(ref(db), updates);
+      closeModal('chatInfoModal');
+      toast('Владение группой передано', '👑');
+      openChatInfo();
+    } catch (e) {
+      console.error('transferGroupOwner', e);
+      toast('Не удалось передать владение. Проверьте права доступа.', '⚠️');
+    }
+  });
 }
 async function promoteAdmin(uid) { try { await set(ref(db, 'chats/' + state.chat.id + '/admins/' + uid), true); toast('Админ', '⬆️'); closeModal('chatInfoModal'); openChatInfo(); } catch(e) {} }
 async function demoteAdmin(uid) { try { await remove(ref(db, 'chats/' + state.chat.id + '/admins/' + uid)); toast('Снят', '⬇️'); closeModal('chatInfoModal'); openChatInfo(); } catch(e) {} }
@@ -2527,6 +2638,10 @@ function renderSettings() {
         <div class="set-row" onclick="confirmLogout()"><div class="set-icon">⎋</div><div class="set-info"><div class="set-label">Выйти</div></div><div class="set-arrow">›</div></div>
         <div class="set-row danger" onclick="confirmDeleteAccount()"><div class="set-icon">⚠️</div><div class="set-info"><div class="set-label">Удалить аккаунт</div></div><div class="set-arrow">›</div></div>
       </div>
+      <div class="settings-group">
+        <h3>Документы</h3>
+        <a class="set-row" href="https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;"><div class="set-icon">🔒</div><div class="set-info"><div class="set-label">Политика конфиденциальности</div><div class="set-sub">Как обрабатываются данные</div></div><div class="set-arrow">↗</div></a>
+      </div>
       <div style="text-align: center; padding: 20px; color: var(--text-3); font-size: 12px;">MetroChat · v20</div>
     </div>`;
 }
@@ -2692,11 +2807,11 @@ Object.assign(window, {
   openCreateGroupModal, openJoinGroupModal, createGroup, joinByCode,
   copyCreatedCode, copyCode, showChatCtx, showMsgCtx, closeAllMenus, chatCtxFromEvent, msgCtxFromEvent,
   setReply, cancelReply, toggleReaction, showReactionPicker,
-  copyMsgText, startEditMsg, deleteMsg, togglePin, unpinMessage, saveMsg,
+  copyMsgText, startEditMsg, deleteMsg, togglePin, unpinMessage, saveMsg, openFavorites, removeFavorite,
   forwardMsg, doForward, scrollToMsg, scrollToFirstPinned,
   openOrCreateDM, renderList, renderSettings, openGroupSettings, toggleGroupSettingByKey, updateGroupNumberSetting,
   togglePinChat, toggleMuteChat, markRead, deleteChat, blockChat, blockUser,
-  promoteAdmin, demoteAdmin, kickMember, leaveGroup, deleteGroupForAll,
+  promoteAdmin, demoteAdmin, transferGroupOwner, kickMember, leaveGroup, deleteGroupForAll,
   clearChatHistory, deleteChatFromInfo,
   openProfileModal, profileAvatarChange, saveProfile,
   setTheme, toggleDarkMode, toggleAppSetting,
