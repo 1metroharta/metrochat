@@ -329,6 +329,10 @@ input, textarea { font-family: inherit; }
 .group-info-back { width: 42px; height: 42px; border-radius: 12px; background: var(--surface-2); color: var(--text); font-size: 22px; flex-shrink: 0; }
 .group-info-top-title { font-size: 16px; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #publicProfileModal { z-index: 360; }
+#callModal { z-index: 420; }
+#callModal .modal { display:flex; flex-direction:column; }
+#callControls, #incomingCallControls { position:sticky; bottom:0; padding-top:14px; background:var(--surface); }
+#callRemoteAudio { display:none; }
 .public-profile-avatar { display:flex; justify-content:center; margin: 8px 0 16px; }
 .member-row { display: flex; align-items: center; gap: 12px; padding: 10px 8px; cursor: pointer; }
 .member-row:hover { background: var(--surface-2); }
@@ -486,6 +490,7 @@ input, textarea { font-family: inherit; }
       <button class="sb-tab active" data-tab="chats" onclick="switchTab('chats')"><span>💬</span> Чаты <span class="count hidden" id="cntChats">0</span></button>
       <button class="sb-tab" data-tab="groups" onclick="switchTab('groups')"><span>👥</span> Группы</button>
       <button class="sb-tab" data-tab="contacts" onclick="switchTab('contacts')"><span>🔍</span> Поиск</button>
+      <button class="sb-tab" data-tab="favorites" onclick="switchTab('favorites')" title="Избранное"><span>⭐</span> Избранное</button>
     </div>
     <div class="sb-search" id="sbSearchWrap"><input type="text" id="sbSearch" placeholder="Поиск..." oninput="renderList()"></div>
     <div class="sb-list" id="sbList"></div>
@@ -528,6 +533,7 @@ input, textarea { font-family: inherit; }
       <button class="mobile-nav-item active" data-nav="chats" onclick="switchTab('chats')"><span class="mobile-nav-icon">💬</span><span>Чаты</span><span class="nav-count hidden" id="navCntChats">0</span></button>
       <button class="mobile-nav-item" data-nav="groups" onclick="switchTab('groups')"><span class="mobile-nav-icon">👥</span><span>Группы</span></button>
       <button class="mobile-nav-item" data-nav="contacts" onclick="switchTab('contacts')"><span class="mobile-nav-icon">🔍</span><span>Поиск</span></button>
+      <button class="mobile-nav-item" data-nav="favorites" onclick="switchTab('favorites')"><span class="mobile-nav-icon">⭐</span><span>Избранное</span></button>
       <button class="mobile-nav-item" data-nav="settings" onclick="switchTab('settings')"><span class="mobile-nav-icon">⚙️</span><span>Ещё</span></button>
     </div>
   </nav>
@@ -538,6 +544,8 @@ input, textarea { font-family: inherit; }
 <div class="modal-overlay hidden" id="groupCreatedModal"><div class="modal"><h3>Группа создана 🎉</h3><p class="modal-desc">Код:</p><div class="code-box"><div class="code" id="createdGroupCode">00000000</div><button class="btn btn-secondary" onclick="copyCreatedCode()">📋 Скопировать</button></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('groupCreatedModal'); openChat(window.createdGroupId, 'group')">В чат</button></div></div></div>
 <div class="modal-overlay hidden" id="chatInfoModal"><div class="modal modal-lg"><div id="chatInfoContent"></div></div></div>
 <div class="modal-overlay hidden" id="publicProfileModal"><div class="modal"><div id="publicProfileContent"></div></div></div>
+<div class="modal-overlay hidden" id="callModal"><div class="modal" style="text-align:center;max-width:460px;"><div style="font-size:42px;margin-bottom:8px;">📞</div><h3 id="callTitle">Голосовой звонок</h3><p class="modal-desc" id="callStatus">Подключение…</p><video id="callRemoteVideo" autoplay playsinline style="display:none;width:100%;max-height:42vh;background:#111;border-radius:14px;margin:10px 0;object-fit:contain;"></video><audio id="callRemoteAudio" autoplay></audio><div id="callControls" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;"><button class="btn btn-secondary" id="callMuteBtn" onclick="toggleCallMute()">🎙️ Выключить микрофон</button><button class="btn btn-secondary" id="callShareBtn" onclick="toggleScreenShare()">🖥️ Демонстрация экрана</button><button class="btn" style="background:#dc2626;color:white;" onclick="hangupCall()">Завершить</button></div><div id="incomingCallControls" class="hidden" style="display:flex;gap:10px;margin-top:18px;"><button class="btn btn-primary" onclick="acceptIncomingCall()">Ответить</button><button class="btn" style="background:#dc2626;color:white;" onclick="declineIncomingCall()">Отклонить</button></div></div></div>
+<div class="modal-overlay hidden" id="installPromptModal"><div class="modal"><h3>Установите MetroChat</h3><p class="modal-desc" id="installPromptText">Установка добавит MetroChat на главный экран или в меню приложений и позволит открывать его как отдельное приложение.</p><div class="settings-group" style="padding:14px;margin-bottom:14px;"><div id="installInstructions" style="font-size:13px;line-height:1.6;color:var(--text-2);"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('installPromptModal')">Продолжить в браузере</button><button class="btn btn-primary" id="installNowBtn" onclick="installMetroChat()">Установить</button></div></div></div>
 <div class="modal-overlay hidden" id="groupSettingsModal"><div class="modal modal-lg"><div id="groupSettingsContent"></div></div></div>
 <div class="modal-overlay hidden" id="addMemberModal"><div class="modal">
   <h3>Добавить участников</h3>
@@ -547,13 +555,6 @@ input, textarea { font-family: inherit; }
     <button class="btn btn-secondary" onclick="doAddMemberToGroup()" style="padding: 10px 14px;">Добавить</button>
   </div>
   <div class="uname-status" id="addMemberStatus"></div>
-  <div class="settings-group" style="margin-top:14px;padding:14px;text-align:center;">
-    <div style="font-weight:700;margin-bottom:5px;">🔳 QR-код для вступления</div>
-    <div class="modal-desc" style="margin-bottom:10px;">Покажите код человеку. После сканирования откроется MetroChat с кодом группы.</div>
-    <div id="groupInviteQr" role="img" aria-label="QR-код приглашения в группу" style="display:flex;align-items:center;justify-content:center;width:216px;min-height:216px;max-width:100%;margin:0 auto 10px;background:white;border-radius:12px;padding:8px;color:#334155;font-size:12px;"></div>
-    <div class="code" id="groupInviteCode" style="margin-bottom:10px;"></div>
-    <button class="btn btn-secondary" type="button" onclick="copyGroupInviteLink()" style="width:auto;">🔗 Скопировать ссылку</button>
-  </div>
   <div style="margin-top: 16px;"><label style="font-size: 12.5px; font-weight: 600; color: var(--text-2); display: block; margin-bottom: 8px;">Из контактов</label><div class="contact-pick-list" id="contactPickList"></div></div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('addMemberModal')">Закрыть</button><button class="btn btn-primary" onclick="addSelectedContactsToGroup()">Добавить выбранных</button></div>
 </div></div>
@@ -604,11 +605,10 @@ input, textarea { font-family: inherit; }
   }, 7000);
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, setPersistence, browserLocalPersistence, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast, increment } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast, increment, onChildAdded } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDIpe10bCclSO4C3KmYWT6vseRdR5wOnRA",
@@ -626,6 +626,9 @@ const db = getDatabase(fbApp);
 let currentDeviceSessionId = null;
 let deviceHeartbeatTimer = null;
 let deviceRevocationUnsub = null;
+let callInboxUnsub = null;
+let deferredInstallPrompt = null;
+const callState = { pc: null, callId: null, remoteUid: null, localStream: null, screenStream: null, isCaller: false, incoming: null, unsubscribers: [], handledIncoming: new Set(), muted: false, remoteStream: null, candidateQueue: [] };
 
 const THEMES = [
   { id: 'crimson',  name: 'Багровый',   accent: '#e63946', grad: ['#e63946','#b91c26'], dark: false },
@@ -654,7 +657,7 @@ const GROUP_DEFAULTS = {
 const STICKERS = ['😀','😂','🤣','😊','😍','🥰','😎','🤩','🥳','😏','😢','😭','😡','🤬','🤯','😱','🥶','🤔','🤗','🤭','😴','🤤','🥴','🤢','🤮','🤧','😷','🤠','😈','👿','👻','💀','👽','🤖','🎃','💩','❤️','💔','💯','🔥','✨','🎉','🎊','👏','👍','👎','🙏','💪','🤝','✌️'];
 
 const state = {
-  user: null, profile: null, chat: null, tab: 'chats',
+  user: null, profile: null, chat: null, tab: 'chats', savedMessages: {},
   chats: {}, users: {}, presence: {}, typing: {}, galochka: {}, deviceSessions: {},
   messages: [], replyTo: null, pendingAttachment: null,
   blocked: {},
@@ -1168,9 +1171,11 @@ function startApp() {
   authScreen.classList.add('hidden'); $('verifyScreen').classList.add('hidden');
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
-  setupKeyboardHandling(); setTimeout(showJoinFromUrl, 350);
+  setupKeyboardHandling(); listenForIncomingCalls(); setTimeout(maybeShowInstallPrompt, 900);
 }
 function stopApp() {
+  if (callInboxUnsub) { try { callInboxUnsub(); } catch(_) {} callInboxUnsub = null; }
+  if (callState.pc || callState.incoming) hangupCall().catch(()=>closeCallPeer());
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = [];
   Object.values(state.presenceSubs || {}).forEach(u => { try { u(); } catch(_) {} }); state.presenceSubs = {}; state.presence = {};
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(_) {} state.chatUnsub = null; }
@@ -1229,7 +1234,7 @@ function subscribeAll() {
   if (!state.user) return;
   const uid = state.user.uid;
   // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
-  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); if (state.chat) renderChatHeader(); if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
+  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); updateUserStrip(); if (state.chat) renderChatHeader(); if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
   state.subs.push(onValue(ref(db, 'typing'), snap => { const d = snap.val() || {}; const t = now(); state.typing = {}; for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v; if (state.chat) renderMessages(); }, () => {}));
   state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
   state.subs.push(onValue(ref(db, 'user_blocked/' + uid), snap => { state.blocked = snap.exists() ? snap.val() : {}; }, () => {}));
@@ -1237,9 +1242,9 @@ function subscribeAll() {
 function updateUserStrip() {
   if (!state.profile) return;
   const name = state.profile.displayName || state.profile.firstName || 'Пользователь';
-  $('sbMeName').textContent = name;
+  $('sbMeName').innerHTML = esc(name) + verifiedMark(state.user?.uid);
   const statusEl = $('sbMeStatus');
-  if (state.profile.username) statusEl.textContent = '@' + state.profile.username;
+  if (state.profile.username) statusEl.innerHTML = '<span>@' + esc(state.profile.username) + '</span>' + verifiedMark(state.user?.uid);
   else statusEl.textContent = 'в сети';
   const av = $('sbMeAvatar');
   if (state.profile.avatar) {
@@ -1254,7 +1259,7 @@ function switchTab(tab) {
   state.tab = tab;
   qsa('.sb-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   qsa('.mobile-nav-item').forEach(t => t.classList.toggle('active', t.dataset.nav === tab));
-  const isSettings = tab === 'settings', isContacts = tab === 'contacts';
+  const isSettings = tab === 'settings', isContacts = tab === 'contacts', isFavorites = tab === 'favorites';
   const mobile = window.innerWidth <= 760;
   if (mobile) {
     document.body.classList.remove('chat-open');
@@ -1263,12 +1268,12 @@ function switchTab(tab) {
     $('sidebar').classList.toggle('hide-mobile', isSettings);
   }
   $('settingsBtn').classList.toggle('active', isSettings);
-  $('sbSearchWrap').style.display = (isSettings || isContacts) ? 'none' : 'block';
+  $('sbSearchWrap').style.display = (isSettings || isContacts || isFavorites) ? 'none' : 'block';
   $('sbNav').style.display = isSettings ? 'none' : 'flex';
   $('sbList').style.display = isSettings ? 'none' : 'block';
   $('settingsPanel').classList.toggle('hidden', !isSettings);
-  $('chatPanel').classList.toggle('hidden', isSettings);
-  if (isSettings) renderSettings(); else if (isContacts) renderContactsSearch(); else renderList();
+  $('chatPanel').classList.toggle('hidden', isSettings || isFavorites);
+  if (isSettings) renderSettings(); else if (isContacts) renderContactsSearch(); else if (isFavorites) loadAndRenderFavorites(); else renderList();
 }
 function updateBadges() {
   let total = 0;
@@ -1284,6 +1289,7 @@ function renderList() {
   const q = ($('sbSearch')?.value || '').trim().toLowerCase();
   if (state.tab === 'chats') renderAllChats(q);
   else if (state.tab === 'groups') renderGroups(q);
+  else if (state.tab === 'favorites') renderSavedMessages();
 }
 function getAllChatsList() {
   const items = [];
@@ -1438,8 +1444,8 @@ function renderChatHeader() {
   if (c.type === 'dm') { const peer = getUser(c.peerId); sub.innerHTML = peerStatusText(peer, c.peerId); }
   else if (c.type === 'group') { sub.innerHTML = `<span>${Object.keys(c.members || {}).length} участников</span><span class="code" onclick="copyCode(event)">${c.code}</span>`; }
   const actions = $('chatActions');
-  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button>`;
-  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" onclick="openChatInfo()">ℹ️</button>`;
+  if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()" title="Поиск">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button><button class="chat-icon-btn" onclick="startVoiceCall()" title="Голосовой звонок">📞</button>`;
+  else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button><button class="chat-icon-btn" onclick="openChatInfo()">ℹ️</button>`;
   applyGroupChatTheme();
   renderPinnedBar();
 }
@@ -1959,15 +1965,40 @@ async function saveMsg(msgId) {
   const m = state.messages.find(x => x.id === msgId);
   if (!m) return;
   try {
-    const id = 'sv_' + now();
-    await set(ref(db, 'user_saved/' + state.user.uid + '/' + id), {
-      text: m.text || '', type: m.type, imageData: m.imageData, fileData: m.fileData, fileName: m.fileName,
-      voiceData: m.voiceData, voiceDuration: m.voiceDuration, videoData: m.videoData, sticker: m.sticker,
-      geo: m.geo, chatName: state.chat.name, fromUser: getUser(m.senderId)?.firstName || 'Вы', savedAt: now()
+    const savedRef = push(ref(db, 'user_saved/' + state.user.uid));
+    await set(savedRef, {
+      text: m.text || '', type: m.type || 'text', imageData: m.imageData || null, fileData: m.fileData || null, fileName: m.fileName || null,
+      voiceData: m.voiceData || null, voiceDuration: m.voiceDuration || null, videoData: m.videoData || null, sticker: m.sticker || null,
+      geo: m.geo || null, chatName: state.chat.name, fromUser: getUser(m.senderId)?.firstName || 'Вы', senderId: m.senderId || state.user.uid,
+      sourceChatId: state.chat.id, sourceMessageId: msgId, savedAt: now()
     });
+    if (state.tab === 'favorites') loadAndRenderFavorites();
     toast('В избранное', '⭐');
   } catch(e) { toast('Ошибка', '⚠'); }
 }
+async function loadAndRenderFavorites() {
+  if (!state.user) return;
+  const list = $('sbList');
+  if (list) list.innerHTML = '<div class="empty" style="padding:24px;"><div class="empty-icon">⏳</div><p>Загружаем избранное…</p></div>';
+  try {
+    const snap = await get(query(ref(db, 'user_saved/' + state.user.uid), orderByChild('savedAt'), limitToLast(100)));
+    state.savedMessages = snap.val() || {};
+    renderSavedMessages();
+  } catch (e) { if (list) list.innerHTML = '<div class="empty"><p>Не удалось загрузить избранное. Проверьте правила Firebase.</p></div>'; }
+}
+function renderSavedMessages() {
+  const list = $('sbList'); if (!list) return;
+  const items = Object.entries(state.savedMessages || {}).sort((a,b)=>(b[1]?.savedAt||0)-(a[1]?.savedAt||0));
+  if (!items.length) { list.innerHTML = '<div class="empty" style="padding:24px;text-align:center;"><div class="empty-icon">⭐</div><p>Здесь будут сообщения, которые вы добавили в избранное.</p></div>'; return; }
+  list.innerHTML = items.map(([id,m]) => {
+    const typeLabel = ({image:'🖼️ Фото',file:'📄 Файл',voice:'🎤 Голосовое',sticker:'😀 Стикер',videoCircle:'⭕ Видеокружок',geo:'📍 Геолокация',poll:'📊 Опрос'})[m.type] || '';
+    const body = m.text || typeLabel || (m.fileName ? '📄 '+m.fileName : 'Сохранённое сообщение');
+    return `<div class="list-item" style="cursor:default;align-items:flex-start;"><div class="avatar square" style="background:var(--accent-light);display:flex;align-items:center;justify-content:center;">⭐</div><div class="list-info" style="min-width:0;"><div class="list-name">${esc(m.chatName || 'Сообщение')}</div><div class="list-last" style="white-space:normal;overflow-wrap:anywhere;">${esc(body)}</div><div class="list-last">${esc(m.fromUser || 'Вы')} · ${m.savedAt ? esc(timeList(m.savedAt)) : ''}</div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">${m.sourceChatId && state.chats[m.sourceChatId] ? `<button class="btn btn-secondary" style="width:auto;padding:7px 10px;font-size:12px;" onclick="openSavedSource('${esc(id)}')">Открыть чат</button>` : ''}<button class="btn btn-secondary" style="width:auto;padding:7px 10px;font-size:12px;" onclick="deleteSavedMessage('${esc(id)}')">Убрать</button></div></div></div>`;
+  }).join('');
+}
+async function openSavedSource(id) { const m = state.savedMessages?.[id]; if (!m?.sourceChatId) return; const c = state.chats[m.sourceChatId]; if (!c) return toast('Исходный чат уже недоступен', '⚠'); switchTab(c.type === 'group' ? 'groups' : 'chats'); setTimeout(()=>openChat(m.sourceChatId,c.type),100); }
+async function deleteSavedMessage(id) { try { await remove(ref(db, 'user_saved/' + state.user.uid + '/' + id)); delete state.savedMessages[id]; renderSavedMessages(); toast('Убрано из избранного','✓'); } catch(e) { toast(humanErr(e),'⚠'); } }
+
 function forwardMsg(msgId) {
   const m = state.messages.find(x => x.id === msgId);
   if (!m) return;
@@ -2177,46 +2208,12 @@ async function openOrCreateDM(peerId) {
   switchTab('chats'); setTimeout(() => openChat(chatId, 'dm'), 200);
 }
 
-function getGroupInviteLink(code) {
-  const url = new URL(location.href);
-  url.search = ''; url.hash = ''; url.searchParams.set('join', String(code || ''));
-  return url.toString();
-}
-function refreshGroupInviteQr() {
-  const code = state.chat?.type === 'group' ? (state.chat.code || String(state.chat.id || '').replace(/^grp_/, '')) : '';
-  const qrBox = $('groupInviteQr'); const codeEl = $('groupInviteCode');
-  if (!qrBox || !code) return;
-  const link = getGroupInviteLink(code);
-  qrBox.innerHTML = '';
-  // QR is generated locally in the browser: invite code is not sent to a QR-image service.
-  if (window.QRCode) {
-    try { new window.QRCode(qrBox, { text: link, width: 200, height: 200, colorDark: '#111827', colorLight: '#ffffff', correctLevel: window.QRCode.CorrectLevel.M }); }
-    catch (_) { qrBox.textContent = 'Не удалось создать QR. Скопируйте ссылку ниже.'; }
-  } else qrBox.textContent = 'QR-модуль не загрузился. Скопируйте ссылку ниже.';
-  if (codeEl) codeEl.textContent = 'Код группы: ' + code;
-}
-async function copyGroupInviteLink() {
-  const code = state.chat?.type === 'group' ? (state.chat.code || String(state.chat.id || '').replace(/^grp_/, '')) : '';
-  if (!code) return toast('Группа не выбрана', '⚠');
-  const link = getGroupInviteLink(code);
-  try { await navigator.clipboard.writeText(link); toast('Ссылка приглашения скопирована', '🔗'); }
-  catch (_) { const inp = document.createElement('textarea'); inp.value = link; document.body.appendChild(inp); inp.select(); const ok = document.execCommand('copy'); inp.remove(); toast(ok ? 'Ссылка приглашения скопирована' : link, ok ? '🔗' : '⚠'); }
-}
-function showJoinFromUrl() {
-  try {
-    const url = new URL(location.href); const code = url.searchParams.get('join');
-    if (!code || !/^\d{8}$/.test(code)) return;
-    url.searchParams.delete('join'); history.replaceState({}, '', url.toString());
-    openJoinGroupModal(); $('joinCode').value = code;
-    toast('QR-приглашение распознано. Нажмите «Войти» для вступления.', '🔳');
-  } catch (_) {}
-}
+function showJoinFromUrl() { /* QR-приглашения отключены; вступление доступно по коду группы. */ }
 function openAddMemberModal() {
   $('addMemberUsername').value = '';
   $('addMemberStatus').className = 'uname-status';
   $('addMemberStatus').textContent = '';
   renderContactPickList();
-  refreshGroupInviteQr();
   $('addMemberModal').classList.remove('hidden');
 }
 function renderContactPickList() {
@@ -2476,7 +2473,9 @@ async function openPublicProfile(uid) {
     ${user.status ? `<p class="modal-desc" style="text-align:center;margin-bottom:12px;">${esc(user.status)}</p>` : ''}
     ${user.bio ? `<div class="settings-group"><h3>О себе</h3><div style="padding:0 20px 16px;white-space:pre-wrap;overflow-wrap:anywhere;">${esc(user.bio)}</div></div>` : ''}
     ${links.length ? `<div class="settings-group"><h3>Ссылки</h3>${links.map((url,i)=>`<a class="set-row" href="${esc(url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;"><div class="set-icon">🔗</div><div class="set-info"><div class="set-label">Социальная сеть ${i+1}</div><div class="set-sub" style="overflow-wrap:anywhere;">${esc(url)}</div></div><div class="set-arrow">↗</div></a>`).join('')}</div>` : ''}
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('publicProfileModal')">Закрыть</button>${uid !== state.user?.uid ? `<button class="btn btn-primary" onclick="closeModal('publicProfileModal'); openOrCreateDM('${uid}')">Написать</button>` : ''}</div>`;
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('publicProfileModal')">Закрыть</button>${uid !== state.user?.uid ? `<button class="btn btn-primary" onclick="closeModal('publicProfileModal'); closeModal('chatInfoModal'); openOrCreateDM('${uid}')">Написать</button>` : ''}</div>`;
+  // Закрываем окно списка участников, чтобы профиль и личный чат не оставались под ним.
+  $('chatInfoModal').classList.add('hidden');
   $('publicProfileModal').classList.remove('hidden');
 }
 
@@ -2849,6 +2848,10 @@ function renderSettings() {
         <div class="set-row danger" onclick="confirmDeleteAccount()"><div class="set-icon">⚠️</div><div class="set-info"><div class="set-label">Удалить аккаунт</div></div><div class="set-arrow">›</div></div>
       </div>
       <div class="settings-group">
+        <h3>Поддержка</h3>
+        <a class="set-row" href="mailto:metrochatsupport@gmail.com?subject=MetroChat%20-%20%D0%BE%D0%B1%D1%80%D0%B0%D1%89%D0%B5%D0%BD%D0%B8%D0%B5&body=%D0%9E%D0%BF%D0%B8%D1%88%D0%B8%D1%82%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC%D1%83%20MetroChat%20%D0%B8%20%D1%83%D0%BA%D0%B0%D0%B6%D0%B8%D1%82%D0%B5%20%D1%83%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE%20%D0%B8%20%D0%B1%D1%80%D0%B0%D1%83%D0%B7%D0%B5%D1%80." style="text-decoration:none;color:inherit;"><div class="set-icon">✉️</div><div class="set-info"><div class="set-label">Написать в поддержку</div><div class="set-sub">metrochatsupport@gmail.com</div></div><div class="set-arrow">↗</div></a>
+      </div>
+      <div class="settings-group">
         <h3>Документы</h3>
         <a class="set-row" href="https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit;"><div class="set-icon">🔒</div><div class="set-info"><div class="set-label">Политика конфиденциальности</div><div class="set-sub">Как обрабатываются данные</div></div><div class="set-arrow">↗</div></a>
       </div>
@@ -2988,8 +2991,191 @@ window.addEventListener('resize', () => {
   if (!mobile) { document.body.classList.remove('chat-open'); $('sidebar').classList.remove('hide-mobile'); $('chatPanel').classList.remove('show-mobile'); }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAllMenus(); qsa('.modal-overlay').forEach(m => m.classList.add('hidden')); $('viewer').classList.add('hidden'); }
+  if (e.key === 'Escape') {
+    closeAllMenus();
+    if (!$('callModal').classList.contains('hidden')) { e.preventDefault(); hangupCall(); return; }
+    qsa('.modal-overlay').forEach(m => m.classList.add('hidden')); $('viewer').classList.add('hidden');
+  }
 });
+
+function isStandaloneApp() { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; }
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; if ($('installNowBtn') && !$('installPromptModal').classList.contains('hidden')) $('installNowBtn').classList.remove('hidden'); });
+window.addEventListener('appinstalled', () => { deferredInstallPrompt = null; closeModal('installPromptModal'); toast('MetroChat установлен','✓'); });
+function maybeShowInstallPrompt() {
+  if (!state.user || isStandaloneApp()) return;
+  let seen = false; try { seen = sessionStorage.getItem('metro_install_prompt_seen') === '1'; } catch(_) {}
+  if (seen) return;
+  const ua = navigator.userAgent || '';
+  let instructions = '';
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    instructions = '<b>iPhone / iPad</b><br>1. Откройте MetroChat в Safari.<br>2. Нажмите «Поделиться» (квадрат со стрелкой).<br>3. Выберите «На экран Домой», затем «Добавить». Для iOS установка через другие браузеры может быть недоступна.';
+    $('installNowBtn').classList.add('hidden');
+  } else if (/Android/i.test(ua)) {
+    instructions = '<b>Android</b><br>Нажмите «Установить», если браузер предлагает установку. Если кнопки установки нет, откройте меню браузера ⋮ и выберите «Установить приложение» или «Добавить на главный экран».';
+    $('installNowBtn').classList.toggle('hidden', !deferredInstallPrompt);
+  } else {
+    instructions = '<b>Компьютер</b><br>В Chrome или Edge нажмите значок установки в адресной строке либо откройте меню браузера и выберите «Установить MetroChat».';
+    $('installNowBtn').classList.toggle('hidden', !deferredInstallPrompt);
+  }
+  $('installInstructions').innerHTML = instructions;
+  $('installPromptModal').classList.remove('hidden');
+  try { sessionStorage.setItem('metro_install_prompt_seen','1'); } catch(_) {}
+}
+async function installMetroChat() {
+  if (!deferredInstallPrompt) { toast('Откройте меню браузера и выберите установку MetroChat','ℹ️'); return; }
+  try { deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; closeModal('installPromptModal'); }
+  catch(e) { toast('Установка недоступна в этом браузере','⚠'); }
+}
+
+function clearCallListeners() { callState.unsubscribers.forEach(fn=>{try{fn();}catch(_){}}); callState.unsubscribers=[]; }
+function closeCallPeer() {
+  clearCallListeners();
+  try { callState.pc?.close(); } catch(_) {}
+  [callState.localStream, callState.screenStream].forEach(st=>{ try { st?.getTracks().forEach(t=>t.stop()); } catch(_) {} });
+  callState.pc=null; callState.localStream=null; callState.screenStream=null; callState.remoteStream=null; callState.callId=null; callState.remoteUid=null; callState.incoming=null; callState.isCaller=false; callState.muted=false; callState.candidateQueue=[];
+  if ($('callRemoteAudio')) $('callRemoteAudio').srcObject=null;
+  if ($('callRemoteVideo')) { $('callRemoteVideo').srcObject=null; $('callRemoteVideo').style.display='none'; }
+  $('callModal').classList.add('hidden');
+}
+function setCallStatus(text) { if ($('callStatus')) $('callStatus').textContent=text; }
+function updateCallControls() {
+  $('callMuteBtn').textContent = callState.muted ? '🔇 Включить микрофон' : '🎙️ Выключить микрофон';
+  $('callShareBtn').textContent = callState.screenStream ? '🖥️ Остановить показ экрана' : '🖥️ Демонстрация экрана';
+}
+function createPeerConnection(callId, remoteUid, isCaller) {
+  const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] });
+  callState.pc=pc; callState.callId=callId; callState.remoteUid=remoteUid; callState.isCaller=isCaller;
+  const remoteStream = new MediaStream(); callState.remoteStream=remoteStream;
+  // Резервируем video-трансивер заранее: так демонстрация экрана сможет начаться без renegotiation.
+  if (!pc.getTransceivers().some(t=>t.receiver?.track?.kind==='video')) pc.addTransceiver('video',{direction:'sendrecv'});
+  pc.ontrack = e => {
+    if (!remoteStream.getTracks().some(t=>t.id===e.track.id)) remoteStream.addTrack(e.track);
+    if (e.track.kind==='audio') $('callRemoteAudio').srcObject=remoteStream;
+    if (e.track.kind==='video') {
+      $('callRemoteVideo').srcObject=remoteStream;
+      e.track.onunmute=()=>{ $('callRemoteVideo').style.display='block'; };
+      e.track.onmute=()=>{ $('callRemoteVideo').style.display='none'; };
+      if (!e.track.muted) $('callRemoteVideo').style.display='block';
+    }
+  };
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState==='connected') setCallStatus('Звонок активен');
+    else if (pc.connectionState==='connecting') setCallStatus('Соединяем…');
+    else if (['failed','disconnected'].includes(pc.connectionState)) setCallStatus('Соединение прервано. Проверьте сеть и разрешения браузера.');
+    else if (pc.connectionState==='closed') closeCallPeer();
+  };
+  const localCandidatePath = `calls/${callId}/${isCaller?'callerCandidates':'calleeCandidates'}`;
+  pc.onicecandidate = e => { if (e.candidate && callState.callId===callId) push(ref(db,localCandidatePath),e.candidate.toJSON()).catch(err=>console.warn('ICE candidate:',err)); };
+  const remoteCandidatePath = ref(db,`calls/${callId}/${isCaller?'calleeCandidates':'callerCandidates'}`);
+  const unsubCandidates = onChildAdded(remoteCandidatePath, snap => {
+    if (!snap.exists() || !callState.pc || callState.callId!==callId) return;
+    const candidate = new RTCIceCandidate(snap.val());
+    if (pc.remoteDescription) pc.addIceCandidate(candidate).catch(()=>{}); else callState.candidateQueue.push(candidate);
+  }, err => console.warn('ICE listener:',err));
+  callState.unsubscribers.push(unsubCandidates);
+  return pc;
+}
+async function addLocalCallAudio(pc) {
+  if (!navigator.mediaDevices?.getUserMedia) throw new Error('Этот браузер не поддерживает доступ к микрофону. Откройте MetroChat через HTTPS.');
+  callState.localStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true }, video:false });
+  callState.localStream.getTracks().forEach(track=>pc.addTrack(track,callState.localStream));
+}
+async function flushCallCandidates() {
+  if (!callState.pc?.remoteDescription) return;
+  const pending=callState.candidateQueue.splice(0);
+  for (const c of pending) { try { await callState.pc.addIceCandidate(c); } catch(_) {} }
+}
+async function startVoiceCall() {
+  if (!state.chat || state.chat.type!=='dm') return toast('Звонки доступны только в личных сообщениях','⚠');
+  if (callState.pc || callState.incoming) return toast('Сначала ответьте на текущий звонок или завершите его','⚠');
+  if (!window.isSecureContext) return toast('Для звонков откройте MetroChat по HTTPS','⚠');
+  const peerId=state.chat.peerId; if (!peerId) return;
+  const callId=push(ref(db,'calls')).key;
+  $('callTitle').textContent='Звонок: '+(state.chat.name||'Пользователь'); $('incomingCallControls').classList.add('hidden'); $('callControls').classList.remove('hidden'); $('callModal').classList.remove('hidden'); setCallStatus('Запрашиваем доступ к микрофону…');
+  try {
+    await set(ref(db,'calls/'+callId),{ callerId:state.user.uid, calleeId:peerId, chatId:state.chat.id, status:'ringing', createdAt:now() });
+    const pc=createPeerConnection(callId,peerId,true); await addLocalCallAudio(pc);
+    const offer=await pc.createOffer(); await pc.setLocalDescription(offer);
+    await update(ref(db,'calls/'+callId),{ offer:{type:offer.type,sdp:offer.sdp} });
+    await set(ref(db,`call_inbox/${peerId}/${callId}`),{ callId, callerId:state.user.uid, callerName:state.profile?.displayName||state.profile?.firstName||'Пользователь', chatId:state.chat.id, createdAt:now(), status:'ringing' });
+    const unsub=onValue(ref(db,`calls/${callId}/answer`),async snap=>{
+      if (!snap.exists()||!callState.pc||callState.callId!==callId||!callState.isCaller) return;
+      try { if (!pc.remoteDescription) { await pc.setRemoteDescription(new RTCSessionDescription(snap.val())); await flushCallCandidates(); setCallStatus('Ответ получен. Соединяем…'); } } catch(e) { console.warn('Call answer:',e); }
+    }); callState.unsubscribers.push(unsub);
+    const statusUnsub=onValue(ref(db,`calls/${callId}/status`),snap=>{ if (snap.val()==='ended' && callState.callId===callId) { toast('Звонок завершён','📞'); closeCallPeer(); } }); callState.unsubscribers.push(statusUnsub);
+    updateCallControls(); setCallStatus('Вызов… ожидаем ответа');
+    setTimeout(()=>{ if (callState.callId===callId && callState.isCaller && callState.pc?.connectionState!=='connected') { toast('Нет ответа','📞'); hangupCall(); } },60000);
+  } catch(e) {
+    try { await update(ref(db,'calls/'+callId),{status:'ended',endedAt:now()}); await remove(ref(db,`call_inbox/${peerId}/${callId}`)); } catch(_) {}
+    closeCallPeer(); toast(e.message||'Не удалось начать звонок','⚠');
+  }
+}
+function listenForIncomingCalls() {
+  if (!state.user) return;
+  if (callInboxUnsub) { try { callInboxUnsub(); } catch(_) {} callInboxUnsub=null; }
+  const unsub=onValue(ref(db,'call_inbox/'+state.user.uid),async snap=>{
+    const inbox=snap.val()||{};
+    for (const [callId,entry] of Object.entries(inbox)) {
+      if (entry?.createdAt && now()-entry.createdAt > 90000) { remove(ref(db,`call_inbox/${state.user.uid}/${callId}`)).catch(()=>{}); update(ref(db,`calls/${callId}`),{status:'ended',endedAt:now()}).catch(()=>{}); continue; }
+      if (!entry || entry.status!=='ringing' || callState.handledIncoming.has(callId) || callState.pc) continue;
+      callState.handledIncoming.add(callId); callState.incoming={...entry,callId};
+      $('callTitle').textContent='Входящий звонок'; $('callControls').classList.add('hidden'); $('incomingCallControls').classList.remove('hidden'); $('callModal').classList.remove('hidden'); setCallStatus((entry.callerName||'Пользователь')+' звонит вам…');
+      setTimeout(()=>{ if (callState.incoming?.callId===callId && !callState.pc) { remove(ref(db,`call_inbox/${state.user.uid}/${callId}`)).catch(()=>{}); update(ref(db,`calls/${callId}`),{status:'ended',endedAt:now()}).catch(()=>{}); callState.handledIncoming.delete(callId); closeCallPeer(); toast('Пропущенный звонок','📞'); } },90000);
+    }
+    if (callState.incoming && !inbox[callState.incoming.callId] && !callState.pc) { callState.incoming=null; $('callModal').classList.add('hidden'); }
+  },err=>console.warn('Call inbox:',err));
+  callInboxUnsub=unsub;
+}
+async function acceptIncomingCall() {
+  const incoming=callState.incoming; if (!incoming) return;
+  try {
+    setCallStatus('Подключаем микрофон…'); $('incomingCallControls').classList.add('hidden'); $('callControls').classList.remove('hidden');
+    const snap=await get(ref(db,'calls/'+incoming.callId)); if (!snap.exists()) throw new Error('Звонок уже завершён');
+    const call=snap.val(); if (call.calleeId!==state.user.uid || call.status==='ended') throw new Error('Звонок уже недоступен');
+    const pc=createPeerConnection(incoming.callId,incoming.callerId,false); await addLocalCallAudio(pc);
+    await pc.setRemoteDescription(new RTCSessionDescription(call.offer)); await flushCallCandidates();
+    const answer=await pc.createAnswer(); await pc.setLocalDescription(answer);
+    await update(ref(db,'calls/'+incoming.callId),{answer:{type:answer.type,sdp:answer.sdp},status:'active'});
+    await remove(ref(db,`call_inbox/${state.user.uid}/${incoming.callId}`));
+    const statusUnsub=onValue(ref(db,`calls/${incoming.callId}/status`),snapStatus=>{ if (snapStatus.val()==='ended'&&callState.callId===incoming.callId) { toast('Звонок завершён','📞'); closeCallPeer(); } }); callState.unsubscribers.push(statusUnsub);
+    callState.incoming=null; updateCallControls(); setCallStatus('Соединяем…');
+  } catch(e) { await declineIncomingCall(); toast(e.message||'Не удалось ответить','⚠'); }
+}
+async function declineIncomingCall() {
+  const inc=callState.incoming; if (!inc) { closeCallPeer(); return; }
+  try { await remove(ref(db,`call_inbox/${state.user.uid}/${inc.callId}`)); await update(ref(db,'calls/'+inc.callId),{status:'ended',endedAt:now()}); } catch(_) {}
+  callState.handledIncoming.delete(inc.callId); closeCallPeer();
+}
+async function hangupCall() {
+  const id=callState.callId || callState.incoming?.callId;
+  const remote=callState.remoteUid || callState.incoming?.callerId;
+  try {
+    if (id) { await update(ref(db,'calls/'+id),{status:'ended',endedAt:now()}); await remove(ref(db,`call_inbox/${state.user.uid}/${id}`)); if (remote) await remove(ref(db,`call_inbox/${remote}/${id}`)); }
+  } catch(e) { console.warn('Hangup cleanup:',e); }
+  closeCallPeer();
+}
+function toggleCallMute() {
+  if (!callState.localStream) return;
+  callState.muted=!callState.muted; callState.localStream.getAudioTracks().forEach(t=>t.enabled=!callState.muted); updateCallControls();
+}
+async function toggleScreenShare() {
+  if (!callState.pc) return;
+  if (callState.screenStream) {
+    const track=callState.screenStream.getVideoTracks()[0]; const sender=callState.pc.getSenders().find(s=>s.track===track) || callState.pc.getTransceivers().find(t=>t.receiver?.track?.kind==='video')?.sender;
+    if (sender) await sender.replaceTrack(null).catch(()=>{});
+    callState.screenStream.getTracks().forEach(t=>t.stop()); callState.screenStream=null; updateCallControls(); return;
+  }
+  if (!navigator.mediaDevices?.getDisplayMedia) return toast('Демонстрация экрана не поддерживается этим устройством или браузером','⚠');
+  try {
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:12},audio:false}); const track=stream.getVideoTracks()[0];
+    callState.screenStream=stream;
+    const sender=callState.pc.getTransceivers().find(t=>t.receiver?.track?.kind==='video')?.sender;
+    if (sender) await sender.replaceTrack(track); else { callState.pc.addTrack(track,stream); }
+
+    track.onended=()=>{ if(callState.screenStream){ callState.screenStream=null; updateCallControls(); } };
+    updateCallControls();
+  } catch(e) { toast(e.name==='NotAllowedError'?'Вы отменили демонстрацию экрана':'Не удалось начать демонстрацию экрана','⚠'); }
+}
 
 bindUsernameInput('onbUsername', 'onbUsernameStatus', () => null);
 bindUsernameInput('profileUsername', 'profileUsernameStatus', () => state.user?.uid || null);
@@ -3020,8 +3206,9 @@ Object.assign(window, {
   toggleVoiceRecording, stopRecording, cancelRecording, toggleVoice,
   msgTouchStart, msgTouchMove, msgTouchEnd, doContactSearch, sendMessage,
   allowNotifFromOnb, skipNotifPrompt, showNotifPrompt,
-  openAddMemberModal, doAddMemberToGroup, addSelectedContactsToGroup, copyGroupInviteLink, showJoinFromUrl,
+  openAddMemberModal, doAddMemberToGroup, addSelectedContactsToGroup, showJoinFromUrl,
   startVideoCircle, stopVideoCircle, cancelVideoCircle, toggleVideoCircle,
+  startVoiceCall, acceptIncomingCall, declineIncomingCall, hangupCall, toggleCallMute, toggleScreenShare, installMetroChat, openSavedSource, deleteSavedMessage,
   openStickerPicker, sendSticker,
   checkEmailVerified, resendVerifyEmail, cancelVerify,
   openEditGroupModal, editGroupAvatarChange, saveGroupInfo,
