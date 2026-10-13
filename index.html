@@ -66,6 +66,41 @@ input, textarea { font-family: inherit; }
 .auth-error { padding: 12px 14px; border-radius: 12px; margin-bottom: 14px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #b91c1c; font-size: 13px; display: none; white-space: pre-line; }
 [data-theme="dark"] .auth-error { color: #fca5a5; }
 .auth-error.show { display: block; }
+.auth-card { animation: authCardIn .42s cubic-bezier(.2,.8,.2,1) both; backdrop-filter: blur(18px); }
+@keyframes authCardIn { from { opacity:0; transform:translateY(14px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+.auth-screen { background: radial-gradient(circle at 12% 15%, rgba(230,57,70,.22), transparent 34%), radial-gradient(circle at 88% 85%, rgba(59,130,246,.18), transparent 32%), linear-gradient(135deg, #111827 0%, #0f172a 100%); }
+.auth-logo-mark { box-shadow: 0 12px 32px rgba(230,57,70,.25); }
+.auth-field input { box-sizing:border-box; transition:border-color .18s, box-shadow .18s, background .18s; }
+.auth-submit-note { color:var(--text-2); font-size:12px; line-height:1.5; text-align:center; margin-top:12px; }
+.verify-explainer { text-align:left; padding:14px; border-radius:14px; background:var(--surface-2); border:1px solid var(--border); margin:0 0 16px; color:var(--text-2); font-size:13px; line-height:1.55; }
+.verify-explainer strong { color:var(--text); }
+.verify-steps { display:grid; gap:8px; margin-top:10px; }
+.verify-step { display:flex; gap:9px; align-items:flex-start; }
+.verify-step span:first-child { flex:0 0 22px; height:22px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:var(--accent-light); color:var(--accent); font-weight:800; }
+.sticker-img { transform-origin:50% 70%; animation: stickerFloat 1.55s ease-in-out infinite; filter: drop-shadow(0 5px 7px rgba(0,0,0,.12)); }
+.sticker-grid button { animation: stickerFloat 1.8s ease-in-out infinite; }
+.sticker-grid button:nth-child(3n) { animation-delay:-.45s; }
+.sticker-grid button:nth-child(3n + 1) { animation-delay:-.9s; }
+@keyframes stickerFloat { 0%,100% { transform:translateY(0) rotate(-2deg) scale(1); } 50% { transform:translateY(-4px) rotate(3deg) scale(1.08); } }
+@media (max-width:480px) {
+  .auth-screen { align-items:flex-start; padding: max(14px, env(safe-area-inset-top)) 12px max(14px, env(safe-area-inset-bottom)); }
+  .auth-card { margin:auto; padding:26px 18px; border-radius:20px; }
+  .auth-logo-row { margin-bottom:20px; gap:9px; }
+  .auth-logo-mark { width:58px; height:58px; border-radius:17px; font-size:28px; }
+  .auth-field input { padding:13px 13px; font-size:16px; }
+  .auth-tab { padding:12px 8px; }
+  .verify-explainer { padding:12px; }
+}
+@media (max-height:620px) and (orientation:landscape) {
+  .auth-screen { align-items:flex-start; padding:10px; }
+  .auth-card { max-width:560px; padding:18px 22px; }
+  .auth-logo-row { flex-direction:row; justify-content:center; margin-bottom:14px; }
+  .auth-logo-mark { width:46px; height:46px; border-radius:14px; font-size:24px; }
+  .auth-tabs { margin-bottom:12px; }
+  .auth-field { margin-bottom:8px; }
+  .auth-field input { padding:10px 12px; }
+}
+
 
 .uname-wrap { position: relative; }
 .uname-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-2); font-weight: 700; font-size: 15px; pointer-events: none; }
@@ -361,6 +396,17 @@ input, textarea { font-family: inherit; }
   .settings-wrap { padding: 16px 12px; }
   /* Клавиатура: увеличиваем padding-bottom */
   body.keyboard-open .chat-input-bar { padding-bottom: 12px; }
+  .chat-header { min-width:0; gap:6px; padding-left:8px; padding-right:8px; }
+  .chat-header-info { min-width:0; overflow:hidden; }
+  .chat-title, #chatName { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .chat-actions, #chatActions { flex-shrink:0; gap:2px; }
+  .chat-icon-btn { min-width:34px; width:34px; height:34px; }
+  .sticker-picker { width:calc(100vw - 20px); max-width:360px; max-height:min(55dvh,400px); bottom:calc(76px + env(safe-area-inset-bottom)); }
+  .sticker-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+  .sticker-grid button { width:100%; min-width:0; height:46px; }
+  .modal-overlay { padding:10px; }
+  .modal { width:100%; max-width:100%; box-sizing:border-box; }
+
 }
 </style>
 </head>
@@ -383,20 +429,26 @@ input, textarea { font-family: inherit; }
         <label style="display:flex; align-items:flex-start; gap:9px; cursor:pointer;"><input type="checkbox" id="privacyConsent" style="margin-top:3px; flex:0 0 auto; accent-color:var(--accent);"><span>Я прочитал(а) и принимаю <a href="https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline;">Политику конфиденциальности</a>.</span></label>
         <div class="field-err" id="errPrivacyConsent" style="min-height:0;"></div>
       </div>
-      <button type="submit" id="authSubmit" class="btn btn-primary">Войти</button>
+      <button type="submit" id="authSubmit" class="btn btn-primary">Войти</button><p class="auth-submit-note">Ваши сообщения и настройки синхронизируются с аккаунтом. Используйте свою почту, чтобы восстановить доступ при необходимости.</p>
     </form>
   </div>
 </div>
 
 <div class="auth-screen hidden" id="verifyScreen">
   <div class="auth-card" style="text-align: center;">
-    <div style="font-size: 72px; margin-bottom: 16px;">📧</div>
-    <h2 style="margin-bottom: 12px; font-weight: 800;">Подтвердите почту</h2>
-    <p style="color: var(--text-2); margin-bottom: 20px; font-size: 14px;">Мы отправили письмо на <b id="verifyEmail"></b>. Проверьте папку «Спам».</p>
+    <div style="font-size: 64px; margin-bottom: 12px; animation:pulse 1.8s infinite;">📧</div>
+    <h2 style="margin-bottom: 10px; font-weight: 800;">Остался один шаг!</h2>
+    <p style="color: var(--text-2); margin-bottom: 16px; font-size: 14px; line-height:1.55;">Письмо для подтверждения отправлено на <b id="verifyEmail"></b>.</p>
+    <div class="verify-explainer">
+      <strong>Зачем подтверждать почту?</strong>
+      <div style="margin-top:5px;">Это помогает защитить аккаунт, подтвердить, что адрес действительно ваш, и упростить восстановление доступа. Ваш профиль и выбранный никнейм не пропадут, если вы закроете страницу и вернётесь позже.</div>
+      <div class="verify-steps"><div class="verify-step"><span>1</span><span>Откройте письмо от MetroChat. Если его нет — проверьте «Спам» и «Промоакции».</span></div><div class="verify-step"><span>2</span><span>Нажмите ссылку подтверждения в письме.</span></div><div class="verify-step"><span>3</span><span>Вернитесь сюда — мы проверим подтверждение автоматически. Можно также нажать кнопку ниже.</span></div></div>
+    </div>
     <div class="auth-error" id="verifyError"></div>
-    <button class="btn btn-primary" onclick="checkEmailVerified()" style="margin-bottom: 10px;">✓ Я подтвердил</button>
-    <button class="btn btn-secondary" onclick="resendVerifyEmail()" style="margin-bottom: 10px;">📤 Отправить заново</button>
-    <button class="btn btn-ghost" onclick="cancelVerify()">Выйти</button>
+    <button class="btn btn-primary" onclick="checkEmailVerified()" style="margin-bottom: 10px;">✓ Проверить подтверждение</button>
+    <button class="btn btn-secondary" id="resendVerifyBtn" onclick="resendVerifyEmail()" style="margin-bottom: 10px;">📤 Отправить письмо повторно</button>
+    <p id="verifyResendHint" class="auth-submit-note">Не закрывайте письмо, пока не нажмёте ссылку. Можно вернуться в MetroChat после подтверждения.</p>
+    <button class="btn btn-ghost" onclick="cancelVerify()">Выйти из аккаунта</button>
   </div>
 </div>
 
@@ -495,6 +547,13 @@ input, textarea { font-family: inherit; }
     <button class="btn btn-secondary" onclick="doAddMemberToGroup()" style="padding: 10px 14px;">Добавить</button>
   </div>
   <div class="uname-status" id="addMemberStatus"></div>
+  <div class="settings-group" style="margin-top:14px;padding:14px;text-align:center;">
+    <div style="font-weight:700;margin-bottom:5px;">🔳 QR-код для вступления</div>
+    <div class="modal-desc" style="margin-bottom:10px;">Покажите код человеку. После сканирования откроется MetroChat с кодом группы.</div>
+    <div id="groupInviteQr" role="img" aria-label="QR-код приглашения в группу" style="display:flex;align-items:center;justify-content:center;width:216px;min-height:216px;max-width:100%;margin:0 auto 10px;background:white;border-radius:12px;padding:8px;color:#334155;font-size:12px;"></div>
+    <div class="code" id="groupInviteCode" style="margin-bottom:10px;"></div>
+    <button class="btn btn-secondary" type="button" onclick="copyGroupInviteLink()" style="width:auto;">🔗 Скопировать ссылку</button>
+  </div>
   <div style="margin-top: 16px;"><label style="font-size: 12.5px; font-weight: 600; color: var(--text-2); display: block; margin-bottom: 8px;">Из контактов</label><div class="contact-pick-list" id="contactPickList"></div></div>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('addMemberModal')">Закрыть</button><button class="btn btn-primary" onclick="addSelectedContactsToGroup()">Добавить выбранных</button></div>
 </div></div>
@@ -545,10 +604,11 @@ input, textarea { font-family: inherit; }
   }, 7000);
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, setPersistence, browserLocalPersistence, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast, increment } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDIpe10bCclSO4C3KmYWT6vseRdR5wOnRA",
@@ -606,7 +666,7 @@ const state = {
     hapticFeedback: true, confirmDeleteChat: true, saveDrafts: true, enterToSend: true,
     linkPreview: true, autoPlayVoice: false
   },
-  subs: [], onboarding: null, chatUnsub: null, presenceTimer: null,
+  subs: [], presenceSubs: {}, onboarding: null, chatUnsub: null, groupMetaUnsub: null, presenceTimer: null,
   booted: false, cacheUsers: {},
   mediaRecorder: null, audioChunks: [], recordingStart: 0, recordingTimer: null,
   searchMatches: [], searchIndex: 0,
@@ -634,16 +694,24 @@ function initials(name) { const p = String(name || '?').trim().split(/\s+/); if 
 function avatarColor(name) { const palette = ['#e63946','#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981','#06b6d4','#6366f1']; let h = 0; for (let i = 0; i < (name || '').length; i++) h = (h * 31 + name.charCodeAt(i)) | 0; return palette[Math.abs(h) % palette.length]; }
 function hex2rgba(hex, a) { const n = parseInt(hex.replace('#',''), 16); return `rgba(${n >> 16}, ${(n >> 8) & 0xFF}, ${n & 0xFF}, ${a})`; }
 function toast(msg, icon = '✓') { const el = $('toast'); el.innerHTML = `<span>${icon}</span> ${esc(msg)}`; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2200); }
-function isOnline(uid) { const p = state.presence[uid]; return p && p.online && (now() - p.lastSeen < 60000); }
+function isOnline(uid) { const p = state.presence[uid]; return !!(p && p.showOnline !== false && p.online && (now() - p.lastSeen < 60000)); }
 function dmId(a, b) { return 'dm_' + [a, b].sort().join('_'); }
 function getUser(uid) { return state.users[uid] || state.cacheUsers[uid] || null; }
 function isGroupAdmin(chat, uid) { return !!chat?.admins?.[uid]; }
 function isGroupOwner(chat, uid) { return chat?.ownerId === uid; }
 function getGroupSetting(chat, key) { if (!chat || !chat.settings) return GROUP_DEFAULTS[key]; const v = chat.settings[key]; return v === undefined ? GROUP_DEFAULTS[key] : v; }
 function peerStatusText(peer, uid) {
-  if (isOnline(uid)) return '<span style="color: var(--green); font-weight: 600;">● в сети</span>';
-  if (!state.settings.showLastSeen) return 'недавно';
-  return esc(peer?.status || 'недавно');
+  const presence = state.presence[uid] || {};
+  if (isOnline(uid) && presence.showOnline !== false) return '<span style="color: var(--green); font-weight: 600;">● в сети</span>';
+  // Настройки приватности принадлежат собеседнику, а не зрителю.
+  if (presence.showLastSeen === false) return 'был(а) когда-то';
+  const ts = Number(presence.lastSeen || 0);
+  if (!ts) return 'был(а) когда-то';
+  const age = Math.max(0, now() - ts);
+  if (age < 60 * 60 * 1000) return 'был(а) недавно';
+  if (age < 24 * 60 * 60 * 1000) return 'был(а) сегодня';
+  if (age < 48 * 60 * 60 * 1000) return 'был(а) вчера';
+  return 'был(а) когда-то';
 }
 
 // === AVATAR RENDER (FIXED) ===
@@ -836,7 +904,7 @@ authForm.addEventListener('submit', async e => {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       try { await set(ref(db, 'users/' + cred.user.uid), { email, createdAt: now(), onboardingComplete: false, privacyPolicyAcceptedAt: now(), verified: false, socialLinks: [] }); }
       catch (dbErr) { try { await deleteUser(cred.user); } catch(_) {} throw dbErr; }
-      try { await sendEmailVerification(cred.user); toast('Письмо отправлено (проверьте спам)', '📧'); } catch(e) {}
+      try { await sendEmailVerification(cred.user); toast('Письмо для подтверждения отправлено', '📧'); } catch(e) { console.warn('Email verification send failed:', e); }
     }
     try { localStorage.setItem('metro_last_email', email); } catch(_) {}
     setBusy(false);
@@ -846,6 +914,9 @@ const initialPrivacyConsent = $('privacyConsent');
 if (initialPrivacyConsent) initialPrivacyConsent.required = false;
 try { const e = localStorage.getItem('metro_last_email'); if (e) authEmail.value = e; } catch(_) {}
 
+let verifyPollTimer = null;
+let verifyResendCooldownUntil = 0;
+let verifyCheckInProgress = false;
 function showVerifyEmailScreen(user) {
   hideSplash();
   authScreen.classList.add('hidden');
@@ -853,28 +924,61 @@ function showVerifyEmailScreen(user) {
   $('app').classList.add('hidden');
   $('verifyScreen').classList.remove('hidden');
   $('verifyEmail').textContent = user.email || '—';
+  if (verifyPollTimer) clearInterval(verifyPollTimer);
+  // Автоматически проверяем подтверждение, чтобы пользователь не застревал на этом экране.
+  verifyPollTimer = setInterval(() => {
+    if (!auth.currentUser || $('verifyScreen').classList.contains('hidden')) return;
+    checkEmailVerified(true);
+  }, 7000);
 }
-async function checkEmailVerified() {
-  const errEl = $('verifyError');
-  errEl.classList.remove('show');
+async function checkEmailVerified(silent = false) {
+  if (verifyCheckInProgress) return;
   if (!auth.currentUser) return;
+  verifyCheckInProgress = true;
+  const errEl = $('verifyError');
+  if (!silent) errEl.classList.remove('show');
   try {
     await auth.currentUser.reload();
     if (auth.currentUser.emailVerified) {
+      if (verifyPollTimer) { clearInterval(verifyPollTimer); verifyPollTimer = null; }
       $('verifyScreen').classList.add('hidden');
       await bootstrapUser(auth.currentUser);
-    } else {
-      errEl.textContent = '⚠ Почта ещё не подтверждена. Проверьте «Спам».';
+    } else if (!silent) {
+      errEl.textContent = 'Пока не видим подтверждение. Откройте ссылку в письме, затем попробуйте ещё раз.';
       errEl.classList.add('show');
     }
-  } catch(e) { errEl.textContent = '⚠ ' + humanErr(e); errEl.classList.add('show'); }
+  } catch(e) {
+    if (!silent) { errEl.textContent = 'Не удалось проверить почту: ' + humanErr(e); errEl.classList.add('show'); }
+  } finally { verifyCheckInProgress = false; }
 }
 async function resendVerifyEmail() {
   if (!auth.currentUser) return;
-  try { await sendEmailVerification(auth.currentUser); toast('Отправлено — проверьте спам', '📤'); }
-  catch(e) { toast(humanErr(e), '⚠'); }
+  const btn = $('resendVerifyBtn');
+  const hint = $('verifyResendHint');
+  if (Date.now() < verifyResendCooldownUntil) {
+    if (hint) hint.textContent = `Повторную отправку можно выполнить через ${Math.ceil((verifyResendCooldownUntil-Date.now())/1000)} сек.`;
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Отправляем…'; }
+  try {
+    await sendEmailVerification(auth.currentUser);
+    verifyResendCooldownUntil = Date.now() + 60000;
+    if (hint) hint.textContent = 'Письмо отправлено. Проверьте входящие, «Спам» и «Промоакции». Повторная отправка доступна через минуту.';
+    toast('Письмо отправлено', '📤');
+  } catch(e) {
+    if (hint) hint.textContent = 'Не удалось отправить письмо: ' + humanErr(e) + '. Подождите немного и попробуйте снова.';
+    toast(humanErr(e), '⚠');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '📤 Отправить письмо повторно'; }
+  }
 }
-function cancelVerify() { auth.signOut(); }
+function cancelVerify() {
+  if (verifyPollTimer) { clearInterval(verifyPollTimer); verifyPollTimer = null; }
+  signOut(auth).catch(()=>{});
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && auth.currentUser && !$('verifyScreen').classList.contains('hidden') && !auth.currentUser.emailVerified) checkEmailVerified(true);
+});
 
 let splashHidden = false;
 function hideSplash() {
@@ -1064,11 +1168,13 @@ function startApp() {
   authScreen.classList.add('hidden'); $('verifyScreen').classList.add('hidden');
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
-  setupKeyboardHandling();
+  setupKeyboardHandling(); setTimeout(showJoinFromUrl, 350);
 }
 function stopApp() {
   state.subs.forEach(u => { try { u(); } catch(_) {} }); state.subs = [];
+  Object.values(state.presenceSubs || {}).forEach(u => { try { u(); } catch(_) {} }); state.presenceSubs = {}; state.presence = {};
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(_) {} state.chatUnsub = null; }
+  if (state.groupMetaUnsub) { try { state.groupMetaUnsub(); } catch(_) {} state.groupMetaUnsub = null; }
   if (state.presenceTimer) { clearInterval(state.presenceTimer); state.presenceTimer = null; }
   if (deviceHeartbeatTimer) { clearInterval(deviceHeartbeatTimer); deviceHeartbeatTimer = null; }
   if (deviceRevocationUnsub) { try { deviceRevocationUnsub(); } catch (_) {} deviceRevocationUnsub = null; }
@@ -1093,23 +1199,39 @@ function setupKeyboardHandling() {
 function setupPresence() {
   if (!state.user) return;
   const pRef = ref(db, 'presence/' + state.user.uid);
-  set(pRef, { online: true, lastSeen: now() }).catch(()=>{});
-  onDisconnect(pRef).set({ online: false, lastSeen: now() }).catch(()=>{});
+  const privacy = { showOnline: state.settings.onlineStatus !== false, showLastSeen: state.settings.showLastSeen !== false };
+  update(pRef, { online: true, lastSeen: now(), ...privacy }).catch(()=>{});
+  onDisconnect(pRef).update({ online: false }).catch(()=>{});
   if (state.presenceTimer) clearInterval(state.presenceTimer);
-  state.presenceTimer = setInterval(() => { if (state.user) set(pRef, { online: true, lastSeen: now() }).catch(()=>{}); }, 30000);
+  // Presence heartbeat is small and only updates this user's record.
+  state.presenceTimer = setInterval(() => {
+    if (state.user) update(pRef, { online: true, lastSeen: now(), showOnline: state.settings.onlineStatus !== false, showLastSeen: state.settings.showLastSeen !== false }).catch(()=>{});
+  }, 45000);
+}
+function syncPresenceSubscriptions() {
+  if (!state.user) return;
+  const wanted = new Set();
+  for (const item of Object.values(state.chats || {})) if (item?.type === 'dm' && item.peerId && item.peerId !== state.user.uid) wanted.add(item.peerId);
+  if (state.chat?.type === 'dm' && state.chat.peerId) wanted.add(state.chat.peerId);
+  if (state.chat?.type === 'group') for (const memberId of Object.keys(state.chat.members || {})) if (memberId !== state.user.uid) wanted.add(memberId);
+  for (const [uid, unsub] of Object.entries(state.presenceSubs || {})) {
+    if (!wanted.has(uid)) { try { unsub(); } catch (_) {} delete state.presenceSubs[uid]; delete state.presence[uid]; }
+  }
+  for (const uid of wanted) {
+    if (state.presenceSubs[uid]) continue;
+    state.presenceSubs[uid] = onValue(ref(db, 'presence/' + uid), snap => {
+      if (snap.exists()) state.presence[uid] = snap.val() || {}; else delete state.presence[uid];
+      renderList(); if (state.chat) renderChatHeader();
+    }, () => {});
+  }
 }
 function subscribeAll() {
   if (!state.user) return;
   const uid = state.user.uid;
-  state.subs.push(onValue(ref(db, 'users'), snap => { state.users = snap.val() || {}; renderList(); if (state.chat) renderChatHeader(); }, err => console.warn('Users subscription:', err)));
+  // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
   state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); if (state.chat) renderChatHeader(); if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
-  state.subs.push(onValue(ref(db, 'presence'), snap => { state.presence = snap.val() || {}; updateUserStrip(); renderList(); if (state.chat) renderChatHeader(); }, err => console.warn('Presence subscription:', err)));
-  state.subs.push(onValue(ref(db, 'typing'), snap => {
-    const d = snap.val() || {}; const t = now(); state.typing = {};
-    for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v;
-    if (state.chat) renderMessages();
-  }, () => {}));
-  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; renderList(); updateBadges(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'typing'), snap => { const d = snap.val() || {}; const t = now(); state.typing = {}; for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v; if (state.chat) renderMessages(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
   state.subs.push(onValue(ref(db, 'user_blocked/' + uid), snap => { state.blocked = snap.exists() ? snap.val() : {}; }, () => {}));
 }
 function updateUserStrip() {
@@ -1224,7 +1346,7 @@ async function doContactSearch(uname) {
     <div style="padding: 8px;">
       <div class="list-item" style="background: var(--accent-light); border: 2px solid var(--accent);" onclick="openOrCreateDM('${uid}')">
         ${avatarHTML({ name, avatar: u.avatar, online })}
-        <div class="list-info"><div class="list-name">${esc(name)}${verifiedMark(uid)} <span class="uname">@${esc(u.username || uname)}</span></div><div class="list-last">${online ? '<span style="color:var(--green);font-weight:600;">● в сети</span>' : esc(u.status || 'недавно')}</div></div>
+        <div class="list-info"><div class="list-name">${esc(name)}${verifiedMark(uid)} <span class="uname">@${esc(u.username || uname)}</span></div><div class="list-last">${peerStatusText(u, uid)}</div></div>
         <div class="list-meta"><div style="font-size: 22px;">💬</div></div>
       </div>
     </div>`;
@@ -1264,7 +1386,9 @@ async function openChat(chatId, type) {
     catch (e) { console.warn('Не удалось обновить данные группы:', e); }
   }
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} state.chatUnsub = null; }
+  if (state.groupMetaUnsub) { try { state.groupMetaUnsub(); } catch(e) {} state.groupMetaUnsub = null; }
   state.chat = { id: chatId, type, ...info };
+  syncPresenceSubscriptions();
   state.messages = [];
   if (type === 'dm') { const peer = getUser(info.peerId); state.chat.name = peer?.displayName || peer?.firstName || 'Пользователь'; state.chat.peerId = info.peerId; }
   else if (type === 'group') { state.chat.name = info.name; state.chat.code = info.code; }
@@ -1274,12 +1398,27 @@ async function openChat(chatId, type) {
   if (window.innerWidth <= 760) { document.body.classList.add('chat-open'); $('mobileNav').classList.add('hidden'); $('sidebar').classList.add('hide-mobile'); $('chatPanel').classList.add('show-mobile'); }
   state.messagesAtBottom = true;
   $('chatInput').value = ''; if (state.settings.saveDrafts) { try { const draft = localStorage.getItem('metro_draft_' + chatId); if (draft) $('chatInput').value = draft; } catch(_) {} }
+  if (type === 'group') {
+    // Подписка на каноническую запись группы синхронизирует тему и параметры у всех участников.
+    state.groupMetaUnsub = onValue(ref(db, 'chats/' + chatId), snapGroup => {
+      if (!snapGroup.exists() || state.chat?.id !== chatId || state.chat?.type !== 'group') return;
+      const fresh = snapGroup.val() || {};
+      state.chat = { ...state.chat, ...fresh, id: chatId, type: 'group' };
+      state.chats[chatId] = { ...(state.chats[chatId] || {}), ...fresh, id: chatId, type: 'group' };
+      syncPresenceSubscriptions();
+      applyGroupChatTheme(); renderChatHeader();
+      if (!$('groupSettingsModal')?.classList.contains('hidden')) {
+        if (typeof openGroupCustomization === 'function') { /* refreshes only when its view is currently shown below */ }
+      }
+    }, err => console.warn('Group updates:', err));
+  }
   renderChatHeader(); applyGroupChatTheme(); subscribeMessages(chatId); renderList(); updateSendBtn();
 }
 function closeChatMobile() { document.body.classList.remove('chat-open'); $('mobileNav').classList.toggle('hidden', window.innerWidth > 760); $('sidebar').classList.remove('hide-mobile'); $('chatPanel').classList.remove('show-mobile'); }
 function showChatPlaceholder() {
   state.chat = null; state.messages = [];
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} state.chatUnsub = null; }
+  if (state.groupMetaUnsub) { try { state.groupMetaUnsub(); } catch(e) {} state.groupMetaUnsub = null; }
   $('chatEmpty').classList.remove('hidden'); $('chatHeader').classList.add('hidden'); $('chatInputBar').classList.add('hidden');
   $('replyBar').classList.add('hidden'); $('pinnedBar').classList.add('hidden'); $('chatSearchBar').classList.add('hidden'); $('recordingBar').classList.add('hidden');
   $('messages').innerHTML = ''; renderList();
@@ -1356,7 +1495,7 @@ function renderMessages() {
     const showAuthor = state.chat.type !== 'dm' && !isOwn && m.senderId !== lastSender;
     let inner = '';
     if (m.replyTo) inner += `<div class="reply-quote" onclick="scrollToMsg('${m.replyTo.id}')"><div class="reply-author">${esc(m.replyTo.author)}</div><div>${esc((m.replyTo.text || '').slice(0, 80))}</div></div>`;
-    if (m.type === 'sticker' && m.sticker) inner += `<span class="sticker-img">${esc(m.sticker)}</span>`;
+    if (m.type === 'sticker' && m.sticker) inner += `<span class="sticker-img animated-sticker" aria-label="Анимированный стикер">${esc(m.sticker)}</span>`;
     else if (m.type === 'image' && m.imageData) inner += `<img class="msg-image" src="${m.imageData}" onclick="openViewer('${m.id}')">`;
     else if (m.type === 'file' && m.fileData) inner += `<a class="msg-file" href="${m.fileData}" download="${esc(m.fileName)}" onclick="event.stopPropagation()"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">${esc(m.fileName)}</div><div class="file-size">${formatBytes(m.fileSize)}</div></div></a>`;
     else if (m.type === 'voice' && m.voiceData) inner += `<div class="voice-msg"><button class="voice-play" data-msgid="${m.id}" onclick="toggleVoice('${m.id}', this)">▶</button><div class="voice-wave"><div class="voice-progress" id="vp-${m.id}"></div></div><div class="voice-duration">${formatDuration(m.voiceDuration || 0)}</div></div>`;
@@ -1545,7 +1684,7 @@ function openStickerPicker() {
   STICKERS.forEach(s => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = s;
+    b.textContent = s; b.setAttribute('aria-label', 'Анимированный стикер ' + s); b.title = 'Отправить стикер';
     b.addEventListener('click', (ev) => {
       ev.preventDefault(); ev.stopPropagation();
       sendSticker(s);
@@ -1632,17 +1771,17 @@ async function sendMessage() {
     if (state.chat.type === 'dm') {
       const peerId = state.chat.peerId;
       const peerRef = ref(db, 'user_chats/' + peerId + '/' + chatId);
-      const s = await get(peerRef);
-      if (!s.exists()) await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
-      else await update(peerRef, { lastTs: msg.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
+      // Atomic increment avoids downloading the recipient's entire chat record on every message.
+      await update(peerRef, { lastTs: msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(async () => {
+        await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
+      });
     } else if (state.chat.type === 'group') {
-      for (const uid of Object.keys(state.chat.members || {})) {
-        if (uid === state.user.uid) continue;
-        const r = ref(db, 'user_chats/' + uid + '/' + chatId);
-        const s = await get(r);
-        if (s.exists()) await update(r, { lastTs: msg.createdAt, lastMessage: preview, unread: (s.val().unread || 0) + 1 });
-        else await set(r, { type: 'group', name: state.chat.name, code: state.chat.code, members: state.chat.members, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
-      }
+      // Update only each recipient's compact chat preview; no read-before-write and no duplicated members map.
+      const recipients = Object.keys(state.chat.members || {}).filter(uid => uid !== state.user.uid);
+      await Promise.all(recipients.map(uid => update(ref(db, 'user_chats/' + uid + '/' + chatId), {
+        lastTs: msg.createdAt, lastMessage: preview, unread: increment(1), type: 'group',
+        name: state.chat.name, code: state.chat.code || '', ownerId: state.chat.ownerId || ''
+      })));
     }
     set(ref(db, 'typing/' + state.user.uid), null).catch(()=>{});
   } catch (e) { toast('Ошибка: ' + humanErr(e), '⚠'); }
@@ -1996,7 +2135,7 @@ async function createGroup() {
   const settings = { ...GROUP_DEFAULTS };
   try {
     await set(ref(db, 'chats/' + chatId), { type: 'group', name, code, ownerId: uid, members, admins, settings, createdAt: now(), createdBy: uid });
-    await set(ref(db, 'user_chats/' + uid + '/' + chatId), { type: 'group', name, code, members, settings, ownerId: uid, admins, lastTs: now(), unread: 0 });
+    await set(ref(db, 'user_chats/' + uid + '/' + chatId), { type: 'group', name, code, ownerId: uid, lastTs: now(), unread: 0 });
     await push(ref(db, 'messages/' + chatId), { senderId: uid, system: true, text: `Группа «${name}» создана`, createdAt: now() });
     window.createdGroupId = chatId; $('createdGroupCode').textContent = code; closeModal('createGroupModal'); $('groupCreatedModal').classList.remove('hidden');
   } catch(e) { toast(humanErr(e), '⚠'); }
@@ -2016,7 +2155,7 @@ async function joinByCode() {
       await push(ref(db, 'messages/grp_' + code), { senderId: uid, system: true, text: `${state.profile.displayName} присоединился`, createdAt: now() });
     }
     const existing = await get(ref(db, 'user_chats/' + uid + '/grp_' + code));
-    if (!existing.exists()) await set(ref(db, 'user_chats/' + uid + '/grp_' + code), { type: 'group', name: g.name, code: g.code, members: g.members, ownerId: g.ownerId, admins: g.admins, settings: g.settings, lastTs: now(), unread: 0 });
+    if (!existing.exists()) await set(ref(db, 'user_chats/' + uid + '/grp_' + code), { type: 'group', name: g.name, code: g.code, ownerId: g.ownerId, lastTs: now(), unread: 0 });
     closeModal('joinGroupModal'); switchTab('chats'); toast('Вы вошли', '✓');
     setTimeout(() => openChat('grp_' + code, 'group'), 300);
   } catch(e) { toast(humanErr(e), '⚠'); }
@@ -2038,11 +2177,46 @@ async function openOrCreateDM(peerId) {
   switchTab('chats'); setTimeout(() => openChat(chatId, 'dm'), 200);
 }
 
+function getGroupInviteLink(code) {
+  const url = new URL(location.href);
+  url.search = ''; url.hash = ''; url.searchParams.set('join', String(code || ''));
+  return url.toString();
+}
+function refreshGroupInviteQr() {
+  const code = state.chat?.type === 'group' ? (state.chat.code || String(state.chat.id || '').replace(/^grp_/, '')) : '';
+  const qrBox = $('groupInviteQr'); const codeEl = $('groupInviteCode');
+  if (!qrBox || !code) return;
+  const link = getGroupInviteLink(code);
+  qrBox.innerHTML = '';
+  // QR is generated locally in the browser: invite code is not sent to a QR-image service.
+  if (window.QRCode) {
+    try { new window.QRCode(qrBox, { text: link, width: 200, height: 200, colorDark: '#111827', colorLight: '#ffffff', correctLevel: window.QRCode.CorrectLevel.M }); }
+    catch (_) { qrBox.textContent = 'Не удалось создать QR. Скопируйте ссылку ниже.'; }
+  } else qrBox.textContent = 'QR-модуль не загрузился. Скопируйте ссылку ниже.';
+  if (codeEl) codeEl.textContent = 'Код группы: ' + code;
+}
+async function copyGroupInviteLink() {
+  const code = state.chat?.type === 'group' ? (state.chat.code || String(state.chat.id || '').replace(/^grp_/, '')) : '';
+  if (!code) return toast('Группа не выбрана', '⚠');
+  const link = getGroupInviteLink(code);
+  try { await navigator.clipboard.writeText(link); toast('Ссылка приглашения скопирована', '🔗'); }
+  catch (_) { const inp = document.createElement('textarea'); inp.value = link; document.body.appendChild(inp); inp.select(); const ok = document.execCommand('copy'); inp.remove(); toast(ok ? 'Ссылка приглашения скопирована' : link, ok ? '🔗' : '⚠'); }
+}
+function showJoinFromUrl() {
+  try {
+    const url = new URL(location.href); const code = url.searchParams.get('join');
+    if (!code || !/^\d{8}$/.test(code)) return;
+    url.searchParams.delete('join'); history.replaceState({}, '', url.toString());
+    openJoinGroupModal(); $('joinCode').value = code;
+    toast('QR-приглашение распознано. Нажмите «Войти» для вступления.', '🔳');
+  } catch (_) {}
+}
 function openAddMemberModal() {
   $('addMemberUsername').value = '';
   $('addMemberStatus').className = 'uname-status';
   $('addMemberStatus').textContent = '';
   renderContactPickList();
+  refreshGroupInviteQr();
   $('addMemberModal').classList.remove('hidden');
 }
 function renderContactPickList() {
@@ -2080,9 +2254,8 @@ async function addSelectedContactsToGroup() {
     for (const uid of actuallyAdded) await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
     const newMembers = { ...freshMembers, ...Object.fromEntries(actuallyAdded.map(uid => [uid, true])) };
     state.chat = { ...state.chat, ...g, id: groupId, type: 'group', members: newMembers };
-    await update(ref(db, 'user_chats/' + state.user.uid + '/' + groupId), { members: newMembers });
     for (const uid of actuallyAdded) {
-      await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins || {}, settings: g.settings || {}, lastTs: now(), unread: 0 });
+      await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, ownerId: g.ownerId, lastTs: now(), unread: 0 });
       const u = getUser(uid) || await fetchUserIfMissing(uid);
       await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
     }
@@ -2098,16 +2271,9 @@ async function doAddMemberToGroup() {
   statusEl.className = 'uname-status checking'; statusEl.textContent = 'Ищем...';
   let uid = null;
   try {
+    // Индекс usernames/{ник} позволяет найти человека без скачивания всей базы users.
     const s = await get(ref(db, 'usernames/' + uname));
     if (s.exists()) uid = s.val();
-    else {
-      // Fallback: искать по users
-      const usersSnap = await get(ref(db, 'users'));
-      const allUsers = usersSnap.val() || {};
-      for (const [u, data] of Object.entries(allUsers)) {
-        if (data.username === uname) { uid = u; break; }
-      }
-    }
   } catch(e) {}
   if (!uid) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Не найден'; return; }
   if (uid === state.user.uid) { statusEl.className = 'uname-status err'; statusEl.textContent = 'Это вы'; return; }
@@ -2120,8 +2286,7 @@ async function doAddMemberToGroup() {
     await set(ref(db, 'chats/' + groupId + '/members/' + uid), true);
     const newMembers = { ...(g.members || {}), [uid]: true };
     state.chat = { ...state.chat, ...g, id: groupId, type: 'group', members: newMembers };
-    await update(ref(db, 'user_chats/' + state.user.uid + '/' + groupId), { members: newMembers });
-    await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, members: newMembers, ownerId: g.ownerId, admins: g.admins || {}, settings: g.settings || {}, lastTs: now(), unread: 0 });
+    await set(ref(db, 'user_chats/' + uid + '/' + groupId), { type: 'group', name: g.name, code: g.code, ownerId: g.ownerId, lastTs: now(), unread: 0 });
     const u = getUser(uid) || await fetchUserIfMissing(uid);
     await push(ref(db, 'messages/' + groupId), { senderId: state.user.uid, system: true, text: `${u?.firstName || 'Участник'} добавлен(а)`, createdAt: now() });
     statusEl.className = 'uname-status ok'; statusEl.textContent = '✓ Добавлен!';
@@ -2608,7 +2773,7 @@ async function renderMyDevices() {
     const snap = await get(ref(db, 'device_sessions/' + uid));
     const sessions = snap.val() || {};
     state.deviceSessions = sessions;
-    const entries = Object.entries(sessions).sort((a,b) => (b[1]?.lastSeen || b[1]?.createdAt || 0) - (a[1]?.lastSeen || a[1]?.createdAt || 0));
+    const entries = Object.entries(sessions).filter(([,d]) => d?.revoked !== true).sort((a,b) => (b[1]?.lastSeen || b[1]?.createdAt || 0) - (a[1]?.lastSeen || a[1]?.createdAt || 0));
     if (!entries.length) { list.innerHTML = '<div class="set-sub" style="padding:12px;">Сеансы ещё не зарегистрированы. После следующего входа устройство появится здесь.</div>'; return; }
     list.innerHTML = entries.map(([sid, d]) => {
       const current = sid === currentDeviceSessionId;
@@ -2617,7 +2782,7 @@ async function renderMyDevices() {
       const revoked = d.revoked === true;
       const date = ts => ts ? new Date(ts).toLocaleString() : 'неизвестно';
       const title = d.label || d.platform || 'Устройство';
-      return `<div class="set-row" style="align-items:flex-start;gap:10px;"><div class="set-icon">${current ? '🟢' : '💻'}</div><div class="set-info" style="min-width:0;"><div class="set-label">${esc(title)}${current ? ' · Это устройство' : ''}</div><div class="set-sub">Первый вход: ${esc(date(d.createdAt))}<br>Последняя активность: ${esc(date(d.lastSeen))}<br>${revoked ? 'Сеанс заблокирован' : (d.online ? 'Сейчас активен' : 'Неактивен')}</div><div class="set-sub" style="overflow-wrap:anywhere;">${esc(d.userAgent || '')}</div></div>${!current && !revoked ? `<button class="btn btn-secondary" style="width:auto;align-self:center;white-space:nowrap;" ${tooNew ? 'disabled title="Можно завершить через 2 часа после входа"' : ''} onclick="revokeDeviceSession('${sid}')">${tooNew ? 'Подождать 2 ч' : 'Завершить'}</button>` : ''}</div>`;
+      return `<div class="set-row" style="align-items:flex-start;gap:10px;"><div class="set-icon">${current ? '🟢' : '💻'}</div><div class="set-info" style="min-width:0;"><div class="set-label">${esc(title)}${current ? ' · Это устройство' : ''}</div><div class="set-sub">Первый вход: ${esc(date(d.createdAt))}<br>Последняя активность: ${esc(date(d.lastSeen))}<br>${d.online ? 'Сейчас активен' : 'Неактивен'}</div><div class="set-sub" style="overflow-wrap:anywhere;">${esc(d.userAgent || '')}</div></div>${!current && !revoked ? `<button class="btn btn-secondary" style="width:auto;align-self:center;white-space:nowrap;" ${tooNew ? 'disabled title="Можно завершить через 2 часа после входа"' : ''} onclick="revokeDeviceSession('${sid}')">${tooNew ? 'Подождать 2 ч' : 'Завершить'}</button>` : ''}</div>`;
     }).join('');
   } catch (e) { list.innerHTML = '<div class="set-sub" style="padding:12px;">Не удалось загрузить устройства. Проверьте Firebase Rules.</div>'; }
 }
@@ -2627,7 +2792,7 @@ async function revokeDeviceSession(sid) {
   if (sid === currentDeviceSessionId) return toast('Нельзя завершить текущий сеанс отсюда', '⚠');
   if (now() - (Number(d.createdAt) || now()) < 2 * 60 * 60 * 1000) return toast('Сеанс можно завершить только через 2 часа после входа', '⚠');
   showConfirm('Завершить сеанс?', 'На выбранном устройстве аккаунт будет отключён при следующей проверке соединения.', async () => {
-    try { await update(ref(db, `device_sessions/${state.user.uid}/${sid}`), { revoked: true }); toast('Сеанс завершён', '✓'); await renderMyDevices(); }
+    try { await update(ref(db, `device_sessions/${state.user.uid}/${sid}`), { revoked: true }); state.deviceSessions[sid] = { ...d, revoked: true }; await renderMyDevices(); toast('Сеанс завершён', '✓'); setTimeout(() => { remove(ref(db, `device_sessions/${state.user.uid}/${sid}`)).catch(()=>{}); delete state.deviceSessions[sid]; }, 1200); }
     catch (e) { toast(humanErr(e) || 'Не удалось завершить сеанс. Проверьте Firebase Rules.', '⚠'); }
   });
 }
@@ -2666,8 +2831,8 @@ function renderSettings() {
       <div class="settings-group">
         <h3>Приватность</h3>
         <div class="set-row" onclick="toggleAppSetting('readReceipts')"><div class="set-icon">✓</div><div class="set-info"><div class="set-label">Отчёты о прочтении</div></div><div class="toggle ${s.readReceipts ? 'on' : ''}"></div></div>
-        <div class="set-row" onclick="toggleAppSetting('onlineStatus')"><div class="set-icon">👁️</div><div class="set-info"><div class="set-label">Показывать «в сети»</div></div><div class="toggle ${s.onlineStatus ? 'on' : ''}"></div></div>
-        <div class="set-row" onclick="toggleAppSetting('showLastSeen')"><div class="set-icon">🕒</div><div class="set-info"><div class="set-label">«Был(а) недавно»</div></div><div class="toggle ${s.showLastSeen ? 'on' : ''}"></div></div>
+        <div class="set-row" onclick="toggleAppSetting('onlineStatus')"><div class="set-icon">👁️</div><div class="set-info"><div class="set-label">Показывать «в сети»</div><div class="set-sub">Если выключить, другие не увидят ваш онлайн-статус</div></div><div class="toggle ${s.onlineStatus ? 'on' : ''}"></div></div>
+        <div class="set-row" onclick="toggleAppSetting('showLastSeen')"><div class="set-icon">🕒</div><div class="set-info"><div class="set-label">Показывать время последнего посещения</div><div class="set-sub">Если выключить, другим будет показано «был(а) когда-то»</div></div><div class="toggle ${s.showLastSeen ? 'on' : ''}"></div></div>
       </div>
       <div class="settings-group">
         <h3>Безопасность</h3>
@@ -2692,7 +2857,13 @@ function renderSettings() {
 }
 function setTheme(id) { const t = getTheme(id); state.settings.themeId = id; state.settings.darkMode = t.dark; applySettings(); saveSettings(); renderSettings(); }
 function toggleDarkMode() { state.settings.darkMode = !state.settings.darkMode; applySettings(); saveSettings(); renderSettings(); }
-function toggleAppSetting(key) { state.settings[key] = !state.settings[key]; applySettings(); saveSettings(); renderSettings(); }
+function toggleAppSetting(key) {
+  state.settings[key] = !state.settings[key]; applySettings(); saveSettings(); renderSettings();
+  if (key === 'onlineStatus' || key === 'showLastSeen') {
+    if (state.user) update(ref(db, 'presence/' + state.user.uid), { showOnline: state.settings.onlineStatus !== false, showLastSeen: state.settings.showLastSeen !== false, lastSeen: now() }).catch(() => {});
+    renderList(); if (state.chat) renderChatHeader();
+  }
+}
 async function saveSettings() {
   if (!state.user) return;
   try { await set(ref(db, 'user_settings/' + state.user.uid), state.settings); }
@@ -2849,7 +3020,7 @@ Object.assign(window, {
   toggleVoiceRecording, stopRecording, cancelRecording, toggleVoice,
   msgTouchStart, msgTouchMove, msgTouchEnd, doContactSearch, sendMessage,
   allowNotifFromOnb, skipNotifPrompt, showNotifPrompt,
-  openAddMemberModal, doAddMemberToGroup, addSelectedContactsToGroup,
+  openAddMemberModal, doAddMemberToGroup, addSelectedContactsToGroup, copyGroupInviteLink, showJoinFromUrl,
   startVideoCircle, stopVideoCircle, cancelVideoCircle, toggleVideoCircle,
   openStickerPicker, sendSticker,
   checkEmailVerified, resendVerifyEmail, cancelVerify,
