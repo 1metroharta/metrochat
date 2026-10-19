@@ -1512,7 +1512,7 @@ function openChannelProfileEditor() {
       <div class="channel-profile-bottom"><button class="btn btn-secondary" onclick="renderChannelProfile()">Отмена</button><button class="btn btn-primary" id="saveChannelProfileBtn" onclick="saveChannelProfile()">Сохранить</button></div>
     </div>`;
 }
-async async function editChannelAvatarChange(event) {
+async function editChannelAvatarChange(event) {
   const file = event.target.files?.[0]; event.target.value = '';
   if (!file) return;
   if (!file.type || !file.type.startsWith('image/')) return toast('Выберите файл изображения', '⚠');
@@ -1526,7 +1526,7 @@ async async function editChannelAvatarChange(event) {
     toast('Фото выбрано. Нажмите «Сохранить», чтобы применить его.', '✓');
   } catch(e) { console.error('Channel image processing failed:', e); toast('Не удалось обработать изображение. Попробуйте другое фото.', '⚠'); }
 }
-async async function saveChannelProfile() {
+async function saveChannelProfile() {
   const c = state.chat;
   if (!c || c.type !== 'channel' || c.ownerId !== state.user?.uid) return toast('Недостаточно прав', '🔒');
   const name = ($('editChannelName')?.value || '').trim();
@@ -1575,7 +1575,7 @@ async function selectChannelTheme(themeId) {
     applyGroupChatTheme(); renderChannelProfile(); toast('Тема канала сохранена', '✓');
   } catch(e) { console.error('Save channel theme:',e); toast(humanErr(e) || 'Не удалось сохранить тему канала', '⚠'); }
 }
-async async function manageChannelAdmins() {
+async function manageChannelAdmins() {
   const c = state.chat;
   if (!c || c.type !== 'channel') return;
   const uid = state.user?.uid;
