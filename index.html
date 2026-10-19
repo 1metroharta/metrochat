@@ -541,7 +541,7 @@ input, textarea { font-family: inherit; }
   </nav>
 </div>
 
-<div class="modal-overlay hidden" id="createChannelModal"><div class="modal"><h3>Создать канал</h3><p class="modal-desc">В канале публикуют владелец и администраторы. Подписчики читают публикации.</p><input type="text" class="onb-input" id="newChannelName" placeholder="Название канала" maxlength="60"><textarea class="onb-input" id="newChannelDescription" placeholder="Описание (необязательно)" maxlength="300" rows="3" style="resize:vertical;"></textarea><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createChannelModal')">Отмена</button><button class="btn btn-primary" onclick="createChannel()">Создать</button></div></div></div>
+<div class="modal-overlay hidden" id="createChannelModal"><div class="modal"><h3>Создать канал</h3><p class="modal-desc">В канале публикуют владелец и администраторы. Подписчики читают публикации.</p><input type="text" class="onb-input" id="newChannelName" placeholder="Название канала" maxlength="60"><textarea class="onb-input" id="newChannelDescription" placeholder="Описание (необязательно)" maxlength="300" rows="3" style="resize:vertical;"></textarea><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createChannelModal')">Отмена</button><button class="btn btn-primary" id="createChannelSubmit" onclick="createChannel()">Создать</button></div></div></div>
 <div class="modal-overlay hidden" id="createGroupModal"><div class="modal"><h3>Создать группу</h3><p class="modal-desc">Введите название.</p><input type="text" class="onb-input" id="newGroupName" placeholder="Название" maxlength="50" style="margin-bottom: 0;"><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createGroupModal')">Отмена</button><button class="btn btn-primary" onclick="createGroup()">Создать</button></div></div></div>
 <div class="modal-overlay hidden" id="joinGroupModal"><div class="modal"><h3>Войти по коду</h3><p class="modal-desc">Введите 8-значный код.</p><input type="text" class="onb-input code-input" id="joinCode" placeholder="00000000" maxlength="8" inputmode="numeric" style="margin-bottom: 0;"><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('joinGroupModal')">Отмена</button><button class="btn btn-primary" onclick="joinByCode()">Войти</button></div></div></div>
 <div class="modal-overlay hidden" id="groupCreatedModal"><div class="modal"><h3>Группа создана 🎉</h3><p class="modal-desc">Код:</p><div class="code-box"><div class="code" id="createdGroupCode">00000000</div><button class="btn btn-secondary" onclick="copyCreatedCode()">📋 Скопировать</button></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('groupCreatedModal'); openChat(window.createdGroupId, 'group')">В чат</button></div></div></div>
@@ -1353,34 +1353,64 @@ function openCreateChannelModal() {
   $('newChannelName').value = ''; $('newChannelDescription').value = '';
   $('createChannelModal').classList.remove('hidden');
 }
+let channelCreateInProgress = false;
 async function createChannel() {
-  const name = $('newChannelName').value.trim();
-  const description = $('newChannelDescription').value.trim();
-  if (!name) return toast('Введите название канала', '⚠');
-  if (!state.user) return toast('Сначала войдите в аккаунт', '⚠');
-  const id = 'chn_' + push(ref(db, 'channels')).key;
+  if (channelCreateInProgress) return;
+  const nameEl = $('newChannelName');
+  const descEl = $('newChannelDescription');
+  const submitBtn = $('createChannelSubmit');
+  const name = (nameEl?.value || '').trim();
+  const description = (descEl?.value || '').trim();
+  if (!name) { toast('Введите название канала', '⚠'); nameEl?.focus(); return; }
+  if (!state.user?.uid) return toast('Сначала войдите в аккаунт', '⚠');
+  channelCreateInProgress = true;
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Создаём…'; }
   const uid = state.user.uid, ts = now();
+  const id = 'chn_' + push(ref(db, 'channels')).key;
   const data = { type:'channel', name, description, ownerId:uid, admins:{[uid]:true}, members:{[uid]:true}, createdAt:ts };
+  const preview = { type:'channel', name, ownerId:uid, lastTs:ts, unread:0 };
   try {
+    // Одна атомарная запись: канал и его карточка у владельца создаются вместе.
     await update(ref(db), {
       ['channels/' + id]: data,
-      [`user_chats/${uid}/${id}`]: { type:'channel', name, ownerId:uid, lastTs:ts, unread:0 }
+      [`user_chats/${uid}/${id}`]: preview
     });
+    // Не ждём Firebase onValue: открытие канала не должно зависеть от скорости подписки.
+    state.channels = { ...(state.channels || {}), [id]: data };
+    state.chats = { ...(state.chats || {}), [id]: preview };
     closeModal('createChannelModal');
     switchTab('channels');
-    toast('Канал создан. Ссылку можно скопировать в списке каналов.', '✓');
-    setTimeout(()=>openChat(id,'channel'),100);
-  } catch(e) { console.error('Create channel:',e); toast(humanErr(e) || 'Не удалось создать канал. Проверьте доступ к channels и user_chats в Firebase Rules.', '⚠'); }
+    renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
+    toast('Канал создан. Его можно найти через поиск и поделиться ссылкой.', '✓');
+    await openChat(id, 'channel');
+  } catch(e) {
+    console.error('Create channel failed:', e);
+    const detail = humanErr(e) || e?.message || 'Неизвестная ошибка Firebase';
+    toast(/permission_denied|доступа к базе/i.test(detail)
+      ? 'Firebase запретил создание. Проверьте Rules для channels и user_chats.'
+      : 'Не удалось создать канал: ' + detail, '⚠');
+  } finally {
+    channelCreateInProgress = false;
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Создать'; }
+  }
 }
 async function joinChannel(id) {
   const ch = state.channels?.[id];
-  if (!ch || !state.user) return toast('Канал не найден или недоступен', '⚠');
+  if (!ch || !state.user?.uid) return toast('Канал не найден или недоступен', '⚠');
+  const uid = state.user.uid;
+  const preview = { type:'channel', name:ch.name || 'Канал', ownerId:ch.ownerId || '', lastTs:ch.createdAt || now(), unread:0 };
   try {
-    await update(ref(db, `channels/${id}/members`), { [state.user.uid]:true });
-    await set(ref(db, `user_chats/${state.user.uid}/${id}`), { type:'channel', name:ch.name || 'Канал', ownerId:ch.ownerId, lastTs:ch.createdAt || now(), unread:0 });
+    // Атомарно сохраняем подписку в канале и карточку в списке чатов.
+    await update(ref(db), {
+      [`channels/${id}/members/${uid}`]: true,
+      [`user_chats/${uid}/${id}`]: preview
+    });
+    state.chats = { ...(state.chats || {}), [id]: preview };
+    state.channels = { ...(state.channels || {}), [id]: { ...ch, members:{ ...(ch.members || {}), [uid]:true } } };
+    renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
     toast('Вы подписались на канал', '✓');
-    openChat(id,'channel');
-  } catch(e) { console.error('Join channel:',e); toast(humanErr(e) || 'Не удалось подписаться. Проверьте правила Firebase.', '⚠'); }
+    await openChat(id,'channel');
+  } catch(e) { console.error('Join channel failed:',e); toast(humanErr(e) || 'Не удалось подписаться. Проверьте правила Firebase.', '⚠'); }
 }
 async function manageChannelAdmins() {
   const c = state.chat;
@@ -3406,6 +3436,8 @@ Object.assign(window, {
   openStickerPicker, sendSticker,
   checkEmailVerified, resendVerifyEmail, cancelVerify,
   openEditGroupModal, editGroupAvatarChange, saveGroupInfo,
+  // Эти функции вызываются из inline onclick внутри динамически созданных элементов.
+  openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins,
   refreshChatPreview
 });
 </script>
