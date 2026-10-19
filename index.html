@@ -2676,6 +2676,16 @@ async function openChatInfo() {
         state.chat = { ...state.chat, ...(freshSnap.val() || {}), id: groupId, type: 'group' };
       }
     } catch (e) { console.warn('Could not refresh group details:', e); }
+  } else if (state.chat.type === 'channel') {
+    // Каналы хранятся в channels/<id>, а не в chats/<id>.
+    // Обновляем данные профиля, но не блокируем отображение при ошибке сети.
+    try {
+      const channelId = state.chat.id;
+      const freshSnap = await get(ref(db, 'channels/' + channelId));
+      if (freshSnap.exists() && state.chat && state.chat.id === channelId && state.chat.type === 'channel') {
+        state.chat = { ...state.chat, ...(freshSnap.val() || {}), id: channelId, type: 'channel' };
+      }
+    } catch (e) { console.warn('Could not refresh channel details:', e); }
   }
   if (!state.chat) return;
   const c = state.chat;
@@ -2698,6 +2708,35 @@ async function openChatInfo() {
         <div class="set-row" onclick="clearChatHistory()"><div class="set-icon">🧹</div><div class="set-info"><div class="set-label">Очистить историю</div></div></div>
         <div class="set-row" onclick="blockUser('${c.peerId}')"><div class="set-icon">🚫</div><div class="set-info"><div class="set-label">${state.blocked[c.peerId] ? 'Разблокировать' : 'Заблокировать'}</div></div></div>
         <div class="set-row danger" onclick="deleteChatFromInfo()"><div class="set-icon">🗑️</div><div class="set-info"><div class="set-label">Удалить чат</div></div></div>
+      </div>
+      <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
+    return;
+  }
+
+  if (c.type === 'channel') {
+    const members = c.members && typeof c.members === 'object' ? c.members : {};
+    const admins = c.admins && typeof c.admins === 'object' ? c.admins : {};
+    const uid = state.user?.uid;
+    const isOwner = !!uid && c.ownerId === uid;
+    const isAdmin = !!uid && !!admins[uid];
+    const isMember = !!uid && !!members[uid];
+    const owner = c.ownerId ? getUser(c.ownerId) : null;
+    const ownerName = owner?.displayName || owner?.firstName || owner?.username || (isOwner ? 'Вы' : 'Владелец канала');
+    const memberCount = Object.values(members).filter(Boolean).length;
+    const adminCount = Object.values(admins).filter(Boolean).length;
+    wrap.innerHTML = `
+      <div class="group-info-top"><button class="group-info-back" onclick="closeModal('chatInfoModal')" aria-label="Назад в канал">←</button><div class="group-info-top-title">Информация о канале</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 22px;">
+        <div class="avatar square" style="width:88px;height:88px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent);font-size:38px;">📢</div>
+        <h3 style="margin:14px 0 5px;overflow-wrap:anywhere;">${esc(c.name || 'Канал')}</h3>
+        <p class="modal-desc" style="margin:0;">${memberCount} подписчиков</p>
+      </div>
+      ${c.description ? `<div class="settings-group"><h3>Описание</h3><div style="padding:0 20px 16px;white-space:pre-wrap;overflow-wrap:anywhere;">${esc(c.description)}</div></div>` : ''}
+      <div class="settings-group">
+        <div class="set-row"><div class="set-icon">👑</div><div class="set-info"><div class="set-label">Владелец</div><div class="set-sub">${esc(ownerName)}</div></div></div>
+        <div class="set-row"><div class="set-icon">🛡️</div><div class="set-info"><div class="set-label">Администраторы</div><div class="set-sub">${adminCount}</div></div></div>
+        ${(isOwner || isAdmin) ? `<div class="set-row" onclick="manageChannelAdmins()"><div class="set-icon">⚙️</div><div class="set-info"><div class="set-label">Управление администраторами</div><div class="set-sub">Выдать или снять права</div></div></div>` : ''}
+        ${!isMember && !isOwner ? `<div class="set-row" onclick="closeModal('chatInfoModal'); joinChannel('${c.id}')"><div class="set-icon">➕</div><div class="set-info"><div class="set-label">Подписаться на канал</div></div></div>` : ''}
       </div>
       <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
     return;
@@ -2752,6 +2791,8 @@ async function openChatInfo() {
       <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
     return;
   }
+
+  wrap.innerHTML = `<div style="padding:24px;"><div class="group-info-top"><button class="group-info-back" onclick="closeModal('chatInfoModal')" aria-label="Закрыть">←</button><div class="group-info-top-title">Информация</div></div><p class="modal-desc">Не удалось отобразить информацию для этого типа чата.</p><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div></div>`;
 }
 
 async function transferGroupOwnership() {
