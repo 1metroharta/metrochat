@@ -1412,27 +1412,145 @@ async function joinChannel(id) {
     await openChat(id,'channel');
   } catch(e) { console.error('Join channel failed:',e); toast(humanErr(e) || 'Не удалось подписаться. Проверьте правила Firebase.', '⚠'); }
 }
+function channelProfileAvatar(c, size = 92) {
+  const style = `width:${size}px;height:${size}px;border-radius:24px;flex:0 0 auto;background:var(--accent-light) center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:${Math.round(size*.42)}px;overflow:hidden;`;
+  return `<div class="avatar square" style="${style}${c.avatar ? `background-image:url('${String(c.avatar).replace(/'/g, '%27')}');` : ''}">${c.avatar ? '' : '📢'}</div>`;
+}
+function renderChannelProfile() {
+  const c = state.chat;
+  if (!c || c.type !== 'channel') return;
+  const uid = state.user?.uid;
+  const members = c.members && typeof c.members === 'object' ? c.members : {};
+  const admins = c.admins && typeof c.admins === 'object' ? c.admins : {};
+  const isOwner = !!uid && c.ownerId === uid;
+  const isAdmin = !!uid && !!admins[uid];
+  const isMember = !!uid && (!!members[uid] || isOwner || isAdmin);
+  const owner = c.ownerId ? getUser(c.ownerId) : null;
+  const ownerName = owner?.displayName || [owner?.firstName, owner?.lastName].filter(Boolean).join(' ') || owner?.username || (isOwner ? 'Вы' : 'Владелец канала');
+  const memberCount = Object.values(members).filter(Boolean).length;
+  const adminIds = Object.keys(admins).filter(id => admins[id] && id !== c.ownerId);
+  const url = channelShareUrl(c.id);
+  const activeTheme = c.themeId || 'crimson';
+  const themeHtml = (isOwner || isAdmin) ? `<div class="settings-group"><h3>🎨 Тема канала</h3><p class="modal-desc" style="padding:0 20px 10px;">Оформление применяется для всех подписчиков.</p><div class="theme-grid">${THEMES.map(t => `<div class="theme-item ${t.id === activeTheme ? 'active' : ''}" data-channel-theme="${esc(t.id)}" style="background:var(--surface-2);cursor:pointer;"><div class="theme-preview" style="background:linear-gradient(135deg,${t.grad[0]},${t.grad[1]})">M</div><div class="theme-name">${esc(t.name)}</div></div>`).join('')}</div></div>` : '';
+  $('chatInfoContent').innerHTML = `
+    <div class="group-info-top"><button class="group-info-back" onclick="closeModal('chatInfoModal')" aria-label="Назад в канал">←</button><div class="group-info-top-title">Информация о канале</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 22px;">
+      ${channelProfileAvatar(c, 92)}
+      <h3 style="margin:14px 0 5px;overflow-wrap:anywhere;">${esc(c.name || 'Канал')}</h3>
+      ${c.username ? `<div style="font-weight:700;color:var(--accent);margin:0 0 5px;overflow-wrap:anywhere;">@${esc(String(c.username).replace(/^@/,''))}</div>` : ''}
+      <p class="modal-desc" style="margin:0;">${memberCount} подписчиков</p>
+    </div>
+    ${c.description ? `<div class="settings-group"><h3>Описание</h3><div style="padding:0 20px 16px;white-space:pre-wrap;overflow-wrap:anywhere;">${esc(c.description)}</div></div>` : '<div class="settings-group"><h3>Описание</h3><div style="padding:0 20px 16px;color:var(--text-2);">Описание не добавлено</div></div>'}
+    <div class="settings-group"><h3>Ссылка и владелец</h3>
+      <div class="set-row" onclick="copyChannelLink('${c.id}')"><div class="set-icon">🔗</div><div class="set-info" style="min-width:0;"><div class="set-label">Ссылка на канал</div><div class="set-sub" style="overflow-wrap:anywhere;">${esc(url)}</div></div><div class="set-arrow">⧉</div></div>
+      <div class="set-row"><div class="set-icon">👑</div><div class="set-info"><div class="set-label">Владелец</div><div class="set-sub">${esc(ownerName)}${owner?.username ? ` · @${esc(owner.username)}` : ''}</div></div></div>
+      <div class="set-row"><div class="set-icon">🛡️</div><div class="set-info"><div class="set-label">Администраторы</div><div class="set-sub">${adminIds.length}</div></div></div>
+      ${(isOwner || isAdmin) ? `<div class="set-row" onclick="manageChannelAdmins()"><div class="set-icon">⚙️</div><div class="set-info"><div class="set-label">Права администраторов</div><div class="set-sub">Выдать или снять права</div></div><div class="set-arrow">›</div></div>` : ''}
+    </div>
+    ${themeHtml}
+    ${isOwner ? `<div class="settings-group"><h3>Управление каналом</h3><div class="set-row" onclick="openChannelProfileEditor()"><div class="set-icon">✏️</div><div class="set-info"><div class="set-label">Редактировать шапку канала</div><div class="set-sub">Фото, название, описание и юзернейм</div></div><div class="set-arrow">›</div></div></div>` : ''}
+    ${!isMember ? `<div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal'); joinChannel('${c.id}')">Подписаться на канал</button></div>` : `<div class="modal-actions"><button class="btn btn-secondary" onclick="copyChannelLink('${c.id}')">Копировать ссылку</button><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Готово</button></div>`}`;
+  $('chatInfoContent').querySelectorAll('[data-channel-theme]').forEach(el => el.addEventListener('click', () => selectChannelTheme(el.dataset.channelTheme)));
+}
+function openChannelProfileEditor() {
+  const c = state.chat;
+  if (!c || c.type !== 'channel' || c.ownerId !== state.user?.uid) return toast('Изменять шапку может только владелец канала', '🔒');
+  $('chatInfoContent').innerHTML = `
+    <div class="group-info-top"><button class="group-info-back" onclick="renderChannelProfile()" aria-label="Назад">←</button><div class="group-info-top-title">Редактирование канала</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;padding:18px 0;"><div id="editChannelAvatarPreview">${channelProfileAvatar(c, 92)}</div><input id="editChannelAvatarInput" type="file" accept="image/*" style="display:none" onchange="editChannelAvatarChange(event)"><button class="btn btn-secondary" style="margin-top:10px;" onclick="document.getElementById('editChannelAvatarInput').click()">Изменить фото</button></div>
+    <div class="auth-field"><label>Название канала *</label><input id="editChannelName" maxlength="60" value="${esc(c.name || '')}"></div>
+    <div class="auth-field"><label>Описание</label><textarea id="editChannelDescription" maxlength="300" rows="3" class="onb-input" style="resize:vertical;">${esc(c.description || '')}</textarea></div>
+    <div class="auth-field"><label>Юзернейм канала (без @)</label><input id="editChannelUsername" maxlength="32" autocapitalize="off" spellcheck="false" value="${esc(String(c.username || '').replace(/^@/,''))}" placeholder="metro_news"><div class="set-sub">Используйте латинские буквы, цифры и подчёркивание. Юзернейм должен быть уникальным вручную.</div></div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="renderChannelProfile()">Отмена</button><button class="btn btn-primary" onclick="saveChannelProfile()">Сохранить</button></div>`;
+}
+async function editChannelAvatarChange(event) {
+  const file = event.target.files?.[0]; event.target.value = '';
+  if (!file) return;
+  if (!file.type.startsWith('image/')) return toast('Выберите файл изображения', '⚠');
+  try {
+    const data = await compressImage(file, 350 * 1024);
+    const preview = $('editChannelAvatarPreview');
+    if (preview) preview.innerHTML = `<div class="avatar square" style="width:92px;height:92px;border-radius:24px;background:url('${data}') center/cover no-repeat;"></div>`;
+    const c = state.chat; if (c?.type === 'channel') c._pendingAvatar = data;
+  } catch(e) { toast('Не удалось обработать изображение', '⚠'); }
+}
+async function saveChannelProfile() {
+  const c = state.chat;
+  if (!c || c.type !== 'channel' || c.ownerId !== state.user?.uid) return toast('Недостаточно прав', '🔒');
+  const name = ($('editChannelName')?.value || '').trim();
+  const description = ($('editChannelDescription')?.value || '').trim();
+  const username = ($('editChannelUsername')?.value || '').trim().replace(/^@+/, '').toLowerCase();
+  if (!name) return toast('Введите название канала', '⚠');
+  if (username && !/^[a-z0-9_]{3,32}$/.test(username)) return toast('Юзернейм: 3–32 символа, латиница, цифры и _', '⚠');
+  const patch = { name, description, username: username || null };
+  if (c._pendingAvatar) patch.avatar = c._pendingAvatar;
+  try {
+    await update(ref(db, 'channels/' + c.id), patch);
+    c.name = name; c.description = description; c.username = username || ''; if (patch.avatar) c.avatar = patch.avatar; delete c._pendingAvatar;
+    state.channels = { ...(state.channels || {}), [c.id]: { ...(state.channels?.[c.id] || {}), ...c } };
+    state.chats[c.id] = { ...(state.chats[c.id] || {}), name, avatar: c.avatar || null, type:'channel', ownerId:c.ownerId };
+    await update(ref(db, `user_chats/${state.user.uid}/${c.id}`), { name, avatar: c.avatar || null, type:'channel', ownerId:c.ownerId }).catch(()=>{});
+    renderChatHeader(); renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
+    toast('Шапка канала сохранена', '✓'); renderChannelProfile();
+  } catch(e) { console.error('Save channel profile:', e); toast(humanErr(e) || 'Не удалось сохранить шапку канала. Проверьте Firebase Rules.', '⚠'); }
+}
+async function selectChannelTheme(themeId) {
+  const c = state.chat;
+  if (!c || c.type !== 'channel' || !THEMES.some(t => t.id === themeId)) return;
+  if (c.ownerId !== state.user?.uid && !c.admins?.[state.user?.uid]) return toast('Менять тему могут только администраторы и владелец', '🔒');
+  try {
+    const fresh = await get(ref(db, 'channels/' + c.id));
+    if (!fresh.exists()) throw new Error('Канал не найден');
+    const latest = fresh.val() || {};
+    if (latest.ownerId !== state.user?.uid && !latest.admins?.[state.user?.uid]) throw new Error('Недостаточно прав');
+    await update(ref(db, 'channels/' + c.id), { themeId });
+    state.chat.themeId = themeId;
+    state.channels[c.id] = { ...(state.channels[c.id] || {}), themeId };
+    applyGroupChatTheme(); renderChannelProfile(); toast('Тема канала сохранена', '✓');
+  } catch(e) { console.error('Save channel theme:',e); toast(humanErr(e) || 'Не удалось сохранить тему канала', '⚠'); }
+}
 async function manageChannelAdmins() {
   const c = state.chat;
-  if (!c || c.type !== 'channel' || c.ownerId !== state.user?.uid) return toast('Управлять администраторами может только владелец', '🔒');
-  const uname = prompt('Введите @никнейм участника, которому хотите выдать или снять права администратора:');
-  if (uname === null || !uname.trim()) return;
-  const normalized = normalizeUsername(uname.trim());
+  if (!c || c.type !== 'channel') return;
+  const uid = state.user?.uid;
+  const canManage = c.ownerId === uid || !!c.admins?.[uid];
+  if (!canManage) return toast('Недостаточно прав', '🔒');
+  const adminIds = Object.keys(c.admins || {}).filter(id => c.admins[id] && id !== c.ownerId);
+  const rows = await Promise.all(adminIds.map(async id => {
+    let u = getUser(id); if (!u) { try { u = await fetchUserIfMissing(id); } catch(_) {} }
+    const label = u?.displayName || [u?.firstName,u?.lastName].filter(Boolean).join(' ') || u?.username || id;
+    return `<div class="set-row"><div class="set-icon">🛡️</div><div class="set-info"><div class="set-label">${esc(label)}</div><div class="set-sub">${u?.username ? '@'+esc(u.username) : 'Администратор'}</div></div>${(c.ownerId === uid || c.admins?.[uid]) ? `<button class="btn btn-secondary" style="width:auto;padding:7px 9px;" onclick="revokeChannelAdmin('${id}')">Снять</button>` : ''}</div>`;
+  }));
+  $('chatInfoContent').innerHTML = `<div class="group-info-top"><button class="group-info-back" onclick="renderChannelProfile()" aria-label="Назад">←</button><div class="group-info-top-title">Права администраторов</div></div><p class="modal-desc">Администраторы могут публиковать сообщения и менять тему канала.</p>${c.ownerId === uid || c.admins?.[uid] ? `<div class="auth-field"><label>Выдать права по @юзернейму</label><div style="display:flex;gap:8px;"><input id="channelAdminUsername" maxlength="32" placeholder="username" autocapitalize="off" spellcheck="false"><button class="btn btn-primary" style="width:auto;white-space:nowrap;" onclick="grantChannelAdminFromProfile()">Выдать</button></div></div>` : ''}<div class="settings-group"><h3>Текущие администраторы (${adminIds.length})</h3>${rows.length ? rows.join('') : '<div style="padding:0 20px 16px;color:var(--text-2);">Других администраторов пока нет</div>'}</div><div class="modal-actions"><button class="btn btn-primary" onclick="renderChannelProfile()">Готово</button></div>`;
+}
+async function grantChannelAdminFromProfile() {
+  const c = state.chat; const uid = state.user?.uid;
+  if (!c || c.type !== 'channel' || (c.ownerId !== uid && !c.admins?.[uid])) return toast('Недостаточно прав', '🔒');
+  const normalized = normalizeUsername(($('channelAdminUsername')?.value || '').trim());
+  if (!normalized) return toast('Введите юзернейм', '⚠');
   try {
-    const userSnap = await get(ref(db, 'usernames/' + normalized));
-    if (!userSnap.exists()) return toast('Пользователь с таким ником не найден', '⚠');
-    const uid = userSnap.val();
-    if (uid === c.ownerId) return toast('Владелец уже имеет все права', 'ℹ️');
-    const alreadyAdmin = !!c.admins?.[uid];
-    if (alreadyAdmin) await remove(ref(db, `channels/${c.id}/admins/${uid}`));
-    else {
-      await update(ref(db, `channels/${c.id}/members`), { [uid]:true });
-      await update(ref(db, `channels/${c.id}/admins`), { [uid]:true });
-      const userChat = await get(ref(db, `user_chats/${uid}/${c.id}`));
-      if (!userChat.exists()) await set(ref(db, `user_chats/${uid}/${c.id}`), {type:'channel',name:c.name,ownerId:c.ownerId,lastTs:now(),unread:0});
-    }
-    toast(alreadyAdmin ? 'Права администратора сняты' : 'Администратор добавлен', '✓');
-  } catch(e) { console.error('Channel admin update:',e); toast(humanErr(e) || 'Не удалось изменить права. Проверьте правила Firebase.', '⚠'); }
+    const snap = await get(ref(db, 'usernames/' + normalized));
+    if (!snap.exists()) return toast('Пользователь с таким юзернеймом не найден', '⚠');
+    const targetUid = snap.val();
+    if (targetUid === c.ownerId) return toast('Владелец уже имеет все права', 'ℹ️');
+    if (c.admins?.[targetUid]) return toast('Этот пользователь уже администратор', 'ℹ️');
+    await update(ref(db, 'channels/' + c.id), { [`members/${targetUid}`]: true, [`admins/${targetUid}`]: true });
+    await set(ref(db, `user_chats/${targetUid}/${c.id}`), { type:'channel', name:c.name, avatar:c.avatar || null, ownerId:c.ownerId, lastTs:now(), unread:0 });
+    c.members = { ...(c.members || {}), [targetUid]:true }; c.admins = { ...(c.admins || {}), [targetUid]:true };
+    state.channels[c.id] = { ...(state.channels[c.id] || {}), members:c.members, admins:c.admins };
+    toast('Права администратора выданы', '✓'); await manageChannelAdmins();
+  } catch(e) { console.error('Grant channel admin:',e); toast(humanErr(e) || 'Не удалось выдать права. Проверьте Firebase Rules.', '⚠'); }
+}
+async function revokeChannelAdmin(targetUid) {
+  const c = state.chat; const uid = state.user?.uid;
+  if (!c || c.type !== 'channel' || (c.ownerId !== uid && !c.admins?.[uid])) return toast('Недостаточно прав', '🔒');
+  if (targetUid === c.ownerId) return toast('Нельзя снять права владельца', '⚠');
+  try {
+    await remove(ref(db, `channels/${c.id}/admins/${targetUid}`));
+    c.admins = { ...(c.admins || {}) }; delete c.admins[targetUid];
+    state.channels[c.id] = { ...(state.channels[c.id] || {}), admins:c.admins };
+    toast('Права администратора сняты', '✓'); await manageChannelAdmins();
+  } catch(e) { console.error('Revoke channel admin:',e); toast(humanErr(e) || 'Не удалось снять права', '⚠'); }
 }
 function canPostToChannel(channel, uid) {
   return !!channel && (channel.ownerId === uid || !!channel.admins?.[uid]);
@@ -1538,7 +1656,8 @@ async function openChat(chatId, type) {
     state.groupMetaUnsub = onValue(ref(db, 'channels/' + chatId), snapChannel => {
       if (!snapChannel.exists() || state.chat?.id !== chatId || state.chat?.type !== 'channel') return;
       state.chat = { ...state.chat, ...(snapChannel.val() || {}), id:chatId, type:'channel' };
-      renderChatHeader(); updateSendBtn();
+      state.channels[chatId] = { ...(state.channels[chatId] || {}), ...(snapChannel.val() || {}) };
+      renderChatHeader(); applyGroupChatTheme(); updateSendBtn();
     }, err => console.warn('Channel updates:',err));
   }
   if (type === 'group') {
@@ -1584,7 +1703,7 @@ function renderChatHeader() {
   const actions = $('chatActions');
   if (c.type === 'dm') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()" title="Поиск">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button><button class="chat-icon-btn" onclick="startVoiceCall()" title="Голосовой звонок">📞</button>`;
   else if (c.type === 'group') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button><button class="chat-icon-btn" onclick="openChatInfo()">ℹ️</button>`;
-  else if (c.type === 'channel') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()" title="Поиск по каналу">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button>${canPostToChannel(c,state.user?.uid) ? `<button class="chat-icon-btn" onclick="manageChannelAdmins()" title="Управление каналом">⚙️</button>` : ''}`;
+  else if (c.type === 'channel') actions.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()" title="Поиск по каналу">🔍</button><button class="chat-icon-btn" onclick="switchTab('favorites')" title="Избранное">⭐</button>`;
   applyGroupChatTheme();
   renderPinnedBar();
 }
@@ -2523,7 +2642,7 @@ function applyGroupChatTheme() {
   const messages = $('messages');
   const chatPanel = $('chatPanel');
   if (!messages || !chatPanel) return;
-  if (!state.chat || state.chat.type !== 'group') {
+  if (!state.chat || !['group','channel'].includes(state.chat.type)) {
     messages.style.background = '';
     chatPanel.style.background = '';
     return;
@@ -2666,6 +2785,25 @@ async function openPublicProfile(uid) {
 
 async function openChatInfo() {
   if (!state.chat) return;
+  // Канал показываем сразу из уже загруженного состояния. Сетевое обновление идёт
+  // в фоне, поэтому медленный Firebase не оставляет окно профиля на «Загрузка…».
+  if (state.chat.type === 'channel') {
+    const channelId = state.chat.id;
+    $('chatInfoModal').classList.remove('hidden');
+    $('chatInfoModal').classList.remove('group-fullscreen');
+    renderChannelProfile();
+    get(ref(db, 'channels/' + channelId)).then(snap => {
+      if (!snap.exists() || state.chat?.id !== channelId || state.chat?.type !== 'channel' || $('chatInfoModal').classList.contains('hidden')) return;
+      const fresh = snap.val() || {};
+      state.chat = { ...state.chat, ...fresh, id:channelId, type:'channel' };
+      state.channels[channelId] = { ...(state.channels[channelId] || {}), ...fresh };
+      renderChatHeader(); applyGroupChatTheme();
+      // Не перерисовываем поверх редактора или окна выдачи прав, если пользователь
+      // успел открыть их до завершения фонового запроса Firebase.
+      if (!$('chatInfoContent').querySelector('#editChannelName') && !$('chatInfoContent').querySelector('#channelAdminUsername')) renderChannelProfile();
+    }).catch(e => console.warn('Could not refresh channel details:', e));
+    return;
+  }
   // chats/<id> is the canonical record; user_chats is only a per-user preview
   // and its members map can be stale after another user joins.
   if (state.chat.type === 'group') {
@@ -2676,16 +2814,6 @@ async function openChatInfo() {
         state.chat = { ...state.chat, ...(freshSnap.val() || {}), id: groupId, type: 'group' };
       }
     } catch (e) { console.warn('Could not refresh group details:', e); }
-  } else if (state.chat.type === 'channel') {
-    // Каналы хранятся в channels/<id>, а не в chats/<id>.
-    // Обновляем данные профиля, но не блокируем отображение при ошибке сети.
-    try {
-      const channelId = state.chat.id;
-      const freshSnap = await get(ref(db, 'channels/' + channelId));
-      if (freshSnap.exists() && state.chat && state.chat.id === channelId && state.chat.type === 'channel') {
-        state.chat = { ...state.chat, ...(freshSnap.val() || {}), id: channelId, type: 'channel' };
-      }
-    } catch (e) { console.warn('Could not refresh channel details:', e); }
   }
   if (!state.chat) return;
   const c = state.chat;
@@ -2714,31 +2842,7 @@ async function openChatInfo() {
   }
 
   if (c.type === 'channel') {
-    const members = c.members && typeof c.members === 'object' ? c.members : {};
-    const admins = c.admins && typeof c.admins === 'object' ? c.admins : {};
-    const uid = state.user?.uid;
-    const isOwner = !!uid && c.ownerId === uid;
-    const isAdmin = !!uid && !!admins[uid];
-    const isMember = !!uid && !!members[uid];
-    const owner = c.ownerId ? getUser(c.ownerId) : null;
-    const ownerName = owner?.displayName || owner?.firstName || owner?.username || (isOwner ? 'Вы' : 'Владелец канала');
-    const memberCount = Object.values(members).filter(Boolean).length;
-    const adminCount = Object.values(admins).filter(Boolean).length;
-    wrap.innerHTML = `
-      <div class="group-info-top"><button class="group-info-back" onclick="closeModal('chatInfoModal')" aria-label="Назад в канал">←</button><div class="group-info-top-title">Информация о канале</div></div>
-      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 0 22px;">
-        <div class="avatar square" style="width:88px;height:88px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent);font-size:38px;">📢</div>
-        <h3 style="margin:14px 0 5px;overflow-wrap:anywhere;">${esc(c.name || 'Канал')}</h3>
-        <p class="modal-desc" style="margin:0;">${memberCount} подписчиков</p>
-      </div>
-      ${c.description ? `<div class="settings-group"><h3>Описание</h3><div style="padding:0 20px 16px;white-space:pre-wrap;overflow-wrap:anywhere;">${esc(c.description)}</div></div>` : ''}
-      <div class="settings-group">
-        <div class="set-row"><div class="set-icon">👑</div><div class="set-info"><div class="set-label">Владелец</div><div class="set-sub">${esc(ownerName)}</div></div></div>
-        <div class="set-row"><div class="set-icon">🛡️</div><div class="set-info"><div class="set-label">Администраторы</div><div class="set-sub">${adminCount}</div></div></div>
-        ${(isOwner || isAdmin) ? `<div class="set-row" onclick="manageChannelAdmins()"><div class="set-icon">⚙️</div><div class="set-info"><div class="set-label">Управление администраторами</div><div class="set-sub">Выдать или снять права</div></div></div>` : ''}
-        ${!isMember && !isOwner ? `<div class="set-row" onclick="closeModal('chatInfoModal'); joinChannel('${c.id}')"><div class="set-icon">➕</div><div class="set-info"><div class="set-label">Подписаться на канал</div></div></div>` : ''}
-      </div>
-      <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('chatInfoModal')">Закрыть</button></div>`;
+    renderChannelProfile();
     return;
   }
 
@@ -3478,7 +3582,7 @@ Object.assign(window, {
   checkEmailVerified, resendVerifyEmail, cancelVerify,
   openEditGroupModal, editGroupAvatarChange, saveGroupInfo,
   // Эти функции вызываются из inline onclick внутри динамически созданных элементов.
-  openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins,
+  openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins, renderChannelProfile, openChannelProfileEditor, editChannelAvatarChange, saveChannelProfile, selectChannelTheme, grantChannelAdminFromProfile, revokeChannelAdmin,
   refreshChatPreview
 });
 </script>
