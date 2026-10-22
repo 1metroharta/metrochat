@@ -431,7 +431,7 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 .auth-logo-mark { width:76px;height:76px;border-radius:23px; }
 .auth-logo-text h1 { color:#f2f6ff; font-size:clamp(21px,4vw,27px); letter-spacing:-.7px; }
 .auth-logo-text p { color:#9fb2d8; letter-spacing:1.6px; }
-.auth-orbit { position:relative;width:100%;height:12px;display:flex;justify-content:center;gap:9px;margin-top:-12px;margin-bottom:8px; }
+.auth-orbit { display:none!important; }
 .auth-orbit span { width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#27d8f2,#8758f6);box-shadow:0 0 18px rgba(91,140,255,.65);animation:orbitPulse 1.8s ease-in-out infinite; }
 .auth-orbit span:nth-child(2) { animation-delay:.25s } .auth-orbit span:nth-child(3) { animation-delay:.5s }
 @keyframes orbitPulse { 0%,100%{opacity:.45;transform:translateY(0) scale(.85)}50%{opacity:1;transform:translateY(-3px) scale(1.2)} }
@@ -501,17 +501,36 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 .sb-nav .stories-toggle { width:38px;min-width:38px;justify-content:center;padding:0;border-radius:13px;position:relative; }
 .stories-dot { position:absolute;width:7px;height:7px;right:5px;top:5px;border-radius:50%;background:#38d8f0;box-shadow:0 0 10px #38d8f0; }
 .stories-panel { padding:13px 12px 12px;border-bottom:1px solid var(--border);background:rgba(16,25,47,.42);backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%); }
-.stories-panel-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }.stories-panel-head b{display:block;font-size:14px}.stories-panel-head small{display:block;color:var(--text-2);font-size:11px;margin-top:3px}.stories-list{display:flex;gap:10px;overflow-x:auto;padding:3px 1px 7px}.story-chip{flex:0 0 70px;width:70px;border:0;background:transparent;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;overflow:hidden}.story-ring{width:58px;height:58px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#26d8f1,#4b80ff,#9a5dff);box-shadow:0 0 18px rgba(81,126,255,.22)}.story-ring-inner{width:100%;height:100%;border:2px solid #0b1020;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b2b4d,#10172b);font-size:22px;overflow:hidden}.story-chip-name{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stories-loading{font-size:12px;color:var(--text-2);padding:10px}.story-modal{border-radius:26px!important}.story-modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.story-colors{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.story-colors button{padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:12px}.story-colors button.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light)}.story-view-modal{padding:0!important;overflow:hidden;background:linear-gradient(145deg,#0b1531,#171443,#152d4a)!important}.story-view-card{min-height:440px;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:radial-gradient(circle at 15% 15%,rgba(39,216,242,.18),transparent 40%),radial-gradient(circle at 90% 90%,rgba(135,88,246,.22),transparent 40%)}.story-view-text{font-size:clamp(22px,5vw,34px);line-height:1.35;font-weight:750;white-space:pre-wrap;overflow-wrap:anywhere;text-align:center;margin:auto 0;padding:20px 0}.story-view-actions{display:flex;gap:8px;align-items:center}.story-view-actions button{border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:14px;color:white;padding:10px 12px}.story-comments-list{max-height:45vh;overflow:auto;display:flex;flex-direction:column;gap:9px;margin:12px 0}.story-comment{padding:10px 12px;border-radius:14px;background:var(--surface-2);font-size:13px}.story-comment small{display:block;color:var(--text-2);margin-top:4px}.story-comment-compose{display:flex;gap:8px}.story-comment-compose .onb-input{margin:0;min-width:0;flex:1}.story-comment-compose .btn{width:auto;white-space:nowrap}.chat-input-bar,.chat-input,.chat-input-btn,.chat-send,.ctx-menu,.modal,.list-item,.member-row,.contact-pick-item{border-radius:18px;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}.chat-input-btn{border:1px solid rgba(143,169,221,.18);background:rgba(74,103,164,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:inset 0 1px rgba(255,255,255,.08)}.chat-input-btn:active,.chat-send:active,.sb-icon-btn:active{transform:scale(.92)}.chat-input-bar{border:1px solid rgba(143,169,221,.14);box-shadow:0 -8px 30px rgba(0,0,0,.08),inset 0 1px rgba(255,255,255,.04)}.ctx-menu button{border-radius:13px;padding:12px 14px}.ctx-menu{animation:glassMenuIn .18s cubic-bezier(.2,.8,.2,1)}@keyframes glassMenuIn{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.stories-panel-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }.stories-panel-head b{display:block;font-size:14px}.stories-panel-head small{display:block;color:var(--text-2);font-size:11px;margin-top:3px}.stories-list{display:flex;gap:10px;overflow-x:auto;padding:3px 1px 7px}.story-chip{flex:0 0 70px;width:70px;border:0;background:transparent;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;overflow:hidden}.story-ring{width:58px;height:58px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#26d8f1,#4b80ff,#9a5dff);box-shadow:0 0 18px rgba(81,126,255,.22)}.story-ring-inner{width:100%;height:100%;border:2px solid #0b1020;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b2b4d,#10172b);font-size:22px;overflow:hidden}.story-chip-name{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.story-ring-inner img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}.story-avatar-fallback{font-size:17px;font-weight:800;color:#dbeafe;background:#1b2b4d;width:100%;height:100%;display:flex;align-items:center;justify-content:center}.stories-loading{font-size:12px;color:var(--text-2);padding:10px}.story-modal{border-radius:26px!important}.story-modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.story-colors{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.story-colors button{padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:12px}.story-colors button.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light)}.story-view-modal{padding:0!important;overflow:hidden;background:linear-gradient(145deg,#0b1531,#171443,#152d4a)!important}.story-view-card{min-height:440px;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:radial-gradient(circle at 15% 15%,rgba(39,216,242,.18),transparent 40%),radial-gradient(circle at 90% 90%,rgba(135,88,246,.22),transparent 40%)}.story-view-text{font-size:clamp(22px,5vw,34px);line-height:1.35;font-weight:750;white-space:pre-wrap;overflow-wrap:anywhere;text-align:center;margin:auto 0;padding:20px 0}.story-view-actions{display:flex;gap:8px;align-items:center}.story-view-actions button{border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:14px;color:white;padding:10px 12px}.story-comments-list{max-height:45vh;overflow:auto;display:flex;flex-direction:column;gap:9px;margin:12px 0}.story-comment{padding:10px 12px;border-radius:14px;background:var(--surface-2);font-size:13px}.story-comment small{display:block;color:var(--text-2);margin-top:4px}.story-comment-compose{display:flex;gap:8px}.story-comment-compose .onb-input{margin:0;min-width:0;flex:1}.story-comment-compose .btn{width:auto;white-space:nowrap}.chat-input-bar,.chat-input,.chat-input-btn,.chat-send,.ctx-menu,.modal,.list-item,.member-row,.contact-pick-item{border-radius:18px;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}.chat-input-btn{border:1px solid rgba(143,169,221,.18);background:rgba(74,103,164,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:inset 0 1px rgba(255,255,255,.08)}.chat-input-btn:active,.chat-send:active,.sb-icon-btn:active{transform:scale(.92)}.chat-input-bar{border:1px solid rgba(143,169,221,.14);box-shadow:0 -8px 30px rgba(0,0,0,.08),inset 0 1px rgba(255,255,255,.04)}.ctx-menu button{border-radius:13px;padding:12px 14px}.ctx-menu{animation:glassMenuIn .18s cubic-bezier(.2,.8,.2,1)}@keyframes glassMenuIn{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+
+/* Call UI: immersive, responsive full-screen layout */
+#callModal{padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:rgba(2,6,18,.92)!important;backdrop-filter:blur(24px) saturate(150%);-webkit-backdrop-filter:blur(24px) saturate(150%)}
+#callModal:not(.hidden){display:flex!important}
+#callModal .modal{position:relative!important;width:100%!important;max-width:none!important;height:100dvh!important;min-height:100vh!important;max-height:none!important;margin:0!important;padding:calc( max(28px, env(safe-area-inset-top)) + 18px) 22px calc(max(22px, env(safe-area-inset-bottom)) + 18px)!important;border-radius:0!important;box-sizing:border-box;justify-content:center;align-items:center;overflow:auto;background:radial-gradient(ellipse at 50% 15%,rgba(50,92,180,.2),transparent 50%),linear-gradient(160deg,#080e20,#050813 72%)!important;color:#f5f8ff!important}
+#callModal #callTitle{font-size:clamp(24px,4vw,36px);font-weight:800;margin:14px 0 6px}
+#callModal #callStatus{max-width:520px;margin:0 auto 18px;color:#a8badb}
+#callModal #callRemoteVideo{width:min(92vw,820px)!important;max-height:52dvh!important;border-radius:26px!important;box-shadow:0 22px 70px rgba(0,0,0,.4);background:#02040b!important}
+#callModal #callControls,#callModal #incomingCallControls{position:relative!important;bottom:auto!important;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:min(100%,650px);margin-top:28px!important;padding:18px!important;border:1px solid rgba(164,190,255,.14);border-radius:26px;background:rgba(20,30,54,.58)!important;backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);box-shadow:0 18px 55px rgba(0,0,0,.25)}
+#callModal #callControls .btn,#callModal #incomingCallControls .btn{min-height:48px;border-radius:18px!important;padding:12px 17px;flex:1 1 155px}
+#callModal #callRemoteAudio{display:none}
+@media(max-width:600px){#callModal .modal{padding-left:16px!important;padding-right:16px!important}#callModal #callControls,#callModal #incomingCallControls{gap:8px;padding:12px!important;border-radius:22px}#callModal #callControls .btn,#callModal #incomingCallControls .btn{flex:1 1 130px;font-size:13px}}
+/* The initial app splash is a real photograph, not a gradient. */
+#splash,#welcomeSplash{background-size:cover;background-position:center;background-color:#070b16;isolation:isolate;transition:opacity .35s ease}
+#splash:before,#welcomeSplash:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,8,20,.18),rgba(3,8,20,.64));z-index:-1}
+#splash .splash-loader{display:none!important}
+#splash .splash-greeting,#welcomeSplash .splash-greeting{font-size:clamp(26px,5vw,40px);font-weight:850;letter-spacing:-.03em;text-align:center;padding:0 18px;text-shadow:0 4px 28px rgba(0,0,0,.55)}
+#splash .splash-logo{display:none!important}
 
 </style>
 </head>
 <body>
 
-<div class="splash" id="splash"><div class="splash-logo" aria-label="MetroChat"></div><h1>MetroChat</h1><div class="splash-loader"></div></div>
+<div class="splash" id="splash"><h1 class="splash-greeting" id="splashGreeting">Добро пожаловать в MetroChat</h1></div>
 
 <div class="auth-screen hidden" id="authScreen">
   <div class="auth-card">
-    <div class="auth-logo-row"><div class="auth-logo-mark" aria-label="Логотип MetroChat">M</div><div class="auth-logo-text"><h1 id="welcomeAnimated" class="welcome-animated">Добро пожаловать в MetroChat</h1><p>ВАШЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ</p></div><div class="auth-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div>
+    <div class="auth-logo-row"><div class="auth-logo-mark" aria-label="Логотип MetroChat">M</div><div class="auth-logo-text"><h1 id="welcomeAnimated" class="welcome-animated">Добро пожаловать в MetroChat</h1><p>ВАШЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ</p></div></div>
     <div class="auth-step-indicator"><span class="auth-step-dot active" id="authDot1"></span><span class="auth-step-dot" id="authDot2"></span><span id="authStepLabel">Шаг 1 из 2 · Ваша почта</span></div>
     <div class="auth-error" id="authError"></div>
     <form id="authForm" autocomplete="on">
@@ -1279,10 +1298,25 @@ function finishNotifPrompt() {
   startApp();
 }
 
+function showPersonalWelcome() {
+  if (document.getElementById('welcomeSplash')) return;
+  const hour = new Date().getHours();
+  let greeting, photo;
+  if (hour >= 5 && hour < 11) { greeting = 'Доброе утро'; photo = 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=68'; }
+  else if (hour >= 11 && hour < 17) { greeting = 'Добрый день'; photo = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=68'; }
+  else if (hour >= 17 && hour < 22) { greeting = 'Добрый вечер'; photo = 'https://images.unsplash.com/photo-1472120435266-53107fd0c44a?auto=format&fit=crop&w=1200&q=68'; }
+  else { greeting = 'Доброй ночи'; photo = 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=68'; }
+  const name = state.profile?.displayName || state.profile?.firstName || state.profile?.username || state.user?.email?.split('@')[0] || '';
+  const overlay = document.createElement('div'); overlay.className = 'splash'; overlay.id = 'welcomeSplash';
+  const title = document.createElement('h1'); title.className = 'splash-greeting'; title.textContent = name ? `${greeting}, ${name}` : greeting;
+  overlay.appendChild(title); overlay.style.backgroundImage = `url("${photo}")`; document.body.appendChild(overlay);
+  setTimeout(() => { overlay.classList.add('hide'); setTimeout(() => overlay.remove(), 400); }, 1500);
+}
 function startApp() {
-  hideSplash(); state.booted = true;
+  state.booted = true;
   authScreen.classList.add('hidden'); $('verifyScreen').classList.add('hidden');
   $('onboarding').classList.add('hidden'); $('notifPrompt').classList.add('hidden'); $('app').classList.remove('hidden');
+  showPersonalWelcome();
   applySettings(); updateUserStrip(); setupPresence(); subscribeAll(); switchTab('chats'); updateSendBtn();
   setupKeyboardHandling(); listenForIncomingCalls(); setTimeout(maybeShowInstallPrompt, 900); setTimeout(showJoinFromUrl, 1200);
 }
@@ -1482,7 +1516,7 @@ async function loadStories() {
     await Promise.all(usersNeeded.map(uid=>fetchUserIfMissing(uid).catch(()=>null)));
     if(!storiesCache.length){el.innerHTML='<div class="stories-loading">Пока нет историй. Создайте первую через ✏️.</div>';return;}
     const newestByUser=new Map(); storiesCache.forEach(st=>{if(!newestByUser.has(st.uid))newestByUser.set(st.uid,st)});
-    el.innerHTML=[...newestByUser.values()].map(st=>{const u=getUser(st.uid)||{};const name=st.uid===state.user.uid?'Ваша история':(u.displayName||u.firstName||u.username||'Пользователь');return `<button class="story-chip" onclick="openStory('${st.id}')"><span class="story-ring"><span class="story-ring-inner">${st.uid===state.user.uid?'＋':'◉'}</span></span><span class="story-chip-name">${esc(name)}</span></button>`}).join('');
+    el.innerHTML=[...newestByUser.values()].map(st=>{const u=getUser(st.uid)||{};const name=st.uid===state.user.uid?'Ваша история':(u.displayName||u.firstName||u.username||'Пользователь');const avatar=u.avatar||u.photoURL||u.photoUrl||'';const inner=avatar?`<img src="${esc(avatar)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">`:`<span class="story-avatar-fallback">${esc(initials(name))}</span>`;return `<button class="story-chip" onclick="openStory('${st.id}')"><span class="story-ring"><span class="story-ring-inner">${inner}</span></span><span class="story-chip-name">${esc(name)}</span></button>`}).join('');
   } catch(e) { console.warn('Stories load:',e); el.innerHTML='<div class="stories-loading">Не удалось загрузить истории. Проверьте Firebase Rules.</div>'; }
 }
 function openCreateStory(){
@@ -1955,11 +1989,14 @@ function renderPinnedBar() {
 }
 function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
-  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(60));
+  const cacheKey = 'metrochat_msg_cache_v1_' + chatId;
+  try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); } } catch(_) {}
+  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(30));
   state.chatUnsub = onValue(q, snap => {
     const prevLen = state.messages.length;
     const data = snap.val() || {};
     state.messages = Object.entries(data).map(([id, m]) => ({ id, ...m })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    try { localStorage.setItem(cacheKey, JSON.stringify(state.messages.slice(-30))); } catch(_) {}
     state.messages.forEach(m => { if (m.senderId && !getUser(m.senderId)) fetchUserIfMissing(m.senderId); });
     renderMessages(); renderPinnedBar();
     if (prevLen > 0 && state.messages.length > prevLen) {
@@ -3621,7 +3658,7 @@ function updateCallControls() {
   $('callShareBtn').textContent = callState.screenStream ? '🖥️ Остановить показ экрана' : '🖥️ Демонстрация экрана';
 }
 function createPeerConnection(callId, remoteUid, isCaller) {
-  const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] });
+  const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }], iceCandidatePoolSize: 4, bundlePolicy: 'max-bundle', rtcpMuxPolicy: 'require' });
   callState.pc=pc; callState.callId=callId; callState.remoteUid=remoteUid; callState.isCaller=isCaller;
   const remoteStream = new MediaStream(); callState.remoteStream=remoteStream;
   // Резервируем video-трансивер заранее: так демонстрация экрана сможет начаться без renegotiation.
