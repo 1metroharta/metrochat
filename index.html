@@ -12,13 +12,13 @@
 <title>MetroChat</title>
 <style>
 :root {
-  --accent: #e63946; --accent-light: rgba(230,57,70,0.1);
+  --accent: #4f8cff; --accent-light: rgba(79,140,255,0.14);
   --green: #22c55e; --red: #ef4444;
   --bg: #f0f2f7; --surface: #ffffff; --surface-2: #f7f8fc;
   --text: #0f1729; --text-2: #64748b; --text-3: #94a3b8; --border: #e2e8f0;
   --shadow-sm: 0 1px 3px rgba(15,23,42,0.06); --shadow-lg: 0 20px 60px rgba(15,23,42,0.18);
   --font-size: 14px;
-  --header-grad: linear-gradient(135deg, #e63946 0%, #b91c26 100%);
+  --header-grad: linear-gradient(135deg, #27d8f2 0%, #397cff 54%, #8758f6 100%);
 }
 [data-theme="dark"] {
   --bg: #0a0e1a; --surface: #131826; --surface-2: #1a1f30; --text: #e8edf7;
@@ -522,6 +522,47 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 #splash .splash-greeting,#welcomeSplash .splash-greeting{font-size:clamp(26px,5vw,40px);font-weight:850;letter-spacing:-.03em;text-align:center;padding:0 18px;text-shadow:0 4px 28px rgba(0,0,0,.55)}
 #splash .splash-logo{display:none!important}
 
+
+
+/* Final midnight-glass contrast and navigation polish */
+:root {
+  --accent:#4f8cff; --accent-light:rgba(79,140,255,.14);
+  --header-grad:linear-gradient(135deg,#27d8f2 0%,#397cff 54%,#8758f6 100%);
+}
+[data-theme="dark"] { --accent:#75a6ff; --accent-light:rgba(79,140,255,.18); }
+/* Replace legacy red top rails and borders with cool blue glass. */
+.sb-top,.sb-nav,.chat-header,.settings-header { border-top-color:transparent!important; }
+.sb-top::before,.sb-top::after,.chat-header::before { background:transparent!important; border-color:transparent!important; }
+.splash { background:linear-gradient(145deg,#07101f,#101b36 60%,#11102b)!important; }
+.auth-logo-mark,.onb-avatar,.sb-me-avatar,.avatar,.chat-empty-logo { background-color:#182849; }
+.btn-primary,.sb-icon-btn.primary,.chat-send { background:linear-gradient(115deg,#24cde8,#397cff 56%,#8758f6)!important; box-shadow:0 8px 24px rgba(57,124,255,.24)!important; }
+.sb-tab.active,.list-item.active { color:#75a6ff; }
+/* Reliable text contrast in group headers, profile sheets and story surfaces. */
+.group-info-top,.group-info-top *,.group-info-top-title { color:var(--text)!important; }
+#chatInfoContent,#chatInfoContent * { --panel-text:var(--text); }
+#chatInfoContent .set-label,#chatInfoContent .set-sub,#chatInfoContent .settings-group h3,
+#chatInfoContent .group-info-top-title,#chatInfoContent .modal-desc,#chatInfoContent .theme-item { color:var(--text)!important; }
+.story-chip,.story-chip-name,.stories-panel-head b,.stories-panel-head small { color:var(--text)!important; }
+.story-view-modal,.story-view-modal * { color:#f8fbff; }
+.story-view-modal .story-comments-list,.story-view-modal .story-comment { color:#15213a; }
+.story-view-modal .story-comment small { color:#52617b; }
+[data-theme="light"] .story-ring-inner { border-color:#f4f7ff; background:#e4ebf8; color:#17233d; }
+[data-theme="light"] .story-avatar-fallback { background:#e4ebf8; color:#17233d; }
+[data-theme="light"] .story-chip,[data-theme="light"] .story-chip-name,
+[data-theme="light"] .stories-panel-head b,[data-theme="light"] .stories-panel-head small { color:#17233d!important; }
+[data-theme="light"] .group-info-top,[data-theme="light"] .group-info-top *,
+[data-theme="light"] #chatInfoContent .set-label,[data-theme="light"] #chatInfoContent .set-sub,
+[data-theme="light"] #chatInfoContent .settings-group h3,[data-theme="light"] #chatInfoContent .modal-desc { color:#17233d!important; }
+/* Floating, rounded liquid-glass bottom navigation on mobile and desktop layouts. */
+.mobile-nav { left:12px!important; right:12px!important; bottom:calc(8px + env(safe-area-inset-bottom))!important; border:1px solid rgba(143,169,221,.22)!important; border-radius:24px!important; overflow:hidden; background:rgba(12,19,37,.78)!important; box-shadow:0 12px 38px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.09)!important; backdrop-filter:blur(30px) saturate(165%)!important; -webkit-backdrop-filter:blur(30px) saturate(165%)!important; }
+.mobile-nav-inner { padding:0 5px; }
+.mobile-nav-item { border-radius:18px; margin:5px 2px; transition:background .2s ease,transform .2s ease,color .2s ease; }
+.mobile-nav-item.active { background:rgba(82,132,255,.16); color:#9fc2ff!important; }
+.mobile-nav-item:active { transform:scale(.96); }
+[data-theme="light"] .mobile-nav { background:rgba(245,249,255,.82)!important; border-color:rgba(57,79,125,.18)!important; box-shadow:0 12px 38px rgba(32,54,100,.14),inset 0 1px rgba(255,255,255,.8)!important; }
+[data-theme="light"] .mobile-nav-item { color:#51617e; }
+@media (max-width:760px) { .mobile-nav { left:10px!important; right:10px!important; bottom:calc(7px + env(safe-area-inset-bottom))!important; } }
+
 </style>
 </head>
 <body>
@@ -746,7 +787,7 @@ let deferredInstallPrompt = null;
 const callState = { pc: null, callId: null, remoteUid: null, localStream: null, screenStream: null, isCaller: false, incoming: null, unsubscribers: [], handledIncoming: new Set(), muted: false, remoteStream: null, candidateQueue: [], connectionTimer: null };
 
 const THEMES = [
-  { id: 'crimson',  name: 'Багровый',   accent: '#e63946', grad: ['#e63946','#b91c26'], dark: false },
+  { id: 'crimson',  name: 'Midnight Glass', accent: '#4f8cff', grad: ['#27d8f2','#8758f6'], dark: false },
   { id: 'ocean',    name: 'Океан',      accent: '#2563eb', grad: ['#3b82f6','#1d4ed8'], dark: false },
   { id: 'forest',   name: 'Лес',        accent: '#059669', grad: ['#10b981','#047857'], dark: false },
   { id: 'sunset',   name: 'Закат',      accent: '#ea580c', grad: ['#f97316','#c2410c'], dark: false },
@@ -820,16 +861,18 @@ function isGroupOwner(chat, uid) { return chat?.ownerId === uid; }
 function getGroupSetting(chat, key) { if (!chat || !chat.settings) return GROUP_DEFAULTS[key]; const v = chat.settings[key]; return v === undefined ? GROUP_DEFAULTS[key] : v; }
 function peerStatusText(peer, uid) {
   const presence = state.presence[uid] || {};
-  if (isOnline(uid) && presence.showOnline !== false) return '<span style="color: var(--green); font-weight: 600;">● в сети</span>';
-  // Настройки приватности принадлежат собеседнику, а не зрителю.
-  if (presence.showLastSeen === false) return 'был(а) когда-то';
+  if (isOnline(uid) && presence.showOnline !== false) return '<span style="color:var(--green);font-weight:600;">● в сети</span>';
+  // Соблюдаем настройку приватности собеседника.
+  if (presence.showLastSeen === false) return 'время последнего посещения скрыто';
   const ts = Number(presence.lastSeen || 0);
-  if (!ts) return 'был(а) когда-то';
-  const age = Math.max(0, now() - ts);
-  if (age < 60 * 60 * 1000) return 'был(а) недавно';
-  if (age < 24 * 60 * 60 * 1000) return 'был(а) сегодня';
-  if (age < 48 * 60 * 60 * 1000) return 'был(а) вчера';
-  return 'был(а) когда-то';
+  if (!ts) return 'время последнего посещения неизвестно';
+  const d = new Date(ts), today = new Date(), yesterday = new Date();
+  const clock = d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+  if (d.toDateString() === today.toDateString()) return `был(а) в ${clock}`;
+  yesterday.setDate(today.getDate() - 1);
+  if (d.toDateString() === yesterday.toDateString()) return `был(а) вчера в ${clock}`;
+  const date = d.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'});
+  return `был(а) ${date} в ${clock}`;
 }
 
 // === AVATAR RENDER (FIXED) ===
@@ -1509,7 +1552,7 @@ function storyDayStart(ts=Date.now()) { const d=new Date(ts); d.setHours(0,0,0,0
 async function loadStories() {
   const el=$('storiesList'); if(!el || !state.user?.uid) return;
   try {
-    const snap=await get(query(ref(db,'stories'),orderByChild('createdAt'),limitToLast(80)));
+    const snap=await get(query(ref(db,'stories'),orderByChild('createdAt'),limitToLast(30)));
     const raw=snap.val()||{}; const cutoff=Date.now()-STORY_LIFETIME;
     storiesCache=Object.entries(raw).map(([id,v])=>({id,...v})).filter(x=>x.createdAt>=cutoff).sort((a,b)=>b.createdAt-a.createdAt);
     const usersNeeded=[...new Set(storiesCache.map(x=>x.uid).filter(uid=>uid&&!getUser(uid)))];
