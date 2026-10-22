@@ -474,6 +474,35 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 @media (max-width:760px) { .mobile-nav-inner { height:62px; } .auth-card { margin:auto; } .chat-input-bar { border-radius:18px 18px 0 0; } .messages { scroll-padding-bottom:20px; } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important; } }
 
+
+/* MetroChat Midnight Glass refinements */
+:root { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; --bg:#edf2fb; --surface:rgba(255,255,255,.84); --surface-2:rgba(225,233,247,.84); --text:#15213a; --text-2:#51617e; --text-3:#71809b; --border:rgba(57,79,125,.18); --shadow-sm:0 4px 18px rgba(32,54,100,.08); --shadow-lg:0 24px 70px rgba(32,54,100,.18); }
+[data-theme="light"] body { background:radial-gradient(ellipse at 12% -10%,rgba(39,150,230,.10),transparent 38%),radial-gradient(ellipse at 95% 10%,rgba(135,88,246,.09),transparent 34%),var(--bg); }
+[data-theme="light"] .sidebar,[data-theme="light"] .chat-header,[data-theme="light"] .chat-input-bar,[data-theme="light"] .settings-header,[data-theme="light"] .pinned-bar { background:rgba(245,248,255,.82); }
+[data-theme="light"] .modal,[data-theme="light"] .settings-group,[data-theme="light"] .ctx-menu,[data-theme="light"] .sticker-picker,[data-theme="light"] .reaction-picker { background:rgba(248,250,255,.94); border-color:rgba(70,91,140,.19); }
+[data-theme="light"] .auth-field input,[data-theme="light"] .onb-input,[data-theme="light"] .chat-input { background:rgba(255,255,255,.84); color:#15213a; border-color:rgba(57,79,125,.2); }
+[data-theme="light"] .mobile-nav { background:rgba(245,248,255,.84); }
+[data-theme="light"] .msg.in { background:rgba(255,255,255,.94); color:#15213a; border-color:rgba(57,79,125,.12); }
+[data-theme="light"] .sb-tab,[data-theme="light"] .list-item,[data-theme="light"] .set-row,[data-theme="light"] .settings-group,[data-theme="light"] .modal,[data-theme="light"] .ctx-menu button { color:var(--text); }
+[data-theme="light"] .sb-tab.active,[data-theme="light"] .list-item.active { background:rgba(76,125,255,.10);color:#2456b8; }
+[data-theme="light"] .stories-panel { background:rgba(235,241,253,.78); }
+.auth-card { position:relative; overflow:hidden; border:1px solid rgba(124,163,255,.24)!important; background:linear-gradient(145deg,rgba(16,25,49,.92),rgba(10,14,29,.9))!important; box-shadow:0 35px 110px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.1)!important; backdrop-filter:blur(32px) saturate(160%); -webkit-backdrop-filter:blur(32px) saturate(160%); }
+.auth-card:before { content:"";position:absolute;inset:-40% -15% auto;height:250px;background:radial-gradient(ellipse,rgba(39,216,242,.18),transparent 68%);pointer-events:none; }
+.welcome-animated { background:linear-gradient(100deg,#fff 0%,#7deaff 25%,#8baaff 55%,#d3a0ff 80%,#fff 100%);background-size:220% auto;color:transparent;background-clip:text;-webkit-background-clip:text;animation:welcomeShimmer 5s linear infinite,welcomeFloat 4s ease-in-out infinite; }
+.welcome-animated.welcome-swap{opacity:0;transform:translateY(5px) scale(.985);filter:blur(3px);transition:opacity .25s,transform .25s,filter .25s}
+@keyframes welcomeShimmer { to { background-position:220% center; } } @keyframes welcomeFloat { 0%,100% { transform:translateY(0);filter:drop-shadow(0 0 0 rgba(80,150,255,0)); } 50% { transform:translateY(-2px);filter:drop-shadow(0 0 16px rgba(80,150,255,.2)); } }
+.auth-step-indicator { display:flex;align-items:center;gap:7px;color:#a7b6d5;font-size:12px;margin:10px 0 18px; }
+.auth-step-dot { width:7px;height:7px;border-radius:50%;background:#42506d;transition:all .3s; } .auth-step-dot.active { width:20px;border-radius:8px;background:linear-gradient(90deg,#25d5ec,#7c6cff);box-shadow:0 0 16px rgba(77,145,255,.5); }
+.auth-email-summary { display:flex;align-items:center;gap:8px;padding:10px 12px;margin-bottom:15px;border:1px solid rgba(133,164,230,.18);border-radius:14px;background:rgba(255,255,255,.045);font-size:12px; }
+.auth-email-summary span { color:#94a6c9; } .auth-email-summary strong { flex:1;overflow:hidden;text-overflow:ellipsis;color:#e8f0ff; } .auth-email-summary button { color:#7fdfff;font-weight:700; }
+.auth-bottom-actions { margin-top:18px;text-align:center;color:#94a6c9;font-size:12px; } .auth-choice-row { display:flex;gap:10px;margin-top:10px; } .auth-choice { flex:1;padding:13px 10px;border:1px solid rgba(133,164,230,.2);border-radius:14px;color:#eaf1ff;background:rgba(255,255,255,.045);font-weight:750;transition:all .25s; } .auth-choice.active { background:linear-gradient(120deg,rgba(36,205,232,.18),rgba(135,88,246,.22));border-color:rgba(108,157,255,.65);box-shadow:0 8px 28px rgba(57,124,255,.15); }
+.auth-card #authBack { margin-top:5px; } #authPasswordStep.hidden { display:none!important; }
+.sb-nav .stories-toggle { width:38px;min-width:38px;justify-content:center;padding:0;border-radius:13px;position:relative; }
+.stories-dot { position:absolute;width:7px;height:7px;right:5px;top:5px;border-radius:50%;background:#38d8f0;box-shadow:0 0 10px #38d8f0; }
+.stories-panel { padding:13px 12px 12px;border-bottom:1px solid var(--border);background:rgba(16,25,47,.42);backdrop-filter:blur(20px) saturate(145%);-webkit-backdrop-filter:blur(20px) saturate(145%); }
+.stories-panel-head { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }.stories-panel-head b{display:block;font-size:14px}.stories-panel-head small{display:block;color:var(--text-2);font-size:11px;margin-top:3px}.stories-list{display:flex;gap:10px;overflow-x:auto;padding:3px 1px 7px}.story-chip{flex:0 0 70px;width:70px;border:0;background:transparent;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;overflow:hidden}.story-ring{width:58px;height:58px;border-radius:50%;padding:3px;background:linear-gradient(135deg,#26d8f1,#4b80ff,#9a5dff);box-shadow:0 0 18px rgba(81,126,255,.22)}.story-ring-inner{width:100%;height:100%;border:2px solid #0b1020;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1b2b4d,#10172b);font-size:22px;overflow:hidden}.story-chip-name{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stories-loading{font-size:12px;color:var(--text-2);padding:10px}.story-modal{border-radius:26px!important}.story-modal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.story-colors{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.story-colors button{padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:12px}.story-colors button.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light)}.story-view-modal{padding:0!important;overflow:hidden;background:linear-gradient(145deg,#0b1531,#171443,#152d4a)!important}.story-view-card{min-height:440px;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:radial-gradient(circle at 15% 15%,rgba(39,216,242,.18),transparent 40%),radial-gradient(circle at 90% 90%,rgba(135,88,246,.22),transparent 40%)}.story-view-text{font-size:clamp(22px,5vw,34px);line-height:1.35;font-weight:750;white-space:pre-wrap;overflow-wrap:anywhere;text-align:center;margin:auto 0;padding:20px 0}.story-view-actions{display:flex;gap:8px;align-items:center}.story-view-actions button{border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.08);backdrop-filter:blur(16px);border-radius:14px;color:white;padding:10px 12px}.story-comments-list{max-height:45vh;overflow:auto;display:flex;flex-direction:column;gap:9px;margin:12px 0}.story-comment{padding:10px 12px;border-radius:14px;background:var(--surface-2);font-size:13px}.story-comment small{display:block;color:var(--text-2);margin-top:4px}.story-comment-compose{display:flex;gap:8px}.story-comment-compose .onb-input{margin:0;min-width:0;flex:1}.story-comment-compose .btn{width:auto;white-space:nowrap}.chat-input-bar,.chat-input,.chat-input-btn,.chat-send,.ctx-menu,.modal,.list-item,.member-row,.contact-pick-item{border-radius:18px;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}.chat-input-btn{border:1px solid rgba(143,169,221,.18);background:rgba(74,103,164,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:inset 0 1px rgba(255,255,255,.08)}.chat-input-btn:active,.chat-send:active,.sb-icon-btn:active{transform:scale(.92)}.chat-input-bar{border:1px solid rgba(143,169,221,.14);box-shadow:0 -8px 30px rgba(0,0,0,.08),inset 0 1px rgba(255,255,255,.04)}.ctx-menu button{border-radius:13px;padding:12px 14px}.ctx-menu{animation:glassMenuIn .18s cubic-bezier(.2,.8,.2,1)}@keyframes glassMenuIn{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
 </style>
 </head>
 <body>
@@ -482,21 +511,19 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 
 <div class="auth-screen hidden" id="authScreen">
   <div class="auth-card">
-    <div class="auth-logo-row"><div class="auth-logo-mark" aria-label="Логотип MetroChat">M</div><div class="auth-logo-text"><h1>Добро пожаловать в MetroChat</h1><p>ВАШЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ</p></div><div class="auth-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login" type="button">Вход</button>
-      <button class="auth-tab" data-tab="register" type="button">Регистрация</button>
-    </div>
+    <div class="auth-logo-row"><div class="auth-logo-mark" aria-label="Логотип MetroChat">M</div><div class="auth-logo-text"><h1 id="welcomeAnimated" class="welcome-animated">Добро пожаловать в MetroChat</h1><p>ВАШЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ</p></div><div class="auth-orbit" aria-hidden="true"><span></span><span></span><span></span></div></div>
+    <div class="auth-step-indicator"><span class="auth-step-dot active" id="authDot1"></span><span class="auth-step-dot" id="authDot2"></span><span id="authStepLabel">Шаг 1 из 2 · Ваша почта</span></div>
     <div class="auth-error" id="authError"></div>
     <form id="authForm" autocomplete="on">
-      <div class="auth-field"><label>Email</label><div class="input-wrap"><input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email" autocapitalize="off" spellcheck="false"></div><div class="field-err" id="errEmail"></div></div>
-      <div class="auth-field"><label>Пароль</label><div class="input-wrap"><input type="password" id="authPass" placeholder="Минимум 6 символов" autocomplete="current-password"><button type="button" class="pw-toggle" id="pwToggle">👁</button></div><div class="field-err" id="errPass"></div></div>
+      <div id="authEmailStep"><div class="auth-field"><label>Электронная почта</label><div class="input-wrap"><input type="email" id="authEmail" placeholder="name@example.com" autocomplete="email" autocapitalize="off" spellcheck="false" required></div><div class="field-err" id="errEmail"></div></div><button type="button" id="authContinue" class="btn btn-primary">Продолжить <span>→</span></button></div>
+      <div id="authPasswordStep" class="hidden"><div class="auth-email-summary"><span>Ваша почта</span><strong id="authEmailSummary"></strong><button type="button" id="authChangeEmail">Изменить</button></div><div class="auth-field"><label>Пароль</label><div class="input-wrap"><input type="password" id="authPass" placeholder="Не менее 6 символов" autocomplete="current-password"><button type="button" class="pw-toggle" id="pwToggle">👁</button></div><div class="field-err" id="errPass"></div></div>
       <div id="privacyConsentWrap" style="display:none; margin: 4px 0 16px; font-size: 13px; line-height: 1.5; color: var(--text-2);">
         <label style="display:flex; align-items:flex-start; gap:9px; cursor:pointer;"><input type="checkbox" id="privacyConsent" style="margin-top:3px; flex:0 0 auto; accent-color:var(--accent);"><span>Я прочитал(а) и принимаю <a href="https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:underline;">Политику конфиденциальности</a>.</span></label>
         <div class="field-err" id="errPrivacyConsent" style="min-height:0;"></div>
       </div>
-      <button type="submit" id="authSubmit" class="btn btn-primary">Войти</button><p class="auth-submit-note">Ваши сообщения и настройки синхронизируются с аккаунтом. Используйте свою почту, чтобы восстановить доступ при необходимости.</p>
+      <button type="submit" id="authSubmit" class="btn btn-primary">Войти</button><button type="button" id="authBack" class="btn btn-ghost">← Назад к почте</button><p class="auth-submit-note">Ваши сообщения и настройки синхронизируются с аккаунтом. Используйте свою почту, чтобы восстановить доступ при необходимости.</p></div>
     </form>
+    <div class="auth-bottom-actions"><div>Уже с нами или впервые?</div><div class="auth-choice-row"><button type="button" class="auth-choice active" data-tab="login">Войти</button><button type="button" class="auth-choice" data-tab="register">Зарегистрироваться</button></div></div>
   </div>
 </div>
 
@@ -549,12 +576,14 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
       <button class="sb-icon-btn" id="settingsBtn" onclick="switchTab('settings')" title="Настройки">⚙️</button>
     </div>
     <div class="sb-nav" id="sbNav">
+      <button class="sb-tab stories-toggle" id="storiesToggle" onclick="toggleStoriesPanel()" title="Истории"><span>👤</span><span class="stories-dot"></span></button>
       <button class="sb-tab active" data-tab="chats" onclick="switchTab('chats')"><span>💬</span> Чаты <span class="count hidden" id="cntChats">0</span></button>
       <button class="sb-tab" data-tab="groups" onclick="switchTab('groups')"><span>👥</span> Группы</button>
       <button class="sb-tab" data-tab="channels" onclick="switchTab('channels')"><span>📢</span> Каналы</button>
       <button class="sb-tab" data-tab="contacts" onclick="switchTab('contacts')"><span>🔍</span> Поиск</button>
       <button class="sb-tab" data-tab="favorites" onclick="switchTab('favorites')" title="Избранное"><span>⭐</span> Избранное</button>
     </div>
+    <div class="stories-panel hidden" id="storiesPanel"><div class="stories-panel-head"><div><b>Истории</b><small>Исчезают через 24 часа</small></div><button class="mini-btn" onclick="openCreateStory()" title="Создать историю">＋</button></div><div id="storiesList" class="stories-list"><div class="stories-loading">Загрузка историй…</div></div></div>
     <div class="sb-search" id="sbSearchWrap"><input type="text" id="sbSearch" placeholder="Поиск..." oninput="renderList()"></div>
     <div class="sb-list" id="sbList"></div>
   </aside>
@@ -601,6 +630,9 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
   </nav>
 </div>
 
+<div class="modal-overlay hidden" id="createStoryModal"><div class="modal story-modal"><div class="story-modal-top"><div><h3>Создать историю</h3><p class="modal-desc">До 3 историй в сутки. История исчезнет через 24 часа.</p></div><button class="mini-btn" onclick="closeModal('createStoryModal')">✕</button></div><textarea id="storyText" class="onb-input" maxlength="500" rows="5" placeholder="Что нового? Добавьте короткую историю…"></textarea><div class="story-colors"><button type="button" data-story-color="midnight" class="active">Ночь</button><button type="button" data-story-color="ocean">Океан</button><button type="button" data-story-color="violet">Неон</button><button type="button" data-story-color="sunset">Закат</button></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createStoryModal')">Отмена</button><button class="btn btn-primary" id="publishStoryBtn" onclick="publishStory()">Опубликовать</button></div></div></div>
+<div class="modal-overlay hidden" id="viewStoryModal"><div class="modal story-view-modal"><div id="storyViewContent"></div></div></div>
+<div class="modal-overlay hidden" id="storyCommentsModal"><div class="modal"><h3>Комментарии</h3><div id="storyCommentsList" class="story-comments-list"></div><div class="story-comment-compose"><input id="storyCommentInput" class="onb-input" maxlength="300" placeholder="Написать комментарий…"><button class="btn btn-primary" onclick="sendStoryComment()">Отправить</button></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('storyCommentsModal')">Закрыть</button></div></div></div>
 <div class="modal-overlay hidden" id="createChannelModal"><div class="modal"><h3>Создать канал</h3><p class="modal-desc">В канале публикуют владелец и администраторы. Подписчики читают публикации.</p><input type="text" class="onb-input" id="newChannelName" placeholder="Название канала" maxlength="60"><textarea class="onb-input" id="newChannelDescription" placeholder="Описание (необязательно)" maxlength="300" rows="3" style="resize:vertical;"></textarea><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createChannelModal')">Отмена</button><button class="btn btn-primary" id="createChannelSubmit" onclick="createChannel()">Создать</button></div></div></div>
 <div class="modal-overlay hidden" id="createGroupModal"><div class="modal"><h3>Создать группу</h3><p class="modal-desc">Введите название.</p><input type="text" class="onb-input" id="newGroupName" placeholder="Название" maxlength="50" style="margin-bottom: 0;"><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('createGroupModal')">Отмена</button><button class="btn btn-primary" onclick="createGroup()">Создать</button></div></div></div>
 <div class="modal-overlay hidden" id="joinGroupModal"><div class="modal"><h3>Войти по коду</h3><p class="modal-desc">Введите 8-значный код.</p><input type="text" class="onb-input code-input" id="joinCode" placeholder="00000000" maxlength="8" inputmode="numeric" style="margin-bottom: 0;"><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('joinGroupModal')">Отмена</button><button class="btn btn-primary" onclick="joinByCode()">Войти</button></div></div></div>
@@ -656,9 +688,10 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 // Emergency boot fallback: module imports can fail when offline or blocked.
 (function(){
   window.setTimeout(function(){
+    if (window.__metroAuthResolved) return;
     var splash=document.getElementById('splash');
     var auth=document.getElementById('authScreen');
-    if(splash && !splash.classList.contains('hide')) {
+    if(splash && !splash.classList.contains('hide') && !window.__metroAuthResolved) {
       splash.classList.add('hide');
       window.setTimeout(function(){ if(splash.isConnected) splash.remove(); }, 450);
       if(auth) auth.classList.remove('hidden');
@@ -725,7 +758,7 @@ const state = {
   messages: [], replyTo: null, pendingAttachment: null,
   blocked: {},
   settings: {
-    themeId: 'crimson', darkMode: false, fontSize: '14px',
+    themeId: 'midnight', darkMode: true, fontSize: '14px',
     notifications: true, sound: true, vibration: true, messagePreview: true,
     readReceipts: true, onlineStatus: true, showLastSeen: true,
     typingIndicator: true, showTimestamps: true, showAvatarsInGroups: true,
@@ -915,21 +948,36 @@ function humanErr(err) {
 const authScreen = $('authScreen'), authForm = $('authForm'), authError = $('authError');
 const authSubmit = $('authSubmit'), authEmail = $('authEmail'), authPass = $('authPass');
 const pwToggle = $('pwToggle'), errEmail = $('errEmail'), errPass = $('errPass');
-qsa('.auth-tab').forEach(t => {
-  t.addEventListener('click', () => {
-    if (state.busy) return;
-    state.authMode = t.dataset.tab;
-    qsa('.auth-tab').forEach(x => x.classList.toggle('active', x === t));
-    authSubmit.textContent = state.authMode === 'login' ? 'Войти' : 'Создать аккаунт';
-    authPass.autocomplete = state.authMode === 'login' ? 'current-password' : 'new-password';
-    authPass.placeholder = state.authMode === 'login' ? 'Пароль' : 'Минимум 6 символов';
-    const consentWrap = $('privacyConsentWrap'); const consent = $('privacyConsent');
-    if (consentWrap) consentWrap.style.display = state.authMode === 'register' ? 'block' : 'none';
-    if (consent) { consent.required = state.authMode === 'register'; if (state.authMode === 'login') consent.checked = false; }
-    const consentErr = $('errPrivacyConsent'); if (consentErr) consentErr.textContent = '';
-    authError.classList.remove('show'); errEmail.textContent = ''; errPass.textContent = '';
-  });
+let authStage = 1;
+function setAuthMode(mode) {
+  if (state.busy) return;
+  state.authMode = mode;
+  qsa('.auth-choice').forEach(x => x.classList.toggle('active', x.dataset.tab === mode));
+  qsa('.auth-tab').forEach(x => x.classList.toggle('active', x.dataset.tab === mode));
+  authSubmit.textContent = mode === 'login' ? 'Войти в MetroChat' : 'Создать аккаунт';
+  authPass.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+  authPass.placeholder = mode === 'login' ? 'Введите пароль' : 'Не менее 6 символов';
+  const consentWrap = $('privacyConsentWrap'); const consent = $('privacyConsent');
+  if (consentWrap) consentWrap.style.display = mode === 'register' ? 'block' : 'none';
+  if (consent) { consent.required = mode === 'register'; if (mode === 'login') consent.checked = false; }
+  const consentErr = $('errPrivacyConsent'); if (consentErr) consentErr.textContent = '';
+  hideAuthError(); errEmail.textContent = ''; errPass.textContent = '';
+  authStage = 1; $('authEmailStep').classList.remove('hidden'); $('authPasswordStep').classList.add('hidden');
+  $('authDot1').classList.add('active'); $('authDot2').classList.remove('active'); $('authStepLabel').textContent = 'Шаг 1 из 2 · Ваша почта';
+}
+qsa('.auth-choice').forEach(t => t.addEventListener('click', () => setAuthMode(t.dataset.tab)));
+qsa('.auth-tab').forEach(t => t.addEventListener('click', () => setAuthMode(t.dataset.tab)));
+$('authContinue').addEventListener('click', () => {
+  const email = authEmail.value.trim().toLowerCase(); errEmail.textContent = '';
+  if (!email) { errEmail.textContent = 'Введите электронную почту'; authEmail.focus(); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { errEmail.textContent = 'Проверьте формат почты'; authEmail.focus(); return; }
+  authEmail.value = email; $('authEmailSummary').textContent = email;
+  authStage = 2; $('authEmailStep').classList.add('hidden'); $('authPasswordStep').classList.remove('hidden');
+  $('authDot1').classList.remove('active'); $('authDot2').classList.add('active'); $('authStepLabel').textContent = 'Шаг 2 из 2 · Пароль';
+  authPass.autocomplete = state.authMode === 'login' ? 'current-password' : 'new-password'; authPass.focus();
 });
+$('authChangeEmail').addEventListener('click', () => { authStage = 1; $('authEmailStep').classList.remove('hidden'); $('authPasswordStep').classList.add('hidden'); $('authDot1').classList.add('active'); $('authDot2').classList.remove('active'); $('authStepLabel').textContent = 'Шаг 1 из 2 · Ваша почта'; });
+$('authBack').addEventListener('click', () => $('authChangeEmail').click());
 pwToggle.addEventListener('click', () => {
   authPass.type = authPass.type === 'password' ? 'text' : 'password';
   pwToggle.textContent = authPass.type === 'password' ? '👁' : '🙈';
@@ -941,6 +989,7 @@ function setBusy(b) {
   authSubmit.textContent = b ? (state.authMode === 'login' ? 'Входим...' : 'Создаём...') : (state.authMode === 'login' ? 'Войти' : 'Создать аккаунт');
 }
 function validateAuth() {
+  if (authStage === 1) { $('authContinue').click(); return false; }
   let ok = true; errEmail.textContent = ''; errPass.textContent = '';
   const email = authEmail.value.trim(); const pass = authPass.value;
   if (!email) { errEmail.textContent = 'Введите email'; ok = false; }
@@ -1053,7 +1102,7 @@ function hideSplash() {
   const s = $('splash');
   if (s) { s.classList.add('hide'); setTimeout(() => s.remove(), 400); }
 }
-setTimeout(() => { hideSplash(); if (!state.user && !state.onboarding) authScreen.classList.remove('hidden'); }, 2500);
+setTimeout(() => { hideSplash(); if (!window.__metroAuthResolved && !state.user) authScreen.classList.remove('hidden'); }, 10000);
 
 async function registerDeviceSession(user) {
   if (!user?.uid) return;
@@ -1114,6 +1163,7 @@ async function bootstrapUser(user) {
   startApp();
 }
 onAuthStateChanged(auth, async user => {
+  window.__metroAuthResolved = true;
   hideSplash();
   if (user) {
     if (!user.emailVerified) { showVerifyEmailScreen(user); return; }
@@ -1138,7 +1188,7 @@ const ONB_TOTAL = 6;
 function showOnboarding() {
   hideSplash(); authScreen.classList.add('hidden'); $('app').classList.add('hidden');
   $('onboarding').classList.remove('hidden'); onbStep = 1;
-  state.selectedOnbTheme = 'crimson';
+  state.selectedOnbTheme = 'midnight';
   renderOnbThemeGrid();
   const base = (state.user.email || '').split('@')[0].toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20);
   if ($('onbUsername') && !$('onbUsername').value) $('onbUsername').value = base || '';
@@ -1300,7 +1350,8 @@ function subscribeAll() {
   state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); updateUserStrip(); if (state.chat) renderChatHeader(); if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
   state.subs.push(onValue(ref(db, 'typing'), snap => { const d = snap.val() || {}; const t = now(); state.typing = {}; for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v; if (state.chat) renderMessages(); }, () => {}));
   state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
-  state.subs.push(onValue(ref(db, 'channels'), snap => {
+  // Ограничиваем стартовую подписку: не скачиваем всю историю всех каналов на каждом входе.
+  state.subs.push(onValue(query(ref(db, 'channels'), orderByChild('createdAt'), limitToLast(30)), snap => {
     state.channels = snap.val() || {};
     if (state.tab === 'channels') renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
     if (state.chat?.type === 'channel' && state.channels[state.chat.id]) {
@@ -1394,9 +1445,10 @@ function renderGroups(q) {
 }
 function renderChannels(q = '') {
   const list = $('sbList'); if (!list) return;
-  const items = Object.entries(state.channels || {}).filter(([id,c]) => c && (!q || String(c.name || '').toLowerCase().includes(q) || String(c.description || '').toLowerCase().includes(q)));
+  const allItems = Object.entries(state.channels || {}).filter(([id,c]) => c && (!q || String(c.name || '').toLowerCase().includes(q) || String(c.description || '').toLowerCase().includes(q)));
+  const items = allItems.sort((a,b) => Object.values(b[1].members || {}).filter(Boolean).length - Object.values(a[1].members || {}).filter(Boolean).length || (b[1].createdAt||0)-(a[1].createdAt||0)).slice(0, q ? 30 : 15);
   if (!items.length) {
-    list.innerHTML = `<div class="empty"><div class="empty-icon">📢</div><h3>${q ? 'Каналы не найдены' : 'Пока нет каналов'}</h3><p>${q ? 'Попробуйте другое название.' : 'Создайте канал через ✏️ или найдите его через поиск.'}</p></div>`;
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📢</div><h3>${q ? 'Каналы не найдены' : 'Популярные каналы появятся здесь'}</h3><p>${q ? 'Попробуйте другое название.' : 'Пока нет каналов с подписчиками. Используйте поиск, чтобы найти канал.'}</p></div>`;
     return;
   }
   list.innerHTML = items.sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0)).map(([id,c]) => {
@@ -1409,6 +1461,71 @@ function renderChannels(q = '') {
     </div>`;
   }).join('');
 }
+
+// Animated multilingual welcome headline (8 languages); no external GIFs or network traffic.
+const welcomeLines = ['Добро пожаловать в MetroChat','Welcome to MetroChat','Bienvenue sur MetroChat','Willkommen bei MetroChat','Benvenuto su MetroChat','Bienvenido a MetroChat','Bem-vindo ao MetroChat','MetroChatへようこそ'];
+let welcomeLineIndex = 0;
+setInterval(() => { const el = $('welcomeAnimated'); if (!el || $('authScreen').classList.contains('hidden')) return; el.classList.add('welcome-swap'); setTimeout(() => { welcomeLineIndex = (welcomeLineIndex + 1) % welcomeLines.length; el.textContent = welcomeLines[welcomeLineIndex]; el.classList.remove('welcome-swap'); }, 260); }, 3200);
+
+// Stories: text-first by design to avoid uploading large media blobs into Realtime Database.
+let storiesCache = [], activeStory = null, selectedStoryColor = 'midnight';
+const STORY_LIFETIME = 24 * 60 * 60 * 1000;
+function toggleStoriesPanel() { const panel=$('storiesPanel'); if(!panel) return; panel.classList.toggle('hidden'); if(!panel.classList.contains('hidden')) loadStories(); }
+function storyDayStart(ts=Date.now()) { const d=new Date(ts); d.setHours(0,0,0,0); return d.getTime(); }
+async function loadStories() {
+  const el=$('storiesList'); if(!el || !state.user?.uid) return;
+  try {
+    const snap=await get(query(ref(db,'stories'),orderByChild('createdAt'),limitToLast(80)));
+    const raw=snap.val()||{}; const cutoff=Date.now()-STORY_LIFETIME;
+    storiesCache=Object.entries(raw).map(([id,v])=>({id,...v})).filter(x=>x.createdAt>=cutoff).sort((a,b)=>b.createdAt-a.createdAt);
+    const usersNeeded=[...new Set(storiesCache.map(x=>x.uid).filter(uid=>uid&&!getUser(uid)))];
+    await Promise.all(usersNeeded.map(uid=>fetchUserIfMissing(uid).catch(()=>null)));
+    if(!storiesCache.length){el.innerHTML='<div class="stories-loading">Пока нет историй. Создайте первую через ✏️.</div>';return;}
+    const newestByUser=new Map(); storiesCache.forEach(st=>{if(!newestByUser.has(st.uid))newestByUser.set(st.uid,st)});
+    el.innerHTML=[...newestByUser.values()].map(st=>{const u=getUser(st.uid)||{};const name=st.uid===state.user.uid?'Ваша история':(u.displayName||u.firstName||u.username||'Пользователь');return `<button class="story-chip" onclick="openStory('${st.id}')"><span class="story-ring"><span class="story-ring-inner">${st.uid===state.user.uid?'＋':'◉'}</span></span><span class="story-chip-name">${esc(name)}</span></button>`}).join('');
+  } catch(e) { console.warn('Stories load:',e); el.innerHTML='<div class="stories-loading">Не удалось загрузить истории. Проверьте Firebase Rules.</div>'; }
+}
+function openCreateStory(){
+  if(!state.user?.uid) return toast('Сначала войдите в аккаунт','⚠');
+  const today=storyDayStart(); const count=storiesCache.filter(s=>s.uid===state.user.uid && s.createdAt>=today).length;
+  // Verify daily quota from database rather than relying only on cached stories.
+  get(query(ref(db,'stories'),orderByChild('createdAt'),limitToLast(100))).then(snap=>{
+    const all=Object.values(snap.val()||{}); const used=all.filter(s=>s.uid===state.user.uid && s.createdAt>=today).length;
+    if(used>=3) return toast('Можно публиковать не более трёх историй в день','⚠');
+    $('storyText').value=''; selectedStoryColor='midnight'; qsa('[data-story-color]').forEach(b=>b.classList.toggle('active',b.dataset.storyColor===selectedStoryColor)); $('createStoryModal').classList.remove('hidden');
+  }).catch(e=>toast(humanErr(e)||'Не удалось проверить лимит историй','⚠'));
+}
+qsa('[data-story-color]').forEach(b=>b.addEventListener('click',()=>{selectedStoryColor=b.dataset.storyColor;qsa('[data-story-color]').forEach(x=>x.classList.toggle('active',x===b));}));
+async function publishStory(){
+  const textValue=($('storyText')?.value||'').trim(); if(!textValue) return toast('Напишите текст истории','⚠'); if(textValue.length>500) return toast('Максимум 500 символов','⚠');
+  const btn=$('publishStoryBtn'); if(btn){btn.disabled=true;btn.textContent='Публикуем…';}
+  try {
+    const uid=state.user.uid, today=storyDayStart();
+    const snap=await get(query(ref(db,'stories'),orderByChild('createdAt'),limitToLast(100)));
+    const count=Object.values(snap.val()||{}).filter(st=>st.uid===uid&&st.createdAt>=today).length;
+    if(count>=3) throw new Error('Можно публиковать не более трёх историй в день');
+    const storyRef=push(ref(db,'stories')); await set(storyRef,{uid,text:textValue,color:selectedStoryColor,createdAt:Date.now(),expiresAt:Date.now()+STORY_LIFETIME,likes:{}});
+    closeModal('createStoryModal'); toast('История опубликована','✓'); await loadStories();
+  } catch(e){console.error('Publish story:',e);toast(humanErr(e)||e.message||'Не удалось опубликовать историю. Проверьте Firebase Rules.','⚠');}
+  finally{if(btn){btn.disabled=false;btn.textContent='Опубликовать';}}
+}
+async function openStory(id){
+  const story=storiesCache.find(s=>s.id===id); if(!story)return toast('История уже недоступна','⚠'); activeStory=story;
+  const u=getUser(story.uid)||{}; const name=story.uid===state.user.uid?'Вы':(u.displayName||u.firstName||u.username||'Пользователь'); const liked=!!story.likes?.[state.user.uid]; const likes=Object.values(story.likes||{}).filter(Boolean).length;
+  const gradients={midnight:'linear-gradient(145deg,#0b1531,#171443,#152d4a)',ocean:'linear-gradient(145deg,#064e68,#1d4ed8,#312e81)',violet:'linear-gradient(145deg,#24104d,#5b21b6,#172554)',sunset:'linear-gradient(145deg,#7c2d12,#be185d,#312e81)'};
+  $('storyViewContent').innerHTML=`<div class="story-view-card" style="background:${gradients[story.color]||gradients.midnight}"><div style="display:flex;align-items:center;justify-content:space-between;color:#fff"><div><b>${esc(name)}</b><div style="font-size:11px;opacity:.7;margin-top:4px">${new Date(story.createdAt).toLocaleString()}</div></div><button class="mini-btn" style="color:white;background:#ffffff18" onclick="closeModal('viewStoryModal')">✕</button></div><div class="story-view-text">${esc(story.text||'')}</div><div class="story-view-actions"><button onclick="toggleStoryLike('${story.id}')">${liked?'♥':'♡'} ${likes}</button><button onclick="openStoryComments('${story.id}')">💬 Комментарии</button>${story.uid===state.user.uid?`<button onclick="deleteStory('${story.id}')">🗑</button>`:''}</div></div>`;
+  $('viewStoryModal').classList.remove('hidden');
+}
+async function toggleStoryLike(id){
+  if(!state.user?.uid)return; const story=storiesCache.find(s=>s.id===id); if(!story)return;
+  try{const path=`stories/${id}/likes/${state.user.uid}`;if(story.likes?.[state.user.uid]){await remove(ref(db,path));delete story.likes[state.user.uid];}else{await set(ref(db,path),true);story.likes={...(story.likes||{}),[state.user.uid]:true};}openStory(id);}catch(e){toast(humanErr(e)||'Не удалось поставить отметку','⚠');}
+}
+async function openStoryComments(id){activeStory=storiesCache.find(s=>s.id===id);if(!activeStory)return; $('storyCommentsList').innerHTML='<div class="stories-loading">Загрузка…</div>'; $('storyCommentsModal').classList.remove('hidden');
+  try{const snap=await get(query(ref(db,`story_comments/${id}`),orderByChild('createdAt'),limitToLast(50)));const rows=Object.entries(snap.val()||{}).map(([key,v])=>({id:key,...v})).sort((a,b)=>a.createdAt-b.createdAt);const ids=[...new Set(rows.map(x=>x.uid).filter(uid=>uid&&!getUser(uid)))];await Promise.all(ids.map(uid=>fetchUserIfMissing(uid).catch(()=>null)));$('storyCommentsList').innerHTML=rows.length?rows.map(c=>{const u=getUser(c.uid)||{};return `<div class="story-comment"><b>${esc(u.displayName||u.firstName||u.username||'Пользователь')}</b><div>${esc(c.text||'')}</div><small>${new Date(c.createdAt).toLocaleString()}</small></div>`}).join(''):'<div class="stories-loading">Комментариев пока нет.</div>';}catch(e){$('storyCommentsList').innerHTML='<div class="stories-loading">Не удалось загрузить комментарии. Проверьте Firebase Rules.</div>';}
+}
+async function sendStoryComment(){const story=activeStory;const textValue=($('storyCommentInput')?.value||'').trim();if(!story||!textValue)return;if(textValue.length>300)return toast('Максимум 300 символов','⚠');try{const r=push(ref(db,`story_comments/${story.id}`));await set(r,{uid:state.user.uid,text:textValue,createdAt:Date.now()});$('storyCommentInput').value='';await openStoryComments(story.id);}catch(e){toast(humanErr(e)||'Не удалось отправить комментарий. Проверьте Firebase Rules.','⚠');}}
+async function deleteStory(id){const story=storiesCache.find(s=>s.id===id);if(!story||story.uid!==state.user.uid)return toast('Удалить историю может только автор','⚠');showConfirm('Удалить историю?','История и её комментарии будут удалены.',async()=>{try{await remove(ref(db,`stories/${id}`));await remove(ref(db,`story_comments/${id}`)).catch(()=>{});closeModal('viewStoryModal');await loadStories();toast('История удалена','✓');}catch(e){toast(humanErr(e)||'Не удалось удалить историю','⚠');}});}
+
 function openCreateChannelModal() {
   $('newChannelName').value = ''; $('newChannelDescription').value = '';
   $('createChannelModal').classList.remove('hidden');
@@ -1474,65 +1591,64 @@ async function joinChannel(id) {
 }
 async function deleteOwnedChannel(channelId) {
   const uid = state.user?.uid;
-  const current = state.chat;
-  if (!uid || !current || current.type !== 'channel' || current.id !== channelId || current.ownerId !== uid) {
-    return toast('Удалить канал может только его владелец', '🔒');
-  }
-  showConfirm('Удалить канал?', 'Канал будет удалён, а его карточка исчезнет из списка участников. Это действие нельзя отменить.', async () => {
+  if (!uid || !channelId) return toast('Не удалось определить канал или аккаунт', '⚠');
+  const current = state.channels?.[channelId] || (state.chat?.id === channelId ? state.chat : null);
+  if (!current || current.ownerId !== uid) return toast('Удалить канал может только его владелец', '🔒');
+  showConfirm('Удалить канал?', 'Канал и его публикации будут удалены. Это действие нельзя отменить.', async () => {
     try {
       const snap = await get(ref(db, 'channels/' + channelId));
       if (!snap.exists()) throw new Error('Канал уже удалён');
       const channel = snap.val() || {};
       if (channel.ownerId !== uid) throw new Error('Вы больше не владелец этого канала');
-      const updates = {};
-      updates['channels/' + channelId] = null;
-      updates['messages/' + channelId] = null;
-      const memberIds = new Set([uid, ...Object.keys(channel.members || {}), ...Object.keys(channel.admins || {})]);
-      for (const memberId of memberIds) updates['user_chats/' + memberId + '/' + channelId] = null;
-      await update(ref(db), updates);
+      // Не затрагиваем приватные списки user_chats других пользователей: Firebase Rules обычно запрещают такую запись.
+      await remove(ref(db, 'messages/' + channelId)).catch(e => { console.warn('Channel messages cleanup:', e); });
+      await remove(ref(db, 'channels/' + channelId));
+      await remove(ref(db, `user_chats/${uid}/${channelId}`)).catch(()=>{});
       if (state.channels) delete state.channels[channelId];
       if (state.chats) delete state.chats[channelId];
       closeModal('chatInfoModal');
-      state.chat = null;
-      renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
+      if (state.chat?.id === channelId) { state.chat = null; $('chatHeader')?.classList.add('hidden'); $('chatInputBar')?.classList.add('hidden'); $('chatEmpty')?.classList.remove('hidden'); $('messages').innerHTML = ''; }
+      renderChannels(($('sbSearch')?.value || '').trim().toLowerCase()); renderAllChats(($('sbSearch')?.value || '').trim().toLowerCase());
       toast('Канал удалён', '✓');
     } catch (e) {
       console.error('Delete channel failed:', e);
-      toast(humanErr(e) || e?.message || 'Не удалось удалить канал. Проверьте Firebase Rules для channels, messages и user_chats.', '⚠');
+      toast(humanErr(e) || e?.message || 'Firebase отклонил удаление. Проверьте права владельца в channels/$channelId.', '⚠');
     }
   });
 }
+
 async function leaveChannel(channelId) {
   const uid = state.user?.uid;
-  const current = state.chat;
-  if (!uid || !current || current.type !== 'channel' || current.id !== channelId) return toast('Канал не найден', '⚠');
-  if (current.ownerId === uid) return toast('Владелец не может покинуть свой канал. Сначала передайте владение или удалите канал.', '⚠');
-  showConfirm('Покинуть канал?', 'Вы перестанете быть подписчиком канала. Его карточка исчезнет из вашего списка.', async () => {
+  if (!uid || !channelId) return toast('Не удалось определить канал или аккаунт', '⚠');
+  showConfirm('Покинуть канал?', 'Вы перестанете быть подписчиком. История переписки может остаться доступна в базе, но канал исчезнет из вашего списка.', async () => {
     try {
       const snap = await get(ref(db, 'channels/' + channelId));
-      if (!snap.exists()) throw new Error('Канал не найден');
-      const channel = snap.val() || {};
-      if (channel.ownerId === uid) throw new Error('Владелец не может покинуть канал');
-      const updates = {};
-      updates['channels/' + channelId + '/members/' + uid] = null;
-      updates['channels/' + channelId + '/admins/' + uid] = null;
-      updates['user_chats/' + uid + '/' + channelId] = null;
-      await update(ref(db), updates);
+      if (!snap.exists()) {
+        await remove(ref(db, `user_chats/${uid}/${channelId}`)).catch(()=>{});
+      } else {
+        const channel = snap.val() || {};
+        if (channel.ownerId === uid) throw new Error('Владелец не может покинуть свой канал. Передайте владение или удалите канал.');
+        // Раздельные записи позволяют правилам Firebase проверить права на каждый собственный узел.
+        await remove(ref(db, `channels/${channelId}/members/${uid}`));
+        await remove(ref(db, `channels/${channelId}/admins/${uid}`)).catch(()=>{});
+        await remove(ref(db, `user_chats/${uid}/${channelId}`));
+      }
       if (state.channels?.[channelId]) {
         const next = { ...state.channels[channelId], members: { ...(state.channels[channelId].members || {}) }, admins: { ...(state.channels[channelId].admins || {}) } };
         delete next.members[uid]; delete next.admins[uid]; state.channels[channelId] = next;
       }
       if (state.chats) delete state.chats[channelId];
       closeModal('chatInfoModal');
-      state.chat = null;
-      renderChannels(($('sbSearch')?.value || '').trim().toLowerCase());
+      if (state.chat?.id === channelId) { state.chat = null; $('chatHeader')?.classList.add('hidden'); $('chatInputBar')?.classList.add('hidden'); $('chatEmpty')?.classList.remove('hidden'); $('messages').innerHTML = ''; }
+      renderChannels(($('sbSearch')?.value || '').trim().toLowerCase()); renderAllChats(($('sbSearch')?.value || '').trim().toLowerCase());
       toast('Вы покинули канал', '✓');
     } catch (e) {
       console.error('Leave channel failed:', e);
-      toast(humanErr(e) || e?.message || 'Не удалось покинуть канал. Проверьте Firebase Rules.', '⚠');
+      toast(humanErr(e) || e?.message || 'Firebase отклонил выход. Проверьте права на channels/$channelId/members и user_chats/$uid.', '⚠');
     }
   });
 }
+
 function channelProfileAvatar(c, size = 92) {
   const style = `width:${size}px;height:${size}px;border-radius:24px;flex:0 0 auto;background:var(--accent-light) center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:${Math.round(size*.42)}px;overflow:hidden;`;
   return `<div class="avatar square" style="${style}${c.avatar ? `background-image:url('${String(c.avatar).replace(/'/g, '%27')}');` : ''}">${c.avatar ? '' : '📢'}</div>`;
@@ -1839,7 +1955,7 @@ function renderPinnedBar() {
 }
 function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
-  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(150));
+  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(60));
   state.chatUnsub = onValue(q, snap => {
     const prevLen = state.messages.length;
     const data = snap.val() || {};
@@ -2248,7 +2364,8 @@ function showMsgCtx(e, msgId) {
   const canDeleteForAll = isOwn || isOwner || isAdmin;
   const canForward = !isGroup || !getGroupSetting(state.chat, 'disableForwarding') || isOwner || isAdmin;
   const menu = document.createElement('div');
-  menu.className = 'ctx-menu'; menu.id = 'ctxMenu';
+  menu.className = 'ctx-menu fab-glass-menu'; menu.id = 'ctxMenu';
+  const heading=document.createElement('div'); heading.className='ctx-title'; heading.textContent='Быстрые действия'; menu.appendChild(heading);
   menu.addEventListener('click', (ev) => ev.stopPropagation());
   const items = [];
   items.push({ icon: '↩️', text: 'Ответить', fn: () => setReply(msgId) });
@@ -2291,7 +2408,8 @@ function showChatCtx(e, chatId) {
   const info = state.chats[chatId];
   if (!info) return;
   const menu = document.createElement('div');
-  menu.className = 'ctx-menu'; menu.id = 'ctxMenu';
+  menu.className = 'ctx-menu fab-glass-menu'; menu.id = 'ctxMenu';
+  const heading=document.createElement('div'); heading.className='ctx-title'; heading.textContent='Быстрые действия'; menu.appendChild(heading);
   menu.addEventListener('click', (ev) => ev.stopPropagation());
   const items = [
     { icon: '📌', text: info.pinned ? 'Открепить' : 'Закрепить', fn: () => togglePinChat(chatId) },
@@ -2398,7 +2516,8 @@ function forwardMsg(msgId) {
   if (!m) return;
   const items = getAllChatsList();
   const menu = document.createElement('div');
-  menu.className = 'ctx-menu'; menu.id = 'ctxMenu';
+  menu.className = 'ctx-menu fab-glass-menu'; menu.id = 'ctxMenu';
+  const heading=document.createElement('div'); heading.className='ctx-title'; heading.textContent='Быстрые действия'; menu.appendChild(heading);
   menu.style.position = 'fixed'; menu.style.left = '50%'; menu.style.top = '100px'; menu.style.transform = 'translateX(-50%)';
   menu.style.maxHeight = '60vh'; menu.style.overflowY = 'auto';
   menu.addEventListener('click', (ev) => ev.stopPropagation());
@@ -3343,7 +3462,7 @@ async function changePassword() {
   if (newP !== newP2) return toast('Пароли не совпадают', '⚠');
   try { const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP); await reauthenticateWithCredential(auth.currentUser, cred); await updatePassword(auth.currentUser, newP); closeModal('changePasswordModal'); toast('Пароль изменён', '🔐'); } catch(e) { toast(humanErr(e), '⚠'); }
 }
-function confirmLogout() { showConfirm('Выйти из аккаунта?', 'Вы сможете войти снова.', () => { stopApp(); auth.signOut(); }); }
+function confirmLogout() { showConfirm('Выйти из аккаунта?', 'Вы сможете войти снова.', async () => { try { stopApp(); await signOut(auth); state.user = null; state.profile = null; state.booted = false; $('app').classList.add('hidden'); $('verifyScreen').classList.add('hidden'); $('authScreen').classList.remove('hidden'); } catch(e) { console.error('Logout failed:',e); toast(humanErr(e) || 'Не удалось выйти. Проверьте подключение.', '⚠'); } }); }
 function confirmDeleteAccount() {
   showConfirm('Удалить аккаунт?', 'Все данные будут удалены безвозвратно.', async () => {
     const uid = state.user.uid;
@@ -3385,6 +3504,7 @@ function fabAction() {
   closeAllMenus();
   // Карандаш доступен рядом с профилем на любом экране: создание канала не спрятано внутри вкладки.
   const items = [
+    { icon: '✨', text: 'Создать историю', fn: openCreateStory },
     { icon: '📢', text: 'Создать канал', fn: openCreateChannelModal },
     { icon: '➕', text: 'Создать группу', fn: openCreateGroupModal },
     { icon: '🔑', text: 'Войти по коду группы', fn: openJoinGroupModal },
@@ -3392,12 +3512,13 @@ function fabAction() {
     { icon: '📣', text: 'Открыть каналы', fn: () => switchTab('channels') }
   ];
   const menu = document.createElement('div');
-  menu.className = 'ctx-menu'; menu.id = 'ctxMenu';
+  menu.className = 'ctx-menu fab-glass-menu'; menu.id = 'ctxMenu';
+  const heading=document.createElement('div'); heading.className='ctx-title'; heading.textContent='Быстрые действия'; menu.appendChild(heading);
   const btn = $('fabBtn');
   const r = btn.getBoundingClientRect();
   menu.style.position = 'fixed';
   menu.style.top = (r.bottom + 6) + 'px';
-  const menuWidth = 200;
+  const menuWidth = 252;
   let left = r.right - menuWidth;
   if (left < 10) left = 10;
   if (left + menuWidth > window.innerWidth - 10) left = window.innerWidth - menuWidth - 10;
@@ -3703,7 +3824,8 @@ Object.assign(window, {
   checkEmailVerified, resendVerifyEmail, cancelVerify,
   openEditGroupModal, editGroupAvatarChange, saveGroupInfo,
   // Эти функции вызываются из inline onclick внутри динамически созданных элементов.
-  openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins, renderChannelProfile, openChannelProfileEditor, editChannelAvatarChange, saveChannelProfile, selectChannelTheme, grantChannelAdminFromProfile, revokeChannelAdmin,
+  openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins, renderChannelProfile, openChannelProfileEditor, editChannelAvatarChange, saveChannelProfile, selectChannelTheme, grantChannelAdminFromProfile, revokeChannelAdmin, deleteOwnedChannel, leaveChannel,
+  toggleStoriesPanel, loadStories, openCreateStory, publishStory, openStory, toggleStoryLike, openStoryComments, sendStoryComment, deleteStory,
   refreshChatPreview
 });
 </script>
