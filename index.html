@@ -3990,7 +3990,12 @@ Object.assign(window, {
   // Эти функции вызываются из inline onclick внутри динамически созданных элементов.
   openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins, renderChannelProfile, openChannelProfileEditor, editChannelAvatarChange, saveChannelProfile, selectChannelTheme, grantChannelAdminFromProfile, revokeChannelAdmin, deleteOwnedChannel, leaveChannel,
   toggleStoriesPanel, loadStories, openCreateStory, publishStory, openStory, toggleStoryLike, openStoryComments, sendStoryComment, deleteStory,
-  refreshChatPreview
+  refreshChatPreview,
+  // Other tab / channel discovery / gifts: expose inline-handler targets from the module.
+  renderOtherHome, renderOtherChannels, renderGiftShop, renderOwnedGifts,
+  startGiftEarning, renderGiftQuizStage, continueGiftAge, chooseGiftSubject,
+  beginGiftQuiz, answerGiftQuestion, nextGiftQuestion, selectGiftToBuy,
+  hideOwnedGift, openGiftSendPicker, giftOwnedItem
 });
 </script>
 
