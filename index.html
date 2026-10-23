@@ -3481,17 +3481,14 @@ const METRO_GIFTS = [
 let giftFlow = {stage:'age', age:null, subject:null, questions:[], answers:[], index:0, claimed:false};
 let selectedGiftId = null;
 function renderOtherHome() {
-  const wrap = $('settingsPanel');
-  if (!wrap) return;
-  wrap.innerHTML = `<div class="settings-header"><button type="button" class="settings-back-btn" data-other-action="back">← Назад</button><div class="settings-title">Прочее</div></div>
-    <div class="settings-wrap"><div class="other-hub-grid">
-      <button type="button" class="other-hub-card" data-other-action="channels"><span class="other-hub-icon">📡</span><b>Каналы</b><small>Популярные сообщества и авторские каналы</small><span class="other-hub-arrow">Открыть →</span></button>
-      <button type="button" class="other-hub-card" data-other-action="gifts"><span class="other-hub-icon">🎁</span><b>Подарки</b><small>Зарабатывайте умы и дарите подарки друзьям</small><span class="other-hub-arrow">Открыть →</span></button>
-    </div></div>`;
-  // Bind directly to the freshly rendered controls; do not depend on inline onclick/global handlers.
-  wrap.querySelector('[data-other-action="back"]')?.addEventListener('click', () => switchTab('chats'));
-  wrap.querySelector('[data-other-action="channels"]')?.addEventListener('click', () => renderOtherChannels());
-  wrap.querySelector('[data-other-action="gifts"]')?.addEventListener('click', () => { void renderGiftShop(); });
+  const wrap=$('settingsPanel'); if(!wrap)return;
+  wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Назад</button><div class="settings-title">Прочее</div></div>
+  <div class="settings-wrap"><div class="other-hub-grid">
+    <button type="button" class="other-hub-card" data-open-other="channels"><span class="other-hub-icon">📡</span><b>Каналы</b><small>Популярные сообщества и авторские каналы</small><span class="other-hub-arrow">Открыть →</span></button>
+    <button type="button" class="other-hub-card" data-open-other="gifts"><span class="other-hub-icon">🎁</span><b>Подарки</b><small>Зарабатывайте умы и дарите подарки друзьям</small><span class="other-hub-arrow">Открыть →</span></button>
+  </div></div>`;
+  wrap.querySelector('[data-open-other="channels"]')?.addEventListener('click', () => renderOtherChannels());
+  wrap.querySelector('[data-open-other="gifts"]')?.addEventListener('click', () => { void renderGiftShop(); });
 }
 function renderOtherChannels(q='') {
   const wrap=$('settingsPanel'); if(!wrap)return;
@@ -3996,7 +3993,7 @@ Object.assign(window, {
   openCreateChannelModal, createChannel, joinChannel, manageChannelAdmins, renderChannelProfile, openChannelProfileEditor, editChannelAvatarChange, saveChannelProfile, selectChannelTheme, grantChannelAdminFromProfile, revokeChannelAdmin, deleteOwnedChannel, leaveChannel,
   toggleStoriesPanel, loadStories, openCreateStory, publishStory, openStory, toggleStoryLike, openStoryComments, sendStoryComment, deleteStory,
   refreshChatPreview,
-  // Other tab / channel discovery / gifts: expose inline-handler targets from the module.
+  // Other tab and gifts: these functions are called by inline handlers in generated HTML.
   renderOtherHome, renderOtherChannels, renderGiftShop, renderOwnedGifts,
   startGiftEarning, renderGiftQuizStage, continueGiftAge, chooseGiftSubject,
   beginGiftQuiz, answerGiftQuestion, nextGiftQuestion, selectGiftToBuy,
