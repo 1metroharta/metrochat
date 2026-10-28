@@ -1093,8 +1093,32 @@ authForm.addEventListener('submit', async e => {
       await signInWithEmailAndPassword(auth, email, pass);
     } else {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      try { await set(ref(db, 'users/' + cred.user.uid), { email, createdAt: now(), onboardingComplete: false, privacyPolicyAcceptedAt: now(), verified: false, socialLinks: [] }); }
-      catch (dbErr) { try { await deleteUser(cred.user); } catch(_) {} throw dbErr; }
+      try {
+        await set(ref(db, 'users/' + cred.user.uid), {
+          email, createdAt: now(), onboardingComplete: false,
+          privacyPolicyAcceptedAt: now(), verified: false, socialLinks: []
+        });
+      } catch (dbErr) {
+        // Do not silently delete the Auth account: this failure usually means
+        // Realtime Database Rules denied writes to users/<uid>.
+        console.error('MetroChat registration: profile write failed', {
+          code: dbErr?.code, message: dbErr?.message,
+          path: 'users/' + cred.user.uid, uid: cred.user.uid
+        });
+        try {
+          await signOut(auth);
+        } catch (signOutErr) {
+          console.warn('Could not sign out after profile write failure:', signOutErr);
+        }
+        const msg = /permission[_ ]denied/i.test(dbErr?.message || '') ||
+                    dbErr?.code === 'PERMISSION_DENIED' ||
+                    dbErr?.code === 'database/permission-denied'
+          ? 'Firebase Realtime Database запретила запись в users/' + cred.user.uid +
+            '. Исправьте Rules для users/$uid: чтение и запись должны быть разрешены только владельцу (auth.uid === $uid). Аккаунт Auth создан, но профиль не сохранён. После исправления Rules войдите снова.'
+          : 'Аккаунт создан, но не удалось сохранить профиль в Firebase Realtime Database: ' +
+            (dbErr?.message || dbErr?.code || 'неизвестная ошибка');
+        throw new Error(msg);
+      }
       try { await sendEmailVerification(cred.user); toast('Письмо для подтверждения отправлено', '📧'); } catch(e) { console.warn('Email verification send failed:', e); }
     }
     try { localStorage.setItem('metro_last_email', email); } catch(_) {}
