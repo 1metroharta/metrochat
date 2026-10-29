@@ -577,6 +577,38 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 @media(max-width:600px){.other-hub-grid,.gift-shop-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.other-hub-card{padding:14px}.channel-discovery-hero{padding:18px}.channel-discovery-hero h2{font-size:21px}.discovery-channel-card{gap:7px;padding:9px}.discovery-channel-avatar{width:38px;height:38px;border-radius:12px}.discovery-action{padding:8px!important;font-size:10px!important}.discovery-rank{width:18px}.gift-wallet-card{padding:18px}.gift-wallet-coin{width:52px;height:52px}.quiz-subject-grid{grid-template-columns:1fr}.gift-shop-item{padding:13px 8px}}
 
 </style>
+
+<style id="metrochat-visual-redesign-2026">
+:root{--mc-accent:#e63946;--mc-accent-2:#ff6470;--mc-bg:#f4f6fb;--mc-panel:rgba(255,255,255,.88);--mc-panel-solid:#fff;--mc-text:#171b2b;--mc-muted:#737b90;--mc-border:rgba(116,128,157,.17);--mc-shadow:0 16px 44px rgba(32,42,75,.09);--mc-shadow-hover:0 22px 54px rgba(32,42,75,.15);--mc-radius:22px;--mc-ease:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 8% 0%,rgba(230,57,70,.075),transparent 34%),radial-gradient(ellipse at 100% 100%,rgba(99,102,241,.065),transparent 38%),var(--mc-bg);color:var(--mc-text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input,textarea,select{font:inherit}button,[role=button],.btn,[class*=button]{transition:transform .22s var(--mc-ease),box-shadow .22s var(--mc-ease),background-color .22s ease,border-color .22s ease,opacity .22s ease}
+button:active,[role=button]:active,.btn:active{transform:scale(.975)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(230,57,70,.28);outline-offset:3px}
+input,textarea,select{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}input:focus,textarea:focus,select:focus{border-color:rgba(230,57,70,.58)!important;box-shadow:0 0 0 4px rgba(230,57,70,.09)}
+img,video{max-width:100%}img{transition:filter .25s ease}::selection{background:rgba(230,57,70,.2)}
+*{scrollbar-width:thin;scrollbar-color:rgba(130,140,164,.42) transparent}*::-webkit-scrollbar{width:7px;height:7px}*::-webkit-scrollbar-thumb{background:rgba(130,140,164,.38);border-radius:99px}*::-webkit-scrollbar-track{background:transparent}
+[class*=modal],[class*=Modal],[class*=dialog],[class*=Dialog],[class*=popover],[class*=Popover]{backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+[class*=card],[class*=Card],[class*=panel],[class*=Panel],[class*=section],[class*=Section]{transition:border-color .25s ease,box-shadow .25s ease,background .25s ease}
+[class*=chat-item],[class*=ChatItem],[class*=conversation],[class*=Conversation],[class*=contact],[class*=Contact]{transition:background .2s ease,transform .2s var(--mc-ease),box-shadow .2s ease}
+[class*=chat-item]:hover,[class*=ChatItem]:hover,[class*=conversation]:hover,[class*=Conversation]:hover,[class*=contact]:hover,[class*=Contact]:hover{transform:translateY(-1px)}
+nav,[class*=bottom-nav],[class*=BottomNav],[class*=tab-bar],[class*=TabBar]{-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4)}
+button:hover,[role=button]:hover,.btn:hover{filter:brightness(1.025)}button:disabled,[aria-disabled=true]{cursor:not-allowed}
+@keyframes mcFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes mcPopIn{0%{opacity:0;transform:scale(.965)}70%{opacity:1;transform:scale(1.012)}100%{opacity:1;transform:scale(1)}}
+@keyframes mcSoftPulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}50%{box-shadow:0 0 0 5px rgba(230,57,70,.075)}}
+main,[role=main],#app,#root,.app,.app-container,.main-content{animation:mcFadeUp .42s var(--mc-ease) both}
+[class*=toast],[class*=Toast],[class*=notification],[class*=Notification]{animation:mcPopIn .28s var(--mc-ease) both}
+[class*=avatar],[class*=Avatar],.avatar{transition:transform .22s var(--mc-ease),box-shadow .22s ease}
+[class*=avatar]:hover,[class*=Avatar]:hover,.avatar:hover{transform:translateY(-1px) scale(1.035)}
+@media(prefers-reduced-motion:no-preference){button:not(:disabled):hover,[role=button]:not([aria-disabled=true]):hover{box-shadow:0 7px 20px rgba(32,42,75,.08)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+@media(prefers-color-scheme:dark){body:not(.light-theme):not([data-theme=light]){--mc-bg:#10131d;--mc-panel:rgba(26,30,44,.88);--mc-panel-solid:#1a1e2c;--mc-text:#f1f3fa;--mc-muted:#a0a8bd;--mc-border:rgba(174,184,210,.15);--mc-shadow:0 16px 44px rgba(0,0,0,.22);background:radial-gradient(ellipse at 8% 0%,rgba(230,57,70,.10),transparent 34%),radial-gradient(ellipse at 100% 100%,rgba(99,102,241,.08),transparent 38%),var(--mc-bg);color:var(--mc-text)}}
+</style>
+
+
+<style id="metrochat-final-contrast-fix">
+:root{color-scheme:light dark} body{--mc-safe-text:var(--text,#20242b)} .settings-wrap,.settings-panel,.modal-content,.chat-info-content{color:var(--text,#20242b)} .settings-wrap button,.settings-wrap input,.settings-wrap select,.settings-wrap textarea{color:inherit} .settings-wrap select,.settings-wrap input,.settings-wrap textarea{background:var(--surface-2,#f4f5f7);border-color:var(--border,#d9dde5)} .gift-shop-item,.other-hub-card{color:var(--text,#20242b)} .gift-shop-item small,.other-hub-card small,.set-sub{color:var(--text-2,#626a78)} button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent,#e63946);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 
@@ -1572,7 +1604,7 @@ function renderChannels(q = '') {
     return;
   }
   list.innerHTML = items.sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0)).map(([id,c]) => {
-    const subscribed = !!state.chats[id];
+    const subscribed = !!(state.chats?.[id] || c.members?.[state.user?.uid]);
     const role = c.ownerId === state.user?.uid ? 'Владелец' : c.admins?.[state.user?.uid] ? 'Администратор' : subscribed ? 'Подписка оформлена' : 'Канал';
     return `<div class="list-item" style="align-items:flex-start;" onclick="${subscribed ? `openChat('${id}','channel')` : `joinChannel('${id}')`}">
       <div class="avatar square" style="display:flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent);">📢</div>
@@ -3500,7 +3532,16 @@ const METRO_GIFTS = [
   {id:'flower',name:'Букет',emoji:'💐',cost:45,desc:'Тёплое поздравление'},
   {id:'heart',name:'Сердце',emoji:'💝',cost:60,desc:'Особенный подарок'},
   {id:'rocket',name:'Ракета',emoji:'🚀',cost:100,desc:'Для больших достижений'},
-  {id:'crown',name:'Корона',emoji:'👑',cost:180,desc:'Подарок особого статуса'}
+  {id:'crown',name:'Корона',emoji:'👑',cost:180,desc:'Подарок особого статуса'},
+  {id:'coffee',name:'Кофе',emoji:'☕',cost:15,desc:'Небольшой знак внимания'},
+  {id:'cookie',name:'Печенье',emoji:'🍪',cost:25,desc:'Сладкий сюрприз'},
+  {id:'teddy',name:'Мишка',emoji:'🧸',cost:75,desc:'Мягкий подарок'},
+  {id:'music',name:'Музыка',emoji:'🎵',cost:90,desc:'Хорошее настроение'},
+  {id:'planet',name:'Планета',emoji:'🪐',cost:140,desc:'Целая вселенная'},
+  {id:'diamond',name:'Алмаз',emoji:'💎',cost:250,desc:'Редкий подарок'},
+  {id:'fireworks',name:'Фейерверк',emoji:'🎆',cost:320,desc:'Яркое событие'},
+  {id:'trophy',name:'Кубок',emoji:'🏆',cost:400,desc:'За большие победы'},
+  {id:'unicorn',name:'Единорог',emoji:'🦄',cost:500,desc:'Волшебный сюрприз'}
 ];
 let giftFlow = {stage:'age', age:null, subject:null, questions:[], answers:[], index:0, claimed:false};
 let selectedGiftId = null;
@@ -3531,11 +3572,11 @@ function renderOtherChannels(q='') {
 }
 async function readGiftBalance(uid=state.user?.uid){try{const s=await get(ref(db,`gift_wallet/${uid}/balance`));return Number(s.val()||0)}catch(e){console.warn('Gift balance read:',e);return 0}}
 async function renderGiftShop(){
- const wrap=$('settingsPanel');if(!wrap)return;wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите короткие тесты и отправляйте подарки.</p></div><div class="gift-wallet-coin">УМ</div></div><button class="btn btn-primary gift-earn-wide" onclick="startGiftEarning()">✦ Заработать подарки</button><button class="btn btn-secondary gift-send-wide" onclick="openGiftSendPicker()">↗ Подарить подарок</button><div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>Выберите подарок для себя или друга</p></div></div><div class="gift-shop-grid">${METRO_GIFTS.map(g=>`<button class="gift-shop-item" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><span class="gift-price">${g.cost} УМ</span></button>`).join('')}</div><div id="giftOwnedSection"></div></div>`;
+ const wrap=$('settingsPanel');if(!wrap)return;wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите короткие тесты и отправляйте подарки.</p></div><div class="gift-wallet-coin">УМ</div></div><button class="btn btn-primary gift-earn-wide" onclick="startGiftEarning()">✦ Заработать подарки</button><button class="btn btn-secondary gift-send-wide" onclick="openGiftSendPicker()">↗ Подарить подарок</button><button class="btn btn-secondary gift-send-wide" onclick="renderGiftCraft()">🛠️ Крафт подарков</button><div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>Выберите подарок для себя или друга</p></div></div><div class="gift-shop-grid">${METRO_GIFTS.map(g=>`<button class="gift-shop-item" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><span class="gift-price">${g.cost} УМ</span></button>`).join('')}</div><div id="giftOwnedSection"></div></div>`;
  const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;await renderOwnedGifts();
 }
 async function renderOwnedGifts(){const el=$('giftOwnedSection');if(!el||!state.user?.uid)return;try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>!g.hidden);el.innerHTML=`<div class="discovery-section-head"><div><h3>Мои подарки</h3><p>Подарки, отображаемые в вашем профиле</p></div></div>${items.length?`<div class="gift-owned-list">${items.map(g=>`<div class="gift-owned-item"><span>${esc(g.emoji||'🎁')}</span><div><b>${esc(g.name||'Подарок')}</b><small>${g.fromName?'От '+esc(g.fromName):'Ваш подарок'}</small></div><button class="mini-btn" title="Скрыть в профиле" onclick="hideOwnedGift('${g.id}')">◉</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`).join('')}</div>`:'<p class="gift-empty-note">Пока нет подарков. Выберите подарок в витрине или заработайте умы.</p>'}`;}catch(e){el.innerHTML='<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>';}}
-async function selectGiftToBuy(id){
+async async function selectGiftToBuy(id){
   const g=METRO_GIFTS.find(x=>x.id===id);
   if(!g)return;
   const uid=state.user?.uid;
@@ -3589,6 +3630,20 @@ async function selectGiftToBuy(id){
     if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${actual} <span>умов</span>`;
     toast(`Покупка не завершена. Баланс: ${actual} умов. Проверьте права gift_wallet и gift_inventory.`,'⚠');
   }
+}
+async function renderGiftCraft(){
+ const wrap=$('settingsPanel'); if(!wrap)return;
+ let items=[]; try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));items=Object.entries(snap.val()||{}).filter(([id,g])=>g&&!g.hidden&&!g.purchasePending).map(([id,g])=>({id,...g}));}catch(e){return toast('Не удалось загрузить инвентарь подарков','⚠')}
+ wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderGiftShop()">← Подарки</button><div class="settings-title">Крафт подарков</div></div><div class="settings-wrap"><p class="set-sub">Обменяйте один подарок на часть его цены или объедините два одинаковых/разных подарка, доплатив умы, чтобы получить новый.</p><div class="settings-group"><h3>Обменять на умы</h3><div class="gift-shop-grid">${items.map(g=>`<button class="gift-shop-item" onclick="craftSellGift('${g.id}')"><span class="gift-emoji">${esc(g.emoji||'🎁')}</span><b>${esc(g.name||'Подарок')}</b><small>Вернуть ${Math.floor(Math.max(0,Number(g.cost)||0)*0.5)} умов</small></button>`).join('')||'<p>У вас пока нет купленных подарков.</p>'}</div></div><div class="settings-group"><h3>Объединить подарки</h3><label>Первый подарок</label><select id="craftGiftA">${items.map(g=>`<option value="${g.id}">${esc(g.emoji||'🎁')} ${esc(g.name||'Подарок')}</option>`).join('')}</select><label>Второй подарок</label><select id="craftGiftB">${items.map(g=>`<option value="${g.id}">${esc(g.emoji||'🎁')} ${esc(g.name||'Подарок')}</option>`).join('')}</select><label>Новый подарок</label><select id="craftGiftOut">${METRO_GIFTS.map(g=>`<option value="${g.id}">${g.emoji} ${esc(g.name)} — ${g.cost} умов</option>`).join('')}</select><p class="set-sub">Стоимость доплаты рассчитывается как цена нового подарка минус половина стоимости каждого используемого подарка.</p><button class="btn btn-primary" style="width:100%" onclick="craftCombineGifts()" ${items.length<2?'disabled':''}>Создать новый подарок</button></div></div>`;
+}
+async function craftSellGift(id){
+ const uid=state.user?.uid;if(!uid)return;const item=ref(db,`gift_inventory/${uid}/${id}`);const snap=await get(item);if(!snap.exists())return toast('Подарок уже недоступен','⚠');const g=snap.val();const reward=Math.floor(Math.max(0,Number(g.cost)||0)*.5);if(!confirm(`Обменять ${g.name||'подарок'} на ${reward} умов? Подарок будет удалён.`))return;
+ const wallet=ref(db,`gift_wallet/${uid}/balance`);try{const tx=await runTransaction(wallet,n=>{if(n===null||!Number.isFinite(Number(n)))return;return Number(n)+reward});if(!tx.committed)return toast('Не удалось обновить баланс. Проверьте Firebase Rules.','⚠');await remove(item);toast(`Получено ${reward} умов`,'✓');await renderGiftCraft();}catch(e){console.error(e);toast('Обмен не выполнен. Проверьте права gift_wallet и gift_inventory.','⚠')}
+}
+async function craftCombineGifts(){
+ const uid=state.user?.uid,a=$('craftGiftA')?.value,b=$('craftGiftB')?.value,out=METRO_GIFTS.find(g=>g.id===$('craftGiftOut')?.value);if(!uid||!a||!b||a===b||!out)return toast('Выберите два разных подарка','⚠');const base=`gift_inventory/${uid}`;try{const [sa,sb]=await Promise.all([get(ref(db,`${base}/${a}`)),get(ref(db,`${base}/${b}`))]);if(!sa.exists()||!sb.exists())return toast('Один из подарков уже недоступен','⚠');const ga=sa.val(),gb=sb.val();const cost=Math.max(0,out.cost-Math.floor((Number(ga.cost)||0)*.5)-Math.floor((Number(gb.cost)||0)*.5));const wallet=ref(db,`gift_wallet/${uid}/balance`);const ws=await get(wallet);if(!ws.exists()||Number(ws.val())<cost)return toast(`Для крафта нужно доплатить ${cost} умов. Баланс: ${ws.val()??'неизвестен'}`,'🎁');if(!confirm(`Создать ${out.emoji} ${out.name}? Доплата: ${cost} умов. Два выбранных подарка будут использованы.`))return;
+ const tx=await runTransaction(wallet,n=>{if(n===null||!Number.isFinite(Number(n))||Number(n)<cost)return;return Number(n)-cost});if(!tx.committed)return toast('Баланс изменился. Повторите попытку.','⚠');try{await Promise.all([remove(ref(db,`${base}/${a}`)),remove(ref(db,`${base}/${b}`))]);await set(push(ref(db,base)),{giftId:out.id,name:out.name,emoji:out.emoji,cost:out.cost,fromName:'Крафт MetroChat',createdAt:Date.now(),hidden:false});toast('Новый подарок создан!','🎁');await renderGiftCraft();}catch(err){console.error('Craft inventory update failed',err);toast('Умы списаны, но подарок не удалось сохранить. Проверьте Rules и восстановите баланс вручную.','⚠')}
+ }catch(e){console.error(e);toast('Крафт не выполнен. Проверьте правила Firebase.','⚠')}
 }
 async function hideOwnedGift(id){if(!confirm('Скрыть этот подарок в вашем профиле?'))return;try{await update(ref(db,`gift_inventory/${state.user.uid}/${id}`),{hidden:true});await renderOwnedGifts();toast('Подарок скрыт из профиля','✓')}catch(e){toast('Не удалось скрыть подарок. Проверьте Firebase Rules.','⚠')}}
 async function openGiftSendPicker(){try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));if(!items.length)return toast('Сначала купите подарок в витрине.','🎁');const choices=items.map((g,i)=>`${i+1}. ${g.emoji||'🎁'} ${g.name||'Подарок'}`).join('\n');const choice=Number(prompt('Какой подарок отправить? Введите номер:\n'+choices));if(!Number.isInteger(choice)||choice<1||choice>items.length)return;await giftOwnedItem(items[choice-1].id)}catch(e){toast('Не удалось открыть ваши подарки','⚠')}}
