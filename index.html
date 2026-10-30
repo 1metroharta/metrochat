@@ -576,6 +576,20 @@ body { background:radial-gradient(ellipse at 12% -10%,rgba(39,216,242,.09),trans
 [data-theme="light"] .other-hub-card,[data-theme="light"] .gift-shop-item,[data-theme="light"] .discovery-channel-card,[data-theme="light"] .quiz-intro,[data-theme="light"] .quiz-question-card{color:#17233d;background:rgba(255,255,255,.88)}
 @media(max-width:600px){.other-hub-grid,.gift-shop-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.other-hub-card{padding:14px}.channel-discovery-hero{padding:18px}.channel-discovery-hero h2{font-size:21px}.discovery-channel-card{gap:7px;padding:9px}.discovery-channel-avatar{width:38px;height:38px;border-radius:12px}.discovery-action{padding:8px!important;font-size:10px!important}.discovery-rank{width:18px}.gift-wallet-card{padding:18px}.gift-wallet-coin{width:52px;height:52px}.quiz-subject-grid{grid-template-columns:1fr}.gift-shop-item{padding:13px 8px}}
 
+
+/* MetroChat auth recovery: keep the sign-in surface above app chrome and mobile nav. */
+.auth-screen { z-index: 20000 !important; isolation:isolate; }
+.auth-screen:not(.hidden) { pointer-events:auto !important; }
+.auth-screen:not(.hidden) ~ #app,
+body:has(#authScreen:not(.hidden)) #mobileNav,
+body:has(#verifyScreen:not(.hidden)) #mobileNav { visibility:hidden !important; pointer-events:none !important; }
+.auth-card { z-index:1; pointer-events:auto !important; }
+.auth-card button,.auth-card input,.auth-card a { position:relative; z-index:2; pointer-events:auto !important; }
+.auth-card:before { pointer-events:none !important; }
+@media (max-width:760px) {
+  .auth-screen { min-height:100dvh; padding: max(16px,env(safe-area-inset-top)) 12px max(20px,env(safe-area-inset-bottom)); }
+  .auth-card { width:100%; max-height:calc(100dvh - 28px); overflow-y:auto; overscroll-behavior:contain; }
+}
 </style>
 
 <style id="metrochat-visual-redesign-2026">
@@ -1161,6 +1175,7 @@ authForm.addEventListener('submit', async e => {
     setBusy(false);
   } catch (err) { setBusy(false); showAuthError(humanErr(err)); }
 });
+window.__metroAuthHandlersReady = true;
 const initialPrivacyConsent = $('privacyConsent');
 if (initialPrivacyConsent) initialPrivacyConsent.required = false;
 try { const e = localStorage.getItem('metro_last_email'); if (e) authEmail.value = e; } catch(_) {}
@@ -4172,5 +4187,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
+<script>
+/* Auth UI fallback: keeps the first step responsive if Firebase module startup is delayed. */
+(function () {
+  document.addEventListener('click', function (event) {
+    var continueBtn = event.target && event.target.closest && event.target.closest('#authContinue');
+    if (continueBtn && !window.__metroAuthHandlersReady) {
+      var email = document.getElementById('authEmail');
+      var err = document.getElementById('errEmail');
+      var value = (email && email.value || '').trim().toLowerCase();
+      if (err) err.textContent = '';
+      if (!value) { if (err) err.textContent = 'Введите электронную почту'; if (email) email.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) { if (err) err.textContent = 'Проверьте формат почты'; if (email) email.focus(); return; }
+      email.value = value;
+      var summary = document.getElementById('authEmailSummary'); if (summary) summary.textContent = value;
+      document.getElementById('authEmailStep')?.classList.add('hidden');
+      document.getElementById('authPasswordStep')?.classList.remove('hidden');
+      document.getElementById('authDot1')?.classList.remove('active');
+      document.getElementById('authDot2')?.classList.add('active');
+      var label = document.getElementById('authStepLabel'); if (label) label.textContent = 'Шаг 2 из 2 · Пароль';
+      document.getElementById('authPass')?.focus();
+    }
+    var choice = event.target && event.target.closest && event.target.closest('.auth-choice');
+    if (choice && !window.__metroAuthHandlersReady) {
+      document.querySelectorAll('.auth-choice').forEach(function (el) { el.classList.toggle('active', el === choice); });
+      var mode = choice.dataset.tab === 'register' ? 'register' : 'login';
+      var submit = document.getElementById('authSubmit'); if (submit) submit.textContent = mode === 'login' ? 'Войти в MetroChat' : 'Создать аккаунт';
+      var consent = document.getElementById('privacyConsentWrap'); if (consent) consent.style.display = mode === 'register' ? 'block' : 'none';
+      window.__metroAuthFallbackMode = mode;
+    }
+  }, true);
+  document.addEventListener('submit', function (event) {
+    if (event.target && event.target.id === 'authForm' && !window.__metroAuthHandlersReady) {
+      event.preventDefault(); event.stopImmediatePropagation();
+      var error = document.getElementById('authError');
+      if (error) { error.textContent = 'Модуль авторизации Firebase не загрузился. Проверьте интернет и обновите страницу. Ваш аккаунт и данные не удалены.'; error.classList.add('show'); }
+    }
+  }, true);
+})();
+</script>
+
 </body>
 </html>
