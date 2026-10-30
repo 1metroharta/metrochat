@@ -3621,7 +3621,7 @@ async function renderGiftShop(){
  const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;await renderOwnedGifts();
 }
 async function renderOwnedGifts(){const el=$('giftOwnedSection');if(!el||!state.user?.uid)return;try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>!g.hidden);el.innerHTML=`<div class="discovery-section-head"><div><h3>Мои подарки</h3><p>Подарки, отображаемые в вашем профиле</p></div></div>${items.length?`<div class="gift-owned-list">${items.map(g=>`<div class="gift-owned-item"><span>${esc(g.emoji||'🎁')}</span><div><b>${esc(g.name||'Подарок')}</b><small>${g.fromName?'От '+esc(g.fromName):'Ваш подарок'}</small></div><button class="mini-btn" title="Скрыть в профиле" onclick="hideOwnedGift('${g.id}')">◉</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`).join('')}</div>`:'<p class="gift-empty-note">Пока нет подарков. Выберите подарок в витрине или заработайте умы.</p>'}`;}catch(e){el.innerHTML='<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>';}}
-async async function selectGiftToBuy(id){
+async function selectGiftToBuy(id){
   const g=METRO_GIFTS.find(x=>x.id===id);
   if(!g)return;
   const uid=state.user?.uid;
