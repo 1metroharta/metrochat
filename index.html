@@ -627,6 +627,38 @@ main,[role=main],#app,#root,.app,.app-container,.main-content{animation:mcFadeUp
 <style id="metrochat-weather-polish-2026">
 .mc-weather-card{border:1px solid var(--border);border-radius:22px;padding:18px;background:linear-gradient(145deg,rgba(70,145,255,.14),rgba(125,90,245,.10));margin:12px 0}.mc-weather-now{display:flex;align-items:center;gap:14px}.mc-weather-temp{font-size:42px;font-weight:850;letter-spacing:-2px}.mc-weather-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.mc-weather-day{padding:12px;border-radius:15px;background:var(--surface-2);border:1px solid var(--border)}.mc-weather-day b,.mc-weather-day small{display:block}.mc-weather-day small{color:var(--text-2);margin-top:4px}.mc-tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.mc-tool-card{padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface);text-align:left;color:var(--text);display:flex;flex-direction:column;gap:7px;min-height:112px}.mc-tool-card span{font-size:28px}.mc-tool-card small{color:var(--text-2)}.mc-gift-animate{animation:mcGiftFloat 2.8s ease-in-out infinite;transform-origin:50% 70%}.gift-shop-item:hover .gift-emoji,.gift-owned-item:hover>span{animation:mcGiftPop .65s ease both}.gift-emoji{animation:mcGiftFloat 3.2s ease-in-out infinite}@keyframes mcGiftFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}@keyframes mcGiftPop{0%{transform:scale(1)}45%{transform:scale(1.22) rotate(-8deg)}100%{transform:scale(1)}}.other-hub-card,.gift-shop-item,.mc-tool-card,.btn,.sb-tab{transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s,border-color .22s,background .22s}.other-hub-card:active,.mc-tool-card:active{transform:scale(.975)}@media(prefers-reduced-motion:reduce){.gift-emoji,.mc-gift-animate{animation:none!important}*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
+
+<style id="metrochat-click-and-weather-fix">
+/* Off-screen chat used to stay on top of the list: a later animation
+   replaced translateX(100%) with translateY(0), and the panel is transparent,
+   so chats and groups looked normal but received no taps. */
+#chatPanel { animation: none !important; }
+@media (max-width: 760px) {
+  #sidebar { z-index: 20 !important; position: absolute; }
+  #chatPanel:not(.show-mobile) {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateX(110%) !important;
+    z-index: 10 !important;
+  }
+  #chatPanel.show-mobile {
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateX(0) !important;
+    z-index: 30 !important;
+  }
+  #settingsPanel:not(.hidden) {
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 40 !important;
+  }
+  #sbList, #sbList .list-item, .sb-nav .sb-tab, #mobileNav, #mobileNav .mobile-nav-item {
+    pointer-events: auto !important;
+  }
+}
+#sbList .list-item { cursor: pointer; }
+</style>
+
 </head>
 <body>
 
@@ -943,8 +975,9 @@ function peerStatusText(peer, uid) {
 function avatarHTML(opts) {
   const { name, avatar, size = '', square = false, online = false } = opts;
   const cls = `avatar${square ? ' square' : ''}${size ? ' ' + size : ''}`;
-  const bg = avatar
-    ? `background: url('${avatar}') center/cover no-repeat;`
+  const safeAvatar = avatar ? String(avatar).replace(/"/g, '%22').replace(/'/g, '%27') : '';
+  const bg = safeAvatar
+    ? `background: url('${safeAvatar}') center/cover no-repeat;`
     : `background: ${avatarColor(name || '?')};`;
   const init = avatar ? '' : `<span class="avatar-init">${esc(initials(name))}</span>`;
   const dot = online ? '<span class="online-dot"></span>' : '';
@@ -2025,7 +2058,7 @@ function renderItems(items, emptyKind = 'chats') {
       else if (it.lastMessage.senderId) { const su = getUser(it.lastMessage.senderId); author = su?.firstName || su?.displayName || ''; }
     }
     const isActive = state.chat && state.chat.id === it.id;
-    return `<div class="list-item ${isActive ? 'active' : ''} ${it.pinned ? 'pinned' : ''}" onclick="openChat('${it.id}', '${it.type}')" oncontextmenu="return chatCtxFromEvent(event, '${it.id}')">
+    return `<div class="list-item ${isActive ? 'active' : ''} ${it.pinned ? 'pinned' : ''}" data-chat-id="${esc(it.id)}" data-chat-type="${esc(it.type)}" onclick="openChat('${String(it.id).replace(/\\/g,'\\\\').replace(/'/g,'')}', '${String(it.type).replace(/'/g,'')}')" oncontextmenu="return chatCtxFromEvent(event, '${String(it.id).replace(/'/g,'')}')">
       ${it.type === 'group' && !it.avatar ? `<div class="avatar square" style="background:var(--header-grad);display:flex;align-items:center;justify-content:center;">👥</div>` : avatarHTML({ name: it.name, avatar: it.avatar, square: it.type !== 'dm', online: it.type === 'dm' && it.online })}
       <div class="list-info"><div class="list-name">${it.pinned ? '📌' : ''}${esc(it.name)}${it.type === 'dm' ? verifiedMark(it.peerId) : ''}${it.muted ? '🔕' : ''}</div><div class="list-last">${author ? `<span class="author">${esc(author)}:</span>` : ''}${esc(preview || 'Нет сообщений')}</div></div>
       <div class="list-meta"><div class="list-time">${it.lastTs ? timeList(it.lastTs) : ''}</div>${it.unread > 0 ? `<div class="list-unread">${it.unread > 99 ? '99+' : it.unread}</div>` : ''}</div>
@@ -2037,15 +2070,10 @@ function chatCtxFromEvent(e, chatId) { if (e.pointerType === 'touch' || e.pointe
 async function openChat(chatId, type) {
   if (!chatId || !type) return;
   let info = state.chats[chatId];
+  if (!info && type === 'channel' && state.channels?.[chatId]) info = { type: 'channel', ...state.channels[chatId] };
   if (!info) return;
-  if (type === 'channel') {
-    try { const channelSnap = await get(ref(db, 'channels/' + chatId)); if (channelSnap.exists()) { info = { ...info, ...(channelSnap.val() || {}), id:chatId, type:'channel' }; state.chats[chatId] = { ...state.chats[chatId], name:info.name, type:'channel' }; } }
-    catch(e) { console.warn('Не удалось обновить канал:', e); }
-  }
-  if (type === 'group') {
-    try { const groupSnap = await get(ref(db, 'chats/' + chatId)); if (groupSnap.exists()) { info = { ...info, ...(groupSnap.val() || {}), id: chatId, type: 'group' }; state.chats[chatId] = { ...state.chats[chatId], ...info }; } }
-    catch (e) { console.warn('Не удалось обновить данные группы:', e); }
-  }
+  // Open immediately. Waiting on Firebase made groups and channels feel dead,
+  // and a hung read swallowed the tap entirely. Live metadata still arrives via onValue below.
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} state.chatUnsub = null; }
   if (state.groupMetaUnsub) { try { state.groupMetaUnsub(); } catch(e) {} state.groupMetaUnsub = null; }
   state.chat = { id: chatId, type, ...info };
@@ -3584,17 +3612,43 @@ function renderOtherHome() {
 // Weather, notes and calculator are rendered inside MetroChat's own settingsPanel (no browser tab).
 const MC_WEATHER_FAV_KEY='metrochat_weather_favorites_v1';
 function mcWeatherFavs(){try{return JSON.parse(localStorage.getItem(MC_WEATHER_FAV_KEY)||'[]')}catch(_){return []}}
-async function mcGeoCity(city){const u='https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=5&language=ru&format=json';const r=await fetch(u);if(!r.ok)throw new Error('Не удалось найти город');const j=await r.json();return j.results||[]}
-async function mcWeatherData(lat,lon){const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto&forecast_days=10`;const r=await fetch(u);if(!r.ok)throw new Error('Сервис погоды временно недоступен');return await r.json()}
+async function mcReadJson(r){try{return await r.json()}catch(_){return {}}}
+async function mcGeoCity(city){
+  const name=String(city||'').trim();
+  if(!name) return [];
+  try{
+    const r=await fetch('/api/weather?city='+encodeURIComponent(name),{headers:{accept:'application/json'}});
+    const j=await mcReadJson(r);
+    if(r.ok && Array.isArray(j.results) && j.results.length) return j.results;
+  }catch(_){}
+  const u='https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(name)+'&count=5&language=ru&format=json';
+  const r=await fetch(u);
+  const j=await mcReadJson(r);
+  if(!r.ok || j.error) throw new Error(j.reason || 'Не удалось найти город');
+  return j.results||[];
+}
+async function mcWeatherData(lat,lon,tz){
+  const q='/api/weather?lat='+encodeURIComponent(lat)+'&lon='+encodeURIComponent(lon)+(tz?'&tz='+encodeURIComponent(tz):'');
+  try{
+    const r=await fetch(q,{headers:{accept:'application/json'}});
+    const j=await mcReadJson(r);
+    if(r.ok && j.current && j.daily && Array.isArray(j.daily.time)) return j;
+  }catch(_){}
+  const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=${encodeURIComponent(tz||'auto')}&forecast_days=10`;
+  const r=await fetch(u);
+  const j=await mcReadJson(r);
+  if(!r.ok || !j.current || !j.daily) throw new Error('Погода временно недоступна. Попробуйте ещё раз через минуту.');
+  return j;
+}
 function mcWeatherDesc(code){if(code===0)return 'Ясно';if([1,2].includes(code))return 'Переменная облачность';if(code===3)return 'Облачно';if([45,48].includes(code))return 'Туман';if([51,53,55,56,57].includes(code))return 'Морось';if([61,63,65,66,67,80,81,82].includes(code))return 'Дождь';if([71,73,75,77,85,86].includes(code))return 'Снег';if([95,96,99].includes(code))return 'Гроза';return 'Погодные условия'}
 function mcWeatherIcon(code){if(code===0)return '☀️';if([1,2].includes(code))return '🌤️';if(code===3)return '☁️';if([45,48].includes(code))return '🌫️';if([71,73,75,77,85,86].includes(code))return '❄️';if([95,96,99].includes(code))return '⛈️';if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code))return '🌧️';return '🌡️'}
 function renderWeatherShell(title,body){const w=$('settingsPanel');if(!w)return;w.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">${title}</div></div><div class="settings-wrap">${body}</div>`}
 async function renderWeatherApp(city='Москва'){renderWeatherShell('Погода',`<div class="mc-weather-card"><label class="set-label" for="mcWeatherCity">Город</label><div style="display:flex;gap:8px;margin-top:8px"><input id="mcWeatherCity" class="onb-input" style="flex:1;min-width:0" value="${esc(city)}" placeholder="Введите город"><button class="btn btn-primary" style="width:auto" onclick="loadMetroWeather()">Найти</button></div><div id="mcWeatherResult" style="margin-top:14px;color:var(--text-2)">Загружаем прогноз…</div></div><h3 style="margin:18px 0 10px">Избранные города</h3><div id="mcWeatherFavorites"></div>`);renderMcWeatherFavorites();await loadMetroWeather(city)}
 function renderMcWeatherFavorites(){const el=$('mcWeatherFavorites');if(!el)return;const favs=mcWeatherFavs();el.innerHTML=favs.length?favs.map((f,i)=>`<button class="mc-tool-card" style="display:inline-flex;width:calc(50% - 6px);margin:3px" onclick="renderWeatherApp('${esc(f.name).replace(/'/g,'&#39;')}')">📍 ${esc(f.name)}<small>Открыть прогноз</small><span onclick="event.stopPropagation();removeMcWeatherFavorite(${i})" style="font-size:12px;color:var(--text-2)">Убрать из избранного</span></button>`).join(''):'<p class="set-sub">Пока нет сохранённых городов.</p>'}
 function removeMcWeatherFavorite(i){const a=mcWeatherFavs();a.splice(i,1);localStorage.setItem(MC_WEATHER_FAV_KEY,JSON.stringify(a));renderMcWeatherFavorites()}
-async function loadMetroWeather(city){const input=$('mcWeatherCity');city=String(city||input?.value||'').trim();const out=$('mcWeatherResult');if(!city||!out)return;out.textContent='Ищем город…';try{const found=await mcGeoCity(city);if(!found.length)throw new Error('Город не найден. Проверьте название.');const place=found[0],d=await mcWeatherData(place.latitude,place.longitude);const label=[place.name,place.admin1,place.country].filter(Boolean).join(', ');window.mcCurrentWeather={place,d};const days=d.daily.time.map((date,i)=>({date,max:d.daily.temperature_2m_max[i],min:d.daily.temperature_2m_min[i],code:d.daily.weather_code[i],rain:d.daily.precipitation_probability_max?.[i]}));out.innerHTML=`<div class="mc-weather-now"><div style="font-size:46px">${mcWeatherIcon(d.current.weather_code)}</div><div><div class="mc-weather-temp">${Math.round(d.current.temperature_2m)}°</div><b>${esc(label)}</b><div class="set-sub">${mcWeatherDesc(d.current.weather_code)} · ощущается ${Math.round(d.current.apparent_temperature)}°</div></div></div><div class="set-sub" style="margin-top:8px">Влажность ${d.current.relative_humidity_2m}% · ветер ${Math.round(d.current.wind_speed_10m)} км/ч</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn btn-primary" style="width:auto" onclick="saveMcWeatherFavorite('${esc(place.name).replace(/'/g,'&#39;')}',${place.latitude},${place.longitude})">☆ В избранное</button><button class="btn btn-ghost" style="width:auto" onclick="openWeatherShare('${esc(place.name).replace(/'/g,'&#39;')}')">Отправить в чат</button></div><h3 style="margin:14px 0 8px">Прогноз на 10 дней</h3><div class="mc-weather-grid">${days.map(x=>`<div class="mc-weather-day"><b>${new Date(x.date+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'})}</b><div style="font-size:25px;margin:5px 0">${mcWeatherIcon(x.code)}</div><b>${Math.round(x.max)}° / ${Math.round(x.min)}°</b><small>${mcWeatherDesc(x.code)}${x.rain!=null?' · дождь '+x.rain+'%':''}</small></div>`).join('')}</div>`;renderMcWeatherFavorites()}catch(e){out.textContent=e.message||'Не удалось загрузить погоду'}}
+async function loadMetroWeather(city){const input=$('mcWeatherCity');city=String(city||input?.value||'').trim();const out=$('mcWeatherResult');if(!city||!out)return;out.textContent='Ищем город…';try{const found=await mcGeoCity(city);if(!found.length)throw new Error('Город не найден. Проверьте название.');const place=found[0],d=await mcWeatherData(place.latitude,place.longitude,place.timezone);const label=[place.name,place.admin1,place.country].filter(Boolean).join(', ');window.mcCurrentWeather={place,d};const days=d.daily.time.map((date,i)=>({date,max:d.daily.temperature_2m_max[i],min:d.daily.temperature_2m_min[i],code:d.daily.weather_code[i],rain:d.daily.precipitation_probability_max?.[i]}));out.innerHTML=`<div class="mc-weather-now"><div style="font-size:46px">${mcWeatherIcon(d.current.weather_code)}</div><div><div class="mc-weather-temp">${Math.round(d.current.temperature_2m)}°</div><b>${esc(label)}</b><div class="set-sub">${mcWeatherDesc(d.current.weather_code)} · ощущается ${Math.round(d.current.apparent_temperature)}°</div></div></div><div class="set-sub" style="margin-top:8px">Влажность ${d.current.relative_humidity_2m}% · ветер ${Math.round(d.current.wind_speed_10m)} км/ч</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn btn-primary" style="width:auto" onclick="saveMcWeatherFavorite('${esc(place.name).replace(/'/g,'&#39;')}',${place.latitude},${place.longitude})">☆ В избранное</button><button class="btn btn-ghost" style="width:auto" onclick="openWeatherShare('${esc(place.name).replace(/'/g,'&#39;')}')">Отправить в чат</button></div><h3 style="margin:14px 0 8px">Прогноз на 10 дней</h3><div class="mc-weather-grid">${days.map(x=>`<div class="mc-weather-day"><b>${new Date(x.date+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'})}</b><div style="font-size:25px;margin:5px 0">${mcWeatherIcon(x.code)}</div><b>${Math.round(x.max)}° / ${Math.round(x.min)}°</b><small>${mcWeatherDesc(x.code)}${x.rain!=null?' · дождь '+x.rain+'%':''}</small></div>`).join('')}</div>`;renderMcWeatherFavorites()}catch(e){out.textContent=e.message||'Не удалось загрузить погоду'}}
 function saveMcWeatherFavorite(name,lat,lon){const a=mcWeatherFavs();if(!a.some(x=>x.name===name)){a.push({name,lat,lon});localStorage.setItem(MC_WEATHER_FAV_KEY,JSON.stringify(a))}renderMcWeatherFavorites();toast('Город добавлен в избранное','✓')}
-async function openWeatherShare(prefill=''){if(!state.chat||!state.user)return toast('Сначала откройте чат','⚠');document.getElementById('mcWeatherShareModal')?.remove();const modal=document.createElement('div');modal.id='mcWeatherShareModal';modal.style.cssText='position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px';modal.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="mcWeatherShareTitle" style="width:min(440px,100%);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 20px 70px #0005"><h3 id="mcWeatherShareTitle" style="margin:0 0 14px">🌤️ Отправить погоду</h3><label class="set-label" for="mcWeatherShareCity">Город</label><input id="mcWeatherShareCity" class="onb-input" style="width:100%;margin:7px 0 14px" value="${esc(prefill||'Москва')}" placeholder="Введите город"><label class="set-label" for="mcWeatherShareDay">Прогноз</label><select id="mcWeatherShareDay" class="onb-input" style="width:100%;margin:7px 0 16px"><option value="0">Сегодня</option><option value="1">Завтра</option></select><div style="display:flex;gap:8px"><button class="btn btn-ghost" style="flex:1" id="mcWeatherShareCancel">Отмена</button><button class="btn btn-primary" style="flex:1" id="mcWeatherShareSend">Отправить в чат</button></div></div>`;document.body.appendChild(modal);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});modal.querySelector('#mcWeatherShareCancel').onclick=()=>modal.remove();modal.querySelector('#mcWeatherShareSend').onclick=async()=>{const city=modal.querySelector('#mcWeatherShareCity').value.trim(),i=Number(modal.querySelector('#mcWeatherShareDay').value);if(!city)return toast('Введите город','⚠');const btn=modal.querySelector('#mcWeatherShareSend');btn.disabled=true;btn.textContent='Загружаем…';try{const list=await mcGeoCity(city);if(!list.length)throw new Error('Город не найден');const p=list[0],d=await mcWeatherData(p.latitude,p.longitude),day=i?'завтра':'сегодня';const msg=`🌤️ Погода — ${[p.name,p.country].filter(Boolean).join(', ')}\n${day[0].toUpperCase()+day.slice(1)}: ${mcWeatherDesc(d.daily.weather_code[i])}\nТемпература: ${Math.round(d.daily.temperature_2m_min[i])}…${Math.round(d.daily.temperature_2m_max[i])}°C\nВероятность осадков: ${d.daily.precipitation_probability_max?.[i]??'—'}%\nИсточник: Open-Meteo`;modal.remove();const input=$('chatInput');if(!input)return toast('Поле сообщения недоступно','⚠');input.value=msg;updateSendBtn();await sendMessage()}catch(e){btn.disabled=false;btn.textContent='Отправить в чат';toast(e.message||'Не удалось получить погоду','⚠')}};}
+async function openWeatherShare(prefill=''){if(!state.chat||!state.user)return toast('Сначала откройте чат','⚠');document.getElementById('mcWeatherShareModal')?.remove();const modal=document.createElement('div');modal.id='mcWeatherShareModal';modal.style.cssText='position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px';modal.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="mcWeatherShareTitle" style="width:min(440px,100%);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 20px 70px #0005"><h3 id="mcWeatherShareTitle" style="margin:0 0 14px">🌤️ Отправить погоду</h3><label class="set-label" for="mcWeatherShareCity">Город</label><input id="mcWeatherShareCity" class="onb-input" style="width:100%;margin:7px 0 14px" value="${esc(prefill||'Москва')}" placeholder="Введите город"><label class="set-label" for="mcWeatherShareDay">Прогноз</label><select id="mcWeatherShareDay" class="onb-input" style="width:100%;margin:7px 0 16px"><option value="0">Сегодня</option><option value="1">Завтра</option></select><div style="display:flex;gap:8px"><button class="btn btn-ghost" style="flex:1" id="mcWeatherShareCancel">Отмена</button><button class="btn btn-primary" style="flex:1" id="mcWeatherShareSend">Отправить в чат</button></div></div>`;document.body.appendChild(modal);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});modal.querySelector('#mcWeatherShareCancel').onclick=()=>modal.remove();modal.querySelector('#mcWeatherShareSend').onclick=async()=>{const city=modal.querySelector('#mcWeatherShareCity').value.trim(),i=Number(modal.querySelector('#mcWeatherShareDay').value);if(!city)return toast('Введите город','⚠');const btn=modal.querySelector('#mcWeatherShareSend');btn.disabled=true;btn.textContent='Загружаем…';try{const list=await mcGeoCity(city);if(!list.length)throw new Error('Город не найден');const p=list[0],d=await mcWeatherData(p.latitude,p.longitude,p.timezone),day=i?'завтра':'сегодня';const msg=`🌤️ Погода — ${[p.name,p.country].filter(Boolean).join(', ')}\n${day[0].toUpperCase()+day.slice(1)}: ${mcWeatherDesc(d.daily.weather_code[i])}\nТемпература: ${Math.round(d.daily.temperature_2m_min[i])}…${Math.round(d.daily.temperature_2m_max[i])}°C\nВероятность осадков: ${d.daily.precipitation_probability_max?.[i]??'—'}%\nИсточник: Open-Meteo`;modal.remove();const input=$('chatInput');if(!input)return toast('Поле сообщения недоступно','⚠');input.value=msg;updateSendBtn();await sendMessage()}catch(e){btn.disabled=false;btn.textContent='Отправить в чат';toast(e.message||'Не удалось получить погоду','⚠')}};}
 function renderMetroNotes(){let notes='';try{notes=localStorage.getItem('metrochat_private_notes')||''}catch(_){}renderWeatherShell('Заметки',`<p class="set-sub">Заметки сохраняются только в памяти браузера на этом устройстве и не синхронизируются.</p><textarea id="mcNotesText" rows="12" class="onb-input" style="width:100%;margin-top:12px;resize:vertical" placeholder="Запишите важную мысль…">${esc(notes)}</textarea><button class="btn btn-primary" style="margin-top:10px" onclick="saveMetroNotes()">Сохранить заметки</button>`)}
 function saveMetroNotes(){try{localStorage.setItem('metrochat_private_notes',$('mcNotesText')?.value||'');toast('Заметки сохранены на устройстве','✓')}catch(_){toast('Не удалось сохранить заметки','⚠')}}
 function renderMetroCalculator(){renderWeatherShell('Калькулятор',`<input id="mcCalcExpr" class="onb-input" style="width:100%;font-size:22px" placeholder="Например: (12 + 8) * 3"><button class="btn btn-primary" style="margin-top:10px" onclick="calculateMetroExpression()">Вычислить</button><div id="mcCalcResult" class="mc-weather-card" aria-live="polite">Результат появится здесь</div><p class="set-sub">Поддерживаются числа, скобки, +, −, ×, ÷ и десятичные дроби.</p>`)}
@@ -4224,6 +4278,33 @@ document.addEventListener('DOMContentLoaded', () => {
       var error = document.getElementById('authError');
       if (error) { error.textContent = 'Модуль авторизации Firebase не загрузился. Проверьте интернет и обновите страницу. Ваш аккаунт и данные не удалены.'; error.classList.add('show'); }
     }
+  }, true);
+})();
+</script>
+
+
+<script>
+/* If a transparent chat sheet still sits over the list, replay the tap underneath. */
+(function(){
+  document.addEventListener('click', function(ev){
+    if (window.innerWidth > 760) return;
+    var chat = document.getElementById('chatPanel');
+    var app = document.getElementById('app');
+    if (!chat || !app || app.classList.contains('hidden')) return;
+    if (chat.classList.contains('show-mobile') || chat.classList.contains('hidden')) return;
+    var t = ev.target;
+    if (!t || !chat.contains(t)) return;
+    var x = ev.clientX, y = ev.clientY;
+    chat.style.setProperty('pointer-events', 'none', 'important');
+    chat.style.setProperty('visibility', 'hidden', 'important');
+    var under = document.elementFromPoint(x, y);
+    chat.style.removeProperty('pointer-events');
+    chat.style.removeProperty('visibility');
+    if (!under || under === chat || chat.contains(under)) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    under.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable:true, clientX:x, clientY:y, view:window}));
   }, true);
 })();
 </script>
