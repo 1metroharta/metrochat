@@ -10,6 +10,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MetroChat">
 <title>MetroChat</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://metrochatmetroharta-i89op-default-rtdb.firebaseio.com">
+<link rel="preconnect" href="https://identitytoolkit.googleapis.com">
+<link rel="preconnect" href="https://securetoken.googleapis.com">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js">
 <style>
 :root {
   --accent: #4f8cff; --accent-light: rgba(79,140,255,0.14);
@@ -592,35 +599,11 @@ body:has(#verifyScreen:not(.hidden)) #mobileNav { visibility:hidden !important; 
 }
 </style>
 
-<style id="metrochat-visual-redesign-2026">
-:root{--mc-accent:#e63946;--mc-accent-2:#ff6470;--mc-bg:#f4f6fb;--mc-panel:rgba(255,255,255,.88);--mc-panel-solid:#fff;--mc-text:#171b2b;--mc-muted:#737b90;--mc-border:rgba(116,128,157,.17);--mc-shadow:0 16px 44px rgba(32,42,75,.09);--mc-shadow-hover:0 22px 54px rgba(32,42,75,.15);--mc-radius:22px;--mc-ease:cubic-bezier(.2,.8,.2,1)}
-html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 8% 0%,rgba(230,57,70,.075),transparent 34%),radial-gradient(ellipse at 100% 100%,rgba(99,102,241,.065),transparent 38%),var(--mc-bg);color:var(--mc-text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-button,input,textarea,select{font:inherit}button,[role=button],.btn,[class*=button]{transition:transform .22s var(--mc-ease),box-shadow .22s var(--mc-ease),background-color .22s ease,border-color .22s ease,opacity .22s ease}
-button:active,[role=button]:active,.btn:active{transform:scale(.975)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(230,57,70,.28);outline-offset:3px}
-input,textarea,select{transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}input:focus,textarea:focus,select:focus{border-color:rgba(230,57,70,.58)!important;box-shadow:0 0 0 4px rgba(230,57,70,.09)}
-img,video{max-width:100%}img{transition:filter .25s ease}::selection{background:rgba(230,57,70,.2)}
-*{scrollbar-width:thin;scrollbar-color:rgba(130,140,164,.42) transparent}*::-webkit-scrollbar{width:7px;height:7px}*::-webkit-scrollbar-thumb{background:rgba(130,140,164,.38);border-radius:99px}*::-webkit-scrollbar-track{background:transparent}
-[class*=modal],[class*=Modal],[class*=dialog],[class*=Dialog],[class*=popover],[class*=Popover]{backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-[class*=card],[class*=Card],[class*=panel],[class*=Panel],[class*=section],[class*=Section]{transition:border-color .25s ease,box-shadow .25s ease,background .25s ease}
-[class*=chat-item],[class*=ChatItem],[class*=conversation],[class*=Conversation],[class*=contact],[class*=Contact]{transition:background .2s ease,transform .2s var(--mc-ease),box-shadow .2s ease}
-[class*=chat-item]:hover,[class*=ChatItem]:hover,[class*=conversation]:hover,[class*=Conversation]:hover,[class*=contact]:hover,[class*=Contact]:hover{transform:translateY(-1px)}
-nav,[class*=bottom-nav],[class*=BottomNav],[class*=tab-bar],[class*=TabBar]{-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4)}
-button:hover,[role=button]:hover,.btn:hover{filter:brightness(1.025)}button:disabled,[aria-disabled=true]{cursor:not-allowed}
-@keyframes mcFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes mcPopIn{0%{opacity:0;transform:scale(.965)}70%{opacity:1;transform:scale(1.012)}100%{opacity:1;transform:scale(1)}}
-@keyframes mcSoftPulse{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0)}50%{box-shadow:0 0 0 5px rgba(230,57,70,.075)}}
-main,[role=main],#app,#root,.app,.app-container,.main-content{animation:mcFadeUp .42s var(--mc-ease) both}
-[class*=toast],[class*=Toast],[class*=notification],[class*=Notification]{animation:mcPopIn .28s var(--mc-ease) both}
-[class*=avatar],[class*=Avatar],.avatar{transition:transform .22s var(--mc-ease),box-shadow .22s ease}
-[class*=avatar]:hover,[class*=Avatar]:hover,.avatar:hover{transform:translateY(-1px) scale(1.035)}
-@media(prefers-reduced-motion:no-preference){button:not(:disabled):hover,[role=button]:not([aria-disabled=true]):hover{box-shadow:0 7px 20px rgba(32,42,75,.08)}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
-@media(prefers-color-scheme:dark){body:not(.light-theme):not([data-theme=light]){--mc-bg:#10131d;--mc-panel:rgba(26,30,44,.88);--mc-panel-solid:#1a1e2c;--mc-text:#f1f3fa;--mc-muted:#a0a8bd;--mc-border:rgba(174,184,210,.15);--mc-shadow:0 16px 44px rgba(0,0,0,.22);background:radial-gradient(ellipse at 8% 0%,rgba(230,57,70,.10),transparent 34%),radial-gradient(ellipse at 100% 100%,rgba(99,102,241,.08),transparent 38%),var(--mc-bg);color:var(--mc-text)}}
-</style>
+<!-- metrochat-visual-redesign-2026 удалён: ломал светлую тему при тёмной теме ОС и держал пустой toast на экране -->
 
 
 <style id="metrochat-final-contrast-fix">
-:root{color-scheme:light dark} body{--mc-safe-text:var(--text,#20242b)} .settings-wrap,.settings-panel,.modal-content,.chat-info-content{color:var(--text,#20242b)} .settings-wrap button,.settings-wrap input,.settings-wrap select,.settings-wrap textarea{color:inherit} .settings-wrap select,.settings-wrap input,.settings-wrap textarea{background:var(--surface-2,#f4f5f7);border-color:var(--border,#d9dde5)} .gift-shop-item,.other-hub-card{color:var(--text,#20242b)} .gift-shop-item small,.other-hub-card small,.set-sub{color:var(--text-2,#626a78)} button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent,#e63946);outline-offset:2px}
+body{--mc-safe-text:var(--text,#20242b)} .settings-wrap,.settings-panel,.modal-content,.chat-info-content{color:var(--text,#20242b)} .settings-wrap button,.settings-wrap input,.settings-wrap select,.settings-wrap textarea{color:inherit} .settings-wrap select,.settings-wrap input,.settings-wrap textarea{background:var(--surface-2,#f4f5f7);border-color:var(--border,#d9dde5)} .gift-shop-item,.other-hub-card{color:var(--text,#20242b)} .gift-shop-item small,.other-hub-card small,.set-sub{color:var(--text-2,#626a78)} button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent,#e63946);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 
@@ -658,7 +641,367 @@ main,[role=main],#app,#root,.app,.app-container,.main-content{animation:mcFadeUp
 }
 #sbList .list-item { cursor: pointer; }
 </style>
+<style id="metrochat-design-v3">
+/* =====================================================================
+   MetroChat Design v3 — единая дизайн-система для светлой и тёмной темы.
+   Этот слой идёт последним и задаёт контрастные токены и поверхности.
+   ===================================================================== */
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:#eef1f6; --surface:#ffffff; --surface-2:#f1f4f9; --surface-3:#e6eaf1;
+  --text:#0d1526; --text-2:#435069; --text-3:#5b6780;
+  --border:rgba(16,24,40,.11); --border-strong:rgba(16,24,40,.18);
+  --hover:rgba(16,24,40,.05); --press:rgba(16,24,40,.08);
+  --shadow-sm:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.06);
+  --shadow-md:0 6px 20px rgba(16,24,40,.08);
+  --shadow-lg:0 24px 64px rgba(16,24,40,.20);
+  --bubble-in:#ffffff; --bubble-in-text:#0d1526; --bubble-in-border:rgba(16,24,40,.06);
+  --overlay:rgba(15,23,42,.42);
+  --input-bg:#f1f4f9; --input-bg-focus:#ffffff;
+  --wall-base:#dfe6f0; --wall-tint:30%; --wall-tint-2:24%;
+  --wall-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%231e2a44' stroke-opacity='.075' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M28 40c8-10 22-10 30 0s22 10 30 0'/%3E%3Ccircle cx='170' cy='36' r='10'/%3E%3Cpath d='M200 90l8 14 16 2-12 11 3 16-15-8-15 8 3-16-12-11 16-2z'/%3E%3Crect x='30' y='110' width='34' height='24' rx='6'/%3E%3Cpath d='M38 134l-4 10 12-10'/%3E%3Cpath d='M118 150c-6-8-20-4-18 7 2 10 18 18 18 18s16-8 18-18c2-11-12-15-18-7z'/%3E%3Ccircle cx='60' cy='200' r='4'/%3E%3Ccircle cx='200' cy='190' r='3'/%3E%3Cpath d='M150 220l12-12m0 12l-12-12'/%3E%3Cpath d='M100 60l10 6-10 6z'/%3E%3C/g%3E%3C/svg%3E");
+  --chip-bg:rgba(255,255,255,.82); --chip-text:#2a3650;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0a0e17; --surface:#121927; --surface-2:#192233; --surface-3:#212b40;
+  --text:#edf1fa; --text-2:#aab5cc; --text-3:#8d98b1;
+  --border:rgba(160,175,210,.13); --border-strong:rgba(160,175,210,.22);
+  --hover:rgba(255,255,255,.05); --press:rgba(255,255,255,.08);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  --shadow-md:0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg:0 24px 64px rgba(0,0,0,.6);
+  --bubble-in:#1a2336; --bubble-in-text:#edf1fa; --bubble-in-border:rgba(160,175,210,.10);
+  --overlay:rgba(2,6,16,.64);
+  --input-bg:#192233; --input-bg-focus:#1d2740;
+  --wall-base:#0b101b; --wall-tint:18%; --wall-tint-2:14%;
+  --wall-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23c9d6ff' stroke-opacity='.055' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M28 40c8-10 22-10 30 0s22 10 30 0'/%3E%3Ccircle cx='170' cy='36' r='10'/%3E%3Cpath d='M200 90l8 14 16 2-12 11 3 16-15-8-15 8 3-16-12-11 16-2z'/%3E%3Crect x='30' y='110' width='34' height='24' rx='6'/%3E%3Cpath d='M38 134l-4 10 12-10'/%3E%3Cpath d='M118 150c-6-8-20-4-18 7 2 10 18 18 18 18s16-8 18-18c2-11-12-15-18-7z'/%3E%3Ccircle cx='60' cy='200' r='4'/%3E%3Ccircle cx='200' cy='190' r='3'/%3E%3Cpath d='M150 220l12-12m0 12l-12-12'/%3E%3Cpath d='M100 60l10 6-10 6z'/%3E%3C/g%3E%3C/svg%3E");
+  --chip-bg:rgba(18,25,39,.78); --chip-text:#d5dcec;
+}
+/* Группы и каналы с выбранной темой — фон заметнее, но остаётся светлым/тёмным по теме. */
+html[data-theme="light"] #chatPanel.chat-themed{ --wall-tint:42%; --wall-tint-2:34%; }
+html[data-theme="dark"]  #chatPanel.chat-themed{ --wall-tint:26%; --wall-tint-2:20%; }
 
+html,body{ background:var(--bg)!important; color:var(--text)!important; }
+body{ font-size:14px; letter-spacing:-.005em; }
+::selection{ background:color-mix(in srgb,var(--accent) 26%,transparent); }
+*{ scrollbar-width:thin; scrollbar-color:color-mix(in srgb,var(--text-3) 45%,transparent) transparent; }
+*::-webkit-scrollbar{ width:8px; height:8px; } *::-webkit-scrollbar-thumb{ background:color-mix(in srgb,var(--text-3) 40%,transparent); border-radius:99px; border:2px solid transparent; background-clip:padding-box; } *::-webkit-scrollbar-track{ background:transparent; }
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{ outline:2px solid var(--accent-ink,var(--accent)); outline-offset:2px; }
+
+/* ---------- Кнопки ---------- */
+html[data-theme] .btn{ border-radius:14px; font-weight:700; letter-spacing:-.01em; transition:transform .15s ease,filter .15s ease,background-color .15s ease,box-shadow .15s ease; }
+html[data-theme] .btn:active:not(:disabled){ transform:scale(.98); }
+html[data-theme] .btn-primary,html[data-theme] .sb-icon-btn.primary,html[data-theme] .chat-send{
+  background:var(--btn-grad,linear-gradient(135deg,#2f6fe4,#6a4fe0))!important; color:#fff!important;
+  box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 30%,transparent)!important; border:0!important; }
+html[data-theme] .btn-primary:hover:not(:disabled),html[data-theme] .chat-send:hover{ filter:brightness(1.06); }
+html[data-theme] .btn-secondary{ background:var(--surface-2)!important; color:var(--text)!important; border:1px solid var(--border)!important; }
+html[data-theme] .btn-secondary:hover{ background:var(--surface-3)!important; }
+html[data-theme] .btn-ghost{ color:var(--text-2)!important; background:transparent; }
+html[data-theme] .btn-ghost:hover{ background:var(--hover); color:var(--text)!important; }
+html[data-theme] .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+/* ---------- Поля ввода ---------- */
+html[data-theme] .onb-input,
+html[data-theme] .modal .auth-field input,
+html[data-theme] .settings-wrap input:not([type=checkbox]):not([type=radio]):not([type=range]),
+html[data-theme] .settings-wrap select,
+html[data-theme] .settings-wrap textarea,
+html[data-theme] .modal select,
+html[data-theme] .modal textarea,
+html[data-theme] .contact-search-input-wrap input,
+html[data-theme] .chat-search-bar input{
+  background:var(--input-bg)!important; color:var(--text)!important; border:1.5px solid var(--border)!important; border-radius:14px; }
+html[data-theme] .onb-input:focus,
+html[data-theme] .modal .auth-field input:focus,
+html[data-theme] .settings-wrap input:focus,
+html[data-theme] .settings-wrap select:focus,
+html[data-theme] .settings-wrap textarea:focus,
+html[data-theme] .modal select:focus,html[data-theme] .modal textarea:focus,
+html[data-theme] .contact-search-input-wrap input:focus,
+html[data-theme] .chat-search-bar input:focus{
+  background:var(--input-bg-focus)!important; border-color:var(--accent)!important; box-shadow:0 0 0 4px var(--accent-light)!important; }
+html[data-theme] input::placeholder,html[data-theme] textarea::placeholder{ color:var(--text-3); opacity:1; }
+html[data-theme] .modal .auth-field label,html[data-theme] .settings-wrap label{ color:var(--text-2); }
+
+/* ---------- Каркас приложения ---------- */
+html[data-theme] .app{ background:var(--bg); }
+html[data-theme] .sidebar{ background:var(--surface)!important; border-right:1px solid var(--border)!important; backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+html[data-theme] .sb-top{ border-bottom:0!important; padding-bottom:6px; }
+html[data-theme] .sb-me{ border-radius:14px; }
+html[data-theme] .sb-me:hover{ background:var(--hover); }
+html[data-theme] .sb-me-name{ color:var(--text); font-size:15px; }
+html[data-theme] .sb-me-status{ color:var(--text-2); }
+html[data-theme] .sb-me-avatar::after{ border-color:var(--surface); }
+html[data-theme] .sb-icon-btn{ color:var(--text-2); border-radius:12px; }
+html[data-theme] .sb-icon-btn:not(.primary):hover{ background:var(--hover); color:var(--text); }
+html[data-theme] .sb-nav{ border-bottom:1px solid var(--border)!important; gap:6px; padding:6px 12px 10px; }
+html[data-theme] .sb-tab{ color:var(--text-2)!important; background:transparent; border-radius:12px; font-weight:650; padding:9px 13px; }
+html[data-theme] .sb-tab:hover{ background:var(--hover); color:var(--text)!important; }
+html[data-theme] .sb-tab.active{ background:var(--accent-light)!important; color:var(--accent-ink,var(--accent))!important; }
+html[data-theme] .sb-tab .count,html[data-theme] .list-unread,html[data-theme] .mobile-nav-item .nav-count{ background:var(--accent-solid,var(--accent))!important; color:#fff!important; }
+html[data-theme] .sb-search input{ background:var(--input-bg)!important; border:1.5px solid transparent!important; color:var(--text)!important; border-radius:14px; padding:11px 16px; }
+html[data-theme] .sb-search input:focus{ border-color:var(--accent)!important; background:var(--input-bg-focus)!important; box-shadow:0 0 0 4px var(--accent-light); }
+html[data-theme] .sb-list{ padding:4px 8px 14px; }
+html[data-theme] .list-item{ color:var(--text)!important; border-radius:16px; padding:10px 12px; gap:12px; transition:background-color .14s ease; }
+html[data-theme] .list-item:hover{ background:var(--hover)!important; transform:none!important; }
+html[data-theme] .list-item.active{ background:var(--accent-light)!important; color:var(--text)!important; }
+html[data-theme] .list-item.pinned{ background:color-mix(in srgb,var(--accent) 5%,transparent); }
+html[data-theme] .list-name{ color:var(--text); font-weight:650; }
+html[data-theme] .list-last{ color:var(--text-2); }
+html[data-theme] .list-last .author{ color:var(--text); }
+html[data-theme] .list-time{ color:var(--text-3); }
+html[data-theme] .avatar .online-dot{ border-color:var(--surface); }
+html[data-theme] .empty{ color:var(--text-2); }
+html[data-theme] .empty h3{ color:var(--text); }
+html[data-theme] .empty-icon{ background:var(--surface-2); }
+
+/* ---------- Чат ---------- */
+html[data-theme] .chat{ background:var(--wall-base)!important; }
+html[data-theme] .chat-header,html[data-theme] .pinned-bar,html[data-theme] .chat-search-bar{
+  background:color-mix(in srgb,var(--surface) 94%,transparent)!important; color:var(--text);
+  border-bottom:1px solid var(--border)!important; backdrop-filter:blur(14px) saturate(140%)!important; -webkit-backdrop-filter:blur(14px) saturate(140%)!important; }
+html[data-theme] .chat-name{ color:var(--text); font-weight:750; }
+html[data-theme] .chat-sub{ color:var(--text-2); }
+html[data-theme] .chat-sub .online{ color:var(--green-ink,#16a34a); }
+html[data-theme="dark"] .chat-sub .online{ color:#4ade80; }
+html[data-theme] .chat-sub .code{ background:var(--surface-2); color:var(--text); }
+html[data-theme] .chat-icon-btn,html[data-theme] .chat-back{ color:var(--text-2); border-radius:12px; }
+html[data-theme] .chat-icon-btn:hover,html[data-theme] .chat-back:hover{ background:var(--hover); color:var(--text); }
+html[data-theme] .pinned-bar .pin-author{ color:var(--accent-ink,var(--accent)); }
+html[data-theme] .pinned-bar .pin-text{ color:var(--text-2); }
+
+/* Обои чата: отдельные для светлой и тёмной темы, оттенок берётся из темы чата/группы. */
+html[data-theme] #chatPanel .messages,
+html[data-theme] #chatPanel .chat-empty{
+  background-color:var(--wall-base)!important;
+  background-image:
+    var(--wall-pattern),
+    radial-gradient(110% 75% at 0% 0%, color-mix(in srgb,var(--wall-a,#4f8cff) var(--wall-tint),transparent) 0%, transparent 62%),
+    radial-gradient(110% 75% at 100% 100%, color-mix(in srgb,var(--wall-b,#8758f6) var(--wall-tint-2),transparent) 0%, transparent 62%)!important;
+  background-size:260px 260px,100% 100%,100% 100%!important;
+  background-repeat:repeat,no-repeat,no-repeat!important; }
+html[data-theme] .messages{ padding:14px 16px 10px; gap:3px; }
+@media (min-width:1100px){ html[data-theme] .messages{ padding-left:max(16px,calc((100% - 860px)/2)); padding-right:max(16px,calc((100% - 860px)/2)); } }
+
+/* Пузырьки сообщений */
+html[data-theme] .msg{ border-radius:18px; padding:8px 12px 6px; line-height:1.42; max-width:min(68%,560px); }
+html[data-theme] .msg.in{ background:var(--bubble-in)!important; color:var(--bubble-in-text)!important; border:1px solid var(--bubble-in-border)!important; border-bottom-left-radius:6px; box-shadow:var(--shadow-sm)!important; }
+html[data-theme] .msg.out{ background:var(--bubble-out,linear-gradient(135deg,#2f6fe4,#5b4fe0))!important; color:#fff!important; border:0!important; border-bottom-right-radius:6px; box-shadow:0 2px 8px color-mix(in srgb,var(--accent) 22%,transparent)!important; }
+html[data-theme] .msg.sticker{ background:transparent!important; border:0!important; box-shadow:none!important; }
+html[data-theme] .msg .time{ opacity:1; color:var(--text-3); font-size:10.5px; margin-top:3px; }
+html[data-theme] .msg.out .time{ color:rgba(255,255,255,.82); }
+html[data-theme] .msg.sticker .time{ display:inline-flex; padding:2px 8px; border-radius:10px; background:var(--chip-bg); color:var(--chip-text); }
+html[data-theme] .msg .link{ color:var(--accent-ink,var(--accent)); text-decoration:underline; text-underline-offset:2px; }
+html[data-theme] .msg.out .link{ color:#fff; }
+html[data-theme] .msg .mention{ color:var(--accent-ink,var(--accent)); background:var(--accent-light); }
+html[data-theme] .msg .reply-quote{ background:color-mix(in srgb,var(--accent) 10%,transparent); border-left-color:var(--accent-ink,var(--accent)); opacity:1; }
+html[data-theme] .msg .reply-quote .reply-author{ color:var(--accent-ink,var(--accent)); }
+html[data-theme] .msg.out .reply-quote{ background:rgba(255,255,255,.18); border-left-color:#fff; }
+html[data-theme] .msg.out .reply-quote .reply-author{ color:#fff; }
+html[data-theme] .msg .reaction-chip{ background:var(--surface-2); color:var(--text); }
+html[data-theme] .msg .reaction-chip.mine{ background:var(--accent-light); border-color:var(--accent); color:var(--accent-ink,var(--accent)); }
+html[data-theme] .msg.out .reaction-chip{ background:rgba(255,255,255,.2); color:#fff; }
+html[data-theme] .msg.out .reaction-chip.mine{ background:rgba(255,255,255,.32); border-color:#fff; color:#fff; }
+html[data-theme] .msg-react-btn{ color:inherit; opacity:.55; }
+html[data-theme] .msg-react-btn:hover{ opacity:1; background:var(--hover); }
+html[data-theme] .msg.out .msg-react-btn:hover{ background:rgba(255,255,255,.16); }
+html[data-theme] .msg .msg-file{ background:var(--surface-2); color:inherit; }
+html[data-theme] .msg.out .msg-file{ background:rgba(255,255,255,.18); }
+html[data-theme] .msg .poll{ background:var(--surface-2); }
+html[data-theme] .msg.out .poll{ background:rgba(255,255,255,.15); }
+html[data-theme] .msg .poll .poll-footer{ border-top-color:var(--border); }
+html[data-theme] .msg-author{ color:var(--accent-ink,var(--accent)); font-weight:750; margin:8px 10px 2px; }
+html[data-theme] .sys-msg,html[data-theme] .typing{ background:var(--chip-bg)!important; color:var(--chip-text)!important; border-radius:12px; box-shadow:none; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+html[data-theme] .typing{ font-style:normal; padding:5px 12px; margin:4px 0; }
+html[data-theme] #messages > .empty{ background:var(--chip-bg); border-radius:22px; margin:auto; max-width:320px; flex:0 0 auto; padding:26px 22px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+html[data-theme] .msg.highlight{ box-shadow:0 0 0 3px var(--accent)!important; }
+
+/* Поле ввода */
+html[data-theme] .chat-input-bar{ background:color-mix(in srgb,var(--surface) 96%,transparent)!important; border-top:1px solid var(--border)!important; backdrop-filter:blur(14px)!important; -webkit-backdrop-filter:blur(14px)!important; gap:8px; }
+html[data-theme] .chat-input{ background:var(--input-bg)!important; color:var(--text)!important; border:1.5px solid transparent!important; border-radius:22px!important; }
+html[data-theme] .chat-input:focus{ background:var(--input-bg-focus)!important; border-color:var(--accent)!important; box-shadow:0 0 0 4px var(--accent-light)!important; }
+html[data-theme] .chat-input-btn{ background:var(--surface-2); color:var(--text-2); }
+html[data-theme] .chat-input-btn:hover{ background:var(--surface-3); color:var(--text); }
+html[data-theme] .chat-input-btn.recording{ background:var(--red); color:#fff; }
+html[data-theme] .reply-bar,html[data-theme] .recording-bar{ background:var(--surface)!important; border-top:1px solid var(--border)!important; color:var(--text); }
+html[data-theme] .reply-bar .reply-who{ color:var(--accent-ink,var(--accent)); }
+html[data-theme] .reply-bar .reply-text{ color:var(--text-2); }
+html[data-theme] .chat-empty{ color:var(--text-2); }
+html[data-theme] .chat-empty h2{ color:var(--text); }
+html[data-theme] .chat-empty > p{ background:var(--chip-bg); color:var(--chip-text); padding:8px 14px; border-radius:14px; }
+
+/* ---------- Настройки, «Прочее», панели ---------- */
+html[data-theme] .settings-panel{ background:var(--bg)!important; color:var(--text); }
+html[data-theme] .settings-header{ background:color-mix(in srgb,var(--surface) 94%,transparent)!important; border-bottom:1px solid var(--border)!important; backdrop-filter:blur(14px)!important; -webkit-backdrop-filter:blur(14px)!important; }
+html[data-theme] .settings-title{ color:var(--text); }
+html[data-theme] .settings-back-btn{ background:var(--surface-2); color:var(--text); border:1px solid var(--border); }
+html[data-theme] .settings-back-btn:hover{ background:var(--surface-3); }
+html[data-theme] .settings-wrap{ color:var(--text); }
+html[data-theme] .settings-group{ background:var(--surface)!important; border:1px solid var(--border)!important; box-shadow:var(--shadow-sm)!important; backdrop-filter:none!important; -webkit-backdrop-filter:none!important; color:var(--text)!important; border-radius:20px; }
+html[data-theme] .settings-group h3{ color:var(--text-2)!important; }
+html[data-theme] .set-row{ color:var(--text)!important; border-top-color:var(--border); }
+html[data-theme] .set-row:hover{ background:var(--hover); }
+html[data-theme] .set-label{ color:var(--text); }
+html[data-theme] .set-sub{ color:var(--text-2)!important; }
+html[data-theme] .set-row.danger .set-label{ color:var(--red-ink,#dc2626); }
+html[data-theme="dark"] .set-row.danger .set-label{ color:#f87171; }
+html[data-theme] .set-icon{ background:var(--surface-2); color:var(--text-2); }
+html[data-theme] .set-arrow{ color:var(--text-3); }
+html[data-theme] .toggle{ background:var(--surface-3); box-shadow:inset 0 0 0 1px var(--border); }
+html[data-theme] .toggle.on{ background:var(--accent-solid,var(--accent)); box-shadow:none; }
+html[data-theme] .toggle::after{ box-shadow:0 1px 3px rgba(0,0,0,.25); }
+html[data-theme] .theme-item{ color:var(--text); }
+html[data-theme] .theme-item:hover{ background:var(--hover); }
+html[data-theme] .theme-item.active{ border-color:var(--accent)!important; background:var(--accent-light); }
+html[data-theme] .other-hub-card,html[data-theme] .gift-shop-item,html[data-theme] .discovery-channel-card,
+html[data-theme] .quiz-intro,html[data-theme] .quiz-question-card,html[data-theme] .mc-tool-card{
+  background:var(--surface)!important; color:var(--text)!important; border:1px solid var(--border)!important; box-shadow:var(--shadow-sm)!important; backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+html[data-theme] .other-hub-card:hover,html[data-theme] .gift-shop-item:hover,html[data-theme] .mc-tool-card:hover{ border-color:color-mix(in srgb,var(--accent) 45%,var(--border))!important; box-shadow:var(--shadow-md)!important; }
+html[data-theme] .other-hub-card b,html[data-theme] .gift-shop-item b,html[data-theme] .discovery-channel-info b{ color:var(--text); }
+html[data-theme] .other-hub-card small,html[data-theme] .gift-shop-item small,html[data-theme] .discovery-channel-info small,html[data-theme] .discovery-channel-info span{ color:var(--text-2)!important; }
+html[data-theme] .other-hub-arrow,html[data-theme] .channel-kicker{ color:var(--accent-ink,var(--accent)); }
+html[data-theme] .gift-price{ color:var(--accent-ink,var(--accent)); background:var(--accent-light); }
+html[data-theme] .gift-wallet-card,html[data-theme] .channel-discovery-hero,html[data-theme] .mc-weather-card{
+  background:radial-gradient(circle at 100% 0,color-mix(in srgb,var(--wall-b,#8758f6) 22%,transparent),transparent 48%),linear-gradient(130deg,color-mix(in srgb,var(--wall-a,#27d8f2) 14%,var(--surface)),var(--surface))!important;
+  border:1px solid var(--border)!important; color:var(--text); }
+html[data-theme] .gift-wallet-card small,html[data-theme] .gift-wallet-card p,html[data-theme] .gift-wallet-card h2 span,html[data-theme] .channel-discovery-hero p{ color:var(--text-2); }
+html[data-theme] .gift-owned-item{ background:var(--surface); border-color:var(--border); color:var(--text); }
+html[data-theme] .gift-owned-item small,html[data-theme] .gift-empty-note{ color:var(--text-2); }
+html[data-theme] .mc-weather-day{ background:var(--surface)!important; border-color:var(--border)!important; color:var(--text); }
+html[data-theme] .mc-weather-day small{ color:var(--text-2); }
+html[data-theme] .discovery-rank{ color:var(--text-2); }
+html[data-theme] .channel-search-wrap{ background:var(--input-bg); border-color:var(--border); }
+html[data-theme] .channel-search-wrap input{ color:var(--text); }
+html[data-theme] .discovery-section-head h3{ color:var(--text); }
+html[data-theme] .discovery-section-head p{ color:var(--text-2); }
+html[data-theme] .profile-gift-chip{ background:var(--surface-2); border-color:var(--border); color:var(--text); }
+
+/* ---------- Модальные окна, меню ---------- */
+html[data-theme] .modal-overlay{ background:var(--overlay)!important; backdrop-filter:blur(6px)!important; -webkit-backdrop-filter:blur(6px)!important; }
+html[data-theme] .modal,html[data-theme] .ctx-menu,html[data-theme] .sticker-picker,html[data-theme] .reaction-picker{
+  background:var(--surface)!important; color:var(--text)!important; border:1px solid var(--border)!important; box-shadow:var(--shadow-lg)!important; backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+html[data-theme] .modal h3{ color:var(--text); }
+html[data-theme] .modal-desc{ color:var(--text-2)!important; }
+html[data-theme] .modal .settings-group{ background:var(--surface-2)!important; box-shadow:none!important; }
+html[data-theme] .ctx-menu button{ color:var(--text)!important; }
+html[data-theme] .ctx-menu button:hover,html[data-theme] .reaction-picker button:hover{ background:var(--hover); }
+html[data-theme] .ctx-menu button.danger{ color:var(--red-ink,#dc2626)!important; }
+html[data-theme="dark"] .ctx-menu button.danger{ color:#f87171!important; }
+html[data-theme] .ctx-title{ color:var(--text-2); }
+html[data-theme] .ctx-menu .divider{ background:var(--border); }
+html[data-theme] .member-row{ color:var(--text); border-radius:14px; }
+html[data-theme] .member-row:hover,html[data-theme] .contact-pick-item:hover{ background:var(--hover); }
+html[data-theme] .member-sub{ color:var(--text-2); }
+html[data-theme] .role-owner{ background:var(--accent-light); color:var(--accent-ink,var(--accent)); }
+html[data-theme="light"] .role-admin{ background:rgba(8,145,178,.12); color:#0e7490; }
+html[data-theme] .role-member{ background:var(--surface-3); color:var(--text-2); }
+html[data-theme] .mini-btn{ color:var(--text-2); }
+html[data-theme] .mini-btn:hover{ background:var(--hover); color:var(--text); }
+html[data-theme] .code-box{ background:var(--surface-2); border-color:var(--border-strong); }
+html[data-theme] .code-box .code{ color:var(--accent-ink,var(--accent)); }
+html[data-theme] #chatInfoModal.group-fullscreen .modal{ background:var(--bg)!important; }
+html[data-theme] #chatInfoContent .group-info-top{ background:color-mix(in srgb,var(--surface) 94%,transparent)!important; }
+html[data-theme] #chatInfoContent .settings-group{ background:var(--surface)!important; }
+html[data-theme] #chatInfoContent .set-label,html[data-theme] #chatInfoContent .group-info-top-title{ color:var(--text)!important; }
+html[data-theme] #chatInfoContent .set-sub,html[data-theme] #chatInfoContent .modal-desc,html[data-theme] #chatInfoContent .settings-group h3{ color:var(--text-2)!important; }
+html[data-theme] #chatInfoContent .theme-item.active{ border-color:var(--accent)!important; }
+
+/* ---------- Истории ---------- */
+html[data-theme] .stories-panel{ background:var(--surface)!important; border-bottom:1px solid var(--border); backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+html[data-theme] .story-chip,html[data-theme] .story-chip-name,html[data-theme] .stories-panel-head b{ color:var(--text)!important; }
+html[data-theme] .stories-panel-head small{ color:var(--text-2)!important; }
+html[data-theme] .story-ring-inner{ border-color:var(--surface)!important; background:var(--surface-2)!important; color:var(--text); }
+html[data-theme] .story-avatar-fallback{ background:var(--surface-2)!important; color:var(--text)!important; }
+html[data-theme] .story-view-modal .story-comments-list,html[data-theme] .story-view-modal .story-comment{ color:#15213a; }
+html[data-theme] .story-colors button{ background:var(--surface-2); color:var(--text); border-color:var(--border); }
+
+/* ---------- Нижняя навигация (мобильная) ---------- */
+html[data-theme] .mobile-nav{ background:color-mix(in srgb,var(--surface) 90%,transparent)!important; border:1px solid var(--border)!important; box-shadow:var(--shadow-md)!important; backdrop-filter:blur(20px) saturate(150%)!important; -webkit-backdrop-filter:blur(20px) saturate(150%)!important; }
+html[data-theme] .mobile-nav-item{ color:var(--text-2)!important; }
+html[data-theme] .mobile-nav-item.active{ background:var(--accent-light)!important; color:var(--accent-ink,var(--accent))!important; }
+html[data-theme] .mobile-nav-item .nav-count{ border-color:var(--surface); }
+
+/* ---------- Toast ---------- */
+html[data-theme] .toast{ animation:none!important; background:var(--toast-bg,#111827)!important; color:#fff!important; box-shadow:0 10px 30px rgba(0,0,0,.25); border-radius:14px; opacity:0; pointer-events:none; }
+html[data-theme="dark"] .toast{ background:#f3f6fc!important; color:#0d1526!important; }
+html[data-theme] .toast.show{ opacity:1; }
+
+/* ---------- Экраны входа: всегда тёмные с корректным контрастом ---------- */
+.auth-screen{
+  --bg:#070b16; --surface:rgba(16,24,44,.92); --surface-2:rgba(255,255,255,.06); --surface-3:rgba(255,255,255,.1);
+  --text:#f2f6ff; --text-2:#b4c1dc; --text-3:#94a3c2; --border:rgba(160,180,230,.22);
+  --input-bg:rgba(5,10,23,.55); --input-bg-focus:rgba(5,10,23,.7); color:#f2f6ff; color-scheme:dark; }
+.auth-screen .auth-field label{ color:#c3cee6; }
+.auth-screen .auth-field input{ background:rgba(5,10,23,.55)!important; color:#f2f6ff!important; border-color:rgba(160,180,230,.26)!important; }
+.auth-screen .auth-field input::placeholder{ color:#8494b6; }
+.auth-screen .btn-secondary{ background:rgba(255,255,255,.07)!important; color:#f2f6ff!important; border:1px solid rgba(160,180,230,.24)!important; }
+.auth-screen .btn-ghost{ color:#c3cee6!important; }
+.auth-screen .btn-primary{ background:linear-gradient(115deg,#1fb8d4,#3172f0 56%,#7a4fe6)!important; }
+.auth-screen .verify-explainer{ background:rgba(255,255,255,.05); border-color:rgba(160,180,230,.2); color:#c3cee6; }
+.auth-screen .verify-explainer strong{ color:#fff; }
+.auth-screen .verify-step span:first-child{ background:rgba(91,140,255,.22); color:#cfe0ff; }
+.auth-screen .auth-submit-note{ color:#b4c1dc; }
+.auth-screen .auth-error{ color:#fecaca; background:rgba(239,68,68,.14); border-color:rgba(239,68,68,.4); }
+.auth-screen a{ color:#8fd8ff; }
+.verify-status{ margin:0 0 12px; padding:10px 12px; border-radius:12px; font-size:13px; line-height:1.45; text-align:left; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35); color:#bbf7d0; }
+.verify-status.warn{ background:rgba(234,179,8,.12); border-color:rgba(234,179,8,.4); color:#fde68a; }
+
+/* Онбординг и уведомления используют токены текущей темы */
+html[data-theme] .onboarding{ background:var(--bg)!important; color:var(--text); }
+html[data-theme] .onb-step p{ color:var(--text-2); }
+html[data-theme] .onb-theme-item{ background:var(--surface); border-color:transparent; }
+html[data-theme] .onb-theme-item.active{ border-color:var(--accent); }
+html[data-theme] .onb-theme-item .n{ color:var(--text); }
+
+/* ---------- Пометка СПАМ ---------- */
+.spam-badge{ display:inline-flex; align-items:center; gap:3px; border-radius:6px; padding:2px 6px; background:#c2410c; color:#fff; font-size:9.5px; font-weight:900; letter-spacing:.04em; vertical-align:middle; line-height:1.2; flex-shrink:0; }
+.spam-warning{ align-self:center; display:flex; gap:10px; align-items:flex-start; max-width:min(560px,94%); margin:6px auto 10px; padding:12px 14px; border-radius:16px; background:#fff4ed; color:#7c2d12; border:1px solid #fdba74; font-size:13px; line-height:1.45; box-shadow:var(--shadow-sm); }
+html[data-theme="dark"] .spam-warning{ background:#2a1709; color:#fed7aa; border-color:#9a3412; }
+.spam-warning b{ display:block; margin-bottom:2px; }
+
+/* ---------- Виджет погоды в чате ---------- */
+.msg.weather-msg{ padding:6px!important; max-width:min(330px,86%)!important; }
+.wx-widget{ position:relative; overflow:hidden; border-radius:14px; padding:14px 14px 12px; color:#fff; min-width:230px; background:linear-gradient(160deg,#3b82f6,#1d4ed8); box-shadow:inset 0 1px rgba(255,255,255,.25); }
+.wx-widget.wx-clear{ background:linear-gradient(160deg,#0284c7 0%,#1d4ed8 100%); }
+.wx-widget.wx-clouds{ background:linear-gradient(160deg,#64748b 0%,#334155 100%); }
+.wx-widget.wx-rain{ background:linear-gradient(160deg,#475569 0%,#1e3a8a 100%); }
+.wx-widget.wx-snow{ background:linear-gradient(160deg,#0369a1 0%,#4f46e5 100%); }
+.wx-widget.wx-storm{ background:linear-gradient(160deg,#4c1d95 0%,#1e1b4b 100%); }
+.wx-widget.wx-fog{ background:linear-gradient(160deg,#94a3b8 0%,#475569 100%); }
+.wx-widget.wx-night{ background:linear-gradient(160deg,#1e293b 0%,#0f172a 100%); }
+.wx-widget:after{ content:""; position:absolute; right:-40px; top:-40px; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.28),transparent 70%); pointer-events:none; }
+.wx-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:700; opacity:.95; position:relative; z-index:1; }
+.wx-place{ display:flex; align-items:center; gap:5px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wx-day{ flex-shrink:0; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,.2); font-size:11px; }
+.wx-main{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0 4px; position:relative; z-index:1; }
+.wx-temp{ font-size:44px; font-weight:800; letter-spacing:-.04em; line-height:1; }
+.wx-icon{ font-size:46px; line-height:1; filter:drop-shadow(0 4px 10px rgba(0,0,0,.2)); }
+.wx-desc{ font-size:14px; font-weight:700; position:relative; z-index:1; }
+.wx-range{ font-size:12.5px; opacity:.92; margin-top:2px; position:relative; z-index:1; }
+.wx-stats{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; margin-top:10px; position:relative; z-index:1; }
+.wx-stat{ background:rgba(255,255,255,.16); border-radius:10px; padding:6px 7px; font-size:11px; line-height:1.25; min-width:0; }
+.wx-stat b{ display:block; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wx-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:10.5px; opacity:.8; position:relative; z-index:1; }
+.msg.weather-msg .time{ padding:2px 6px 0; }
+.msg.weather-msg.in .time{ color:var(--text-3); }
+
+/* Выбор чата для отправки погоды */
+.mc-pick-list{ display:flex; flex-direction:column; gap:4px; max-height:52vh; overflow:auto; margin:8px 0 4px; }
+.mc-pick-item{ display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:14px; text-align:left; color:var(--text); width:100%; }
+.mc-pick-item:hover{ background:var(--hover); }
+.mc-pick-item b{ display:block; font-size:14px; } .mc-pick-item small{ color:var(--text-2); font-size:12px; }
+
+/* ---------- Мобильная адаптация ---------- */
+@media (max-width:760px){
+  html[data-theme] .msg{ max-width:84%; }
+  html[data-theme] .messages{ padding:10px 10px 8px; }
+  html[data-theme] .chat-input-bar{ border-radius:0!important; }
+}
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after{ animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+html[data-theme] [style*="color: var(--accent)"]:not([style*="background"]),html[data-theme] [style*="color:var(--accent)"]:not([style*="background"]){ color:var(--accent-ink,var(--accent))!important; }
+</style>
 </head>
 <body>
 
@@ -1088,13 +1431,51 @@ function translateErr(code) {
     'auth/email-already-in-use': 'Email уже занят',
     'auth/weak-password': 'Пароль минимум 6 символов',
     'auth/network-request-failed': 'Нет соединения',
-    'auth/too-many-requests': 'Слишком много попыток',
+    'auth/too-many-requests': 'Слишком много попыток. Подождите 5–15 минут и попробуйте снова',
+    'auth/quota-exceeded': 'Превышен дневной лимит писем Firebase. Попробуйте позже',
+    'auth/user-disabled': 'Аккаунт отключён администратором',
+    'auth/unauthorized-continue-uri': 'Домен сайта не добавлен в Firebase → Authentication → Authorized domains',
+    'auth/invalid-continue-uri': 'Некорректный адрес возврата в письме',
+    'auth/invalid-recipient-email': 'Почтовый адрес не принимает письма. Проверьте email',
+    'auth/missing-email': 'Не указан email',
+    'auth/user-token-expired': 'Сеанс устарел, войдите снова',
     'auth/unauthorized-domain': 'Домен не разрешён в Firebase',
     'auth/operation-not-allowed': 'Email/Password отключён',
     'auth/requires-recent-login': 'Требуется повторный вход',
     'PERMISSION_DENIED': 'Нет доступа к базе'
   };
   return map[code];
+}
+// Отправка письма подтверждения: русский шаблон, ссылка возврата в MetroChat, защита от двойной отправки.
+const mcVerifyInFlight = {};
+function mcVerifyKey(uid) { return 'metro_verify_sent_' + uid; }
+function mcLastVerifySent(uid) { try { return Number(localStorage.getItem(mcVerifyKey(uid)) || 0); } catch (_) { return 0; } }
+async function sendVerifyMail(user) {
+  if (!user?.uid) throw new Error('Нет пользователя');
+  if (mcVerifyInFlight[user.uid]) return mcVerifyInFlight[user.uid];
+  const run = (async () => {
+    try { auth.languageCode = 'ru'; } catch (_) {}
+    const url = (location.protocol === 'https:' || location.hostname === 'localhost') ? location.origin + location.pathname : null;
+    try {
+      if (url) await sendEmailVerification(user, { url, handleCodeInApp: false });
+      else await sendEmailVerification(user);
+    } catch (e) {
+      // Если домен не разрешён для ссылки возврата — отправляем обычное письмо без неё.
+      if (url && /continue-uri|unauthorized-domain|invalid-dynamic-link|argument-error/i.test(e?.code || '')) await sendEmailVerification(user);
+      else throw e;
+    }
+    try { localStorage.setItem(mcVerifyKey(user.uid), String(Date.now())); } catch (_) {}
+    return true;
+  })();
+  mcVerifyInFlight[user.uid] = run;
+  try { return await run; } finally { delete mcVerifyInFlight[user.uid]; }
+}
+function setVerifyStatus(text, warn = false) {
+  let st = $('verifyStatus');
+  const btn = $('resendVerifyBtn');
+  if (!st) { st = document.createElement('div'); st.id = 'verifyStatus'; st.setAttribute('role', 'status'); if (btn?.parentNode) btn.parentNode.insertBefore(st, btn); else $('verifyScreen')?.appendChild(st); }
+  st.className = 'verify-status' + (warn ? ' warn' : '');
+  st.textContent = text; st.hidden = !text;
 }
 function humanErr(err) {
   const code = err?.code || ''; const msg = err?.message || '';
@@ -1176,6 +1557,9 @@ authForm.addEventListener('submit', async e => {
       await signInWithEmailAndPassword(auth, email, pass);
     } else {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      // Письмо отправляем сразу: раньше оно не уходило, если запись профиля в базу падала из-за Rules.
+      const verifySend = sendVerifyMail(cred.user).then(() => { toast('Письмо для подтверждения отправлено на ' + email, '📧'); return true; })
+        .catch(e => { console.warn('Email verification send failed:', e); state.verifySendError = humanErr(e); return false; });
       try {
         await set(ref(db, 'users/' + cred.user.uid), {
           email, createdAt: now(), onboardingComplete: false,
@@ -1189,6 +1573,7 @@ authForm.addEventListener('submit', async e => {
           path: 'users/' + cred.user.uid, uid: cred.user.uid
         });
         try {
+          await verifySend;
           await signOut(auth);
         } catch (signOutErr) {
           console.warn('Could not sign out after profile write failure:', signOutErr);
@@ -1202,7 +1587,9 @@ authForm.addEventListener('submit', async e => {
             (dbErr?.message || dbErr?.code || 'неизвестная ошибка');
         throw new Error(msg);
       }
-      try { await sendEmailVerification(cred.user); toast('Письмо для подтверждения отправлено', '📧'); } catch(e) { console.warn('Email verification send failed:', e); }
+      const sentOk = await verifySend;
+      if (!sentOk) setTimeout(() => setVerifyStatus('Письмо не отправилось: ' + (state.verifySendError || 'ошибка') + '. Нажмите «Отправить письмо повторно».', true), 300);
+      else setTimeout(() => setVerifyStatus('Письмо отправлено на ' + email + '. Проверьте «Входящие», «Спам» и «Рассылки». Письмо приходит в течение 1–5 минут.'), 300);
     }
     try { localStorage.setItem('metro_last_email', email); } catch(_) {}
     setBusy(false);
@@ -1224,6 +1611,18 @@ function showVerifyEmailScreen(user) {
   $('verifyScreen').classList.remove('hidden');
   $('verifyEmail').textContent = user.email || '—';
   if (verifyPollTimer) clearInterval(verifyPollTimer);
+  const last = mcLastVerifySent(user.uid);
+  if (last && Date.now() - last < 10 * 60000) setVerifyStatus('Письмо отправлено на ' + (user.email || 'вашу почту') + '. Проверьте «Входящие», «Спам» и «Рассылки».');
+  else {
+    // Письмо могло не уйти при регистрации (или регистрация была на другом устройстве) — отправляем автоматически.
+    clearTimeout(showVerifyEmailScreen._auto);
+    showVerifyEmailScreen._auto = setTimeout(() => {
+      if (!auth.currentUser || auth.currentUser.emailVerified || $('verifyScreen').classList.contains('hidden')) return;
+      if (Date.now() - mcLastVerifySent(auth.currentUser.uid) < 10 * 60000) return;
+      sendVerifyMail(auth.currentUser).then(() => { verifyResendCooldownUntil = Date.now() + 60000; setVerifyStatus('Мы отправили письмо на ' + (auth.currentUser?.email || 'вашу почту') + '. Проверьте «Входящие», «Спам» и «Рассылки».'); })
+        .catch(e => setVerifyStatus('Не удалось отправить письмо: ' + humanErr(e), true));
+    }, 1500);
+  }
   // Автоматически проверяем подтверждение, чтобы пользователь не застревал на этом экране.
   verifyPollTimer = setInterval(() => {
     if (!auth.currentUser || $('verifyScreen').classList.contains('hidden')) return;
@@ -1260,12 +1659,15 @@ async function resendVerifyEmail() {
   }
   if (btn) { btn.disabled = true; btn.textContent = 'Отправляем…'; }
   try {
-    await sendEmailVerification(auth.currentUser);
+    await sendVerifyMail(auth.currentUser);
     verifyResendCooldownUntil = Date.now() + 60000;
-    if (hint) hint.textContent = 'Письмо отправлено. Проверьте входящие, «Спам» и «Промоакции». Повторная отправка доступна через минуту.';
+    setVerifyStatus('Письмо отправлено на ' + (auth.currentUser.email || 'вашу почту') + '. Проверьте «Входящие», «Спам» и «Рассылки».');
+    if (hint) hint.textContent = 'Повторная отправка доступна через минуту.';
     toast('Письмо отправлено', '📤');
   } catch(e) {
-    if (hint) hint.textContent = 'Не удалось отправить письмо: ' + humanErr(e) + '. Подождите немного и попробуйте снова.';
+    if (e?.code === 'auth/too-many-requests') verifyResendCooldownUntil = Date.now() + 5 * 60000;
+    setVerifyStatus('Не удалось отправить письмо: ' + humanErr(e), true);
+    if (hint) hint.textContent = 'Подождите немного и попробуйте снова.';
     toast(humanErr(e), '⚠');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '📤 Отправить письмо повторно'; }
@@ -1320,12 +1722,64 @@ async function registerDeviceSession(user) {
   } catch (e) { console.warn('Device session registration failed:', e); return true; }
 }
 
+const MC_BOOT_KEY = uid => 'metrochat_boot_v1_' + uid;
+function readBootCache(uid) {
+  try { const c = JSON.parse(localStorage.getItem(MC_BOOT_KEY(uid)) || 'null'); if (c && c.profile && c.profile.onboardingComplete && Date.now() - (c.ts || 0) < 30 * 864e5) return c; } catch (_) {}
+  return null;
+}
+function writeBootCache() {
+  const uid = state.user?.uid; if (!uid || !state.profile?.onboardingComplete) return;
+  try { localStorage.setItem(MC_BOOT_KEY(uid), JSON.stringify({ ts: Date.now(), profile: state.profile, settings: state.settings, blocked: state.blocked || {} })); }
+  catch (_) { try { const pr = { ...state.profile }; delete pr.avatar; delete pr.photoURL; delete pr.banner; localStorage.setItem(MC_BOOT_KEY(uid), JSON.stringify({ ts: Date.now(), profile: pr, settings: state.settings, blocked: state.blocked || {} })); } catch (__) {} }
+}
+function clearBootCache(uid) { try { if (uid) localStorage.removeItem(MC_BOOT_KEY(uid)); } catch (_) {} }
+// Профиль, настройки и чёрный список загружаются параллельно, а не по очереди.
+async function loadUserCore(uid) {
+  const [u, s, b] = await Promise.all([
+    get(ref(db, 'users/' + uid)),
+    get(ref(db, 'user_settings/' + uid)).catch(() => null),
+    get(ref(db, 'user_blocked/' + uid)).catch(() => null)
+  ]);
+  return { u, s, b };
+}
+function repairUsername(uid, data) {
+  if (!data?.username) return;
+  get(ref(db, 'usernames/' + data.username)).then(s => { if (!s.exists()) return set(ref(db, 'usernames/' + data.username), uid); }).catch(() => {});
+}
+async function refreshUserCoreInBackground(user) {
+  let core;
+  try { core = await loadUserCore(user.uid); } catch (e) { console.warn('Background profile refresh failed:', e); return; }
+  if (state.user?.uid !== user.uid) return;
+  if (!core.u.exists() || !core.u.val()?.onboardingComplete) {
+    clearBootCache(user.uid);
+    state.profile = core.u.exists() ? core.u.val() : { email: user.email, onboardingComplete: false };
+    stopApp(); state.user = { uid: user.uid, email: user.email }; showOnboarding(); return;
+  }
+  state.profile = core.u.val();
+  if (core.s?.exists()) state.settings = { ...state.settings, ...core.s.val() };
+  if (core.b) state.blocked = core.b.exists() ? core.b.val() : {};
+  repairUsername(user.uid, state.profile);
+  try { applySettings(); updateUserStrip(); renderList(); } catch (_) {}
+  writeBootCache();
+}
 async function bootstrapUser(user) {
   if (!user) return;
   state.user = { uid: user.uid, email: user.email };
-  let snap;
-  try { snap = await get(ref(db, 'users/' + user.uid)); }
+  const cached = readBootCache(user.uid);
+  if (cached) {
+    // Мгновенный вход из кэша, свежие данные подтягиваются в фоне.
+    state.profile = cached.profile;
+    state.settings = { ...state.settings, ...(cached.settings || {}) };
+    state.blocked = cached.blocked || {};
+    state.onboarding = null;
+    startApp();
+    refreshUserCoreInBackground(user);
+    return;
+  }
+  let core;
+  try { core = await loadUserCore(user.uid); }
   catch (err) { showAuthError(humanErr(err)); authScreen.classList.remove('hidden'); $('app').classList.add('hidden'); return; }
+  const snap = core.u;
   if (!snap.exists()) {
     try { await set(ref(db, 'users/' + user.uid), { email: user.email, createdAt: now(), onboardingComplete: false, verified: false, socialLinks: [] }); } catch(_) {}
     state.profile = { email: user.email, onboardingComplete: false };
@@ -1333,29 +1787,27 @@ async function bootstrapUser(user) {
   }
   const data = snap.val();
   state.profile = data;
-  // Восстановить usernames/{ник} если его нет (баг со старых версий)
-  if (data.username) {
-    try {
-      const unameSnap = await get(ref(db, 'usernames/' + data.username));
-      if (!unameSnap.exists()) await set(ref(db, 'usernames/' + data.username), user.uid);
-    } catch(_) {}
-  }
+  repairUsername(user.uid, data);
   if (!data.onboardingComplete) { showOnboarding(); return; }
-  try { const setSnap = await get(ref(db, 'user_settings/' + user.uid)); if (setSnap.exists()) state.settings = { ...state.settings, ...setSnap.val() }; } catch(_) {}
-  try { const blockSnap = await get(ref(db, 'user_blocked/' + user.uid)); state.blocked = blockSnap.exists() ? blockSnap.val() : {}; } catch(_) {}
+  if (core.s?.exists()) state.settings = { ...state.settings, ...core.s.val() };
+  state.blocked = core.b?.exists() ? core.b.val() : {};
   state.onboarding = null;
   startApp();
+  writeBootCache();
 }
 onAuthStateChanged(auth, async user => {
   window.__metroAuthResolved = true;
-  hideSplash();
   if (user) {
-    if (!user.emailVerified) { showVerifyEmailScreen(user); return; }
-    if (state.user?.uid === user.uid && state.booted) return;
-    const sessionOk = await registerDeviceSession(user);
-    if (sessionOk === false) return;
-    await bootstrapUser(user);
+    if (!user.emailVerified) { hideSplash(); showVerifyEmailScreen(user); return; }
+    if (state.user?.uid === user.uid && state.booted) { hideSplash(); return; }
+    // Заставка держится до показа приложения (максимум 2.5 с), чтобы не мигал пустой экран.
+    const splashCap = setTimeout(hideSplash, 2500);
+    // Регистрация сеанса устройства идёт параллельно и больше не задерживает вход.
+    registerDeviceSession(user).catch(e => console.warn('Device session:', e));
+    try { await bootstrapUser(user); } finally { clearTimeout(splashCap); hideSplash(); }
   } else {
+    hideSplash();
+    clearBootCache(state.user?.uid);
     try { sessionStorage.removeItem('metrochat_device_session'); } catch (_) {}
     currentDeviceSessionId = null;
     state.user = null; state.profile = null; state.onboarding = null; state.booted = false;
@@ -1475,7 +1927,7 @@ function showPersonalWelcome() {
   const overlay = document.createElement('div'); overlay.className = 'splash'; overlay.id = 'welcomeSplash';
   const title = document.createElement('h1'); title.className = 'splash-greeting'; title.textContent = name ? `${greeting}, ${name}` : greeting;
   overlay.appendChild(title); overlay.style.backgroundImage = `url("${photo}")`; document.body.appendChild(overlay);
-  setTimeout(() => { overlay.classList.add('hide'); setTimeout(() => overlay.remove(), 400); }, 1500);
+  setTimeout(() => { overlay.classList.add('hide'); setTimeout(() => overlay.remove(), 360); }, 900);
 }
 function startApp() {
   state.booted = true;
@@ -1546,8 +1998,8 @@ function subscribeAll() {
   if (!state.user) return;
   const uid = state.user.uid;
   // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
-  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); updateUserStrip(); if (state.chat) renderChatHeader(); if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
-  state.subs.push(onValue(ref(db, 'typing'), snap => { const d = snap.val() || {}; const t = now(); state.typing = {}; for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v; if (state.chat) renderMessages(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); updateUserStrip(); if (state.chat) { renderChatHeader(); renderMessages(); } if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
+  state.subs.push(onValue(ref(db, 'typing'), snap => { const d = snap.val() || {}; const t = now(); const sig = () => state.chat ? Object.values(state.typing).filter(x => x.chatId === state.chat.id && x.uid !== state.user?.uid).map(x => x.uid).sort().join(',') : ''; const before = sig(); state.typing = {}; for (const [k, v] of Object.entries(d)) if (v && t - v.ts < 5000) state.typing[k] = v; if (state.chat && sig() !== before) renderMessages(); }, () => {}));
   state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
   // Ограничиваем стартовую подписку: не скачиваем всю историю всех каналов на каждом входе.
   state.subs.push(onValue(query(ref(db, 'channels'), orderByChild('createdAt'), limitToLast(30)), snap => {
@@ -2121,7 +2573,9 @@ function showChatPlaceholder() {
   $('replyBar').classList.add('hidden'); $('pinnedBar').classList.add('hidden'); $('chatSearchBar').classList.add('hidden'); $('recordingBar').classList.add('hidden');
   $('messages').innerHTML = ''; applyGroupChatTheme(); renderList();
 }
-function verifiedMark(uid) { const flags=state.galochka?.[uid]||{}; const verified=flags.confirmed===true?' <span title="Подтверждённый аккаунт" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#2788f5;color:white;font-size:11px;font-weight:900;vertical-align:middle;">✓</span>':''; const risk=flags.note==='possible'?' <span title="Возможно: информация требует проверки" style="display:inline-flex;align-items:center;border-radius:6px;padding:2px 5px;background:#e8a323;color:#171717;font-size:9px;font-weight:900;vertical-align:middle;">ВОЗМОЖНО</span>':flags.note==='fraud'?' <span title="Пометка администратора: обман" style="display:inline-flex;align-items:center;border-radius:6px;padding:2px 5px;background:#d94343;color:white;font-size:9px;font-weight:900;vertical-align:middle;">ОБМАН</span>':''; return verified+risk; }
+function verifiedMark(uid) { const flags=state.galochka?.[uid]||{}; const verified=flags.confirmed===true?' <span title="Подтверждённый аккаунт" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#2788f5;color:white;font-size:11px;font-weight:900;vertical-align:middle;">✓</span>':''; const risk=flags.note==='possible'?' <span title="Возможно: информация требует проверки" style="display:inline-flex;align-items:center;border-radius:6px;padding:2px 5px;background:#e8a323;color:#171717;font-size:9px;font-weight:900;vertical-align:middle;">ВОЗМОЖНО</span>':flags.note==='fraud'?' <span title="Пометка администратора: обман" style="display:inline-flex;align-items:center;border-radius:6px;padding:2px 5px;background:#d94343;color:white;font-size:9px;font-weight:900;vertical-align:middle;">ОБМАН</span>':''; return verified+risk+(isSpamUser(uid)?' <span class="spam-badge" title="Пометка администрации: спам">СПАМ</span>':''); }
+// Пометка «СПАМ» ставится вручную в Firebase Console → Realtime Database → galochka/<uid>/spam = true
+function isSpamUser(uid) { const f = state.galochka?.[uid]; return !!(f && (f.spam === true || f.spam === 'true' || f.note === 'spam')); }
 
 function renderChatHeader() {
   if (!state.chat) return;
@@ -2184,12 +2638,14 @@ function subscribeMessages(chatId) {
   }, err => { console.error('Messages:', err); $('messages').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>Нет доступа</h3><p>${esc(humanErr(err))}</p></div>`; });
 }
 function linkifyMentions(text) { return text.replace(/@([a-zA-Z0-9_]{2,30})/g, '<span class="mention">@$1</span>'); }
+function mcSafeUrl(u) { const s = String(u || ''); return /^(data:|blob:|https:\/\/)/i.test(s) ? s : ''; }
 function renderMessages() {
   const box = $('messages');
   if (!box || !state.chat) return;
   const atBottom = state.messagesAtBottom;
   if (state.messages.length === 0) { box.innerHTML = `<div class="empty"><div class="empty-icon">💬</div><h3>Нет сообщений</h3><p>Начните общение первым!</p></div>`; return; }
   let html = ''; let lastSender = null;
+  if (state.chat.type === 'dm' && isSpamUser(state.chat.peerId)) html += `<div class="spam-warning" role="alert"><span aria-hidden="true">⚠️</span><div><b>Осторожно: возможный спам</b>Администрация MetroChat отметила этот аккаунт как спам. Не переходите по ссылкам и не передавайте коды и пароли.</div></div>`;
   state.messages.forEach(m => {
     if (m.deleted) return;
     if (m.system) { html += `<div class="sys-msg">${esc(m.text)}</div>`; lastSender = null; return; }
@@ -2197,13 +2653,15 @@ function renderMessages() {
     const sender = getUser(m.senderId);
     const showAuthor = state.chat.type !== 'dm' && !isOwn && m.senderId !== lastSender;
     let inner = '';
+    const wxData = (m.type === 'weather' && m.weather && typeof m.weather === 'object') ? m.weather : (!m.type || m.type === 'text' ? mcParseLegacyWeather(m.text) : null);
     if (m.replyTo) inner += `<div class="reply-quote" onclick="scrollToMsg('${m.replyTo.id}')"><div class="reply-author">${esc(m.replyTo.author)}</div><div>${esc((m.replyTo.text || '').slice(0, 80))}</div></div>`;
-    if (m.type === 'sticker' && m.sticker) inner += `<span class="sticker-img animated-sticker" aria-label="Анимированный стикер">${esc(m.sticker)}</span>`;
-    else if (m.type === 'image' && m.imageData) inner += `<img class="msg-image" src="${m.imageData}" onclick="openViewer('${m.id}')">`;
-    else if (m.type === 'file' && m.fileData) inner += `<a class="msg-file" href="${m.fileData}" download="${esc(m.fileName)}" onclick="event.stopPropagation()"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">${esc(m.fileName)}</div><div class="file-size">${formatBytes(m.fileSize)}</div></div></a>`;
+    if (wxData) inner += mcWeatherWidgetHtml(wxData);
+    else if (m.type === 'sticker' && m.sticker) inner += `<span class="sticker-img animated-sticker" aria-label="Анимированный стикер">${esc(m.sticker)}</span>`;
+    else if (m.type === 'image' && m.imageData) inner += `<img class="msg-image" src="${esc(mcSafeUrl(m.imageData))}" onclick="openViewer('${m.id}')">`;
+    else if (m.type === 'file' && m.fileData) inner += `<a class="msg-file" href="${esc(mcSafeUrl(m.fileData))}" download="${esc(m.fileName)}" onclick="event.stopPropagation()"><div class="file-icon">📄</div><div class="file-info"><div class="file-name">${esc(m.fileName)}</div><div class="file-size">${formatBytes(m.fileSize)}</div></div></a>`;
     else if (m.type === 'voice' && m.voiceData) inner += `<div class="voice-msg"><button class="voice-play" data-msgid="${m.id}" onclick="toggleVoice('${m.id}', this)">▶</button><div class="voice-wave"><div class="voice-progress" id="vp-${m.id}"></div></div><div class="voice-duration">${formatDuration(m.voiceDuration || 0)}</div></div>`;
-    else if (m.type === 'videoCircle' && m.videoData) inner += `<div class="video-circle-msg" id="vc-${m.id}" onclick="toggleVideoCircle('${m.id}')"><video src="${m.videoData}" preload="metadata" playsinline></video><div class="play-overlay">▶</div></div>`;
-    else if (m.type === 'geo' && m.geo) inner += `<div class="geo-msg" onclick="window.open('https://www.google.com/maps?q=${m.geo.lat},${m.geo.lng}','_blank')">📍 Показать на карте</div>`;
+    else if (m.type === 'videoCircle' && m.videoData) inner += `<div class="video-circle-msg" id="vc-${m.id}" onclick="toggleVideoCircle('${m.id}')"><video src="${esc(mcSafeUrl(m.videoData))}" preload="metadata" playsinline></video><div class="play-overlay">▶</div></div>`;
+    else if (m.type === 'geo' && m.geo) inner += `<div class="geo-msg" onclick="window.open('https://www.google.com/maps?q=${Number(m.geo.lat)||0},${Number(m.geo.lng)||0}','_blank')">📍 Показать на карте</div>`;
     else if (m.type === 'poll' && m.poll) {
       const total = (m.poll.votes ? Object.values(m.poll.votes).length : 0);
       const myVote = m.poll.votes ? m.poll.votes[state.user.uid] : null;
@@ -2214,7 +2672,7 @@ function renderMessages() {
       }).join('');
       inner += `<div class="poll"><div class="poll-q">${esc(m.poll.question)}</div>${optionsHtml}<div class="poll-footer">Всего: ${total}</div></div>`;
     }
-    if (m.text) {
+    if (m.text && !wxData) {
       let t = esc(m.text).replace(/(https?:\/\/[^\s]+)/g, (url) => {
         let extra = '';
         if (state.settings.linkPreview) {
@@ -2231,12 +2689,12 @@ function renderMessages() {
       for (const [uid, emoji] of Object.entries(m.reactions)) (grouped[emoji] ||= []).push(uid);
       reactionsHtml = '<div class="reactions">' + Object.entries(grouped).map(([emoji, uids]) => {
         const mine = uids.includes(state.user.uid);
-        return `<span class="reaction-chip ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleReaction('${m.id}','${emoji}')">${emoji} ${uids.length}</span>`;
+        return `<span class="reaction-chip ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleReaction('${m.id}','${esc(String(emoji).replace(/['\\]/g,''))}')">${esc(emoji)} ${uids.length}</span>`;
       }).join('') + '</div>';
     }
     const timeHtml = state.settings.showTimestamps ? timeShort(m.createdAt) : '';
     const authorRow = (showAuthor && state.settings.showAvatarsInGroups && sender) ? `<div class="msg-author">${esc(sender?.firstName || sender?.displayName || 'Участник')}</div>` : '';
-    const stickerCls = (m.type === 'sticker' || m.type === 'videoCircle') ? ' sticker' : '';
+    const stickerCls = ((m.type === 'sticker' || m.type === 'videoCircle') ? ' sticker' : '') + (wxData ? ' weather-msg' : '');
     html += `${authorRow}<div class="msg ${isOwn ? 'out' : 'in'}${stickerCls}" id="msg-${m.id}" oncontextmenu="return msgCtxFromEvent(event,'${m.id}')" ondblclick="setReply('${m.id}')" ontouchstart="msgTouchStart(event,'${m.id}')" ontouchmove="msgTouchMove(event)" ontouchend="msgTouchEnd(event)">${inner}<button type="button" class="msg-react-btn" title="Добавить реакцию" aria-label="Добавить реакцию" onclick="event.stopPropagation(); showReactionPicker(event,'${m.id}')">☺+</button><span class="time">${m.pinned ? '📌 ' : ''}${m.edited ? '<span class="edited-tag">изм.</span>' : ''}${timeHtml}${isOwn && state.settings.readReceipts ? ' ✓✓' : ''}</span>${reactionsHtml}</div>`;
     lastSender = m.senderId;
   });
@@ -3085,16 +3543,14 @@ function applyGroupChatTheme() {
   const messages = $('messages');
   const chatPanel = $('chatPanel');
   if (!messages || !chatPanel) return;
-  if (!state.chat || !['group','channel'].includes(state.chat.type)) {
-    messages.style.background = '';
-    chatPanel.style.background = '';
-    return;
-  }
-  const t = getTheme(state.chat.themeId || 'crimson');
-  // Более заметный фон виден и на узких экранах, где прежний почти прозрачный градиент терялся.
-  const gradient = `linear-gradient(135deg, ${t.grad[0]}24 0%, ${t.grad[1]}30 100%)`;
-  messages.style.background = gradient;
-  chatPanel.style.background = gradient;
+  // Фон теперь задаётся CSS-переменными: светлая база в светлой теме, тёмная — в тёмной.
+  messages.style.background = '';
+  chatPanel.style.background = '';
+  const isGroup = !!(state.chat && ['group','channel'].includes(state.chat.type));
+  const t = isGroup ? getTheme(state.chat.themeId || 'crimson') : getTheme(state.settings?.themeId);
+  chatPanel.style.setProperty('--wall-a', t.grad[0]);
+  chatPanel.style.setProperty('--wall-b', t.grad[1]);
+  chatPanel.classList.toggle('chat-themed', isGroup);
 }
 
 function openGroupPermissionsSettings() {
@@ -3634,7 +4090,7 @@ async function mcWeatherData(lat,lon,tz){
     const j=await mcReadJson(r);
     if(r.ok && j.current && j.daily && Array.isArray(j.daily.time)) return j;
   }catch(_){}
-  const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=${encodeURIComponent(tz||'auto')}&forecast_days=10`;
+  const u=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day&timezone=${encodeURIComponent(tz||'auto')}&forecast_days=10`;
   const r=await fetch(u);
   const j=await mcReadJson(r);
   if(!r.ok || !j.current || !j.daily) throw new Error('Погода временно недоступна. Попробуйте ещё раз через минуту.');
@@ -3648,7 +4104,52 @@ function renderMcWeatherFavorites(){const el=$('mcWeatherFavorites');if(!el)retu
 function removeMcWeatherFavorite(i){const a=mcWeatherFavs();a.splice(i,1);localStorage.setItem(MC_WEATHER_FAV_KEY,JSON.stringify(a));renderMcWeatherFavorites()}
 async function loadMetroWeather(city){const input=$('mcWeatherCity');city=String(city||input?.value||'').trim();const out=$('mcWeatherResult');if(!city||!out)return;out.textContent='Ищем город…';try{const found=await mcGeoCity(city);if(!found.length)throw new Error('Город не найден. Проверьте название.');const place=found[0],d=await mcWeatherData(place.latitude,place.longitude,place.timezone);const label=[place.name,place.admin1,place.country].filter(Boolean).join(', ');window.mcCurrentWeather={place,d};const days=d.daily.time.map((date,i)=>({date,max:d.daily.temperature_2m_max[i],min:d.daily.temperature_2m_min[i],code:d.daily.weather_code[i],rain:d.daily.precipitation_probability_max?.[i]}));out.innerHTML=`<div class="mc-weather-now"><div style="font-size:46px">${mcWeatherIcon(d.current.weather_code)}</div><div><div class="mc-weather-temp">${Math.round(d.current.temperature_2m)}°</div><b>${esc(label)}</b><div class="set-sub">${mcWeatherDesc(d.current.weather_code)} · ощущается ${Math.round(d.current.apparent_temperature)}°</div></div></div><div class="set-sub" style="margin-top:8px">Влажность ${d.current.relative_humidity_2m}% · ветер ${Math.round(d.current.wind_speed_10m)} км/ч</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0"><button class="btn btn-primary" style="width:auto" onclick="saveMcWeatherFavorite('${esc(place.name).replace(/'/g,'&#39;')}',${place.latitude},${place.longitude})">☆ В избранное</button><button class="btn btn-ghost" style="width:auto" onclick="openWeatherShare('${esc(place.name).replace(/'/g,'&#39;')}')">Отправить в чат</button></div><h3 style="margin:14px 0 8px">Прогноз на 10 дней</h3><div class="mc-weather-grid">${days.map(x=>`<div class="mc-weather-day"><b>${new Date(x.date+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'})}</b><div style="font-size:25px;margin:5px 0">${mcWeatherIcon(x.code)}</div><b>${Math.round(x.max)}° / ${Math.round(x.min)}°</b><small>${mcWeatherDesc(x.code)}${x.rain!=null?' · дождь '+x.rain+'%':''}</small></div>`).join('')}</div>`;renderMcWeatherFavorites()}catch(e){out.textContent=e.message||'Не удалось загрузить погоду'}}
 function saveMcWeatherFavorite(name,lat,lon){const a=mcWeatherFavs();if(!a.some(x=>x.name===name)){a.push({name,lat,lon});localStorage.setItem(MC_WEATHER_FAV_KEY,JSON.stringify(a))}renderMcWeatherFavorites();toast('Город добавлен в избранное','✓')}
-async function openWeatherShare(prefill=''){if(!state.chat||!state.user)return toast('Сначала откройте чат','⚠');document.getElementById('mcWeatherShareModal')?.remove();const modal=document.createElement('div');modal.id='mcWeatherShareModal';modal.style.cssText='position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px';modal.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="mcWeatherShareTitle" style="width:min(440px,100%);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 20px 70px #0005"><h3 id="mcWeatherShareTitle" style="margin:0 0 14px">🌤️ Отправить погоду</h3><label class="set-label" for="mcWeatherShareCity">Город</label><input id="mcWeatherShareCity" class="onb-input" style="width:100%;margin:7px 0 14px" value="${esc(prefill||'Москва')}" placeholder="Введите город"><label class="set-label" for="mcWeatherShareDay">Прогноз</label><select id="mcWeatherShareDay" class="onb-input" style="width:100%;margin:7px 0 16px"><option value="0">Сегодня</option><option value="1">Завтра</option></select><div style="display:flex;gap:8px"><button class="btn btn-ghost" style="flex:1" id="mcWeatherShareCancel">Отмена</button><button class="btn btn-primary" style="flex:1" id="mcWeatherShareSend">Отправить в чат</button></div></div>`;document.body.appendChild(modal);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});modal.querySelector('#mcWeatherShareCancel').onclick=()=>modal.remove();modal.querySelector('#mcWeatherShareSend').onclick=async()=>{const city=modal.querySelector('#mcWeatherShareCity').value.trim(),i=Number(modal.querySelector('#mcWeatherShareDay').value);if(!city)return toast('Введите город','⚠');const btn=modal.querySelector('#mcWeatherShareSend');btn.disabled=true;btn.textContent='Загружаем…';try{const list=await mcGeoCity(city);if(!list.length)throw new Error('Город не найден');const p=list[0],d=await mcWeatherData(p.latitude,p.longitude,p.timezone),day=i?'завтра':'сегодня';const msg=`🌤️ Погода — ${[p.name,p.country].filter(Boolean).join(', ')}\n${day[0].toUpperCase()+day.slice(1)}: ${mcWeatherDesc(d.daily.weather_code[i])}\nТемпература: ${Math.round(d.daily.temperature_2m_min[i])}…${Math.round(d.daily.temperature_2m_max[i])}°C\nВероятность осадков: ${d.daily.precipitation_probability_max?.[i]??'—'}%\nИсточник: Open-Meteo`;modal.remove();const input=$('chatInput');if(!input)return toast('Поле сообщения недоступно','⚠');input.value=msg;updateSendBtn();await sendMessage()}catch(e){btn.disabled=false;btn.textContent='Отправить в чат';toast(e.message||'Не удалось получить погоду','⚠')}};}
+// ===== Виджет погоды в чате =====
+function mcNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function mcBuildWeatherPayload(p,d,i){
+  const dl=d.daily||{},cur=d.current||{};
+  const w={city:String(p.name||'').slice(0,80),country:String(p.country||'').slice(0,60),dayIndex:i,dayLabel:i?'Завтра':'Сегодня',date:String(dl.time?.[i]||''),
+    code:mcNum(dl.weather_code?.[i])??0,min:mcNum(dl.temperature_2m_min?.[i]),max:mcNum(dl.temperature_2m_max?.[i]),rain:mcNum(dl.precipitation_probability_max?.[i]),ts:Date.now()};
+  if(!i){w.temp=mcNum(cur.temperature_2m);w.feels=mcNum(cur.apparent_temperature);w.humidity=mcNum(cur.relative_humidity_2m);w.wind=mcNum(cur.wind_speed_10m);if(mcNum(cur.weather_code)!==null)w.code=mcNum(cur.weather_code);if(cur.is_day!==undefined)w.isDay=!!Number(cur.is_day);}
+  Object.keys(w).forEach(k=>{if(w[k]===null||w[k]===undefined)delete w[k]});
+  return w;
+}
+async function mcSendWeatherWidget(weather){
+  if(!state.chat||!state.user)return toast('Сначала откройте чат','⚠');
+  const input=$('chatInput');const keep=input?input.value:'';
+  if(input)input.value='';
+  state.pendingAttachment={type:'weather',weather};
+  try{await sendMessage();}finally{state.pendingAttachment=null;if(input&&keep){input.value=keep;try{updateSendBtn()}catch(_){}}}
+}
+function mcWeatherKind(code,night){code=Number(code);if([95,96,99].includes(code))return 'wx-storm';if([71,73,75,77,85,86].includes(code))return 'wx-snow';if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code))return 'wx-rain';if([45,48].includes(code))return 'wx-fog';if(night)return 'wx-night';if(code===3)return 'wx-clouds';return 'wx-clear'}
+function mcDegree(v){if(v===null||v===undefined||!Number.isFinite(Number(v)))return '—';const n=Math.round(Number(v));return (n>0?'+':'')+n+'°'}
+function mcWeatherWidgetHtml(w){
+  const code=Number(w.code)||0;
+  const night=w.isDay===false;
+  const big=w.temp!==undefined?mcDegree(w.temp):(w.max!==undefined?mcDegree(w.max):'—');
+  const place=[w.city,w.country].filter(Boolean).join(', ')||'Погода';
+  const stats=[];
+  if(w.rain!==undefined)stats.push(['Осадки',Math.round(Number(w.rain))+'%']);
+  if(w.humidity!==undefined)stats.push(['Влажность',Math.round(Number(w.humidity))+'%']);
+  if(w.wind!==undefined)stats.push(['Ветер',Math.round(Number(w.wind))+' км/ч']);
+  if(w.feels!==undefined&&stats.length<3)stats.push(['Ощущается',mcDegree(w.feels)]);
+  const range=(w.min!==undefined||w.max!==undefined)?`Мин. ${mcDegree(w.min)} · Макс. ${mcDegree(w.max)}`:'';
+  return `<div class="wx-widget ${mcWeatherKind(code,night)}" role="group" aria-label="Погода: ${esc(place)}"><div class="wx-head"><span class="wx-place">📍 ${esc(place)}</span><span class="wx-day">${esc(w.dayLabel||'Сегодня')}</span></div><div class="wx-main"><span class="wx-temp">${esc(big)}</span><span class="wx-icon" aria-hidden="true">${mcWeatherIcon(code)}</span></div><div class="wx-desc">${esc(mcWeatherDesc(code))}</div>${range?`<div class="wx-range">${esc(range)}</div>`:''}${stats.length?`<div class="wx-stats">${stats.map(([k,v])=>`<div class="wx-stat">${esc(k)}<b>${esc(v)}</b></div>`).join('')}</div>`:''}<div class="wx-foot"><span>Open-Meteo</span><span>${w.temp!==undefined?'сейчас':'прогноз'}</span></div></div>`;
+}
+// Старые погодные сообщения (отправленные текстом) тоже показываются виджетом.
+function mcParseLegacyWeather(text){
+  if(typeof text!=='string'||text.indexOf('Погода — ')<0||text.indexOf('Температура:')<0)return null;
+  const lines=text.split('\n').map(s=>s.trim());
+  const head=lines[0].split('Погода — ')[1];if(!head)return null;
+  const parts=head.split(',').map(s=>s.trim());
+  const w={city:parts[0]||'',country:parts.slice(1).join(', ')};
+  const dayLine=lines.find(l=>/^(Сегодня|Завтра):/.test(l));
+  if(dayLine){w.dayLabel=dayLine.split(':')[0];const desc=dayLine.split(':').slice(1).join(':').trim();const map={'Ясно':0,'Переменная облачность':2,'Облачно':3,'Туман':45,'Морось':53,'Дождь':63,'Снег':73,'Гроза':95};w.code=map[desc]??3;}
+  const t=text.match(/Температура:\s*(-?\d+)\s*…\s*(-?\d+)/);if(t){w.min=Number(t[1]);w.max=Number(t[2]);}
+  const r=text.match(/осадков:\s*(\d+)%/);if(r)w.rain=Number(r[1]);
+  return w;
+}
+async function openWeatherShare(prefill=''){if(!state.chat||!state.user)return toast('Сначала откройте чат','⚠');document.getElementById('mcWeatherShareModal')?.remove();const modal=document.createElement('div');modal.id='mcWeatherShareModal';modal.style.cssText='position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px';modal.innerHTML=`<div role="dialog" aria-modal="true" aria-labelledby="mcWeatherShareTitle" style="width:min(440px,100%);background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:22px;padding:20px;box-shadow:0 20px 70px #0005"><h3 id="mcWeatherShareTitle" style="margin:0 0 14px">🌤️ Отправить погоду</h3><label class="set-label" for="mcWeatherShareCity">Город</label><input id="mcWeatherShareCity" class="onb-input" style="width:100%;margin:7px 0 14px" value="${esc(prefill||'Москва')}" placeholder="Введите город"><label class="set-label" for="mcWeatherShareDay">Прогноз</label><select id="mcWeatherShareDay" class="onb-input" style="width:100%;margin:7px 0 16px"><option value="0">Сегодня</option><option value="1">Завтра</option></select><div style="display:flex;gap:8px"><button class="btn btn-ghost" style="flex:1" id="mcWeatherShareCancel">Отмена</button><button class="btn btn-primary" style="flex:1" id="mcWeatherShareSend">Отправить в чат</button></div></div>`;document.body.appendChild(modal);modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});modal.querySelector('#mcWeatherShareCancel').onclick=()=>modal.remove();modal.querySelector('#mcWeatherShareSend').onclick=async()=>{const city=modal.querySelector('#mcWeatherShareCity').value.trim(),i=Number(modal.querySelector('#mcWeatherShareDay').value);if(!city)return toast('Введите город','⚠');const btn=modal.querySelector('#mcWeatherShareSend');btn.disabled=true;btn.textContent='Загружаем…';try{const list=await mcGeoCity(city);if(!list.length)throw new Error('Город не найден');const p=list[0],d=await mcWeatherData(p.latitude,p.longitude,p.timezone),day=i?'завтра':'сегодня';const weather=mcBuildWeatherPayload(p,d,i);modal.remove();await mcSendWeatherWidget(weather)}catch(e){btn.disabled=false;btn.textContent='Отправить в чат';toast(e.message||'Не удалось получить погоду','⚠')}};}
 function renderMetroNotes(){let notes='';try{notes=localStorage.getItem('metrochat_private_notes')||''}catch(_){}renderWeatherShell('Заметки',`<p class="set-sub">Заметки сохраняются только в памяти браузера на этом устройстве и не синхронизируются.</p><textarea id="mcNotesText" rows="12" class="onb-input" style="width:100%;margin-top:12px;resize:vertical" placeholder="Запишите важную мысль…">${esc(notes)}</textarea><button class="btn btn-primary" style="margin-top:10px" onclick="saveMetroNotes()">Сохранить заметки</button>`)}
 function saveMetroNotes(){try{localStorage.setItem('metrochat_private_notes',$('mcNotesText')?.value||'');toast('Заметки сохранены на устройстве','✓')}catch(_){toast('Не удалось сохранить заметки','⚠')}}
 function renderMetroCalculator(){renderWeatherShell('Калькулятор',`<input id="mcCalcExpr" class="onb-input" style="width:100%;font-size:22px" placeholder="Например: (12 + 8) * 3"><button class="btn btn-primary" style="margin-top:10px" onclick="calculateMetroExpression()">Вычислить</button><div id="mcCalcResult" class="mc-weather-card" aria-live="polite">Результат появится здесь</div><p class="set-sub">Поддерживаются числа, скобки, +, −, ×, ÷ и десятичные дроби.</p>`)}
@@ -3674,7 +4175,31 @@ async function renderGiftShop(){
  const wrap=$('settingsPanel');if(!wrap)return;wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите короткие тесты и отправляйте подарки.</p></div><div class="gift-wallet-coin">УМ</div></div><button class="btn btn-primary gift-earn-wide" onclick="startGiftEarning()">✦ Заработать подарки</button><button class="btn btn-secondary gift-send-wide" onclick="openGiftSendPicker()">↗ Подарить подарок</button><button class="btn btn-secondary gift-send-wide" onclick="renderGiftCraft()">🛠️ Крафт подарков</button><div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>Выберите подарок для себя или друга</p></div></div><div class="gift-shop-grid">${METRO_GIFTS.map(g=>`<button class="gift-shop-item" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><span class="gift-price">${g.cost} УМ</span></button>`).join('')}</div><div id="giftOwnedSection"></div></div>`;
  const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;await renderOwnedGifts();
 }
-async function renderOwnedGifts(){const el=$('giftOwnedSection');if(!el||!state.user?.uid)return;try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>!g.hidden);el.innerHTML=`<div class="discovery-section-head"><div><h3>Мои подарки</h3><p>Подарки, отображаемые в вашем профиле</p></div></div>${items.length?`<div class="gift-owned-list">${items.map(g=>`<div class="gift-owned-item"><span>${esc(g.emoji||'🎁')}</span><div><b>${esc(g.name||'Подарок')}</b><small>${g.fromName?'От '+esc(g.fromName):'Ваш подарок'}</small></div><button class="mini-btn" title="Скрыть в профиле" onclick="hideOwnedGift('${g.id}')">◉</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`).join('')}</div>`:'<p class="gift-empty-note">Пока нет подарков. Выберите подарок в витрине или заработайте умы.</p>'}`;}catch(e){el.innerHTML='<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>';}}
+async function renderOwnedGifts(){const el=$('giftOwnedSection');if(!el||!state.user?.uid)return;try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>!g.hidden&&!g.purchasePending);el.innerHTML=`<div class="discovery-section-head"><div><h3>Мои подарки</h3><p>Подарки, отображаемые в вашем профиле</p></div></div>${items.length?`<div class="gift-owned-list">${items.map(g=>`<div class="gift-owned-item"><span>${esc(g.emoji||'🎁')}</span><div><b>${esc(g.name||'Подарок')}</b><small>${g.fromName?'От '+esc(g.fromName):'Ваш подарок'}</small></div><button class="mini-btn" title="Скрыть в профиле" onclick="hideOwnedGift('${g.id}')">◉</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`).join('')}</div>`:'<p class="gift-empty-note">Пока нет подарков. Выберите подарок в витрине или заработайте умы.</p>'}`;}catch(e){el.innerHTML='<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>';}}
+function mcSetBalanceUI(v){if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${esc(String(v))} <span>умов</span>`;}
+// Безопасное списание умов. Firebase сначала вызывает функцию транзакции с локальным кэшем (часто null),
+// поэтому null нельзя считать «нет баланса» и прерывать транзакцию — нужно вернуть значение как есть,
+// и SDK повторит вызов с настоящим значением с сервера.
+async function mcSpendUms(uid,cost){
+  const wallet=ref(db,`gift_wallet/${uid}/balance`);
+  let applied=false, seen=null;
+  const tx=await runTransaction(wallet,current=>{
+    applied=false; seen=current;
+    if(current===null||current===undefined)return current;
+    const n=Number(current);
+    if(!Number.isFinite(n))return current;
+    if(n<cost)return n;
+    applied=true;
+    return n-cost;
+  });
+  const after=Number(tx.snapshot?.val()||0);
+  return {ok:!!(tx.committed&&applied),balance:Number.isFinite(after)?after:0,seen};
+}
+async function mcAddUms(uid,amount){
+  const wallet=ref(db,`gift_wallet/${uid}/balance`);
+  const tx=await runTransaction(wallet,current=>{const n=Number(current||0);return (Number.isFinite(n)?n:0)+amount;});
+  return Number(tx.snapshot?.val()||0);
+}
 async function selectGiftToBuy(id){
   const g=METRO_GIFTS.find(x=>x.id===id);
   if(!g)return;
@@ -3682,53 +4207,31 @@ async function selectGiftToBuy(id){
   if(!uid)return toast('Войдите в аккаунт, чтобы покупать подарки.','⚠');
   const cost=Number(g.cost);
   if(!Number.isFinite(cost)||cost<0)return toast('Некорректная цена подарка.','⚠');
+  if(selectGiftToBuy._busy)return;
   if(!confirm(`Купить «${g.name}» за ${cost} умов?`))return;
+  selectGiftToBuy._busy=true;
   const wallet=ref(db,`gift_wallet/${uid}/balance`);
-  let itemRef=null, charged=false;
+  let charged=false;
   try{
-    const beforeSnap=await get(wallet);
-    if(!beforeSnap.exists()||!Number.isFinite(Number(beforeSnap.val())))return toast('Не удалось прочитать баланс из Firebase. Обновите страницу.','⚠');
-    const before=Number(beforeSnap.val());
-    if(before<cost){if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${before} <span>умов</span>`;return toast(`Нужно ${cost} умов. Сейчас у вас ${before}.`,'🎁');}
-
-    // Сначала создаём запись подарка. Если запись запрещена правилами, баланс не трогаем.
-    itemRef=push(ref(db,`gift_inventory/${uid}`));
-    await set(itemRef,{giftId:g.id,name:g.name,emoji:g.emoji,cost,fromName:'MetroChat',createdAt:Date.now(),hidden:false,purchasePending:true});
-
-    // Списание транзакцией: никогда не превращаем отсутствующее значение в 0.
-    const tx=await runTransaction(wallet,current=>{
-      if(current===null||current===undefined)return;
-      const n=Number(current);
-      if(!Number.isFinite(n)||n<cost)return;
-      return n-cost;
-    });
-    if(!tx.committed){
-      try{await remove(itemRef);}catch(cleanupError){console.error('Gift cleanup failed:',cleanupError);}
-      itemRef=null;
-      const latest=await get(wallet);
-      const actual=latest.exists()&&Number.isFinite(Number(latest.val()))?Number(latest.val()):before;
-      if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${actual} <span>умов</span>`;
-      return toast(`Списание не выполнено. Баланс: ${actual} умов. Подарок не куплен.`,'⚠');
-    }
+    let before=0;
+    try{const s=await get(wallet);before=Number(s.val()||0);if(!Number.isFinite(before))before=0;}catch(readErr){console.warn('Gift balance read:',readErr);}
+    if(before<cost){mcSetBalanceUI(before);return toast(`Нужно ${cost} умов. Сейчас у вас ${before}.`,'🎁');}
+    const res=await mcSpendUms(uid,cost);
+    mcSetBalanceUI(res.balance);
+    if(!res.ok)return toast(`Недостаточно умов: нужно ${cost}, на балансе ${res.balance}.`,'🎁');
     charged=true;
-    const actual=Number(tx.snapshot.val());
-    if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${actual} <span>умов</span>`;
-    await update(itemRef,{purchasePending:null});
+    const itemRef=push(ref(db,`gift_inventory/${uid}`));
+    await set(itemRef,{giftId:g.id,name:g.name,emoji:g.emoji,cost,fromName:'MetroChat',createdAt:Date.now(),hidden:false});
     charged=false;
-    toast('Подарок куплен и добавлен в профиль!','🎁');
+    toast('Подарок куплен и добавлен в профиль','🎁');
     await renderGiftShop();
   }catch(e){
     console.error('Gift purchase failed:',e);
-    if(charged){
-      try{await runTransaction(wallet,current=>{if(current===null||current===undefined)return;const n=Number(current);if(!Number.isFinite(n))return;return n+cost;});}
-      catch(refundError){console.error('Gift purchase refund failed:',refundError);}
-    }
-    if(itemRef){try{await remove(itemRef);}catch(cleanupError){console.error('Gift inventory cleanup failed:',cleanupError);}}
-    let actual='—';
-    try{const latest=await get(wallet);if(latest.exists()&&Number.isFinite(Number(latest.val())))actual=Number(latest.val());}catch(readError){console.error('Balance refresh failed:',readError);}
-    if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${actual} <span>умов</span>`;
-    toast(`Покупка не завершена. Баланс: ${actual} умов. Проверьте права gift_wallet и gift_inventory.`,'⚠');
-  }
+    let refunded=false;
+    if(charged){try{const b=await mcAddUms(uid,cost);mcSetBalanceUI(b);refunded=true;}catch(refundError){console.error('Gift purchase refund failed:',refundError);}}
+    const denied=/permission|denied/i.test(String(e?.code||e?.message||''));
+    toast(denied?'Покупка не выполнена: Firebase Rules запрещают запись в gift_wallet или gift_inventory.':(refunded?'Подарок не сохранился, умы возвращены. Попробуйте ещё раз.':'Покупка не завершена. Проверьте интернет и попробуйте ещё раз.'),'⚠');
+  }finally{selectGiftToBuy._busy=false;}
 }
 async function renderGiftCraft(){
  const wrap=$('settingsPanel'); if(!wrap)return;
@@ -3736,17 +4239,19 @@ async function renderGiftCraft(){
  wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderGiftShop()">← Подарки</button><div class="settings-title">Крафт подарков</div></div><div class="settings-wrap"><p class="set-sub">Обменяйте один подарок на часть его цены или объедините два одинаковых/разных подарка, доплатив умы, чтобы получить новый.</p><div class="settings-group"><h3>Обменять на умы</h3><div class="gift-shop-grid">${items.map(g=>`<button class="gift-shop-item" onclick="craftSellGift('${g.id}')"><span class="gift-emoji">${esc(g.emoji||'🎁')}</span><b>${esc(g.name||'Подарок')}</b><small>Вернуть ${Math.floor(Math.max(0,Number(g.cost)||0)*0.5)} умов</small></button>`).join('')||'<p>У вас пока нет купленных подарков.</p>'}</div></div><div class="settings-group"><h3>Объединить подарки</h3><label>Первый подарок</label><select id="craftGiftA">${items.map(g=>`<option value="${g.id}">${esc(g.emoji||'🎁')} ${esc(g.name||'Подарок')}</option>`).join('')}</select><label>Второй подарок</label><select id="craftGiftB">${items.map(g=>`<option value="${g.id}">${esc(g.emoji||'🎁')} ${esc(g.name||'Подарок')}</option>`).join('')}</select><label>Новый подарок</label><select id="craftGiftOut">${METRO_GIFTS.map(g=>`<option value="${g.id}">${g.emoji} ${esc(g.name)} — ${g.cost} умов</option>`).join('')}</select><p class="set-sub">Стоимость доплаты рассчитывается как цена нового подарка минус половина стоимости каждого используемого подарка.</p><button class="btn btn-primary" style="width:100%" onclick="craftCombineGifts()" ${items.length<2?'disabled':''}>Создать новый подарок</button></div></div>`;
 }
 async function craftSellGift(id){
- const uid=state.user?.uid;if(!uid)return;const item=ref(db,`gift_inventory/${uid}/${id}`);const snap=await get(item);if(!snap.exists())return toast('Подарок уже недоступен','⚠');const g=snap.val();const reward=Math.floor(Math.max(0,Number(g.cost)||0)*.5);if(!confirm(`Обменять ${g.name||'подарок'} на ${reward} умов? Подарок будет удалён.`))return;
- const wallet=ref(db,`gift_wallet/${uid}/balance`);try{const tx=await runTransaction(wallet,n=>{if(n===null||!Number.isFinite(Number(n)))return;return Number(n)+reward});if(!tx.committed)return toast('Не удалось обновить баланс. Проверьте Firebase Rules.','⚠');await remove(item);toast(`Получено ${reward} умов`,'✓');await renderGiftCraft();}catch(e){console.error(e);toast('Обмен не выполнен. Проверьте права gift_wallet и gift_inventory.','⚠')}
+ const uid=state.user?.uid;if(!uid)return;const item=ref(db,`gift_inventory/${uid}/${id}`);let snap;try{snap=await get(item);}catch(e){return toast('Не удалось загрузить подарок','⚠')}if(!snap.exists())return toast('Подарок уже недоступен','⚠');const g=snap.val();const reward=Math.floor(Math.max(0,Number(g.cost)||0)*.5);if(!confirm(`Обменять ${g.name||'подарок'} на ${reward} умов? Подарок будет удалён.`))return;
+ let removed=false;
+ try{await remove(item);removed=true;await mcAddUms(uid,reward);toast(`Получено ${reward} умов`,'✓');await renderGiftCraft();}
+ catch(e){console.error(e);if(removed){try{await set(item,g);}catch(_){}}toast('Обмен не выполнен. Проверьте права gift_wallet и gift_inventory.','⚠')}
 }
 async function craftCombineGifts(){
- const uid=state.user?.uid,a=$('craftGiftA')?.value,b=$('craftGiftB')?.value,out=METRO_GIFTS.find(g=>g.id===$('craftGiftOut')?.value);if(!uid||!a||!b||a===b||!out)return toast('Выберите два разных подарка','⚠');const base=`gift_inventory/${uid}`;try{const [sa,sb]=await Promise.all([get(ref(db,`${base}/${a}`)),get(ref(db,`${base}/${b}`))]);if(!sa.exists()||!sb.exists())return toast('Один из подарков уже недоступен','⚠');const ga=sa.val(),gb=sb.val();const cost=Math.max(0,out.cost-Math.floor((Number(ga.cost)||0)*.5)-Math.floor((Number(gb.cost)||0)*.5));const wallet=ref(db,`gift_wallet/${uid}/balance`);const ws=await get(wallet);if(!ws.exists()||Number(ws.val())<cost)return toast(`Для крафта нужно доплатить ${cost} умов. Баланс: ${ws.val()??'неизвестен'}`,'🎁');if(!confirm(`Создать ${out.emoji} ${out.name}? Доплата: ${cost} умов. Два выбранных подарка будут использованы.`))return;
- const tx=await runTransaction(wallet,n=>{if(n===null||!Number.isFinite(Number(n))||Number(n)<cost)return;return Number(n)-cost});if(!tx.committed)return toast('Баланс изменился. Повторите попытку.','⚠');try{await Promise.all([remove(ref(db,`${base}/${a}`)),remove(ref(db,`${base}/${b}`))]);await set(push(ref(db,base)),{giftId:out.id,name:out.name,emoji:out.emoji,cost:out.cost,fromName:'Крафт MetroChat',createdAt:Date.now(),hidden:false});toast('Новый подарок создан!','🎁');await renderGiftCraft();}catch(err){console.error('Craft inventory update failed',err);toast('Умы списаны, но подарок не удалось сохранить. Проверьте Rules и восстановите баланс вручную.','⚠')}
+ const uid=state.user?.uid,a=$('craftGiftA')?.value,b=$('craftGiftB')?.value,out=METRO_GIFTS.find(g=>g.id===$('craftGiftOut')?.value);if(!uid||!a||!b||a===b||!out)return toast('Выберите два разных подарка','⚠');const base=`gift_inventory/${uid}`;try{const [sa,sb]=await Promise.all([get(ref(db,`${base}/${a}`)),get(ref(db,`${base}/${b}`))]);if(!sa.exists()||!sb.exists())return toast('Один из подарков уже недоступен','⚠');const ga=sa.val(),gb=sb.val();const cost=Math.max(0,out.cost-Math.floor((Number(ga.cost)||0)*.5)-Math.floor((Number(gb.cost)||0)*.5));const wallet=ref(db,`gift_wallet/${uid}/balance`);const ws=await get(wallet);const wb=Number(ws.val()||0);if(wb<cost)return toast(`Для крафта нужно доплатить ${cost} умов. Баланс: ${wb}`,'🎁');if(!confirm(`Создать ${out.emoji} ${out.name}? Доплата: ${cost} умов. Два выбранных подарка будут использованы.`))return;
+ if(cost>0){const res=await mcSpendUms(uid,cost);if(!res.ok)return toast(`Недостаточно умов для крафта. Баланс: ${res.balance}`,'⚠');}try{await Promise.all([remove(ref(db,`${base}/${a}`)),remove(ref(db,`${base}/${b}`))]);await set(push(ref(db,base)),{giftId:out.id,name:out.name,emoji:out.emoji,cost:out.cost,fromName:'Крафт MetroChat',createdAt:Date.now(),hidden:false});toast('Новый подарок создан!','🎁');await renderGiftCraft();}catch(err){console.error('Craft inventory update failed',err);if(cost>0){try{await mcAddUms(uid,cost);}catch(_){}}toast('Подарок не удалось сохранить, умы возвращены.','⚠')}
  }catch(e){console.error(e);toast('Крафт не выполнен. Проверьте правила Firebase.','⚠')}
 }
 async function hideOwnedGift(id){if(!confirm('Скрыть этот подарок в вашем профиле?'))return;try{await update(ref(db,`gift_inventory/${state.user.uid}/${id}`),{hidden:true});await renderOwnedGifts();toast('Подарок скрыт из профиля','✓')}catch(e){toast('Не удалось скрыть подарок. Проверьте Firebase Rules.','⚠')}}
-async function openGiftSendPicker(){try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));if(!items.length)return toast('Сначала купите подарок в витрине.','🎁');const choices=items.map((g,i)=>`${i+1}. ${g.emoji||'🎁'} ${g.name||'Подарок'}`).join('\n');const choice=Number(prompt('Какой подарок отправить? Введите номер:\n'+choices));if(!Number.isInteger(choice)||choice<1||choice>items.length)return;await giftOwnedItem(items[choice-1].id)}catch(e){toast('Не удалось открыть ваши подарки','⚠')}}
-async function giftOwnedItem(id){try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}/${id}`));if(!snap.exists())return toast('Подарок не найден','⚠');const gift=snap.val();const username=(prompt('Введите @юзернейм получателя:')||'').trim().replace(/^@/,'').toLowerCase();if(!username)return;const usersSnap=await get(ref(db,'users'));const all=usersSnap.val()||{};const entry=Object.entries(all).find(([uid,u])=>uid!==state.user.uid&&String(u.username||'').toLowerCase()===username);if(!entry)return toast('Пользователь с таким юзернеймом не найден','⚠');const [toUid,toUser]=entry;const transferId=push(ref(db,'gift_transfers')).key;await update(ref(db),{[`gift_inventory/${toUid}/${transferId}`]:{...gift,fromName:state.profile?.displayName||state.profile?.username||'Пользователь',createdAt:Date.now(),hidden:false},[`gift_inventory/${state.user.uid}/${id}`]:null,[`gift_transfers/${transferId}`]:{from:state.user.uid,to:toUid,giftId:gift.giftId||id,createdAt:Date.now()}});toast('Подарок отправлен!','🎁');renderGiftShop();}catch(e){console.error(e);toast('Не удалось отправить подарок. Проверьте Firebase Rules.','⚠')}}
+async function openGiftSendPicker(){try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>g&&!g.purchasePending);if(!items.length)return toast('Сначала купите подарок в витрине.','🎁');const choices=items.map((g,i)=>`${i+1}. ${g.emoji||'🎁'} ${g.name||'Подарок'}`).join('\n');const choice=Number(prompt('Какой подарок отправить? Введите номер:\n'+choices));if(!Number.isInteger(choice)||choice<1||choice>items.length)return;await giftOwnedItem(items[choice-1].id)}catch(e){toast('Не удалось открыть ваши подарки','⚠')}}
+async function giftOwnedItem(id){try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}/${id}`));if(!snap.exists())return toast('Подарок не найден','⚠');const gift=snap.val();const username=(prompt('Введите @юзернейм получателя:')||'').trim().replace(/^@/,'').toLowerCase();if(!username)return;let entry=null;try{const us=await get(ref(db,`usernames/${username}`));const v=us.val();const tu=typeof v==='string'?v:(v&&v.uid);if(tu&&tu!==state.user.uid)entry=[tu,{}];}catch(_){}if(!entry){const usersSnap=await get(ref(db,'users'));const all=usersSnap.val()||{};entry=Object.entries(all).find(([uid,u])=>uid!==state.user.uid&&String(u.username||'').toLowerCase()===username)||null;}if(!entry)return toast('Пользователь с таким юзернеймом не найден','⚠');const [toUid,toUser]=entry;const transferId=push(ref(db,'gift_transfers')).key;await update(ref(db),{[`gift_inventory/${toUid}/${transferId}`]:{...gift,fromName:state.profile?.displayName||state.profile?.username||'Пользователь',createdAt:Date.now(),hidden:false},[`gift_inventory/${state.user.uid}/${id}`]:null,[`gift_transfers/${transferId}`]:{from:state.user.uid,to:toUid,giftId:gift.giftId||id,createdAt:Date.now()}});toast('Подарок отправлен!','🎁');renderGiftShop();}catch(e){console.error(e);toast('Не удалось отправить подарок. Проверьте Firebase Rules.','⚠')}}
 function startGiftEarning(){giftFlow={stage:'age',age:null,subject:null,questions:[],answers:[],index:0,claimed:false};renderGiftQuizStage();}
 function renderGiftQuizStage(){const wrap=$('settingsPanel');if(!wrap)return;const head=`<div class="settings-header"><button class="settings-back-btn" onclick="renderGiftShop()">← Подарки</button><div class="settings-title">Заработать умы</div></div>`;let body='';if(giftFlow.stage==='age'){body=`<div class="quiz-intro"><div class="quiz-big-icon">🎓</div><h2>Начнём с возраста</h2><p>Подберём задания подходящего уровня. Возраст используется только для выбора теста.</p><label class="quiz-label" for="giftQuizAge">Сколько вам лет?</label><select id="giftQuizAge" class="onb-input"><option value="">Выберите возраст</option><option value="6-9">6–9 лет</option><option value="10-12">10–12 лет</option><option value="13-15">13–15 лет</option><option value="16-18">16–18 лет</option><option value="19+">19 лет и старше</option></select><button class="btn btn-primary" onclick="continueGiftAge()">Продолжить →</button></div>`;}else if(giftFlow.stage==='subject'){body=`<div class="quiz-intro"><div class="quiz-big-icon">📚</div><h2>Какой предмет выберем?</h2><p>Будет ровно три задания по выбранному предмету и возрастной группе.</p><div class="quiz-subject-grid">${[['math','➗','Математика'],['science','🔬','Естествознание'],['history','🏛️','История'],['english','🔤','Английский'],['literature','📖','Литература']].map(([id,em,n])=>`<button class="quiz-subject ${giftFlow.subject===id?'selected':''}" onclick="chooseGiftSubject('${id}')"><span>${em}</span><b>${n}</b></button>`).join('')}</div><button class="btn btn-primary" onclick="beginGiftQuiz()" ${giftFlow.subject?'':'disabled'}>Начать тест →</button></div>`;}else if(giftFlow.stage==='question'){const q=giftFlow.questions[giftFlow.index];body=`<div class="quiz-progress"><span>Задание ${giftFlow.index+1} из 3</span><div><i style="width:${(giftFlow.index+1)/3*100}%"></i></div></div><div class="quiz-question-card"><div class="quiz-age-pill">Возраст: ${esc(giftFlow.age)} · ${esc(subjectLabel(giftFlow.subject))}</div><h2>${esc(q.q)}</h2><div class="quiz-options">${q.a.map((a,i)=>`<button class="quiz-option ${giftFlow.answers[giftFlow.index]===i?'selected':''}" onclick="answerGiftQuestion(${i})">${String.fromCharCode(65+i)}. ${esc(a)}</button>`).join('')}</div><button class="btn btn-primary" onclick="nextGiftQuestion()" ${giftFlow.answers[giftFlow.index]===undefined?'disabled':''}>${giftFlow.index===2?'Завершить тест':'Следующее задание →'}</button></div>`;}else if(giftFlow.stage==='result'){const correct=giftFlow.questions.reduce((n,q,i)=>n+(giftFlow.answers[i]===q.correct?1:0),0);body=`<div class="quiz-intro"><div class="quiz-big-icon">${correct===3?'🏆':correct?'✨':'💪'}</div><h2>${correct} из 3 правильных ответов</h2><p>${correct===3?'Отличный результат!':correct?'Хорошая работа — продолжайте тренироваться!':'Спасибо за участие! Попробуйте ещё раз в другой день.'}</p><div class="quiz-reward">+${giftFlow.reward||0} <b>УМ</b></div><button class="btn btn-primary" onclick="renderGiftShop()">К подаркам →</button></div>`;}wrap.innerHTML=head+`<div class="settings-wrap gift-quiz-wrap">${body}</div>`;}
 function continueGiftAge(){const age=$('giftQuizAge')?.value;if(!age)return toast('Выберите возраст, чтобы продолжить','⚠');giftFlow.age=age;giftFlow.stage='subject';renderGiftQuizStage();}
@@ -3837,20 +4342,39 @@ function toggleAppSetting(key) {
 }
 async function saveSettings() {
   if (!state.user) return;
+  writeBootCache();
   try { await set(ref(db, 'user_settings/' + state.user.uid), state.settings); }
   catch(e) { console.warn('Не удалось сохранить настройки:', e); toast('Настройки сохранены только на этом экране', '⚠'); }
 }
+function mcHexRgb(hex) { let h = String(hex || '#4f8cff').replace('#',''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16) || 0; return [n >> 16, (n >> 8) & 255, n & 255]; }
+function mcRgbHex(r) { return '#' + r.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join(''); }
+function mcLum(hex) { const c = mcHexRgb(hex).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+function mcContrast(a, b) { const x = mcLum(a), y = mcLum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+function mcMix(hex, target, k) { const a = mcHexRgb(hex), b = mcHexRgb(target); return mcRgbHex(a.map((v, i) => v + (b[i] - v) * k)); }
+// Подбирает оттенок цвета, который даёт нужную контрастность с фоном (тянет к чёрному или белому).
+function mcEnsure(hex, bg, ratio, toward) { let c = hex; for (let i = 0; i < 20 && mcContrast(c, bg) < ratio; i++) c = mcMix(hex, toward, (i + 1) * 0.05); return c; }
 function applySettings() {
   const t = getTheme(state.settings.themeId);
   const isDark = !!state.settings.darkMode;
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   const root = document.documentElement;
+  root.style.colorScheme = isDark ? 'dark' : 'light';
   root.style.setProperty('--accent', t.accent);
-  root.style.setProperty('--accent-light', hex2rgba(t.accent, 0.14));
+  root.style.setProperty('--accent-light', hex2rgba(t.accent, isDark ? 0.2 : 0.13));
   root.style.setProperty('--header-grad', `linear-gradient(135deg, ${t.grad[0]} 0%, ${t.grad[1]} 100%)`);
+  const ink = isDark ? mcEnsure(t.accent, '#121927', 4.5, '#ffffff') : mcEnsure(t.accent, '#ffffff', 4.5, '#000000');
+  const solid = mcEnsure(t.accent, '#ffffff', 3.2, '#000000');
+  const g0 = mcEnsure(t.grad[0], '#ffffff', 4.5, '#000000'), g1 = mcEnsure(t.grad[1], '#ffffff', 4.5, '#000000');
+  root.style.setProperty('--accent-ink', ink);
+  root.style.setProperty('--accent-solid', solid);
+  root.style.setProperty('--btn-grad', `linear-gradient(135deg, ${g0} 0%, ${g1} 100%)`);
+  root.style.setProperty('--bubble-out', `linear-gradient(135deg, ${g0} 0%, ${g1} 100%)`);
+  root.style.setProperty('--wall-a', t.grad[0]);
+  root.style.setProperty('--wall-b', t.grad[1]);
   root.style.setProperty('--font-size', state.settings.fontSize);
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = isDark ? '#131826' : t.accent;
+  if (meta) meta.content = isDark ? '#121927' : '#ffffff';
+  try { applyGroupChatTheme(); } catch (_) {}
 }
 function openChangePassword() { $('oldPassword').value = ''; $('newPassword').value = ''; $('newPassword2').value = ''; $('changePasswordModal').classList.remove('hidden'); }
 async function changePassword() {
@@ -3864,6 +4388,7 @@ function confirmLogout() { showConfirm('Выйти из аккаунта?', 'В�
 function confirmDeleteAccount() {
   showConfirm('Удалить аккаунт?', 'Все данные будут удалены безвозвратно.', async () => {
     const uid = state.user.uid;
+    clearBootCache(uid);
     const uname = state.profile?.username;
     const chats = state.chats || {};
     for (const [chatId, info] of Object.entries(chats)) {
@@ -3978,7 +4503,7 @@ window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferr
 window.addEventListener('appinstalled', () => { deferredInstallPrompt = null; closeModal('installPromptModal'); toast('MetroChat установлен','✓'); });
 function maybeShowInstallPrompt() {
   if (!state.user || isStandaloneApp()) return;
-  let seen = false; try { seen = sessionStorage.getItem('metro_install_prompt_seen') === '1'; } catch(_) {}
+  let seen = false; try { seen = Date.now() - Number(localStorage.getItem('metro_install_prompt_seen_at') || 0) < 3 * 864e5; } catch(_) {}
   if (seen) return;
   const ua = navigator.userAgent || '';
   let instructions = '';
@@ -3994,7 +4519,7 @@ function maybeShowInstallPrompt() {
   }
   $('installInstructions').innerHTML = instructions;
   $('installPromptModal').classList.remove('hidden');
-  try { sessionStorage.setItem('metro_install_prompt_seen','1'); } catch(_) {}
+  try { localStorage.setItem('metro_install_prompt_seen_at', String(Date.now())); } catch(_) {}
 }
 async function installMetroChat() {
   if (!deferredInstallPrompt) { toast('Откройте меню браузера и выберите установку MetroChat','ℹ️'); return; }
@@ -4226,7 +4751,7 @@ Object.assign(window, {
   toggleStoriesPanel, loadStories, openCreateStory, publishStory, openStory, toggleStoryLike, openStoryComments, sendStoryComment, deleteStory,
   refreshChatPreview,
   // Other tab and gifts: these functions are called by inline handlers in generated HTML.
-  renderOtherHome, renderOtherChannels, renderGiftShop, renderOwnedGifts, renderWeatherApp, loadMetroWeather, saveMcWeatherFavorite, removeMcWeatherFavorite, openWeatherShare, renderMetroNotes, saveMetroNotes, renderMetroCalculator, calculateMetroExpression,
+  renderOtherHome, renderOtherChannels, renderGiftShop, renderOwnedGifts, renderGiftCraft, craftSellGift, craftCombineGifts, renderWeatherApp, loadMetroWeather, saveMcWeatherFavorite, removeMcWeatherFavorite, openWeatherShare, renderMetroNotes, saveMetroNotes, renderMetroCalculator, calculateMetroExpression,
   startGiftEarning, renderGiftQuizStage, continueGiftAge, chooseGiftSubject,
   beginGiftQuiz, answerGiftQuestion, nextGiftQuestion, selectGiftToBuy,
   hideOwnedGift, openGiftSendPicker, giftOwnedItem
