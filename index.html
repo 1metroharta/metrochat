@@ -1540,6 +1540,39 @@ body.mc-resizing{ user-select:none; cursor:grabbing; }
 .msg.out .mc-btn-s:hover{ background:rgba(255,255,255,.3); }
 .msg.out .mc-btn-s.danger{ background:rgba(255,255,255,.92); color:#d93036; border-color:transparent; }
 
+/* ===== Round 4: 2FA через приложение ===== */
+.mc-2fa-code{ display:block; width:100%; margin:14px 0 0; padding:14px 12px; border-radius:16px; border:1.5px solid rgba(160,180,230,.3); background:rgba(255,255,255,.06); color:#fff; font:700 28px/1.1 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.42em; text-align:center; outline:none; transition:border-color .15s, box-shadow .15s; }
+.mc-2fa-code::placeholder{ color:rgba(255,255,255,.28); letter-spacing:.42em; }
+.mc-2fa-code:focus{ border-color:#27d8f2; box-shadow:0 0 0 4px rgba(39,216,242,.18); }
+.mc-2fa-code.is-backup{ letter-spacing:.18em; font-size:24px; }
+.mc-2fa-code.shake{ animation:mcShake .4s var(--mc-ease); border-color:#e5484d; }
+.mc-2fa-link{ display:block; width:100%; margin:10px 0 2px; padding:8px; border:0; background:transparent; color:#7dd3fc; font-size:13.5px; font-weight:600; cursor:pointer; border-radius:10px; }
+.mc-2fa-link:hover{ background:rgba(255,255,255,.06); text-decoration:underline; }
+.mc-2fa-warn{ padding:11px 13px; border-radius:14px; background:rgba(245,158,11,.13); border:1px solid rgba(245,158,11,.3); color:var(--text); font-size:13px; line-height:1.5; margin:0 0 14px; }
+.mc-sheet .mc-2fa-code{ background:var(--surface-2,var(--surface)); color:var(--text); border-color:var(--border); }
+.mc-sheet .mc-2fa-code::placeholder{ color:var(--text-3,#8a94a7); }
+.mc-sheet .mc-2fa-code:focus{ border-color:var(--accent); box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent); }
+.mc-sheet .mc-2fa-status{ background:var(--surface-2,rgba(127,127,127,.08)); color:var(--text-2); }
+.mc-sheet .mc-2fa-status:empty{ display:none; }
+.mc-sheet .mc-2fa-status.is-error{ background:rgba(229,72,77,.12); color:#d93036; }
+html[data-theme="dark"] .mc-sheet .mc-2fa-status.is-error{ color:#fca5a5; }
+.mc-2fa-setup .btn{ width:100%; }
+.mc-2fa-step{ display:flex; gap:12px; align-items:flex-start; margin:4px 0 12px; }
+.mc-2fa-step>span{ flex:0 0 28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.mc-2fa-step b{ display:block; font-size:15px; color:var(--text); }
+.mc-2fa-step p{ margin:3px 0 0; font-size:13px; color:var(--text-2); line-height:1.45; }
+.mc-2fa-qrbox{ display:flex; justify-content:center; margin:4px 0 12px; }
+.mc-2fa-qr{ border-radius:16px; background:#fff; padding:8px; box-shadow:0 6px 24px rgba(0,0,0,.12); max-width:72vw; height:auto; }
+.mc-2fa-secret{ text-align:center; margin:0 0 18px; }
+.mc-2fa-secret small{ display:block; color:var(--text-2); font-size:12px; margin-bottom:6px; }
+.mc-2fa-secret code{ display:inline-block; padding:8px 12px; border-radius:10px; background:var(--surface-2,rgba(127,127,127,.1)); color:var(--text); font:600 14px/1.4 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.06em; word-break:break-all; user-select:all; }
+.mc-2fa-secret-btns{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+.mc-2fa-secret-btns a{ text-decoration:none; }
+.mc-2fa-codes{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.mc-2fa-codes code{ padding:10px; border-radius:12px; text-align:center; background:var(--surface-2,rgba(127,127,127,.1)); border:1px solid var(--border); color:var(--text); font:700 16px/1.2 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.08em; user-select:all; }
+/* История при закрытии продолжает перехватывать нажатия, пока не исчезнет */
+.mc-sv.closing{ pointer-events:auto!important; }
+
 /* Обои чата для тем (генерируется gen_walls.py) */
 html[data-theme="light"] #chatPanel[data-wall="waves"], html[data-theme="light"] .mc-wall-prev[data-wall="waves"]{ --wall-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%231e2a44' stroke-opacity='.1' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M0 40q30-20 60 0t60 0 60 0 60 0M0 100q30-20 60 0t60 0 60 0 60 0M0 160q30-20 60 0t60 0 60 0 60 0M0 220q30-20 60 0t60 0 60 0 60 0'/%3E%3C/g%3E%3C/svg%3E"); }
 html[data-theme="dark"] #chatPanel[data-wall="waves"], html[data-theme="dark"] .mc-wall-prev[data-wall="waves"]{ --wall-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23c9d6ff' stroke-opacity='.08' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M0 40q30-20 60 0t60 0 60 0 60 0M0 100q30-20 60 0t60 0 60 0 60 0M0 160q30-20 60 0t60 0 60 0 60 0M0 220q30-20 60 0t60 0 60 0 60 0'/%3E%3C/g%3E%3C/svg%3E"); }
@@ -2416,7 +2449,7 @@ async function mcAuthHandler(user) {
   if (window.__mc2faLinkTask) { hideSplash(); return; }
   if (user) {
     if (!user.emailVerified) { hideSplash(); showVerifyEmailScreen(user); return; }
-    if (state.user?.uid === user.uid && state.booted) { hideSplash(); return; }
+    if (state.user?.uid === user.uid && state.booted) { hideSplash(); $('authScreen').classList.add('hidden'); $('app').classList.remove('hidden'); return; }
     // Двухфакторная защита: если включена и это устройство ещё не подтвердило вход — ждём подтверждения по почте.
     if (!(await mc2faGate(user))) return;
     if (auth.currentUser?.uid !== user.uid) return;
@@ -3531,7 +3564,7 @@ async function sendMessage() {
       const peerId = state.chat.peerId;
       const peerRef = ref(db, 'user_chats/' + peerId + '/' + chatId);
       // Atomic increment avoids downloading the recipient's entire chat record on every message.
-      await update(peerRef, { lastTs: msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(async () => {
+      await update(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(async () => {
         await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: msg.createdAt, lastMessage: preview, unread: 1 });
       });
     } else if (state.chat.type === 'group') {
@@ -3958,15 +3991,12 @@ async function copyCode(e) { e.stopPropagation(); try { if (!navigator.clipboard
 async function openOrCreateDM(peerId) {
   if (!peerId || peerId === state.user.uid) return;
   const chatId = dmId(state.user.uid, peerId);
-  const peer = getUser(peerId);
+  const peer = getUser(peerId) || await fetchUserIfMissing(peerId).catch(() => null);
   if (!peer) return toast('Пользователь не найден', '⚠');
   try {
     const myRef = ref(db, 'user_chats/' + state.user.uid + '/' + chatId);
     const mySnap = await get(myRef);
     if (!mySnap.exists()) await set(myRef, { type: 'dm', peerId, lastTs: now(), unread: 0 });
-    const peerRef = ref(db, 'user_chats/' + peerId + '/' + chatId);
-    const peerSnap = await get(peerRef);
-    if (!peerSnap.exists()) await set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: now(), unread: 0 });
   } catch(e) { toast(humanErr(e), '⚠'); return; }
   switchTab('chats'); setTimeout(() => openChat(chatId, 'dm'), 200);
 }
@@ -5472,7 +5502,7 @@ function mcPrompt(title, opts = {}) {
   const tag = opts.multiline ? 'textarea' : 'input';
   const field = opts.multiline
     ? `<textarea class="mc-dlg-input" rows="4" maxlength="${opts.maxLength || 2000}" placeholder="${esc(opts.placeholder || '')}" autofocus>${esc(opts.value || '')}</textarea>`
-    : `<input class="mc-dlg-input" type="${opts.type || 'text'}" maxlength="${opts.maxLength || 300}" placeholder="${esc(opts.placeholder || '')}" value="${esc(opts.value || '')}" autocomplete="${opts.autocomplete || 'off'}" autofocus>`;
+    : `<input class="mc-dlg-input" type="${opts.type || 'text'}" maxlength="${opts.maxLength || 300}" placeholder="${esc(opts.placeholder || '')}" value="${esc(opts.value || '')}" autocomplete="${opts.autocomplete || 'off'}"${opts.inputmode ? ` inputmode="${esc(opts.inputmode)}"` : ''} autofocus>`;
   return mcDialog({
     title, text: opts.text || '', icon: opts.icon || '✏️', dismissValue: null,
     body: `${opts.label ? `<label class="mc-dlg-label">${esc(opts.label)}</label>` : ''}${field}<div class="mc-dlg-err" hidden></div>${opts.hint ? `<div class="mc-dlg-hint">${opts.hint}</div>` : ''}`,
@@ -5853,7 +5883,7 @@ async function mcSendDirectText(peerId, text, extra = {}) {
   await push(ref(db, 'messages/' + chatId), msg);
   const preview = { text: msg.text, senderId: me, type: msg.type || 'text' };
   await update(myRef, { lastTs: msg.createdAt, lastMessage: preview, unread: 0 }).catch(() => {});
-  await update(peerRef, { lastTs: msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(async () => {
+  await update(peerRef, { type: 'dm', peerId: me, lastTs: msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(async () => {
     await set(peerRef, { type: 'dm', peerId: me, lastTs: msg.createdAt, lastMessage: preview, unread: 1 }).catch(() => {});
   });
   return chatId;
@@ -6376,10 +6406,19 @@ function mcStoryViewerOpen(gi, si) {
   }
   mcSV.gi = gi; mcSV.si = Math.max(0, si); mcSvShow();
 }
+function mcSwallowClicks(ms) {
+  const until = Date.now() + ms;
+  const stop = e => { if (Date.now() > until) return off(); e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation?.(); };
+  const off = () => { ['click', 'mouseup', 'touchend', 'pointerup', 'contextmenu'].forEach(t => document.removeEventListener(t, stop, true)); };
+  ['click', 'mouseup', 'touchend', 'pointerup', 'contextmenu'].forEach(t => document.addEventListener(t, stop, true));
+  setTimeout(off, ms + 30);
+}
 function mcStoryViewerClose() {
   const v = $('mcStoryViewer'); if (!v) return;
   cancelAnimationFrame(mcSV.raf); document.removeEventListener('keydown', v.__key); mcMusicStop();
   v.classList.remove('open'); v.classList.add('closing'); setTimeout(() => v.remove(), 260);
+  // Тап, закрывший историю, не должен «проваливаться» в чат под ней (pointerup → click / ghost-click на телефоне).
+  mcSwallowClicks(450);
   mcBuildStoryGroups(); mcRenderStoryBar();
 }
 function mcSvCur() { const g = mcStoryGroups[mcSV.gi]; return g ? { g, st: g.items[mcSV.si] } : null; }
@@ -7307,7 +7346,7 @@ doForward = async function (targetId, msgId) {
     await update(ref(db, 'user_chats/' + state.user.uid + '/' + targetId), { lastTs: newMsg.createdAt, lastMessage: preview }).catch(() => {});
     if (target.type === 'dm' && target.peerId) {
       const peerRef = ref(db, 'user_chats/' + target.peerId + '/' + targetId);
-      await update(peerRef, { lastTs: newMsg.createdAt, lastMessage: preview, unread: increment(1) }).catch(() => set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: newMsg.createdAt, lastMessage: preview, unread: 1 }).catch(() => {}));
+      await update(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: newMsg.createdAt, lastMessage: preview, unread: increment(1) }).catch(() => set(peerRef, { type: 'dm', peerId: state.user.uid, lastTs: newMsg.createdAt, lastMessage: preview, unread: 1 }).catch(() => {}));
     } else if (target.type === 'group') {
       const ms = await get(ref(db, 'chats/' + targetId + '/members')).then(s => s.val() || {}).catch(() => ({}));
       await Promise.all(Object.keys(ms).filter(u => u !== state.user.uid).map(u => update(ref(db, 'user_chats/' + u + '/' + targetId), { lastTs: newMsg.createdAt, lastMessage: preview, unread: increment(1), type: 'group', name: target.name || 'Группа', code: target.code || '' }).catch(() => {})));
@@ -7487,7 +7526,7 @@ async function mcLiveStart(minutes) {
     const r = await mcPushMessage(chat.id, msg);
     const preview = { text: MC_PREVIEW_MAP.liveGeo, senderId: state.user.uid, type: 'liveGeo' };
     await update(ref(db, 'user_chats/' + state.user.uid + '/' + chat.id), { lastTs: t, lastMessage: preview, unread: 0 }).catch(() => {});
-    if (chat.type === 'dm') { const pr = ref(db, 'user_chats/' + chat.peerId + '/' + chat.id); await update(pr, { lastTs: t, lastMessage: preview, unread: increment(1) }).catch(() => set(pr, { type: 'dm', peerId: state.user.uid, lastTs: t, lastMessage: preview, unread: 1 }).catch(() => {})); }
+    if (chat.type === 'dm') { const pr = ref(db, 'user_chats/' + chat.peerId + '/' + chat.id); await update(pr, { type: 'dm', peerId: state.user.uid, lastTs: t, lastMessage: preview, unread: increment(1) }).catch(() => set(pr, { type: 'dm', peerId: state.user.uid, lastTs: t, lastMessage: preview, unread: 1 }).catch(() => {})); }
     else if (chat.type === 'group') await Promise.all(Object.keys(chat.members || {}).filter(u => u !== state.user.uid).map(u => update(ref(db, 'user_chats/' + u + '/' + chat.id), { lastTs: t, lastMessage: preview, unread: increment(1), type: 'group', name: chat.name, code: chat.code || '', ownerId: chat.ownerId || '' }).catch(() => {})));
     await set(ref(db, `live_geo/${chat.id}/${r.key}`), { uid: state.user.uid, ...point, expiresAt }).catch(e => { if (mcIsPermErr(e)) mcLiveRulesOk = false; });
     const list = mcLiveSessions(); list.push({ chatId: chat.id, msgId: r.key, expiresAt }); mcLiveSave(list);
@@ -7932,6 +7971,335 @@ mcBuildStoryGroups = function () {
 };
 
 Object.assign(window, { mcSetWallpaper, mcPickStoryMusic, mcStoryMusicToggleMute, mcReopenCard, mcLiveStop, mcOpenTableViewer, mcOpenTableEditor, mcOpenGeoMenu, toggleMuteChat, mcFmtApply, mcDownloadFile });
+
+
+// ===================== Round 4: двухфакторная защита через приложение-аутентификатор (TOTP) =====================
+// Письма со ссылкой для входа на бесплатном тарифе Firebase ограничены 5 штуками в сутки на весь проект,
+// поэтому основной способ подтверждения — 6-значный код из приложения (Google Authenticator, Яндекс Ключ и т.п.).
+// Старый способ (письмо) остаётся только для уже включивших его аккаунтов и больше не отправляет письма сам.
+const MC_B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+const MC2FA_PEND_LS = uid => 'metrochat_2fa_pend_' + uid;
+const MC2FA_FAIL = uid => 'metrochat_2fa_fail_' + uid;
+function mcB32Enc(bytes) { let bits = 0, val = 0, out = ''; for (const b of bytes) { val = ((val << 8) | b) & 0xffff; bits += 8; while (bits >= 5) { out += MC_B32[(val >>> (bits - 5)) & 31]; bits -= 5; } } if (bits > 0) out += MC_B32[(val << (5 - bits)) & 31]; return out; }
+function mcB32Dec(s) { s = String(s || '').toUpperCase().replace(/[^A-Z2-7]/g, ''); let bits = 0, val = 0; const out = []; for (const ch of s) { val = ((val << 5) | MC_B32.indexOf(ch)) & 0xffff; bits += 5; if (bits >= 8) { out.push((val >>> (bits - 8)) & 255); bits -= 8; } } return new Uint8Array(out); }
+async function mcHotp(secretB32, counter) {
+  const key = await crypto.subtle.importKey('raw', mcB32Dec(secretB32), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+  const buf = new ArrayBuffer(8); const dv = new DataView(buf); dv.setUint32(0, Math.floor(counter / 4294967296)); dv.setUint32(4, counter >>> 0);
+  const h = new Uint8Array(await crypto.subtle.sign('HMAC', key, buf)); const o = h[h.length - 1] & 15;
+  const n = ((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3];
+  return String(n % 1000000).padStart(6, '0');
+}
+// Возвращает номер 30-секундного шага при совпадении (окно ±1 шаг), иначе 0. Повтор уже использованного кода отклоняется.
+async function mcTotpCheck(secret, code, lastStep = 0) {
+  const c = String(code || '').replace(/\D/g, ''); if (c.length !== 6 || !secret) return 0;
+  const st = Math.floor(Date.now() / 30000);
+  for (const w of [0, -1, 1]) { const s = st + w; if (s <= Number(lastStep || 0)) continue; if (await mcHotp(secret, s) === c) return s; }
+  return 0;
+}
+async function mcSha256Hex(s) { const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+const mcBackupNorm = c => String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+async function mcBackupHash(uid, code) { return (await mcSha256Hex('mc2fa:' + uid + ':' + mcBackupNorm(code))).slice(0, 40); }
+function mcBackupGen(n = 8) { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({ length: n }, () => { const r = crypto.getRandomValues(new Uint8Array(8)); const s = [...r].map(x => A[x % A.length]).join(''); return s.slice(0, 4) + '-' + s.slice(4); }); }
+function mcQrSvg(text, size = 220) {
+  if (!window.mcQrcode) return '';
+  const qr = window.mcQrcode(0, 'M'); qr.addData(text); qr.make(); const n = qr.getModuleCount(); const q = 2;
+  let d = ''; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) d += `M${c + q} ${r + q}h1v1h-1z`;
+  return `<svg class="mc-2fa-qr" viewBox="0 0 ${n + q * 2} ${n + q * 2}" width="${size}" height="${size}" shape-rendering="crispEdges" role="img" aria-label="QR-код для приложения"><rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#111"/></svg>`;
+}
+const mc2faMethod = (s = state.security) => (s?.twoFactor === true ? (s.method === 'totp' ? 'totp' : 'email') : 'off');
+
+mc2faStatusText = function () {
+  const m = mc2faMethod();
+  if (m === 'totp') return 'Включена · код из приложения-аутентификатора';
+  if (m === 'email') return 'Включена · письмо на почту (рекомендуем перейти на приложение)';
+  if (state.security?.twoFactor === false) return 'Выключена';
+  return 'Код из приложения-аутентификатора';
+};
+mc2faRefreshState = async function (uid) {
+  try {
+    const snap = await get(ref(db, `user_security/${uid}`)); const v = snap.val() || {};
+    state.security = { ...(state.security || {}), twoFactor: v.twoFactor === true, method: v.method || null, totp: v.totp || null, backup: v.backup || null };
+  } catch (_) { /* правила ещё не опубликованы — считаем выключенной */ }
+  const sub = $('mc2faSub'); if (sub) sub.textContent = mc2faStatusText();
+};
+mc2faGate = async function (user) {
+  if (!user?.uid) return false;
+  let ok = null; try { ok = localStorage.getItem(MC2FA_OK(user.uid)); } catch (_) {}
+  if (ok === '1') { setTimeout(() => mc2faRefreshState(user.uid), 2500); return true; }
+  let v = null;
+  try { v = (await mcWithTimeout(get(ref(db, `user_security/${user.uid}`)), 7000)).val() || {}; }
+  catch (e) { console.warn('2FA state unavailable (проверьте правила user_security):', e?.message || e); v = {}; }
+  state.security = { ...(state.security || {}), twoFactor: v.twoFactor === true, method: v.method || null, totp: v.totp || null, backup: v.backup || null };
+  if (v.twoFactor !== true) { try { localStorage.setItem(MC2FA_OK(user.uid), '1'); } catch (_) {} return true; }
+  hideSplash();
+  authScreen.classList.add('hidden'); $('verifyScreen')?.classList.add('hidden'); $('app').classList.add('hidden');
+  mc2faShowScreen(user);
+  return false;
+};
+function mc2faFailState(uid) { try { return JSON.parse(sessionStorage.getItem(MC2FA_FAIL(uid)) || 'null') || { n: 0, until: 0 }; } catch (_) { return { n: 0, until: 0 }; } }
+function mc2faFailSave(uid, s) { try { if (s) sessionStorage.setItem(MC2FA_FAIL(uid), JSON.stringify(s)); else sessionStorage.removeItem(MC2FA_FAIL(uid)); } catch (_) {} }
+function mc2faSuccess(user) {
+  mc2faFailSave(user.uid, null);
+  try { localStorage.setItem(MC2FA_OK(user.uid), '1'); localStorage.removeItem(MC2FA_PEND_LS(user.uid)); sessionStorage.removeItem(MC2FA_PENDING(user.uid)); } catch (_) {}
+  const st = $('mc2faStatus'); if (st) { st.classList.remove('is-error'); st.innerHTML = '✅ Вход подтверждён'; }
+  setTimeout(() => { mc2faHideScreen(); if (auth.currentUser?.uid === user.uid) mcAuthHandler(auth.currentUser); }, 400);
+}
+function mc2faCancelBtnBind(el, user) {
+  el.querySelector('#mc2faCancel').onclick = async () => { mc2faHideScreen(); try { await mcEndCurrentSession(); } catch (_) {} try { sessionStorage.removeItem(MC2FA_PENDING(user.uid)); } catch (_) {} signOut(auth).catch(() => {}); authScreen.classList.remove('hidden'); };
+}
+mc2faShowScreen = function (user) {
+  if (mc2faMethod() === 'totp') return mc2faShowTotp(user);
+  return mc2faShowEmail(user);
+};
+function mc2faShowTotp(user) {
+  let backupMode = false;
+  const el = mc2faScreenShell(`
+    <div class="mc-2fa-icon">🛡️</div>
+    <h2>Подтвердите вход</h2>
+    <p id="mc2faLead">Откройте приложение-аутентификатор (Google Authenticator, Яндекс Ключ, Microsoft Authenticator и др.) и введите 6-значный код <b>MetroChat</b> для ${esc(mcMaskEmail(user.email))}.</p>
+    <input class="mc-2fa-code" id="mc2faCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="Код подтверждения">
+    <div class="mc-2fa-status" id="mc2faStatus">Код обновляется каждые 30 секунд.</div>
+    <button type="button" class="btn btn-primary" id="mc2faSubmit">Подтвердить</button>
+    <button type="button" class="mc-2fa-link" id="mc2faBackupToggle">Нет доступа к приложению? Ввести резервный код</button>
+    <button type="button" class="btn btn-secondary" id="mc2faCancel">Выйти из аккаунта</button>`);
+  const inp = el.querySelector('#mc2faCode'), st = el.querySelector('#mc2faStatus'), btn = el.querySelector('#mc2faSubmit');
+  mc2faCancelBtnBind(el, user);
+  const setErr = (t) => { st.textContent = t; st.classList.add('is-error'); inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake'); };
+  el.querySelector('#mc2faBackupToggle').onclick = () => {
+    backupMode = !backupMode; inp.value = ''; st.classList.remove('is-error');
+    inp.maxLength = backupMode ? 9 : 6; inp.inputMode = backupMode ? 'text' : 'numeric'; inp.placeholder = backupMode ? 'XXXX-XXXX' : '••••••';
+    inp.autocomplete = backupMode ? 'off' : 'one-time-code'; inp.classList.toggle('is-backup', backupMode);
+    el.querySelector('#mc2faLead').innerHTML = backupMode ? 'Введите один из резервных кодов, которые вы сохранили при включении защиты. Каждый код работает один раз.' : `Откройте приложение-аутентификатор и введите 6-значный код <b>MetroChat</b> для ${esc(mcMaskEmail(user.email))}.`;
+    st.textContent = backupMode ? 'Формат: XXXX-XXXX' : 'Код обновляется каждые 30 секунд.';
+    el.querySelector('#mc2faBackupToggle').textContent = backupMode ? 'Ввести код из приложения' : 'Нет доступа к приложению? Ввести резервный код';
+    inp.focus();
+  };
+  let busy = false;
+  const submit = async () => {
+    if (busy) return;
+    const f = mc2faFailState(user.uid);
+    if (f.until > Date.now()) return setErr(`Слишком много неверных кодов. Подождите ${Math.ceil((f.until - Date.now()) / 1000)} сек.`);
+    const val = inp.value.trim();
+    if (!backupMode && val.replace(/\D/g, '').length !== 6) return setErr('Введите 6 цифр из приложения');
+    if (backupMode && mcBackupNorm(val).length !== 8) return setErr('Резервный код состоит из 8 символов');
+    busy = true; btn.disabled = true; st.classList.remove('is-error'); st.textContent = 'Проверяем…';
+    try {
+      // Свежие данные: секрет мог смениться на другом устройстве.
+      let sec = state.security || {};
+      try { const v = (await mcWithTimeout(get(ref(db, `user_security/${user.uid}`)), 7000)).val() || {}; sec = { ...sec, ...v }; state.security = { ...state.security, ...v }; } catch (_) {}
+      if (sec.twoFactor !== true) return mc2faSuccess(user);
+      if (!backupMode) {
+        const step = await mcTotpCheck(sec.totp?.secret, val, sec.totp?.lastStep);
+        if (step) { update(ref(db, `user_security/${user.uid}/totp`), { lastStep: step }).catch(() => {}); return mc2faSuccess(user); }
+      } else {
+        const h = await mcBackupHash(user.uid, val);
+        if (sec.backup?.[h]) {
+          await set(ref(db, `user_security/${user.uid}/backup/${h}`), null).catch(() => {});
+          const left = Object.keys(sec.backup).length - 1; toast(`Резервный код использован. Осталось: ${left}`, '🔑');
+          return mc2faSuccess(user);
+        }
+      }
+      const n = f.n + 1; const lock = n % 5 === 0 ? 30000 * Math.pow(2, Math.min(4, n / 5 - 1)) : 0;
+      mc2faFailSave(user.uid, { n, until: lock ? Date.now() + lock : 0 });
+      setErr(lock ? `Неверный код. Повторить можно через ${Math.round(lock / 1000)} сек.` : backupMode ? 'Резервный код не подошёл или уже использован.' : 'Неверный код. Проверьте, что время на телефоне установлено автоматически.');
+      inp.select();
+    } catch (e) { console.error('2FA check failed:', e); setErr('Не удалось проверить код: ' + (humanErr?.(e) || e?.message || '')); }
+    finally { busy = false; btn.disabled = false; }
+  };
+  btn.onclick = submit;
+  inp.addEventListener('input', () => { if (!backupMode) { inp.value = inp.value.replace(/\D/g, '').slice(0, 6); if (inp.value.length === 6) submit(); } else { let v = mcBackupNorm(inp.value).slice(0, 8); if (v.length > 4) v = v.slice(0, 4) + '-' + v.slice(4); inp.value = v; } });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  setTimeout(() => inp.focus(), 250);
+}
+function mc2faShowEmail(user) {
+  const el = mc2faScreenShell(`
+    <div class="mc-2fa-icon">🛡️</div>
+    <h2>Подтвердите вход</h2>
+    <p>Для аккаунта включено подтверждение входа по почте. Нажмите кнопку — мы отправим письмо со ссылкой на <b>${esc(mcMaskEmail(user.email))}</b>. Откройте его и нажмите на ссылку — этот экран откроет MetroChat автоматически.</p>
+    <div class="mc-2fa-status" id="mc2faStatus">Письмо ещё не отправлено.</div>
+    <div class="mc-2fa-spam">📁 Не видите письмо? Проверьте папку <b>«Спам»</b>. После входа рекомендуем подключить приложение-аутентификатор — оно не зависит от писем.</div>
+    <button type="button" class="btn btn-primary" id="mc2faResend">Отправить письмо</button>
+    <button type="button" class="btn btn-secondary" id="mc2faCancel">Выйти из аккаунта</button>`);
+  mc2faCancelBtnBind(el, user);
+  el.querySelector('#mc2faResend').onclick = () => mc2faSendLink(user, true);
+  // Если письмо уже отправлялось (в т.ч. в другой вкладке) — не тратим лимит, просто ждём подтверждения.
+  mc2faSendLink(user, false);
+}
+mc2faSendLink = async function (user, force) {
+  const st = $('mc2faStatus');
+  let pending = null; try { pending = JSON.parse(localStorage.getItem(MC2FA_PEND_LS(user.uid)) || sessionStorage.getItem(MC2FA_PENDING(user.uid)) || 'null'); } catch (_) {}
+  const fresh = pending && Date.now() - pending.at < 15 * 60000;
+  if (pending?.nonce) mc2faListen(user, pending.nonce);
+  if (!force) {
+    if (fresh && st) { st.innerHTML = `✉️ Письмо уже отправлено в ${new Date(pending.at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}. Ждём подтверждения… <span class="mc-dots"><i></i><i></i><i></i></span>`; mc2faStartCooldown(Math.max(1, 60 - Math.floor((Date.now() - pending.at) / 1000))); }
+    return;
+  }
+  if (fresh && Date.now() - pending.at < 60000) { mc2faStartCooldown(Math.max(1, 60 - Math.floor((Date.now() - pending.at) / 1000))); return; }
+  const nonce = crypto?.randomUUID ? crypto.randomUUID().replace(/-/g, '') : Math.random().toString(36).slice(2) + Date.now().toString(36);
+  const btn = $('mc2faResend'); if (btn) btn.disabled = true;
+  try {
+    if (st) { st.classList.remove('is-error'); st.textContent = 'Отправляем письмо…'; }
+    await set(ref(db, `user_security/${user.uid}/pending/${nonce}`), { createdAt: now(), device: mcParseUA().label });
+    try { auth.languageCode = 'ru'; } catch (_) {}
+    const q = `?mc2fa=${encodeURIComponent(nonce)}&mcu=${encodeURIComponent(user.uid)}`;
+    const url = mcContinueUrl(q) || (location.href.split('?')[0] + q);
+    await sendSignInLinkToEmail(auth, user.email, { url, handleCodeInApp: true });
+    const rec = JSON.stringify({ nonce, at: Date.now() });
+    try { localStorage.setItem(MC2FA_PEND_LS(user.uid), rec); sessionStorage.setItem(MC2FA_PENDING(user.uid), rec); localStorage.setItem('metrochat_2fa_email', user.email); } catch (_) {}
+    mc2faListen(user, nonce);
+    if (st) st.innerHTML = '✉️ Письмо отправлено. Ждём подтверждения… <span class="mc-dots"><i></i><i></i><i></i></span>';
+    mc2faStartCooldown(60);
+  } catch (e) {
+    console.error('2FA link send failed:', e);
+    const code = e?.code || '';
+    let msg = 'Не удалось отправить письмо. ';
+    if (/operation-not-allowed/.test(code)) msg += 'В Firebase Console не включён вход по ссылке (Authentication → Sign-in method → Email link).';
+    else if (/unauthorized-continue-uri|unauthorized-domain/.test(code)) msg += 'Домен сайта не добавлен в Authorized domains в Firebase Console.';
+    else if (/too-many-requests|quota/.test(code)) msg = 'Firebase временно не отправляет письма со ссылкой: на бесплатном тарифе действует лимит 5 таких писем в сутки на весь проект. Попробуйте позже — после входа подключите приложение-аутентификатор, оно не зависит от писем.';
+    else if (/permission|denied/i.test(code + e?.message)) msg += 'Обновите правила Firebase (раздел user_security).';
+    else msg += humanErr?.(e) || e?.message || '';
+    if (st) { st.textContent = msg; st.classList.add('is-error'); }
+    const b = $('mc2faResend'); if (b) { b.disabled = false; b.textContent = 'Попробовать снова'; }
+    update(ref(db), { [`user_security/${user.uid}/pending/${nonce}`]: null }).catch(() => {});
+  }
+};
+const _mc2faApprovedR2 = mc2faApproved;
+mc2faApproved = function (user, nonce) { try { localStorage.removeItem(MC2FA_PEND_LS(user.uid)); } catch (_) {} return _mc2faApprovedR2(user, nonce); };
+
+// ---------- Настройки ----------
+async function mc2faReauth(title, text) {
+  const user = auth.currentUser; if (!user) return false;
+  const pass = await mcPrompt(title, { icon: '🔐', type: 'password', autocomplete: 'current-password', label: 'Пароль от аккаунта', placeholder: '••••••••', okText: 'Продолжить', text, validate: v => v ? '' : 'Введите пароль' });
+  if (pass === null) return false;
+  try { await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, pass)); return true; }
+  catch (e) {
+    const code = e?.code || '';
+    if (/wrong-password|invalid-credential|invalid-login/.test(code)) mcAlert('Неверный пароль', 'Проверьте пароль и попробуйте снова.', { icon: '⚠️' });
+    else if (/too-many-requests/.test(code)) mcAlert('Слишком много попыток входа', 'Firebase временно заблокировал проверку пароля после нескольких неверных попыток. Подождите 5–15 минут.', { icon: '⏳' });
+    else mcAlert('Не удалось проверить пароль', humanErr?.(e) || e?.message || '', { icon: '⚠️' });
+    return false;
+  }
+}
+async function mc2faAskCode(title, text) {
+  const sec = state.security || {}; const uid = state.user?.uid;
+  const v = await mcPrompt(title, { icon: '🔢', type: 'text', inputmode: 'numeric', autocomplete: 'one-time-code', label: 'Код из приложения или резервный код', placeholder: '123456 или XXXX-XXXX', okText: 'Подтвердить', text, validate: x => (String(x).replace(/\D/g, '').length === 6 || mcBackupNorm(x).length === 8) ? '' : 'Введите 6 цифр или резервный код' });
+  if (v === null) return false;
+  if (String(v).replace(/\D/g, '').length === 6 && /^[\d\s-]+$/.test(v)) {
+    const step = await mcTotpCheck(sec.totp?.secret, v, sec.totp?.lastStep);
+    if (step) { update(ref(db, `user_security/${uid}/totp`), { lastStep: step }).catch(() => {}); state.security.totp = { ...(sec.totp || {}), lastStep: step }; return true; }
+  } else {
+    const h = await mcBackupHash(uid, v);
+    if (sec.backup?.[h]) { await set(ref(db, `user_security/${uid}/backup/${h}`), null).catch(() => {}); delete state.security.backup[h]; return true; }
+  }
+  mcAlert('Неверный код', 'Код не подошёл. Проверьте, что время на телефоне установлено автоматически, и попробуйте снова.', { icon: '⚠️' });
+  return false;
+}
+mcOpen2faSettings = async function () {
+  const uid = state.user?.uid; if (!uid) return;
+  await mc2faRefreshState(uid);
+  const m = mc2faMethod(); const left = Object.keys(state.security?.backup || {}).length;
+  const hero = m === 'off'
+    ? `<div class="mc-hero-card"><div class="mc-hero-icon">🔓</div><div><b>Защита выключена</b><p>Включите подтверждение входа кодом из приложения — даже зная пароль, посторонний не сможет войти на новом устройстве.</p></div></div>`
+    : `<div class="mc-hero-card is-on"><div class="mc-hero-icon">🛡️</div><div><b>Защита включена</b><p>${m === 'totp' ? 'При входе на новом устройстве нужен 6-значный код из приложения-аутентификатора.' : 'Сейчас вход подтверждается письмом на почту.'}</p></div></div>`;
+  const legacyWarn = m === 'email' ? `<div class="mc-2fa-warn">⚠️ Firebase отправляет не более 5 писем со ссылкой в сутки на весь проект — поэтому при входе может появляться «Слишком много попыток». Перейдите на приложение-аутентификатор: оно работает без писем и без интернета на телефоне.</div>` : '';
+  const how = `<div class="settings-group"><h3>Как это работает</h3>
+      <div class="set-row"><div class="set-icon">1️⃣</div><div class="set-info"><div class="set-label">Установите приложение</div><div class="set-sub">Google Authenticator, Яндекс Ключ, Microsoft Authenticator, 2FAS, Aegis — любое с поддержкой TOTP</div></div></div>
+      <div class="set-row"><div class="set-icon">2️⃣</div><div class="set-info"><div class="set-label">Отсканируйте QR-код</div><div class="set-sub">В приложении появится MetroChat с кодом, который меняется каждые 30 секунд</div></div></div>
+      <div class="set-row"><div class="set-icon">3️⃣</div><div class="set-info"><div class="set-label">Вводите код при входе</div><div class="set-sub">Только на новых устройствах. Резервные коды помогут, если телефон потерян</div></div></div>
+    </div>`;
+  const totpRows = m === 'totp' ? `<div class="settings-group"><h3>Управление</h3>
+      <div class="set-row" onclick="mc2faRegenBackup()"><div class="set-icon">🔑</div><div class="set-info"><div class="set-label">Резервные коды</div><div class="set-sub">Осталось: ${left} из 8 · нажмите, чтобы создать новые</div></div><span class="set-arrow">›</span></div>
+      <div class="set-row" onclick="mc2faSetupTotp()"><div class="set-icon">📱</div><div class="set-info"><div class="set-label">Сменить телефон / приложение</div><div class="set-sub">Привязать новый QR-код (старый перестанет работать)</div></div><span class="set-arrow">›</span></div>
+    </div>` : '';
+  const btns = m === 'off'
+    ? `<button type="button" class="btn btn-primary" onclick="mc2faSetupTotp()">Подключить приложение-аутентификатор</button>`
+    : m === 'email'
+      ? `<button type="button" class="btn btn-primary" onclick="mc2faSetupTotp()">Перейти на приложение-аутентификатор</button><button type="button" class="btn btn-secondary mc-danger-btn" style="margin-top:10px" onclick="mcToggle2fa(false)">Выключить двухфакторную защиту</button>`
+      : `<button type="button" class="btn btn-secondary mc-danger-btn" onclick="mcToggle2fa(false)">Выключить двухфакторную защиту</button>`;
+  mcSheet('mc2faSheet', `${mcSheetHead('Двухфакторная аутентификация', 'mc2faSheet')}
+    <div class="mc-sheet-body">${hero}${legacyWarn}${totpRows}${m === 'totp' ? '' : how}${btns}
+      <p class="set-sub" style="margin-top:10px;text-align:center">Для изменения настроек потребуется пароль от аккаунта.</p>
+    </div>`);
+};
+mcToggle2fa = async function (enable) {
+  if (enable) return mc2faSetupTotp();
+  const uid = state.user?.uid; if (!uid) return;
+  if (!(await mc2faReauth('Выключение защиты', 'Без двухфакторной защиты вход будет выполняться только по паролю. Введите пароль для подтверждения.'))) return;
+  if (mc2faMethod() === 'totp' && !(await mc2faAskCode('Подтвердите выключение', 'Введите код из приложения-аутентификатора или резервный код.'))) return;
+  try {
+    await update(ref(db, `user_security/${uid}`), { twoFactor: false, method: null, totp: null, backup: null, pending: null, approvals: null, updatedAt: now() });
+    state.security = { twoFactor: false };
+    try { localStorage.setItem(MC2FA_OK(uid), '1'); } catch (_) {}
+    toast('Двухфакторная защита выключена', '🔓'); mcCloseSheet('mc2faSheet'); if (state.tab === 'settings') renderSettings();
+  } catch (e) { mcAlert('Не удалось изменить настройку', /permission|denied/i.test((e?.code || '') + e?.message) ? 'Обновите правила Firebase (раздел user_security).' : (humanErr?.(e) || e?.message || ''), { icon: '⚠️' }); }
+};
+async function mc2faSetupTotp() {
+  const user = auth.currentUser; const uid = user?.uid; if (!uid) return;
+  if (!window.crypto?.subtle) return mcAlert('Недоступно', 'Браузер не поддерживает криптографию (нужно открыть сайт по https).', { icon: '⚠️' });
+  if (!(await mc2faReauth('Подключение приложения', 'Подтвердите, что это вы: введите текущий пароль.'))) return;
+  const secret = mcB32Enc(crypto.getRandomValues(new Uint8Array(20)));
+  const label = encodeURIComponent('MetroChat:' + (user.email || state.profile?.username || uid));
+  const uri = `otpauth://totp/${label}?secret=${secret}&issuer=MetroChat&algorithm=SHA1&digits=6&period=30`;
+  const pretty = secret.match(/.{1,4}/g).join(' ');
+  const el = mcSheet('mc2faSetupSheet', `${mcSheetHead('Приложение-аутентификатор', 'mc2faSetupSheet')}
+    <div class="mc-sheet-body mc-2fa-setup">
+      <div class="mc-2fa-step"><span>1</span><div><b>Отсканируйте QR-код</b><p>Откройте приложение (Google Authenticator, Яндекс Ключ и др.) → «Добавить» → «Сканировать QR-код».</p></div></div>
+      <div class="mc-2fa-qrbox">${mcQrSvg(uri)}</div>
+      <div class="mc-2fa-secret"><small>Или введите ключ вручную</small><code id="mc2faSecret">${pretty}</code><div class="mc-2fa-secret-btns"><button type="button" class="mc-btn-s" id="mc2faCopySecret">⧉ Скопировать ключ</button><a class="mc-btn-s" href="${esc(uri)}">📱 Открыть в приложении</a></div></div>
+      <div class="mc-2fa-step"><span>2</span><div><b>Введите код из приложения</b><p>Так мы проверим, что всё настроено правильно.</p></div></div>
+      <input class="mc-2fa-code" id="mc2faSetupCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="Код из приложения">
+      <div class="mc-2fa-status" id="mc2faSetupStatus"></div>
+      <button type="button" class="btn btn-primary" id="mc2faSetupOk">Подтвердить и включить</button>
+    </div>`);
+  el.querySelector('#mc2faCopySecret').onclick = async () => { try { await navigator.clipboard.writeText(secret); toast('Ключ скопирован', '⧉'); } catch (_) { mcAlert('Ключ', 'Скопируйте вручную:', { copy: secret, icon: '🔑' }); } };
+  const inp = el.querySelector('#mc2faSetupCode'), st = el.querySelector('#mc2faSetupStatus'), ok = el.querySelector('#mc2faSetupOk');
+  let busy = false;
+  const go = async () => {
+    if (busy) return; const code = inp.value.replace(/\D/g, '');
+    if (code.length !== 6) { st.textContent = 'Введите 6 цифр из приложения'; st.classList.add('is-error'); return; }
+    busy = true; ok.disabled = true; st.classList.remove('is-error'); st.textContent = 'Проверяем…';
+    try {
+      const step = await mcTotpCheck(secret, code, 0);
+      if (!step) { st.textContent = 'Код не подошёл. Проверьте, что отсканировали именно этот QR-код и время на телефоне установлено автоматически.'; st.classList.add('is-error'); inp.select(); return; }
+      const codes = mcBackupGen(8); const backup = {};
+      for (const c of codes) backup[await mcBackupHash(uid, c)] = true;
+      await update(ref(db, `user_security/${uid}`), { twoFactor: true, method: 'totp', totp: { secret, createdAt: now(), lastStep: step }, backup, pending: null, approvals: null, updatedAt: now() });
+      state.security = { twoFactor: true, method: 'totp', totp: { secret, lastStep: step }, backup };
+      try { localStorage.setItem(MC2FA_OK(uid), '1'); } catch (_) {}
+      mcCloseSheet('mc2faSetupSheet'); mcCloseSheet('mc2faSheet'); if (state.tab === 'settings') renderSettings();
+      toast('Двухфакторная защита включена', '🛡️');
+      mc2faShowBackup(codes);
+    } catch (e) {
+      st.textContent = /permission|denied/i.test((e?.code || '') + e?.message) ? 'Нет доступа: обновите правила Firebase (раздел user_security).' : ('Ошибка: ' + (humanErr?.(e) || e?.message || '')); st.classList.add('is-error');
+    } finally { busy = false; ok.disabled = false; }
+  };
+  ok.onclick = go;
+  inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g, '').slice(0, 6); if (inp.value.length === 6) go(); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+}
+function mc2faShowBackup(codes) {
+  const txt = 'MetroChat — резервные коды для входа\n' + (state.user?.email || '') + '\n\n' + codes.join('\n') + '\n\nКаждый код можно использовать один раз.';
+  const el = mcSheet('mc2faBackupSheet', `${mcSheetHead('Резервные коды', 'mc2faBackupSheet')}
+    <div class="mc-sheet-body">
+      <div class="mc-2fa-warn">🔑 Сохраните эти коды в надёжном месте. Если телефон с приложением потеряется, войти можно будет только с ними. Каждый код работает один раз.</div>
+      <div class="mc-2fa-codes">${codes.map(c => `<code>${c}</code>`).join('')}</div>
+      <div class="mc-2fa-secret-btns" style="justify-content:center;margin:12px 0 16px"><button type="button" class="mc-btn-s" id="mc2faCodesCopy">⧉ Скопировать</button><button type="button" class="mc-btn-s" id="mc2faCodesSave">⬇ Скачать .txt</button></div>
+      <button type="button" class="btn btn-primary" onclick="mcCloseSheet('mc2faBackupSheet')">Я сохранил коды</button>
+    </div>`);
+  el.querySelector('#mc2faCodesCopy').onclick = async () => { try { await navigator.clipboard.writeText(txt); toast('Коды скопированы', '⧉'); } catch (_) { mcAlert('Резервные коды', 'Скопируйте вручную:', { copy: codes.join(' '), icon: '🔑' }); } };
+  el.querySelector('#mc2faCodesSave').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain;charset=utf-8' })); a.download = 'metrochat-backup-codes.txt'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
+}
+async function mc2faRegenBackup() {
+  const uid = state.user?.uid; if (!uid) return;
+  if (!(await mc2faAskCode('Новые резервные коды', 'Старые резервные коды перестанут работать. Введите код из приложения.'))) return;
+  try {
+    const codes = mcBackupGen(8); const backup = {};
+    for (const c of codes) backup[await mcBackupHash(uid, c)] = true;
+    await set(ref(db, `user_security/${uid}/backup`), backup);
+    state.security.backup = backup; mcCloseSheet('mc2faSheet'); mc2faShowBackup(codes);
+  } catch (e) { mcAlert('Не удалось создать коды', humanErr?.(e) || e?.message || '', { icon: '⚠️' }); }
+}
+Object.assign(window, { mcOpen2faSettings, mcToggle2fa, mc2faSetupTotp, mc2faRegenBackup, mcHotp, mc2faGate });
 
 Object.assign(window, {
   onbNext, onbPrev, onbFinish, onbAvatarChange, randomUsername,
