@@ -1565,13 +1565,21 @@ html[data-theme="dark"] .mc-sheet .mc-2fa-status.is-error{ color:#fca5a5; }
 .mc-2fa-qr{ border-radius:16px; background:#fff; padding:8px; box-shadow:0 6px 24px rgba(0,0,0,.12); max-width:72vw; height:auto; }
 .mc-2fa-secret{ text-align:center; margin:0 0 18px; }
 .mc-2fa-secret small{ display:block; color:var(--text-2); font-size:12px; margin-bottom:6px; }
-.mc-2fa-secret code{ display:inline-block; padding:8px 12px; border-radius:10px; background:var(--surface-2,rgba(127,127,127,.1)); color:var(--text); font:600 14px/1.4 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.06em; word-break:break-all; user-select:all; }
+.mc-2fa-secret code{ display:inline-block; padding:8px 12px; border-radius:10px; background:var(--surface-2,rgba(127,127,127,.1)); color:var(--text); font:600 14px/1.4 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.06em; word-break:normal; overflow-wrap:normal; max-width:100%; font-size:clamp(12px,3.3vw,14px); user-select:all; }
 .mc-2fa-secret-btns{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
 .mc-2fa-secret-btns a{ text-decoration:none; }
 .mc-2fa-codes{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
 .mc-2fa-codes code{ padding:10px; border-radius:12px; text-align:center; background:var(--surface-2,rgba(127,127,127,.1)); border:1px solid var(--border); color:var(--text); font:700 16px/1.2 'SFMono-Regular',Consolas,'Courier New',monospace; letter-spacing:.08em; user-select:all; }
 /* История при закрытии продолжает перехватывать нажатия, пока не исчезнет */
 .mc-sv.closing{ pointer-events:auto!important; }
+/* r5: таймер смены TOTP-кода */
+.mc-2fa-timer{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px;align-items:center}
+.mc-2fa-timer-bar{width:100%;height:4px;border-radius:4px;background:rgba(127,127,127,.22);overflow:hidden}
+.mc-2fa-timer-bar i{display:block;height:100%;width:100%;border-radius:4px;background:linear-gradient(90deg,#22b8a6,#7c5cff);transition:width .9s linear}
+.mc-2fa-timer span{font-size:12px;opacity:.7}
+.mc-2fa-timer.is-low .mc-2fa-timer-bar i{background:#e5484d}
+.mc-2fa-code.is-backup ~ .mc-2fa-timer{display:none}
+.mc-2fa-migrate-note{margin-top:10px}
 
 /* Обои чата для тем (генерируется gen_walls.py) */
 html[data-theme="light"] #chatPanel[data-wall="waves"], html[data-theme="light"] .mc-wall-prev[data-wall="waves"]{ --wall-pattern:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%231e2a44' stroke-opacity='.1' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M0 40q30-20 60 0t60 0 60 0 60 0M0 100q30-20 60 0t60 0 60 0 60 0M0 160q30-20 60 0t60 0 60 0 60 0M0 220q30-20 60 0t60 0 60 0 60 0'/%3E%3C/g%3E%3C/svg%3E"); }
@@ -2639,7 +2647,7 @@ function syncPresenceSubscriptions() {
   const wanted = new Set();
   for (const item of Object.values(state.chats || {})) if (item?.type === 'dm' && item.peerId && item.peerId !== state.user.uid) wanted.add(item.peerId);
   if (state.chat?.type === 'dm' && state.chat.peerId) wanted.add(state.chat.peerId);
-  if (state.chat?.type === 'group') for (const memberId of Object.keys(state.chat.members || {})) if (memberId !== state.user.uid) wanted.add(memberId);
+  if (state.chat?.type === 'group') for (const memberId of Object.keys(state.chat.members || {}).slice(0, 80)) if (memberId !== state.user.uid) wanted.add(memberId);
   for (const [uid, unsub] of Object.entries(state.presenceSubs || {})) {
     if (!wanted.has(uid)) { try { unsub(); } catch (_) {} delete state.presenceSubs[uid]; delete state.presence[uid]; }
   }
@@ -2647,7 +2655,7 @@ function syncPresenceSubscriptions() {
     if (state.presenceSubs[uid]) continue;
     state.presenceSubs[uid] = onValue(ref(db, 'presence/' + uid), snap => {
       if (snap.exists()) state.presence[uid] = snap.val() || {}; else delete state.presence[uid];
-      renderList(); if (state.chat) renderChatHeader();
+      mcSchedulePresenceRender();
     }, () => {});
   }
 }
@@ -2655,7 +2663,7 @@ function subscribeAll() {
   if (!state.user) return;
   const uid = state.user.uid;
   // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
-  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; renderList(); updateUserStrip(); if (state.chat) { renderChatHeader(); renderMessages(); } if (state.tab === 'settings') renderSettings(); }, err => console.warn('Verification subscription:', err)));
+  state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; mcRafOnce('galochka', () => { renderList(); updateUserStrip(); if (state.chat) { renderChatHeader(); renderMessages(); } if (state.tab === 'settings') renderSettings(); }); }, err => console.warn('Verification subscription:', err)));
   // «Печатает…» теперь слушается только для открытого чата (typing_v2/<chatId>), см. mcTypingSubscribe.
   state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
   // Ограничиваем стартовую подписку: не скачиваем всю историю всех каналов на каждом входе.
@@ -3069,6 +3077,7 @@ function renderContactsSearch() {
 async function doContactSearch(term) {
   const resultsEl = $('contactSearchResults'); const hintEl = $('contactSearchHint');
   if (!resultsEl) return;
+  const mcSeq = (state.searchSeq = (state.searchSeq || 0) + 1);
   const raw = String(term || '').trim();
   if (raw.length < 2) { resultsEl.innerHTML = ''; if (hintEl) hintEl.style.display = 'block'; return; }
   if (hintEl) hintEl.style.display = 'none';
@@ -3091,6 +3100,7 @@ async function doContactSearch(term) {
     } catch(e) { console.warn('User search failed:', e); }
   }
   const channelsHtml = channelMatches.length ? `<div style="padding:14px 8px 2px;font-weight:700;">Каналы</div>${channelMatches.map(([id,c]) => { const subscribed=!!state.chats[id]; return `<div class="list-item" style="border:1px solid var(--border);margin:6px 0;" onclick="${subscribed ? `openChat('${id}','channel')` : `joinChannel('${id}')`}"><div class="avatar square" style="display:flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent);">📢</div><div class="list-info"><div class="list-name">${esc(c.name || 'Канал')}</div><div class="list-last" style="white-space:normal;">${esc(c.description || 'Публичный канал')}</div></div><div class="list-meta"><span style="font-size:12px;">${subscribed ? 'Открыть' : 'Подписаться'}</span></div></div>`; }).join('')}` : '';
+  if (mcSeq !== state.searchSeq || !resultsEl.isConnected) return;
   if (!userHtml && !channelsHtml) resultsEl.innerHTML = `<div class="empty" style="padding:24px;"><div class="empty-icon">🔎</div><h3>Ничего не найдено</h3><p>Проверьте @никнейм или название канала.</p></div>`;
   else resultsEl.innerHTML = userHtml + channelsHtml;
 }
@@ -3322,7 +3332,9 @@ function renderMessages() {
     const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== state.user.uid);
     if (tu.length) { const names = tu.map(t => getUser(t.uid)?.firstName || 'Кто-то').join(', '); html += `<div class="typing">${esc(names)} печатает...</div>`; }
   }
-  box.innerHTML = html;
+  if (html && box.__mcHtml === html && box.__mcChat === state.chat.id && box.__mcFirst && box.__mcFirst === box.firstChild) { box.__mcSkip = true; if (atBottom) box.scrollTop = box.scrollHeight; return; }
+  box.__mcSkip = false;
+  box.innerHTML = html; box.__mcHtml = html; box.__mcChat = state.chat.id; box.__mcFirst = box.firstChild;
   if (atBottom) box.scrollTop = box.scrollHeight;
 }
 function formatDuration(sec) { const m = Math.floor(sec / 60); const s = Math.floor(sec % 60); return m + ':' + String(s).padStart(2, '0'); }
@@ -6995,6 +7007,7 @@ renderMessages = function () {
   if (!Array.isArray(raw)) return _mcRenderMessagesR2();
   state.messages = raw.map(mcHydrateMsg);
   try { _mcRenderMessagesR2(); } finally { state.messages = raw; }
+  if ($('messages')?.__mcSkip) return;
   try { mcAfterRenderMessages(raw); } catch (e) { console.warn('after render', e); }
 };
 let mcMediaIO = null;
@@ -8300,6 +8313,97 @@ async function mc2faRegenBackup() {
   } catch (e) { mcAlert('Не удалось создать коды', humanErr?.(e) || e?.message || '', { icon: '⚠️' }); }
 }
 Object.assign(window, { mcOpen2faSettings, mcToggle2fa, mc2faSetupTotp, mc2faRegenBackup, mcHotp, mc2faGate });
+
+// ===== Round 5: 2FA только через приложение-аутентификатор, производительность, исправления =====
+
+// ---------- Планировщик перерисовок (один раз за кадр) ----------
+const mcRafJobs = new Map();
+function mcRafOnce(key, fn) {
+  if (mcRafJobs.has(key)) { mcRafJobs.get(key).fn = fn; return; }
+  const job = { fn };
+  mcRafJobs.set(key, job);
+  const run = () => { if (mcRafJobs.get(key) !== job) return; mcRafJobs.delete(key); try { job.fn(); } catch (e) { console.warn('render', key, e); } };
+  // В фоновой вкладке requestAnimationFrame не срабатывает — подстраховываемся таймером.
+  requestAnimationFrame(run); setTimeout(run, 120);
+}
+function mcSchedulePresenceRender() {
+  mcRafOnce('presence', () => { renderList(); if (state.chat) renderChatHeader(); });
+}
+
+// ---------- 2FA: таймер смены кода ----------
+function mc2faAttachTimer(afterEl) {
+  if (!afterEl || !afterEl.parentNode || afterEl.parentNode.querySelector('.mc-2fa-timer')) return;
+  const t = document.createElement('div');
+  t.className = 'mc-2fa-timer'; t.setAttribute('aria-hidden', 'true');
+  t.innerHTML = '<div class="mc-2fa-timer-bar"><i></i></div><span></span>';
+  afterEl.after(t);
+  const bar = t.querySelector('i'), lbl = t.querySelector('span');
+  let iv = 0;
+  const tick = () => {
+    if (!t.isConnected) { clearInterval(iv); return; }
+    const left = 30 - (Math.floor(Date.now() / 1000) % 30);
+    bar.style.width = (left / 30 * 100).toFixed(1) + '%';
+    lbl.textContent = `Код в приложении сменится через ${left} с`;
+    t.classList.toggle('is-low', left <= 5);
+  };
+  iv = setInterval(tick, 1000); tick();
+}
+const _mc2faShowTotpR5 = mc2faShowTotp;
+mc2faShowTotp = function (user) {
+  const r = _mc2faShowTotpR5(user);
+  try { mc2faAttachTimer($('mc2faCode')); } catch (_) {}
+  return r;
+};
+const _mc2faSetupTotpR5 = mc2faSetupTotp;
+mc2faSetupTotp = async function () {
+  const r = await _mc2faSetupTotpR5();
+  try { const inp = $('mc2faSetupCode'); if (inp) { mc2faAttachTimer(inp); setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (_) {} }, 250); } } catch (_) {}
+  return r;
+};
+
+// ---------- 2FA: привязка только через приложение ----------
+// Почтовый способ (лимит Firebase — 5 писем в сутки на проект) больше нельзя включить.
+// Тем, у кого он остался со старой версии, после входа предлагается перейти на приложение.
+let mc2faMigrateAsked = false;
+async function mc2faMigratePrompt() {
+  const uid = state.user?.uid; if (!uid || mc2faMigrateAsked) return;
+  try { await mc2faRefreshState(uid); } catch (_) {}
+  if (mc2faMethod() !== 'email') return;
+  mc2faMigrateAsked = true;
+  let snoozed = 0; try { snoozed = Number(localStorage.getItem('metrochat_2fa_migrate_' + uid) || 0); } catch (_) {}
+  if (Date.now() - snoozed < 24 * 3600e3) return;
+  const go = await mcConfirm('Привяжите приложение для кодов',
+    'Двухфакторная защита сейчас работает через письма на почту. Firebase отправляет не больше 5 таких писем в сутки на весь MetroChat, поэтому вход может блокироваться сообщением «Слишком много попыток». Привяжите Google Authenticator, Яндекс Ключ или другое приложение: коды работают без писем и без интернета на телефоне.',
+    { icon: '🛡️', okText: 'Привязать', cancelText: 'Позже' });
+  if (go) mc2faSetupTotp();
+  else { try { localStorage.setItem('metrochat_2fa_migrate_' + uid, String(Date.now())); } catch (_) {} }
+}
+const _mcStartAppR5 = startApp;
+startApp = function (...a) {
+  const r = _mcStartAppR5.apply(this, a);
+  mc2faMigrateAsked = false;
+  setTimeout(() => { mc2faMigratePrompt().catch(() => {}); }, 3500);
+  return r;
+};
+
+// Экран входа для старого почтового способа: на нём тоже предлагаем приложение
+// (после входа по письму сразу откроется привязка).
+const _mc2faShowEmailR5 = mc2faShowEmail;
+mc2faShowEmail = function (user) {
+  const r = _mc2faShowEmailR5(user);
+  try {
+    const host = $('mc2faStatus')?.parentNode;
+    if (host && !host.querySelector('.mc-2fa-migrate-note')) {
+      const n = document.createElement('div');
+      n.className = 'mc-2fa-warn mc-2fa-migrate-note';
+      n.textContent = 'После входа привяжите приложение-аутентификатор в настройках — тогда письма больше не понадобятся.';
+      $('mc2faStatus').after(n);
+    }
+  } catch (_) {}
+  return r;
+};
+
+Object.assign(window, { mc2faSetupTotp, mcRafOnce, mc2faMigratePrompt });
 
 Object.assign(window, {
   onbNext, onbPrev, onbFinish, onbAvatarChange, randomUsername,
