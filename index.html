@@ -1956,6 +1956,193 @@ html[data-theme="dark"] .ms-row.danger b{ color:#f87171; }
 }
 @media (prefers-reduced-motion:reduce){ .mc-call-bg, .mc-alarm-ico span, .onb-bd-ico, .mc-cb.green.big span{ animation:none!important; } }
 
+/* ===================== Round 7: подарки, колесо фортуны, аукцион ===================== */
+/* Конфетти (исправленная версия) */
+.mc-confetti7{ position:fixed; inset:0; z-index:30200; pointer-events:none; overflow:hidden; }
+.mc-confetti7 i{ position:absolute; top:-16px; width:8px; height:14px; border-radius:2px; transform:rotate(var(--r)); animation:mcConf7 var(--d) cubic-bezier(.25,.6,.4,1) var(--dl) forwards; opacity:.95; }
+@keyframes mcConf7{ to{ transform:translate3d(var(--dx),108vh,0) rotate(calc(var(--r) + 620deg)); opacity:.7; } }
+.mc-dlg-gift{ display:inline-block; font-size:64px; line-height:1; animation:mcGift7 .9s var(--mc-spring) both; filter:drop-shadow(0 10px 22px rgba(0,0,0,.25)); }
+@keyframes mcGift7{ 0%{ transform:scale(.2) rotate(-25deg); opacity:0 } 60%{ transform:scale(1.18) rotate(6deg); opacity:1 } 100%{ transform:scale(1) rotate(0) } }
+@media (prefers-reduced-motion: reduce){ .mc-confetti7{ display:none; } .mc-dlg-gift{ animation:none; } }
+
+/* Редкость */
+.mc-rar{ display:inline-flex; align-items:center; padding:2px 7px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.02em; white-space:nowrap; }
+.mc-rar-common{ background:rgba(148,163,184,.18); color:#64748b; }
+.mc-rar-rare{ background:rgba(59,130,246,.15); color:#2563eb; }
+.mc-rar-epic{ background:rgba(168,85,247,.16); color:#9333ea; }
+.mc-rar-leg{ background:rgba(245,158,11,.18); color:#c2410c; }
+.mc-rar-excl{ background:linear-gradient(90deg,#ef4444,#f59e0b); color:#fff; }
+html[data-theme="dark"] .mc-rar-common, html.dark .mc-rar-common{ color:#cbd5e1; }
+html[data-theme="dark"] .mc-rar-rare, html.dark .mc-rar-rare{ color:#93c5fd; }
+html[data-theme="dark"] .mc-rar-epic, html.dark .mc-rar-epic{ color:#d8b4fe; }
+html[data-theme="dark"] .mc-rar-leg, html.dark .mc-rar-leg{ color:#fcd34d; }
+
+/* Витрина */
+.mc-gs7-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 14px; }
+.mc-gs7-actions button{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:14px 8px; border-radius:18px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); cursor:pointer; font:inherit; transition:transform .2s var(--mc-spring), border-color .2s; }
+.mc-gs7-actions button span{ font-size:22px; line-height:1; }
+.mc-gs7-actions button b{ font-size:13.5px; }
+.mc-gs7-actions button:hover{ border-color:var(--accent); } .mc-gs7-actions button:active{ transform:scale(.96); }
+.mc-gs7-feat{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
+.mc-feat{ position:relative; display:flex; align-items:center; gap:14px; padding:16px; border-radius:22px; border:0; cursor:pointer; text-align:left; color:#fff; font:inherit; overflow:hidden; min-height:96px; transition:transform .25s var(--mc-spring), box-shadow .25s; }
+.mc-feat:hover{ transform:translateY(-2px); } .mc-feat:active{ transform:scale(.98); }
+.mc-feat-wheel{ background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.25),transparent 40%),linear-gradient(130deg,#7c3aed,#db2777 60%,#f59e0b); box-shadow:0 14px 30px rgba(219,39,119,.28); }
+.mc-feat-auc{ background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.22),transparent 40%),linear-gradient(130deg,#0f766e,#0891b2 55%,#2563eb); box-shadow:0 14px 30px rgba(8,145,178,.26); }
+.mc-feat-art{ flex:none; width:58px; height:58px; display:grid; place-items:center; font-size:34px; border-radius:18px; background:rgba(255,255,255,.18); }
+.mc-mini-wheel{ width:44px; height:44px; border-radius:50%; background:conic-gradient(#f43f5e 0 12.5%,#f59e0b 0 25%,#22c55e 0 37.5%,#06b6d4 0 50%,#3b82f6 0 62.5%,#8b5cf6 0 75%,#ec4899 0 87.5%,#eab308 0); border:3px solid #fff; box-shadow:0 0 0 2px rgba(0,0,0,.12); animation:mcSpin7 6s linear infinite; }
+@keyframes mcSpin7{ to{ transform:rotate(360deg); } }
+.mc-feat-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.mc-feat-txt b{ font-size:17px; } .mc-feat-txt small{ font-size:12.5px; opacity:.92; line-height:1.35; }
+.mc-feat-go{ font-size:26px; opacity:.8; }
+.mc-gs7-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 0 12px; scrollbar-width:none; }
+.mc-gs7-chips::-webkit-scrollbar{ display:none; }
+.mc-gs7-chips button, .mc-chip7{ flex:none; padding:7px 14px; border-radius:999px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.mc-gs7-chips button.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.mc-gs7-grid{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)) !important; margin-bottom:8px; }
+.mc-gi7{ position:relative; }
+.mc-gi7[hidden]{ display:none !important; }
+.mc-gi7 .gift-emoji{ font-size:38px; line-height:1.1; transition:transform .3s var(--mc-spring); }
+.mc-gi7:hover .gift-emoji{ transform:scale(1.12) rotate(-6deg); }
+.mc-gi7-foot{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:auto; }
+.mc-gi7-foot .gift-price{ white-space:nowrap; }
+.mc-gi7.r-rare{ box-shadow:inset 0 0 0 1px rgba(59,130,246,.25); }
+.mc-gi7.r-epic{ box-shadow:inset 0 0 0 1px rgba(168,85,247,.35), 0 8px 22px rgba(168,85,247,.10); }
+.mc-gi7.r-leg{ box-shadow:inset 0 0 0 1px rgba(245,158,11,.45), 0 8px 24px rgba(245,158,11,.14); }
+.mc-gi7.r-excl{ box-shadow:inset 0 0 0 1.5px rgba(239,68,68,.5), 0 10px 26px rgba(239,68,68,.16); }
+.mc-gi7.r-excl::after{ content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%); background-size:250% 100%; animation:mcShine7 3.2s ease-in-out infinite; }
+@keyframes mcShine7{ 0%{ background-position:150% 0 } 60%,100%{ background-position:-100% 0 } }
+.gift-owned-item.is-hidden{ opacity:.55; }
+.gift-owned-item.r-epic > span:first-child{ filter:drop-shadow(0 0 8px rgba(168,85,247,.5)); }
+.gift-owned-item.r-leg > span:first-child, .gift-owned-item.r-excl > span:first-child{ filter:drop-shadow(0 0 9px rgba(245,158,11,.6)); }
+
+/* Колесо фортуны */
+.mc-wheel-ov .mc-sheet, .mc-auc-ov .mc-sheet{ max-width:560px; }
+.mc-wheel-bal{ margin-left:auto; padding:6px 12px; border-radius:999px; background:var(--mc-accent-soft); color:var(--mc-accent-text, var(--accent)); font-weight:800; font-size:13.5px; white-space:nowrap; }
+.mc-wheel-body{ padding:6px 18px 22px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+.mc-wheel-stage{ position:relative; width:min(340px,82vw); aspect-ratio:1; margin-top:12px; }
+.mc-wheel-glow{ position:absolute; inset:-14px; border-radius:50%; background:conic-gradient(from 0deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#8b5cf6,#ec4899,#f43f5e); filter:blur(22px); opacity:.35; animation:mcSpin7 12s linear infinite; }
+.mc-wheel-wrap{ position:absolute; inset:0; border-radius:50%; padding:7px; background:linear-gradient(145deg,#fde68a,#d97706 45%,#fbbf24 70%,#92400e); box-shadow:0 18px 40px rgba(0,0,0,.28), inset 0 2px 4px rgba(255,255,255,.6); }
+.mc-wheel-svg{ width:100%; height:100%; display:block; border-radius:50%; }
+.mc-wheel-rot{ transform-origin:0 0; will-change:transform; }
+.mc-wheel-svg text{ font-family:inherit; paint-order:stroke; stroke:rgba(0,0,0,.25); stroke-width:2px; }
+.mc-wheel-bulbs circle{ fill:#fff7cc; }
+.mc-wheel-bulbs .b0{ animation:mcBulb7 1s steps(1) infinite; } .mc-wheel-bulbs .b1{ animation:mcBulb7 1s steps(1) infinite .5s; }
+@keyframes mcBulb7{ 0%{ fill:#fff7cc; filter:drop-shadow(0 0 3px #fde047); } 50%{ fill:#a16207; filter:none; } }
+.mc-wheel-wrap.win{ animation:mcWin7 .5s ease-in-out 3; }
+@keyframes mcWin7{ 50%{ box-shadow:0 0 0 8px rgba(250,204,21,.45), 0 18px 40px rgba(0,0,0,.28); } }
+.mc-wheel-pointer{ position:absolute; top:-12px; left:50%; z-index:3; width:34px; height:44px; margin-left:-17px; transform-origin:50% 10px; background:linear-gradient(180deg,#fff,#e2e8f0); clip-path:polygon(50% 100%,0 22%,18% 0,82% 0,100% 22%); filter:drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
+.mc-wheel-pointer::after{ content:''; position:absolute; left:50%; top:9px; width:10px; height:10px; margin-left:-5px; border-radius:50%; background:#ef4444; }
+.mc-wheel-pointer.kick{ animation:mcKick7 .12s ease-out; }
+@keyframes mcKick7{ 40%{ transform:rotate(-14deg); } }
+.mc-wheel-hub{ position:absolute; left:50%; top:50%; z-index:2; width:27%; aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; border:4px solid #fde68a; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#fff; font:inherit; background:radial-gradient(circle at 35% 30%,#fb7185,#e11d48 55%,#9f1239); box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 2px 6px rgba(255,255,255,.35); transition:transform .2s var(--mc-spring); }
+.mc-wheel-hub b{ font-size:clamp(10px,3.2vw,13px); letter-spacing:.06em; } .mc-wheel-hub small{ font-size:clamp(9px,2.6vw,11px); opacity:.9; font-weight:700; }
+.mc-wheel-hub:hover:not(:disabled){ transform:translate(-50%,-50%) scale(1.06); }
+.mc-wheel-hub:disabled{ filter:saturate(.6); cursor:wait; }
+.mc-wheel-result{ min-height:44px; text-align:center; font-size:14.5px; color:var(--mc-muted); display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; max-width:420px; }
+.mc-wheel-result b{ color:var(--text); }
+.mc-wr-pop{ font-size:30px; display:inline-block; animation:mcGift7 .7s var(--mc-spring) both; }
+.mc-wheel-spin{ width:100%; max-width:420px; min-height:52px; border:0; border-radius:16px; cursor:pointer; color:#fff; font:inherit; font-weight:800; font-size:16px; background:linear-gradient(115deg,#7c3aed,#db2777 55%,#f59e0b); box-shadow:0 12px 26px rgba(219,39,119,.3); transition:transform .2s var(--mc-spring), opacity .2s; }
+.mc-wheel-spin:active:not(:disabled){ transform:scale(.97); }
+.mc-wheel-spin:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
+.mc-wheel-pity{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:16px; background:var(--mc-card-2); }
+.mc-wheel-pity b{ display:block; font-size:13.5px; } .mc-wheel-pity small{ font-size:12.5px; color:var(--mc-muted); }
+.mc-wheel-pbar{ height:8px; border-radius:99px; background:var(--mc-line); overflow:hidden; }
+.mc-wheel-pbar i{ display:block; height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,#a855f7,#ec4899); transition:width .6s var(--mc-ease-out); }
+.mc-wheel-odds{ width:100%; max-width:420px; border-radius:16px; background:var(--mc-card-2); padding:0 14px; }
+.mc-wheel-odds summary{ cursor:pointer; padding:13px 0; font-weight:800; font-size:14px; list-style:none; display:flex; justify-content:space-between; }
+.mc-wheel-odds summary::after{ content:'›'; transform:rotate(90deg); transition:transform .2s; } .mc-wheel-odds[open] summary::after{ transform:rotate(-90deg); }
+.mc-wheel-odds summary::-webkit-details-marker{ display:none; }
+.mc-odds{ display:flex; flex-direction:column; gap:2px; }
+.mc-odds div{ display:grid; grid-template-columns:12px 1fr auto; gap:10px; align-items:center; padding:7px 0; border-bottom:1px solid var(--mc-line); font-size:13.5px; }
+.mc-odds .sw{ width:12px; height:12px; border-radius:4px; }
+.mc-odds-note{ font-size:12px; line-height:1.5; color:var(--mc-muted); margin:10px 0 14px; }
+.mc-wheel-hist{ width:100%; max-width:420px; }
+.mc-wheel-hist h4, .mc-auc-hist h4{ font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--mc-muted); margin:6px 0 8px; }
+.mc-wh-row{ display:grid; grid-template-columns:32px 1fr auto; gap:10px; align-items:center; padding:8px 10px; border-radius:12px; margin-bottom:4px; background:var(--mc-card-2); }
+.mc-wh-row span{ font-size:22px; text-align:center; } .mc-wh-row b{ font-size:13.5px; } .mc-wh-row small{ font-size:12px; color:var(--mc-muted); }
+.mc-wh-row.r-epic{ box-shadow:inset 3px 0 0 #a855f7; } .mc-wh-row.r-leg{ box-shadow:inset 3px 0 0 #f59e0b; } .mc-wh-row.r-excl{ box-shadow:inset 3px 0 0 #ef4444; } .mc-wh-row.r-rare{ box-shadow:inset 3px 0 0 #3b82f6; }
+
+/* Аукцион */
+.mc-auc-hero{ margin:4px 18px 12px; padding:14px 16px; border-radius:18px; display:flex; align-items:center; gap:12px; background:linear-gradient(130deg,rgba(15,118,110,.12),rgba(37,99,235,.12)); border:1px solid var(--mc-line); }
+.mc-auc-hero div{ flex:1; min-width:0; } .mc-auc-hero b{ display:block; font-size:15px; margin-bottom:3px; } .mc-auc-hero small{ font-size:12.5px; color:var(--mc-muted); line-height:1.4; display:block; }
+.mc-auc-hero .btn{ width:auto !important; flex:none; white-space:nowrap; }
+.mc-auc-tabs{ display:flex; gap:4px; margin:0 18px 10px; padding:4px; border-radius:14px; background:var(--mc-card-2); }
+.mc-auc-tabs button{ flex:1; padding:8px 4px; border:0; border-radius:10px; background:transparent; color:var(--mc-muted); font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+.mc-auc-tabs button.on{ background:var(--mc-card); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+.mc-auc-search{ display:flex; gap:8px; margin:0 18px 10px; }
+.mc-auc-search input, .mc-auc-search select{ height:40px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:14px; padding:0 12px; min-width:0; }
+.mc-auc-search input{ flex:1; } .mc-auc-search select{ flex:none; width:auto; }
+.mc-auc-list{ display:flex; flex-direction:column; gap:8px; padding:0 18px 22px; }
+.mc-auc-card{ display:grid; grid-template-columns:56px 1fr auto; gap:12px; align-items:center; padding:12px; border-radius:18px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); text-align:left; font:inherit; cursor:pointer; transition:transform .2s var(--mc-spring), border-color .2s; }
+.mc-auc-card:hover{ border-color:var(--accent); } .mc-auc-card:active{ transform:scale(.985); }
+.mc-auc-card.is-done{ opacity:.7; }
+.mc-auc-em{ width:56px; height:56px; display:grid; place-items:center; font-size:32px; border-radius:16px; background:var(--mc-card-2); }
+.mc-auc-card.r-epic .mc-auc-em{ background:rgba(168,85,247,.14); } .mc-auc-card.r-leg .mc-auc-em{ background:rgba(245,158,11,.16); } .mc-auc-card.r-excl .mc-auc-em{ background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(245,158,11,.2)); } .mc-auc-card.r-rare .mc-auc-em{ background:rgba(59,130,246,.12); }
+.mc-auc-info{ min-width:0; display:flex; flex-direction:column; gap:3px; }
+.mc-auc-info > b{ font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-auc-info > small{ font-size:12px; color:var(--mc-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-auc-meta{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:12.5px; color:var(--mc-muted); }
+.mc-auc-meta b{ color:var(--text); }
+.mc-auc-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+.mc-auc-time{ font-variant-numeric:tabular-nums; font-weight:800; font-size:13.5px; padding:4px 9px; border-radius:10px; background:var(--mc-card-2); white-space:nowrap; }
+.mc-auc-time.soon, .mc-auc-stats b.soon{ color:#ef4444; }
+.mc-auc-tag{ font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px; background:var(--mc-card-2); color:var(--mc-muted); white-space:nowrap; }
+.mc-auc-tag.lead{ background:rgba(34,197,94,.15); color:#16a34a; } .mc-auc-tag.out{ background:rgba(239,68,68,.14); color:#dc2626; } .mc-auc-tag.mine{ background:var(--mc-accent-soft); color:var(--mc-accent-text, var(--accent)); }
+.mc-auc-empty{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:34px 16px; }
+.mc-auc-empty span{ font-size:46px; } .mc-auc-empty b{ font-size:16px; } .mc-auc-empty small{ font-size:13px; color:var(--mc-muted); max-width:300px; }
+.mc-auc-empty .btn{ width:auto !important; margin-top:6px; }
+.mc-auc-skel{ height:82px; border-radius:18px; background:linear-gradient(90deg,var(--mc-card-2) 25%,var(--mc-line) 50%,var(--mc-card-2) 75%); background-size:200% 100%; animation:mcSkel7 1.2s linear infinite; }
+.mc-auc-skel.big{ height:220px; margin:18px; }
+@keyframes mcSkel7{ to{ background-position:-200% 0; } }
+.mc-auc-lot{ padding:4px 18px 22px; display:flex; flex-direction:column; gap:14px; }
+.mc-auc-lot-top{ display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; padding:18px 12px; border-radius:22px; background:var(--mc-card-2); }
+.mc-auc-lot-top h3{ margin:0; font-size:20px; } .mc-auc-lot-top small{ color:var(--mc-muted); font-size:12.5px; }
+.mc-auc-lot-top > div{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.mc-auc-lot-em{ font-size:72px; line-height:1; animation:mcGift7 .6s var(--mc-spring) both; }
+.mc-auc-lot-top.r-epic{ background:radial-gradient(circle at 50% 30%,rgba(168,85,247,.22),var(--mc-card-2) 70%); }
+.mc-auc-lot-top.r-leg{ background:radial-gradient(circle at 50% 30%,rgba(245,158,11,.24),var(--mc-card-2) 70%); }
+.mc-auc-lot-top.r-excl{ background:radial-gradient(circle at 50% 30%,rgba(239,68,68,.24),var(--mc-card-2) 70%); }
+.mc-auc-val{ font-size:12px; color:var(--mc-muted); }
+.mc-auc-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.mc-auc-stats > div{ padding:12px 10px; border-radius:16px; background:var(--mc-card); border:1px solid var(--mc-line); display:flex; flex-direction:column; gap:3px; min-width:0; }
+.mc-auc-stats small{ font-size:11.5px; color:var(--mc-muted); } .mc-auc-stats b{ font-size:16px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .mc-auc-stats span{ font-size:11.5px; color:var(--mc-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-auc-bid{ display:flex; flex-direction:column; gap:10px; }
+.mc-auc-bid label{ font-size:13px; font-weight:700; color:var(--mc-muted); }
+.mc-auc-amt{ display:grid; grid-template-columns:48px 1fr 48px; gap:8px; }
+.mc-auc-amt button{ height:48px; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font-size:22px; font-weight:700; cursor:pointer; }
+.mc-auc-amt input{ height:48px; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); text-align:center; font:inherit; font-size:20px; font-weight:800; min-width:0; }
+.mc-auc-quick{ display:flex; gap:8px; }
+.mc-auc-quick button{ flex:1; height:36px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-weight:700; font-size:13px; cursor:pointer; }
+.mc-auc-quick button:hover{ border-color:var(--accent); }
+.mc-auc-bid .mc-wheel-spin, .mc-auc-new .mc-wheel-spin{ max-width:none; background:linear-gradient(115deg,#0f766e,#0891b2 55%,#2563eb); box-shadow:0 12px 26px rgba(8,145,178,.28); }
+.mc-auc-blitz, .mc-auc-cancel{ width:100% !important; }
+.mc-auc-note{ font-size:13px; line-height:1.45; padding:10px 12px; border-radius:12px; background:var(--mc-card-2); color:var(--mc-muted); }
+.mc-auc-note.ok{ background:rgba(34,197,94,.12); color:var(--text); } .mc-auc-note.bad{ background:rgba(239,68,68,.10); color:var(--text); }
+.mc-auc-hist > div{ display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; padding:9px 12px; border-radius:12px; margin-bottom:4px; background:var(--mc-card-2); font-size:13.5px; }
+.mc-auc-hist > div.top{ box-shadow:inset 3px 0 0 #22c55e; }
+.mc-auc-hist small{ color:var(--mc-muted); font-size:12px; }
+.mc-auc-new{ padding:4px 18px 22px; display:flex; flex-direction:column; gap:10px; }
+.mc-auc-pick{ display:flex; gap:8px; overflow-x:auto; padding:4px 2px 8px; scroll-snap-type:x proximity; }
+.mc-auc-pick button{ flex:none; width:88px; display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:16px; border:1.5px solid var(--mc-line); background:var(--mc-card); color:var(--text); cursor:pointer; scroll-snap-align:start; font:inherit; }
+.mc-auc-pick button span{ font-size:30px; } .mc-auc-pick button small{ font-size:11.5px; font-weight:700; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-auc-pick button.on{ border-color:var(--accent); background:var(--mc-accent-soft); box-shadow:0 0 0 3px var(--mc-accent-soft); }
+.mc-auc-form{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mc-auc-form label{ display:flex; flex-direction:column; gap:5px; font-size:12.5px; font-weight:700; color:var(--mc-muted); }
+.mc-auc-form input{ height:44px; padding:0 12px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:15px; min-width:0; }
+.mc-auc-durs{ display:flex; gap:6px; flex-wrap:wrap; }
+.mc-auc-durs button{ padding:8px 12px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.mc-auc-durs button.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.mc-auc-sum{ display:flex; flex-direction:column; gap:2px; padding:10px 14px; border-radius:14px; background:var(--mc-card-2); }
+.mc-auc-sum div{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:5px 0; font-size:13.5px; }
+.mc-auc-sum div span{ color:var(--mc-muted); }
+@media (max-width:520px){
+  .mc-gs7-feat{ grid-template-columns:1fr; }
+  .mc-auc-hero{ flex-direction:column; align-items:stretch; } .mc-auc-hero .btn{ width:100% !important; }
+  .mc-auc-card{ grid-template-columns:48px 1fr auto; gap:10px; padding:10px; } .mc-auc-em{ width:48px; height:48px; font-size:28px; }
+  .mc-auc-form{ grid-template-columns:1fr; }
+  .mc-gs7-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+
 </style>
 </head>
 <body>
@@ -10548,6 +10735,674 @@ Object.assign(window, { mcAlarmRing, mcAlarmDismiss, mcTimerMelodySheet });
     }
   }, 500);
 })();
+
+// =====================================================================
+// MetroChat · Round 7 — больше подарков, редкость, колесо фортуны, аукцион
+// =====================================================================
+
+// ---------- Новые подарки ----------
+const MC_GIFTS_R7 = [
+  { id: 'strawberry', name: 'Клубника', emoji: '🍓', cost: 10, desc: 'Маленькая радость' },
+  { id: 'donut', name: 'Пончик', emoji: '🍩', cost: 20, desc: 'С глазурью и посыпкой' },
+  { id: 'puzzle', name: 'Пазл', emoji: '🧩', cost: 22, desc: 'Мы отлично сочетаемся' },
+  { id: 'cupcake', name: 'Капкейк', emoji: '🧁', cost: 28, desc: 'Сладкий привет' },
+  { id: 'sunflower', name: 'Подсолнух', emoji: '🌻', cost: 32, desc: 'Солнечное настроение' },
+  { id: 'rose', name: 'Роза', emoji: '🌹', cost: 38, desc: 'Классика внимания' },
+  { id: 'pizza', name: 'Пицца', emoji: '🍕', cost: 42, desc: 'Для дружеского вечера' },
+  { id: 'butterfly', name: 'Бабочка', emoji: '🦋', cost: 50, desc: 'Лёгкость и вдохновение' },
+  { id: 'clover', name: 'Клевер', emoji: '🍀', cost: 77, desc: 'На удачу' },
+  { id: 'puppy', name: 'Щенок', emoji: '🐶', cost: 88, desc: 'Самый верный друг' },
+  { id: 'fox', name: 'Лис', emoji: '🦊', cost: 95, desc: 'Хитрый и обаятельный' },
+  { id: 'panda', name: 'Панда', emoji: '🐼', cost: 120, desc: 'Пушистое спокойствие' },
+  { id: 'skate', name: 'Скейт', emoji: '🛹', cost: 135, desc: 'Для любителей скорости' },
+  { id: 'gamepad', name: 'Геймпад', emoji: '🎮', cost: 150, desc: 'Ещё один уровень' },
+  { id: 'headphones', name: 'Наушники', emoji: '🎧', cost: 160, desc: 'Любимый плейлист' },
+  { id: 'camera', name: 'Камера', emoji: '📸', cost: 175, desc: 'Лучшие моменты' },
+  { id: 'alien', name: 'Пришелец', emoji: '👾', cost: 190, desc: 'Привет из космоса' },
+  { id: 'tophat', name: 'Цилиндр', emoji: '🎩', cost: 205, desc: 'Элегантность' },
+  { id: 'violin', name: 'Скрипка', emoji: '🎻', cost: 215, desc: 'Для тонкой души' },
+  { id: 'wand', name: 'Волшебная палочка', emoji: '🪄', cost: 235, desc: 'Исполняет желания' },
+  { id: 'crystalball', name: 'Шар судьбы', emoji: '🔮', cost: 265, desc: 'Предсказание удачи' },
+  { id: 'moon', name: 'Луна', emoji: '🌙', cost: 295, desc: 'Спокойной ночи' },
+  { id: 'liberty', name: 'Статуя', emoji: '🗽', cost: 305, desc: 'Свобода и мечты' },
+  { id: 'sun', name: 'Солнце', emoji: '☀️', cost: 330, desc: 'Тепло на весь день' },
+  { id: 'volcano', name: 'Вулкан', emoji: '🌋', cost: 345, desc: 'Взрыв эмоций' },
+  { id: 'car', name: 'Спорткар', emoji: '🏎️', cost: 390, desc: 'Быстрее ветра' },
+  { id: 'plane', name: 'Самолёт', emoji: '✈️', cost: 480, desc: 'В путешествие мечты' },
+  { id: 'yacht', name: 'Яхта', emoji: '🛥️', cost: 520, desc: 'Роскошный отдых' },
+  { id: 'ufo', name: 'НЛО', emoji: '🛸', cost: 560, desc: 'Неопознанный восторг' },
+  { id: 'island', name: 'Остров', emoji: '🏝️', cost: 700, desc: 'Свой кусочек рая' }
+];
+for (const g of MC_GIFTS_R7) if (!METRO_GIFTS.some(x => x.id === g.id)) METRO_GIFTS.push(g);
+METRO_GIFTS.sort((a, b) => a.cost - b.cost);
+
+// Эксклюзивы — только из колеса фортуны (в витрине не продаются)
+const MC_GIFTS_EXCL = [
+  { id: 'x_peacock', name: 'Павлин', emoji: '🦚', cost: 900, desc: 'Эксклюзив колеса фортуны', exclusive: true },
+  { id: 'x_genie', name: 'Джинн', emoji: '🧞', cost: 1000, desc: 'Эксклюзив колеса фортуны', exclusive: true },
+  { id: 'x_galaxy', name: 'Галактика', emoji: '🌌', cost: 1200, desc: 'Эксклюзив колеса фортуны', exclusive: true },
+  { id: 'x_goldwheel', name: 'Золотое колесо', emoji: '🎡', cost: 1500, desc: 'Самый редкий подарок MetroChat', exclusive: true }
+];
+function mcGiftById(id) { return METRO_GIFTS.find(g => g.id === id) || MC_GIFTS_EXCL.find(g => g.id === id) || null; }
+const MC_RARITY = {
+  common: { n: 'Обычный', c: '#94a3b8' },
+  rare: { n: 'Редкий', c: '#3b82f6' },
+  epic: { n: 'Эпический', c: '#a855f7' },
+  leg: { n: 'Легендарный', c: '#f59e0b' },
+  excl: { n: 'Эксклюзив', c: '#ef4444' }
+};
+function mcGiftRarity(g) {
+  if (!g) return 'common';
+  if (g.exclusive || String(g.giftId || g.id || '').startsWith('x_')) return 'excl';
+  const c = Number(g.cost) || 0;
+  return c > 400 ? 'leg' : c > 180 ? 'epic' : c > 60 ? 'rare' : 'common';
+}
+function mcRarBadge(g) { const r = mcGiftRarity(g); return `<span class="mc-rar mc-rar-${r}">${MC_RARITY[r].n}</span>`; }
+function mcFmtUm(n) { return Number(n || 0).toLocaleString('ru-RU'); }
+function mcRand01() { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; } catch (_) { return Math.random(); } }
+
+// ---------- Конфетти и праздничный диалог (исправлено: раньше конфетти падало в одну точку) ----------
+function mcConfettiBurst(n = 70) {
+  const box = document.createElement('div'); box.className = 'mc-confetti7';
+  const cols = ['#f472b6', '#60a5fa', '#fbbf24', '#34d399', '#a78bfa', '#fb7185', '#22d3ee'];
+  box.innerHTML = Array.from({ length: n }, (_, i) => `<i style="left:${(mcRand01() * 100).toFixed(1)}%;--dx:${Math.round(mcRand01() * 160 - 80)}px;--d:${(1.4 + mcRand01() * 1.4).toFixed(2)}s;--dl:${(mcRand01() * 0.35).toFixed(2)}s;--r:${Math.round(mcRand01() * 360)}deg;background:${cols[i % cols.length]};${i % 3 === 0 ? 'border-radius:50%;width:9px;height:9px;' : ''}"></i>`).join('');
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 3400);
+}
+mcGiftCelebrate = function (gift, toName) {
+  mcConfettiBurst();
+  return mcDialog({ icon: `<span class="mc-dlg-gift">${esc(gift.emoji || '🎁')}</span>`, title: 'Подарок отправлен', text: `${toName} получит «${gift.name}» в свою коллекцию.`, buttons: [{ label: 'Отлично', kind: 'primary', value: true }], dismissValue: true });
+};
+
+// ---------- Витрина подарков (новый дизайн) ----------
+let mcShopFilter = 'all';
+renderGiftShop = async function () {
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  window.__mcOtherView = 'gifts';
+  const chips = [['all', 'Все'], ['common', 'Обычные'], ['rare', 'Редкие'], ['epic', 'Эпические'], ['leg', 'Легендарные']];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div>
+  <div class="settings-wrap mc-gs7">
+    <div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите тесты, крутите колесо, торгуйтесь на аукционе.</p></div><div class="gift-wallet-coin">УМ</div></div>
+    <div class="mc-gs7-actions">
+      <button type="button" onclick="startGiftEarning()"><span>✦</span><b>Заработать</b></button>
+      <button type="button" onclick="openGiftSendPicker()"><span>↗</span><b>Подарить</b></button>
+      <button type="button" onclick="renderGiftCraft()"><span>🛠️</span><b>Крафт</b></button>
+    </div>
+    <div class="mc-gs7-feat">
+      <button type="button" class="mc-feat mc-feat-wheel" onclick="mcOpenWheel()">
+        <span class="mc-feat-art"><span class="mc-mini-wheel"></span></span>
+        <span class="mc-feat-txt"><b>Колесо фортуны</b><small>${MC_WHEEL_COST} УМ за вращение · до ${mcFmtUm(1500)} УМ и эксклюзивы</small></span><span class="mc-feat-go">›</span>
+      </button>
+      <button type="button" class="mc-feat mc-feat-auc" onclick="mcOpenAuction()">
+        <span class="mc-feat-art">🔨</span>
+        <span class="mc-feat-txt"><b>Аукцион</b><small id="mcAucFeatSub">Покупайте и продавайте подарки</small></span><span class="mc-feat-go">›</span>
+      </button>
+    </div>
+    <div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>${METRO_GIFTS.length} подарков · нажмите, чтобы купить себе</p></div></div>
+    <div class="mc-gs7-chips">${chips.map(([k, l]) => `<button type="button" class="${mcShopFilter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
+    <div class="gift-shop-grid mc-gs7-grid">${METRO_GIFTS.map(g => { const r = mcGiftRarity(g); return `<button type="button" class="gift-shop-item mc-gi7 r-${r}" data-r="${r}" onclick="selectGiftToBuy('${g.id}')"${mcShopFilter !== 'all' && mcShopFilter !== r ? ' hidden' : ''}><span class="gift-emoji">${g.emoji}</span><b>${esc(g.name)}</b><small>${esc(g.desc)}</small><span class="mc-gi7-foot">${mcRarBadge(g)}<span class="gift-price">${g.cost} УМ</span></span></button>`; }).join('')}</div>
+    <div class="discovery-section-head"><div><h3>Эксклюзивы колеса</h3><p>Не продаются — их можно только выиграть или купить на аукционе</p></div></div>
+    <div class="gift-shop-grid mc-gs7-grid">${MC_GIFTS_EXCL.map(g => `<button type="button" class="gift-shop-item mc-gi7 r-excl" onclick="mcOpenWheel()"><span class="gift-emoji">${g.emoji}</span><b>${esc(g.name)}</b><small>Ценность ${mcFmtUm(g.cost)} УМ</small><span class="mc-gi7-foot">${mcRarBadge(g)}<span class="gift-price">🎡</span></span></button>`).join('')}</div>
+    <div id="giftOwnedSection"></div>
+  </div>`;
+  wrap.querySelector('.mc-gs7-chips')?.addEventListener('click', e => {
+    const b = e.target.closest('[data-f]'); if (!b) return; mcShopFilter = b.dataset.f;
+    wrap.querySelectorAll('.mc-gs7-chips button').forEach(x => x.classList.toggle('on', x === b));
+    wrap.querySelectorAll('.mc-gs7-grid .mc-gi7[data-r]').forEach(x => { x.hidden = mcShopFilter !== 'all' && x.dataset.r !== mcShopFilter; });
+  });
+  const bal = await readGiftBalance(); mcSetBalanceUI(bal);
+  await renderOwnedGifts();
+  mcAucCountActive().then(n => { const s = $('mcAucFeatSub'); if (s && n) s.textContent = `Активных лотов: ${n} · делайте ставки`; }).catch(() => {});
+};
+
+// Мои подарки: раньше скрытый подарок пропадал навсегда — теперь его можно вернуть в профиль
+let mcOwnedShowHidden = false;
+renderOwnedGifts = async function () {
+  const el = $('giftOwnedSection'); if (!el || !state.user?.uid) return;
+  try {
+    const snap = await get(ref(db, `gift_inventory/${state.user.uid}`));
+    const all = Object.entries(snap.val() || {}).map(([id, v]) => ({ id, ...v })).filter(g => g && !g.purchasePending).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const hiddenN = all.filter(g => g.hidden).length;
+    const items = all.filter(g => mcOwnedShowHidden || !g.hidden);
+    const worth = all.reduce((s, g) => s + (Number(g.cost) || Number(mcGiftById(g.giftId)?.cost) || 0), 0);
+    el.innerHTML = `<div class="discovery-section-head"><div><h3>Мои подарки · ${all.length}</h3><p>Ценность коллекции: ${mcFmtUm(worth)} УМ${hiddenN ? ` · скрыто: ${hiddenN}` : ''}</p></div>${hiddenN ? `<button type="button" class="mc-chip7" onclick="mcToggleOwnedHidden()">${mcOwnedShowHidden ? 'Скрыть скрытые' : 'Показать скрытые'}</button>` : ''}</div>
+    ${items.length ? `<div class="gift-owned-list">${items.map(g => { const r = mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost }); return `<div class="gift-owned-item r-${r}${g.hidden ? ' is-hidden' : ''}"><span>${esc(g.emoji || '🎁')}</span><div><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'От ' + esc(g.fromName) : 'Ваш подарок'}${g.hidden ? ' · скрыт' : ''}</small></div><button class="mini-btn" title="${g.hidden ? 'Показать в профиле' : 'Скрыть в профиле'}" onclick="hideOwnedGift('${g.id}')">${g.hidden ? '👁' : '◉'}</button><button class="mini-btn" title="Выставить на аукцион" onclick="mcAucNewLot('${g.id}')">🔨</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`; }).join('')}</div>` : '<p class="gift-empty-note">Пока нет подарков. Купите в витрине, выиграйте в колесе или на аукционе.</p>'}`;
+  } catch (e) { el.innerHTML = '<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>'; }
+};
+function mcToggleOwnedHidden() { mcOwnedShowHidden = !mcOwnedShowHidden; renderOwnedGifts(); }
+hideOwnedGift = async function (id) {
+  const uid = state.user?.uid; if (!uid) return;
+  const r = ref(db, `gift_inventory/${uid}/${id}`);
+  let g; try { g = (await get(r)).val(); } catch (_) {} if (!g) return toast('Подарок уже недоступен', '⚠');
+  if (!g.hidden && !(await mcConfirm('Скрыть подарок?', 'Подарок перестанет отображаться в профиле. Вернуть его можно в «Показать скрытые».', { okText: 'Скрыть', icon: '🙈' }))) return;
+  try { await update(r, { hidden: !g.hidden }); await renderOwnedGifts(); toast(g.hidden ? 'Подарок снова в профиле' : 'Подарок скрыт из профиля', '✓'); }
+  catch (e) { toast('Не удалось изменить подарок. Проверьте Firebase Rules.', '⚠'); }
+};
+
+// =====================================================================
+// Колесо фортуны
+// =====================================================================
+const MC_WHEEL_COST = 300;
+const MC_WHEEL_PITY = 25; // гарантированный эпический подарок, если 25 вращений подряд без эпика и выше
+// Порядок — как на колесе (по часовой стрелке от верха). p — шанс в процентах (сумма = 100).
+const MC_WHEEL = [
+  { id: 'u50', type: 'ums', v: 50, p: 10, ico: '🪙', label: '50', c1: '#475569', c2: '#334155' },
+  { id: 'g_common', type: 'gift', tier: 'common', p: 12, ico: '🎁', label: 'Подарок', c1: '#16a34a', c2: '#15803d' },
+  { id: 'u100', type: 'ums', v: 100, p: 14, ico: '🪙', label: '100', c1: '#0891b2', c2: '#0e7490' },
+  { id: 'g_rare', type: 'gift', tier: 'rare', p: 14, ico: '💙', label: 'Редкий', c1: '#2563eb', c2: '#1d4ed8' },
+  { id: 'u200', type: 'ums', v: 200, p: 16, ico: '💰', label: '200', c1: '#0d9488', c2: '#0f766e' },
+  { id: 'g_epic', type: 'gift', tier: 'epic', p: 7, ico: '💜', label: 'Эпик', c1: '#9333ea', c2: '#7e22ce' },
+  { id: 'u300', type: 'ums', v: 300, p: 14, ico: '🔁', label: '300', c1: '#4f46e5', c2: '#4338ca' },
+  { id: 'g_leg', type: 'gift', tier: 'leg', p: 3, ico: '🧡', label: 'Легенда', c1: '#ea580c', c2: '#c2410c' },
+  { id: 'u500', type: 'ums', v: 500, p: 8, ico: '💎', label: '500', c1: '#db2777', c2: '#be185d' },
+  { id: 'g_excl', type: 'gift', tier: 'excl', p: 0.4, ico: '👑', label: 'Эксклюзив', c1: '#dc2626', c2: '#991b1b' },
+  { id: 'u1500', type: 'ums', v: 1500, p: 1.6, ico: '🏆', label: '1500', c1: '#ca8a04', c2: '#a16207' }
+];
+const MC_WHEEL_EV = Math.round(MC_WHEEL.reduce((s, x) => s + x.p / 100 * (x.type === 'ums' ? x.v : mcWheelTierAvg(x.tier)), 0));
+function mcWheelTierAvg(tier) { const pool = mcWheelPool(tier); return pool.length ? pool.reduce((s, g) => s + g.cost, 0) / pool.length : 0; }
+function mcWheelPool(tier) { return tier === 'excl' ? MC_GIFTS_EXCL : METRO_GIFTS.filter(g => mcGiftRarity(g) === tier); }
+const MCW = { rot: 0, spinning: false, stats: null, hist: [] };
+
+function mcWheelSvg() {
+  const n = MC_WHEEL.length, R = 150, seg = 360 / n;
+  const pt = (a, r) => { const rad = (a - 90) * Math.PI / 180; return [(r * Math.cos(rad)).toFixed(2), (r * Math.sin(rad)).toFixed(2)]; };
+  let defs = '', paths = '', labels = '', bulbs = '';
+  MC_WHEEL.forEach((s, i) => {
+    const a0 = i * seg, a1 = (i + 1) * seg, [x0, y0] = pt(a0, R - 8), [x1, y1] = pt(a1, R - 8);
+    defs += `<radialGradient id="mcwg${i}" cx="0" cy="0" r="150" gradientUnits="userSpaceOnUse"><stop offset="0.25" stop-color="${s.c2}"/><stop offset="1" stop-color="${s.c1}"/></radialGradient>`;
+    paths += `<path d="M0 0 L${x0} ${y0} A${R - 8} ${R - 8} 0 0 1 ${x1} ${y1} Z" fill="url(#mcwg${i})" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>`;
+    const mid = a0 + seg / 2;
+    labels += `<g transform="rotate(${mid})"><text x="0" y="-112" text-anchor="middle" font-size="22">${s.ico}</text><text x="0" y="-84" text-anchor="middle" font-size="${s.label.length > 6 ? 10.5 : 13}" font-weight="800" fill="#fff" style="letter-spacing:.02em">${s.label}</text></g>`;
+  });
+  for (let i = 0; i < 22; i++) { const [bx, by] = pt(i * 360 / 22, R - 3); bulbs += `<circle class="b${i % 2}" cx="${bx}" cy="${by}" r="3.2"/>`; }
+  return `<svg viewBox="-152 -152 304 304" class="mc-wheel-svg" aria-hidden="true"><defs>${defs}</defs>
+    <circle r="150" fill="#1e1b4b"/><g class="mc-wheel-rot" id="mcWheelRot">${paths}${labels}</g>
+    <g class="mc-wheel-bulbs">${bulbs}</g></svg>`;
+}
+async function mcWheelLoad() {
+  const uid = state.user?.uid; if (!uid) return;
+  try {
+    const [st, h] = await Promise.all([get(ref(db, `gift_wheel/${uid}/stats`)), get(query(ref(db, `gift_wheel/${uid}/history`), orderByChild('at'), limitToLast(30)))]);
+    MCW.stats = st.val() || { spins: 0, pity: 0, won: 0 };
+    MCW.hist = Object.values(h.val() || {}).sort((a, b) => b.at - a.at);
+  } catch (e) { MCW.stats = MCW.stats || { spins: 0, pity: 0, won: 0 }; }
+}
+async function mcOpenWheel() {
+  if (!state.user?.uid) return toast('Войдите в аккаунт', '⚠');
+  const el = mcSheet('mcWheelSheet', `${mcSheetHead('Колесо фортуны', 'mcWheelSheet', `<span class="mc-wheel-bal" id="mcWheelBal">… УМ</span>`)}
+    <div class="mc-wheel-body">
+      <div class="mc-wheel-stage">
+        <div class="mc-wheel-glow"></div>
+        <div class="mc-wheel-pointer" id="mcWheelPtr"></div>
+        <div class="mc-wheel-wrap" id="mcWheelWrap">${mcWheelSvg()}</div>
+        <button type="button" class="mc-wheel-hub" id="mcWheelHub" aria-label="Крутить"><b>КРУТИТЬ</b><small>${MC_WHEEL_COST} УМ</small></button>
+      </div>
+      <div class="mc-wheel-result" id="mcWheelRes" aria-live="polite">Испытайте удачу — призы до ${mcFmtUm(1500)} УМ и эксклюзивные подарки</div>
+      <button type="button" class="mc-wheel-spin" id="mcWheelSpin">🎡 Крутить за ${MC_WHEEL_COST} УМ</button>
+      <div class="mc-wheel-pity"><div><b>Гарантия эпика</b><small id="mcWheelPityTxt">…</small></div><div class="mc-wheel-pbar"><i id="mcWheelPity"></i></div></div>
+      <details class="mc-wheel-odds"><summary>Шансы выигрыша</summary>
+        <div class="mc-odds">${MC_WHEEL.slice().sort((a, b) => b.p - a.p).map(s => `<div><span class="sw" style="background:${s.c1}"></span><span>${s.ico} ${s.type === 'ums' ? `${s.v} УМ` : `${MC_RARITY[s.tier].n} подарок`}</span><b>${String(s.p).replace('.', ',')}%</b></div>`).join('')}</div>
+        <p class="mc-odds-note">Результат определяется криптографическим генератором случайных чисел до начала анимации. Средний выигрыш — около ${MC_WHEEL_EV} УМ за вращение. Если ${MC_WHEEL_PITY} вращений подряд не выпадает эпический подарок или лучше, следующее вращение гарантированно даёт эпический подарок.</p>
+      </details>
+      <div class="mc-wheel-hist"><h4>Последние выигрыши</h4><div id="mcWheelHist"></div></div>
+    </div>`, { cls: 'mc-wheel-ov' });
+  el.querySelector('#mcWheelSpin').addEventListener('click', mcWheelSpin);
+  el.querySelector('#mcWheelHub').addEventListener('click', mcWheelSpin);
+  $('mcWheelRot').style.transform = `rotate(${MCW.rot}deg)`;
+  readGiftBalance().then(b => { const x = $('mcWheelBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
+  await mcWheelLoad(); mcWheelRenderMeta();
+}
+function mcWheelRenderMeta() {
+  const s = MCW.stats || { pity: 0, spins: 0 };
+  const left = Math.max(1, MC_WHEEL_PITY - (s.pity || 0));
+  const p = $('mcWheelPity'); if (p) p.style.width = `${Math.min(100, (s.pity || 0) / MC_WHEEL_PITY * 100)}%`;
+  const t = $('mcWheelPityTxt'); if (t) t.textContent = left <= 1 ? 'Следующее вращение — гарантированный эпический подарок' : `Осталось вращений: ${left} · всего вращений: ${s.spins || 0}`;
+  const h = $('mcWheelHist');
+  if (h) h.innerHTML = MCW.hist.length ? MCW.hist.slice(0, 12).map(x => `<div class="mc-wh-row r-${x.rar || 'common'}"><span>${esc(x.emoji || '🪙')}</span><b>${esc(x.title || '')}</b><small>${mcAgo7(x.at)}</small></div>`).join('') : '<p class="gift-empty-note">Здесь появятся ваши выигрыши.</p>';
+}
+function mcAgo7(ts) {
+  const d = Math.max(0, Date.now() - Number(ts || 0)) / 1000;
+  if (d < 60) return 'только что'; if (d < 3600) return `${Math.floor(d / 60)} мин назад`; if (d < 86400) return `${Math.floor(d / 3600)} ч назад`;
+  return new Date(ts).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+}
+function mcWheelPick(pity) {
+  if (pity + 1 >= MC_WHEEL_PITY) return MC_WHEEL.findIndex(s => s.id === 'g_epic');
+  let r = mcRand01() * 100;
+  for (let i = 0; i < MC_WHEEL.length; i++) { r -= MC_WHEEL[i].p; if (r < 0) return i; }
+  return 0;
+}
+function mcWheelTick(strength = 1) {
+  if (state.settings?.sound === false) return;
+  const ac = mcAC(); if (!ac) return;
+  try { const out = mcOut(ac, mcVol() * 0.5); const t = ac.currentTime + 0.005; mcTone6(ac, out, t, 1900 + Math.random() * 200, { type: 'square', dur: 0.03, vol: 0.12 * strength, attack: 0.001, filter: 3000 }); } catch (_) {}
+}
+function mcWheelFanfare(big) {
+  if (state.settings?.sound === false) return;
+  const ac = mcAC(); if (!ac) return;
+  try {
+    const out = mcOut(ac, mcVol()); const t = ac.currentTime + 0.02;
+    const notes = big ? [72, 76, 79, 84, 88, 91] : [72, 76, 79, 84];
+    notes.forEach((n, i) => mcBell(ac, out, t + i * 0.1, mcMidi6(n), big ? 1.6 : 1, 0.18));
+  } catch (_) {}
+}
+async function mcWheelSpin() {
+  if (MCW.spinning) return;
+  const uid = state.user?.uid; if (!uid) return;
+  const btn = $('mcWheelSpin'), hub = $('mcWheelHub'), res = $('mcWheelRes');
+  MCW.spinning = true; if (btn) btn.disabled = true; if (hub) hub.disabled = true;
+  let charged = false;
+  try {
+    if (!MCW.stats) await mcWheelLoad();
+    const spend = await mcSpendUms(uid, MC_WHEEL_COST);
+    if (!spend.ok) {
+      const x = $('mcWheelBal'); if (x) x.textContent = `${mcFmtUm(spend.balance)} УМ`;
+      if (res) res.textContent = `Нужно ${MC_WHEEL_COST} УМ, у вас ${mcFmtUm(spend.balance)}. Пройдите тест в «Заработать».`;
+      return toast(`Недостаточно умов: нужно ${MC_WHEEL_COST}`, '🎡');
+    }
+    charged = true;
+    const pity = Number(MCW.stats?.pity || 0);
+    const idx = mcWheelPick(pity), seg = MC_WHEEL[idx];
+    // Определяем приз и сразу сохраняем его — даже если закрыть окно во время анимации, выигрыш не потеряется
+    let prize, balance = spend.balance;
+    if (seg.type === 'ums') {
+      balance = await mcAddUms(uid, seg.v);
+      prize = { emoji: seg.ico, title: `${seg.v} УМ`, rar: seg.v >= 500 ? 'leg' : seg.v >= 300 ? 'epic' : 'common', ums: seg.v };
+    } else {
+      const pool = mcWheelPool(seg.tier); const g = pool[Math.floor(mcRand01() * pool.length)] || METRO_GIFTS[0];
+      await set(push(ref(db, `gift_inventory/${uid}`)), { giftId: g.id, name: g.name, emoji: g.emoji, cost: g.cost, fromName: 'Колесо фортуны', createdAt: Date.now(), hidden: false, wheel: true });
+      prize = { emoji: g.emoji, title: g.name, rar: seg.tier, gift: g };
+    }
+    charged = false;
+    const big = ['epic', 'leg', 'excl'].includes(seg.tier) || (seg.ums || seg.v) >= 500;
+    const newPity = ['epic', 'leg', 'excl'].includes(seg.tier) ? 0 : pity + 1;
+    MCW.stats = { spins: Number(MCW.stats?.spins || 0) + 1, pity: newPity, won: Number(MCW.stats?.won || 0) + (seg.type === 'ums' ? seg.v : prize.gift.cost), last: Date.now() };
+    const hist = { at: Date.now(), seg: seg.id, emoji: prize.emoji, title: prize.title, rar: prize.rar };
+    update(ref(db, `gift_wheel/${uid}`), { stats: MCW.stats }).catch(e => console.warn('wheel stats', e));
+    set(push(ref(db, `gift_wheel/${uid}/history`)), hist).catch(e => console.warn('wheel hist', e));
+    if (res) res.textContent = 'Колесо вращается…';
+    await mcWheelAnimate(idx);
+    MCW.hist.unshift(hist); mcWheelRenderMeta();
+    const bx = $('mcWheelBal'); if (bx) bx.textContent = `${mcFmtUm(balance)} УМ`;
+    mcSetBalanceUI(balance);
+    if (res) res.innerHTML = `<span class="mc-wr-pop r-${prize.rar}">${esc(prize.emoji)}</span> ${seg.type === 'ums' ? `Вы выиграли <b>${seg.v} УМ</b>` : `Вы выиграли подарок <b>${esc(prize.title)}</b> · ${MC_RARITY[seg.tier].n}`}`;
+    $('mcWheelWrap')?.classList.add('win'); setTimeout(() => $('mcWheelWrap')?.classList.remove('win'), 1600);
+    mcWheelFanfare(big); if (big) mcConfettiBurst(big ? 90 : 40);
+    if (navigator.vibrate && state.settings?.vibration !== false) try { navigator.vibrate(big ? [60, 40, 120] : 40); } catch (_) {}
+    if (big) {
+      await mcDialog({ icon: `<span class="mc-dlg-gift">${esc(prize.emoji)}</span>`, title: seg.type === 'ums' ? `+${seg.v} УМ` : prize.title, text: seg.type === 'ums' ? 'Крупный выигрыш — умы уже на балансе.' : `${MC_RARITY[seg.tier].n} подарок добавлен в вашу коллекцию.`, buttons: [{ label: 'Забрать', kind: 'primary', value: true }], dismissValue: true });
+    }
+    if ($('giftOwnedSection')) renderOwnedGifts();
+  } catch (e) {
+    console.error('wheel', e);
+    if (charged) { try { const b = await mcAddUms(uid, MC_WHEEL_COST); mcSetBalanceUI(b); } catch (_) {} }
+    toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (gift_wheel)' : 'Не удалось прокрутить колесо, умы возвращены', '⚠');
+    if (res) res.textContent = 'Что-то пошло не так. Умы возвращены.';
+  } finally {
+    MCW.spinning = false; const b = $('mcWheelSpin'), h = $('mcWheelHub'); if (b) b.disabled = false; if (h) h.disabled = false;
+  }
+}
+function mcWheelAnimate(idx) {
+  return new Promise(resolve => {
+    const g = $('mcWheelRot'); if (!g) return resolve();
+    const n = MC_WHEEL.length, seg = 360 / n;
+    const center = idx * seg + seg / 2, jitter = (mcRand01() - 0.5) * seg * 0.7;
+    const cur = MCW.rot, curMod = ((cur % 360) + 360) % 360;
+    const target = ((360 - center - jitter) % 360 + 360) % 360;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const turns = reduce ? 1 : 6;
+    const end = cur + turns * 360 + ((target - curMod + 360) % 360);
+    const dur = reduce ? 1200 : 5600, t0 = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 4);
+    let lastSeg = Math.floor(cur / seg); const ptr = $('mcWheelPtr');
+    const frame = now => {
+      const t = Math.min(1, (now - t0) / dur), a = cur + (end - cur) * ease(t);
+      g.style.transform = `rotate(${a}deg)`;
+      const s = Math.floor((a + seg / 2) / seg);
+      if (s !== lastSeg) { lastSeg = s; mcWheelTick(1 - t * 0.6); if (ptr) { ptr.classList.remove('kick'); void ptr.offsetWidth; ptr.classList.add('kick'); } }
+      if (t < 1 && document.body.contains(g)) requestAnimationFrame(frame);
+      else { MCW.rot = end; resolve(); }
+    };
+    requestAnimationFrame(frame);
+  });
+}
+
+// =====================================================================
+// Аукцион подарков
+// auctions/{id}: { sellerId, sellerName, item, startPrice, step, buyNow, createdAt, endsAt, status, topBid, bids, bidders }
+// auction_bids/{id}/{bidId}: { uid, name, amount, at }
+// auction_credits/{uid}/{key}: { amount, reason, auctionId, name, emoji, at, claimed }  — начисления и уведомления
+// Деньги ставки списываются сразу (эскроу). Перебитому участнику умы возвращаются начислением.
+// =====================================================================
+const MC_AUC_FEE = 0.05;
+const MC_AUC_SNIPE = 60000;
+const MC_AUC_DUR = [[15, '15 мин'], [60, '1 час'], [360, '6 часов'], [1440, '1 день'], [4320, '3 дня']];
+const MCA = { lots: {}, unsub: null, tab: 'active', tick: null, settling: new Set(), credUnsub: null, credUid: null, bgIv: null, lotUnsub: null };
+function mcAucMinBid(lot) { const top = lot.topBid?.amount; return top ? top + Math.max(Number(lot.step) || 0, Math.ceil(top * 0.05), 5) : Math.max(1, Number(lot.startPrice) || 1); }
+function mcAucPrice(lot) { return lot.topBid?.amount || lot.startPrice || 0; }
+function mcAucLeft(ms) {
+  if (ms <= 0) return 'завершается…';
+  const s = Math.floor(ms / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60;
+  if (d) return `${d} д ${h} ч`; if (h) return `${h} ч ${p2(m)} мин`; return `${m}:${p2(ss)}`;
+}
+async function mcAucCountActive() {
+  const v = (await get(query(ref(db, 'auctions'), orderByChild('createdAt'), limitToLast(200)))).val() || {};
+  return Object.values(v).filter(l => l && l.status === 'active' && l.endsAt > Date.now()).length;
+}
+function mcOpenAuction(tab) {
+  if (!state.user?.uid) return toast('Войдите в аккаунт', '⚠');
+  if (tab) MCA.tab = tab;
+  const tabs = [['active', 'Лоты'], ['bids', 'Мои ставки'], ['mine', 'Мои лоты'], ['done', 'Завершённые']];
+  const el = mcSheet('mcAucSheet', `${mcSheetHead('Аукцион', 'mcAucSheet', `<span class="mc-wheel-bal" id="mcAucBal">… УМ</span>`)}
+    <div class="mc-auc-hero"><div><b>Аукцион подарков</b><small>Ставка списывается сразу и возвращается, если вас перебьют. Ставка в последнюю минуту продлевает торги. Комиссия продавца — ${Math.round(MC_AUC_FEE * 100)}%.</small></div><button type="button" class="btn btn-primary" onclick="mcAucNewLot()">+ Выставить</button></div>
+    <div class="mc-auc-tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-t="${k}" class="${MCA.tab === k ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <div class="mc-auc-search"><input id="mcAucQ" type="search" placeholder="Поиск по названию подарка" autocomplete="off"><select id="mcAucSort"><option value="end">Скоро конец</option><option value="new">Новые</option><option value="cheap">Дешевле</option><option value="exp">Дороже</option></select></div>
+    <div id="mcAucList" class="mc-auc-list"><div class="mc-auc-skel"></div><div class="mc-auc-skel"></div></div>`, { cls: 'mc-auc-ov' });
+  el.querySelector('.mc-auc-tabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; MCA.tab = b.dataset.t; el.querySelectorAll('.mc-auc-tabs button').forEach(x => x.classList.toggle('on', x === b)); mcAucRender(); });
+  el.querySelector('#mcAucQ').addEventListener('input', mcAucRender);
+  el.querySelector('#mcAucSort').addEventListener('change', mcAucRender);
+  el.querySelector('#mcAucList').addEventListener('click', e => { const c = e.target.closest('[data-lot]'); if (c) mcAucOpenLot(c.dataset.lot); });
+  readGiftBalance().then(b => { const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
+  if (MCA.unsub) { try { MCA.unsub(); } catch (_) {} }
+  MCA.unsub = onValue(query(ref(db, 'auctions'), orderByChild('createdAt'), limitToLast(200)), snap => {
+    if (!document.getElementById('mcAucSheet')) { try { MCA.unsub?.(); } catch (_) {} MCA.unsub = null; return; }
+    MCA.lots = snap.val() || {}; mcAucRender(); mcAucSettleDue();
+  }, e => { const l = $('mcAucList'); if (l) l.innerHTML = `<p class="gift-empty-note">Нет доступа к аукциону. Добавьте новые правила Firebase (auctions).</p>`; });
+  clearInterval(MCA.tick);
+  MCA.tick = setInterval(() => {
+    if (!document.getElementById('mcAucSheet') && !document.getElementById('mcAucLot')) { clearInterval(MCA.tick); MCA.tick = null; if (MCA.unsub) { try { MCA.unsub(); } catch (_) {} MCA.unsub = null; } return; }
+    document.querySelectorAll('[data-ends]').forEach(x => { const ms = Number(x.dataset.ends) - Date.now(); x.textContent = mcAucLeft(ms); x.classList.toggle('soon', ms < 5 * 60000); });
+    mcAucSettleDue();
+  }, 1000);
+}
+function mcAucRender() {
+  const list = $('mcAucList'); if (!list) return;
+  const me = state.user?.uid, now = Date.now();
+  const q = ($('mcAucQ')?.value || '').trim().toLowerCase(), sort = $('mcAucSort')?.value || 'end';
+  let lots = Object.entries(MCA.lots).map(([id, l]) => ({ id, ...l })).filter(l => l && l.item);
+  if (MCA.tab === 'active') lots = lots.filter(l => l.status === 'active');
+  else if (MCA.tab === 'bids') lots = lots.filter(l => l.bidders?.[me]);
+  else if (MCA.tab === 'mine') lots = lots.filter(l => l.sellerId === me);
+  else lots = lots.filter(l => l.status !== 'active');
+  if (q) lots = lots.filter(l => String(l.item.name || '').toLowerCase().includes(q));
+  const cmp = { end: (a, b) => (a.status === 'active' ? 0 : 1) - (b.status === 'active' ? 0 : 1) || a.endsAt - b.endsAt, new: (a, b) => b.createdAt - a.createdAt, cheap: (a, b) => mcAucPrice(a) - mcAucPrice(b), exp: (a, b) => mcAucPrice(b) - mcAucPrice(a) }[sort];
+  if (MCA.tab === 'done') lots.sort((a, b) => (b.doneAt || b.endsAt) - (a.doneAt || a.endsAt)); else lots.sort(cmp);
+  if (!lots.length) {
+    const empty = { active: ['🔨', 'Пока нет активных лотов', 'Выставьте свой подарок первым — он появится здесь у всех.'], bids: ['🙋', 'Вы ещё не делали ставок', 'Откройте вкладку «Лоты» и выберите подарок.'], mine: ['📦', 'У вас нет лотов', 'Нажмите «+ Выставить», чтобы продать подарок.'], done: ['🏁', 'Завершённых торгов пока нет', ''] }[MCA.tab];
+    list.innerHTML = `<div class="mc-auc-empty"><span>${empty[0]}</span><b>${empty[1]}</b><small>${empty[2]}</small>${MCA.tab !== 'done' && MCA.tab !== 'bids' ? '<button type="button" class="btn btn-primary" onclick="mcAucNewLot()">Выставить подарок</button>' : ''}</div>`;
+    return;
+  }
+  list.innerHTML = lots.map(l => {
+    const r = mcGiftRarity(l.item), active = l.status === 'active';
+    let badge = '';
+    if (active && l.topBid?.uid === me) badge = '<span class="mc-auc-tag lead">Вы лидируете</span>';
+    else if (active && l.bidders?.[me]) badge = '<span class="mc-auc-tag out">Вас перебили</span>';
+    else if (active && l.sellerId === me) badge = '<span class="mc-auc-tag mine">Ваш лот</span>';
+    else if (!active) badge = l.status === 'cancelled' ? '<span class="mc-auc-tag">Снят</span>' : l.winner === me ? '<span class="mc-auc-tag lead">Вы выиграли</span>' : l.winner ? '<span class="mc-auc-tag">Продан</span>' : '<span class="mc-auc-tag">Без ставок</span>';
+    return `<button type="button" class="mc-auc-card r-${r}${active ? '' : ' is-done'}" data-lot="${l.id}">
+      <span class="mc-auc-em">${esc(l.item.emoji || '🎁')}</span>
+      <span class="mc-auc-info"><b>${esc(l.item.name || 'Подарок')}</b><small>${mcRarBadge(l.item)} · от ${esc(l.sellerName || 'пользователя')}</small>
+        <span class="mc-auc-meta"><span>${l.topBid ? 'Ставка' : 'Старт'} <b>${mcFmtUm(mcAucPrice(l))} УМ</b></span><span>${l.bids || 0} ${mcPl6(l.bids || 0, ['ставка', 'ставки', 'ставок'])}</span>${l.buyNow && active ? `<span>Блиц ${mcFmtUm(l.buyNow)}</span>` : ''}</span></span>
+      <span class="mc-auc-right">${badge}${active ? `<span class="mc-auc-time" data-ends="${l.endsAt}">${mcAucLeft(l.endsAt - now)}</span>` : `<span class="mc-auc-time">${l.finalPrice ? mcFmtUm(l.finalPrice) + ' УМ' : '—'}</span>`}</span>
+    </button>`;
+  }).join('');
+}
+function mcAucOpenLot(id) {
+  const me = state.user?.uid;
+  const el = mcSheet('mcAucLot', `${mcSheetHead('Лот', 'mcAucLot')}<div id="mcAucLotBody" class="mc-auc-lot"><div class="mc-auc-skel big"></div></div>`, { cls: 'mc-auc-ov' });
+  let lot = MCA.lots[id] ? { id, ...MCA.lots[id] } : null, bids = [];
+  const draw = () => {
+    const b = $('mcAucLotBody'); if (!b || !lot) return;
+    const active = lot.status === 'active', min = mcAucMinBid(lot), mine = lot.sellerId === me, lead = lot.topBid?.uid === me;
+    const cur = Number($('mcAucAmt')?.value || 0);
+    b.innerHTML = `
+      <div class="mc-auc-lot-top r-${mcGiftRarity(lot.item)}"><span class="mc-auc-lot-em">${esc(lot.item.emoji || '🎁')}</span><h3>${esc(lot.item.name || 'Подарок')}</h3><div>${mcRarBadge(lot.item)}${lot.item.cost ? `<span class="mc-auc-val">Цена в витрине: ${mcFmtUm(lot.item.cost)} УМ</span>` : ''}</div><small>Продавец: ${esc(lot.sellerName || '—')}</small></div>
+      <div class="mc-auc-stats">
+        <div><small>${lot.topBid ? 'Текущая ставка' : 'Стартовая цена'}</small><b>${mcFmtUm(mcAucPrice(lot))} УМ</b>${lot.topBid ? `<span>${lead ? 'ваша' : esc(lot.topBid.name || '')}</span>` : ''}</div>
+        <div><small>${active ? 'До конца' : 'Статус'}</small><b ${active ? `data-ends="${lot.endsAt}"` : ''}>${active ? mcAucLeft(lot.endsAt - Date.now()) : lot.status === 'cancelled' ? 'Снят' : lot.winner === me ? 'Ваш' : lot.winner ? 'Продан' : lot.status === 'settling' ? 'Подводим итоги' : 'Без ставок'}</b>${lot.extended ? `<span>продлён ×${lot.extended}</span>` : ''}</div>
+        <div><small>Ставок</small><b>${lot.bids || 0}</b>${lot.buyNow ? `<span>блиц ${mcFmtUm(lot.buyNow)}</span>` : ''}</div>
+      </div>
+      ${active && !mine ? `<div class="mc-auc-bid">
+        ${lead ? '<div class="mc-auc-note ok">Ваша ставка лидирует. Можно повысить её — прошлая сумма вернётся.</div>' : lot.bidders?.[me] ? '<div class="mc-auc-note bad">Вашу ставку перебили — умы уже возвращены на баланс.</div>' : ''}
+        <label>Ваша ставка (минимум ${mcFmtUm(min)} УМ)</label>
+        <div class="mc-auc-amt"><button type="button" data-d="-1">−</button><input id="mcAucAmt" type="number" inputmode="numeric" min="${min}" step="1" value="${Math.max(min, cur || 0)}"><button type="button" data-d="1">+</button></div>
+        <div class="mc-auc-quick">${[min, min + Math.max(5, Math.ceil(min * 0.1)), min + Math.max(10, Math.ceil(min * 0.25))].map(v => `<button type="button" data-v="${v}">${mcFmtUm(v)}</button>`).join('')}</div>
+        <button type="button" class="mc-wheel-spin" id="mcAucBidGo">Сделать ставку</button>
+        ${lot.buyNow && lot.buyNow >= min ? `<button type="button" class="btn btn-secondary mc-auc-blitz" id="mcAucBuyNow">⚡ Купить сразу за ${mcFmtUm(lot.buyNow)} УМ</button>` : ''}
+      </div>` : ''}
+      ${active && mine ? `<div class="mc-auc-note">Это ваш лот. ${lot.topBid ? `После завершения вы получите ${mcFmtUm(lot.topBid.amount - Math.floor(lot.topBid.amount * MC_AUC_FEE))} УМ (комиссия ${Math.round(MC_AUC_FEE * 100)}%).` : 'Пока ставок нет — лот можно снять с торгов.'}</div>${!lot.topBid ? '<button type="button" class="btn btn-secondary mc-auc-cancel" id="mcAucCancel">Снять с торгов</button>' : ''}` : ''}
+      <div class="mc-auc-hist"><h4>История ставок</h4>${bids.length ? bids.map((x, i) => `<div class="${i === 0 ? 'top' : ''}"><span>${x.uid === me ? 'Вы' : esc(x.name || 'Участник')}</span><b>${mcFmtUm(x.amount)} УМ</b><small>${mcAgo7(x.at)}</small></div>`).join('') : '<p class="gift-empty-note">Ставок пока нет — станьте первым.</p>'}</div>`;
+    b.querySelector('#mcAucBidGo')?.addEventListener('click', () => mcAucBid(id, Number($('mcAucAmt')?.value || 0)));
+    b.querySelector('#mcAucBuyNow')?.addEventListener('click', () => mcAucBid(id, lot.buyNow, { blitz: true }));
+    b.querySelector('#mcAucCancel')?.addEventListener('click', () => mcAucCancel(id));
+    b.querySelectorAll('.mc-auc-quick [data-v]').forEach(x => x.addEventListener('click', () => { const i = $('mcAucAmt'); if (i) i.value = x.dataset.v; }));
+    b.querySelectorAll('.mc-auc-amt [data-d]').forEach(x => x.addEventListener('click', () => { const i = $('mcAucAmt'); if (!i) return; const st = Math.max(5, Math.ceil(min * 0.05)); i.value = Math.max(min, (Number(i.value) || min) + Number(x.dataset.d) * st); }));
+  };
+  const offL = onValue(ref(db, 'auctions/' + id), s => { if (!document.getElementById('mcAucLot')) return offL(); const v = s.val(); if (!v) { $('mcAucLotBody') && ($('mcAucLotBody').innerHTML = '<p class="gift-empty-note">Лот не найден.</p>'); return; } lot = { id, ...v }; draw(); if (v.status === 'active' && v.endsAt <= Date.now()) mcAucSettle(id); }, () => {});
+  const offB = onValue(query(ref(db, 'auction_bids/' + id), orderByChild('at'), limitToLast(30)), s => { if (!document.getElementById('mcAucLot')) return offB(); bids = Object.values(s.val() || {}).sort((a, b) => b.amount - a.amount || b.at - a.at); draw(); }, () => {});
+  draw();
+  if (!MCA.tick) MCA.tick = setInterval(() => {
+    if (!document.getElementById('mcAucSheet') && !document.getElementById('mcAucLot')) { clearInterval(MCA.tick); MCA.tick = null; return; }
+    document.querySelectorAll('[data-ends]').forEach(x => { const ms = Number(x.dataset.ends) - Date.now(); x.textContent = mcAucLeft(ms); x.classList.toggle('soon', ms < 5 * 60000); });
+  }, 1000);
+}
+async function mcAucBid(id, amount, { blitz = false } = {}) {
+  const me = state.user?.uid; if (!me || MCA.bidBusy) return;
+  amount = Math.floor(Number(amount) || 0);
+  const lot0 = MCA.lots[id] || (await get(ref(db, 'auctions/' + id)).catch(() => null))?.val?.();
+  if (!lot0 || lot0.status !== 'active') return toast('Торги уже завершены', '⏱');
+  if (lot0.sellerId === me) return toast('Нельзя делать ставки на свой лот', '⚠');
+  const min = mcAucMinBid(lot0);
+  if (amount < min) return toast(`Минимальная ставка — ${mcFmtUm(min)} УМ`, '⚠');
+  const prevMine = lot0.topBid?.uid === me ? lot0.topBid.amount : 0;
+  const ok = await mcConfirm(blitz ? 'Купить сразу?' : 'Подтвердите ставку', `${lot0.item.emoji || '🎁'} «${lot0.item.name}» — ${mcFmtUm(amount)} УМ спишутся сейчас${prevMine ? `, а прошлая ставка ${mcFmtUm(prevMine)} УМ вернётся` : ''}. ${blitz ? 'Лот сразу станет вашим.' : 'Если вас перебьют, умы вернутся.'}`, { okText: blitz ? 'Купить' : 'Поставить' });
+  if (!ok) return;
+  MCA.bidBusy = true; const btn = $('mcAucBidGo'); if (btn) { btn.disabled = true; btn.textContent = 'Отправляем…'; }
+  const name = state.profile?.displayName || state.profile?.username || 'Участник';
+  let charged = false;
+  try {
+    const sp = await mcSpendUms(me, amount);
+    if (!sp.ok) return toast(`Недостаточно умов: нужно ${mcFmtUm(amount)}, у вас ${mcFmtUm(sp.balance)}`, '💸');
+    charged = true;
+    let prev = null, okBid = false, why = '';
+    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => {
+      okBid = false; prev = null; why = '';
+      if (cur === null) return null;
+      const t = Date.now();
+      if (cur.status !== 'active' || t >= cur.endsAt) { why = 'ended'; return; }
+      if (cur.sellerId === me) { why = 'own'; return; }
+      const mn = mcAucMinBid(cur); if (amount < mn) { why = 'low:' + mn; return; }
+      prev = cur.topBid || null;
+      let endsAt = cur.endsAt, ext = cur.extended || 0;
+      if (cur.buyNow && amount >= cur.buyNow) endsAt = t;
+      else if (endsAt - t < MC_AUC_SNIPE) { endsAt = t + MC_AUC_SNIPE; ext++; }
+      okBid = true;
+      return { ...cur, topBid: { uid: me, name, amount, at: t }, bids: (cur.bids || 0) + 1, endsAt, extended: ext, bidders: { ...(cur.bidders || {}), [me]: true } };
+    });
+    if (!tx.committed || !okBid) {
+      await mcAddUms(me, amount); charged = false;
+      return toast(why.startsWith('low') ? `Кто-то успел раньше. Минимум теперь ${mcFmtUm(why.split(':')[1])} УМ` : why === 'own' ? 'Нельзя делать ставки на свой лот' : 'Торги уже завершены', '⏱');
+    }
+    charged = false;
+    set(push(ref(db, 'auction_bids/' + id)), { uid: me, name, amount, at: Date.now() }).catch(() => {});
+    if (prev?.uid === me) { const b = await mcAddUms(me, prev.amount); mcSetBalanceUI(b); }
+    else if (prev?.uid) await mcAucCredit(prev.uid, `${id}_ob_${prev.at}`, { amount: prev.amount, reason: 'outbid', auctionId: id, name: lot0.item.name, emoji: lot0.item.emoji || '🎁' });
+    readGiftBalance().then(b => { mcSetBalanceUI(b); const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
+    const after = tx.snapshot?.val();
+    if (after && after.endsAt <= Date.now()) { await mcAucSettle(id); mcConfettiBurst(60); toast(`«${lot0.item.name}» теперь ваш`, '🎉'); }
+    else toast(`Ставка ${mcFmtUm(amount)} УМ принята`, '🔨');
+  } catch (e) {
+    console.error('bid', e);
+    if (charged) { try { await mcAddUms(me, amount); } catch (_) {} }
+    toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (auctions)' : 'Ставка не прошла, умы возвращены', '⚠');
+  } finally { MCA.bidBusy = false; }
+}
+// Начисление с уникальным ключом — повторный вызов не создаст дубль
+async function mcAucCredit(uid, key, data) {
+  key = String(key).replace(/[.#$\[\]\/]/g, '_');
+  for (let i = 0; i < 3; i++) {
+    try { await runTransaction(ref(db, `auction_credits/${uid}/${key}`), cur => cur ? undefined : { ...data, at: Date.now(), claimed: false }); return true; }
+    catch (e) { console.warn('credit', e); await new Promise(r => setTimeout(r, 600 * (i + 1))); }
+  }
+  return false;
+}
+function mcAucSettleDue() {
+  const now = Date.now();
+  for (const [id, l] of Object.entries(MCA.lots)) {
+    if (!l) continue;
+    if (l.status === 'active' && l.endsAt <= now) mcAucSettle(id);
+    else if (l.status === 'settling' && now - (l.settleAt || 0) > 60000) mcAucSettle(id);
+  }
+}
+async function mcAucSettle(id) {
+  if (MCA.settling.has(id) || !state.user?.uid) return;
+  MCA.settling.add(id);
+  try {
+    let lot = null; const me = state.user.uid;
+    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => {
+      lot = null; if (cur === null) return null;
+      const stuck = cur.status === 'settling' && Date.now() - (cur.settleAt || 0) > 60000;
+      if (!(cur.status === 'active' && Date.now() >= cur.endsAt) && !stuck) return;
+      lot = cur; return { ...cur, status: 'settling', settleAt: Date.now(), settler: me };
+    });
+    if (!tx.committed || !lot) return;
+    const it = { giftId: lot.item.giftId || null, name: lot.item.name, emoji: lot.item.emoji, cost: lot.item.cost || null, createdAt: Date.now(), hidden: false, auction: id };
+    const fin = { status: 'done', doneAt: Date.now(), settleAt: null };
+    if (lot.topBid?.uid) {
+      await runTransaction(ref(db, `gift_inventory/${lot.topBid.uid}/au_${id}`), cur => cur ? undefined : { ...it, fromName: 'Аукцион · ' + (lot.sellerName || ''), wonFor: lot.topBid.amount });
+      const pay = lot.topBid.amount - Math.floor(lot.topBid.amount * MC_AUC_FEE);
+      await mcAucCredit(lot.sellerId, `${id}_sold`, { amount: pay, reason: 'sold', auctionId: id, name: lot.item.name, emoji: lot.item.emoji, price: lot.topBid.amount });
+      await mcAucCredit(lot.topBid.uid, `${id}_won`, { amount: 0, reason: 'won', auctionId: id, name: lot.item.name, emoji: lot.item.emoji, price: lot.topBid.amount });
+      Object.assign(fin, { winner: lot.topBid.uid, finalPrice: lot.topBid.amount });
+    } else {
+      await runTransaction(ref(db, `gift_inventory/${lot.sellerId}/au_${id}`), cur => cur ? undefined : { ...it, ...(lot.item || {}), fromName: lot.item.fromName || 'Возврат с аукциона', hidden: false });
+      await mcAucCredit(lot.sellerId, `${id}_ret`, { amount: 0, reason: 'returned', auctionId: id, name: lot.item.name, emoji: lot.item.emoji });
+      Object.assign(fin, { winner: null, finalPrice: null });
+    }
+    await update(ref(db, 'auctions/' + id), fin);
+  } catch (e) { console.warn('settle', id, e); }
+  finally { setTimeout(() => MCA.settling.delete(id), 3000); }
+}
+async function mcAucCancel(id) {
+  const me = state.user?.uid; if (!me) return;
+  if (!(await mcConfirm('Снять лот с торгов?', 'Подарок вернётся в вашу коллекцию.', { okText: 'Снять', danger: true }))) return;
+  let lot = null;
+  try {
+    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => { lot = null; if (cur === null) return null; if (cur.sellerId !== me || cur.status !== 'active' || cur.topBid) return; lot = cur; return { ...cur, status: 'cancelled', doneAt: Date.now() }; });
+    if (!tx.committed || !lot) return toast('Нельзя снять: уже есть ставки или торги завершены', '⚠');
+    await runTransaction(ref(db, `gift_inventory/${me}/au_${id}`), cur => cur ? undefined : { ...lot.item, createdAt: Date.now(), hidden: false });
+    toast('Лот снят, подарок вернулся в коллекцию', '✓');
+    if ($('giftOwnedSection')) renderOwnedGifts();
+  } catch (e) { console.error(e); toast('Не удалось снять лот', '⚠'); }
+}
+async function mcAucNewLot(preId) {
+  const me = state.user?.uid; if (!me) return toast('Войдите в аккаунт', '⚠');
+  let inv = {};
+  try { inv = (await get(ref(db, `gift_inventory/${me}`))).val() || {}; } catch (e) { return toast('Не удалось загрузить подарки', '⚠'); }
+  const items = Object.entries(inv).map(([id, v]) => ({ id, ...v })).filter(g => g && !g.purchasePending).sort((a, b) => (Number(b.cost) || 0) - (Number(a.cost) || 0));
+  if (!items.length) return mcDialog({ icon: '📦', title: 'Нечего выставить', text: 'Сначала получите подарок: купите его в витрине или выиграйте в колесе фортуны.', buttons: [{ label: 'Понятно', kind: 'primary', value: true }], dismissValue: true });
+  const S = { id: items.some(x => x.id === preId) ? preId : items[0].id, dur: 60 };
+  const el = mcSheet('mcAucNew', `${mcSheetHead('Выставить на аукцион', 'mcAucNew')}
+    <div class="mc-auc-new">
+      <label class="mc-sch-lbl">Подарок</label>
+      <div class="mc-auc-pick" id="mcAucPick">${items.map(g => `<button type="button" data-id="${g.id}" class="r-${mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost })}"><span>${esc(g.emoji || '🎁')}</span><small>${esc(g.name || 'Подарок')}</small></button>`).join('')}</div>
+      <div class="mc-auc-form">
+        <label>Стартовая цена, УМ<input id="mcAucStart" type="number" inputmode="numeric" min="1" step="1"></label>
+        <label>Блиц-цена (необязательно)<input id="mcAucBlitz" type="number" inputmode="numeric" min="0" step="1" placeholder="нет"></label>
+      </div>
+      <label class="mc-sch-lbl">Длительность</label>
+      <div class="mc-auc-durs" id="mcAucDurs">${MC_AUC_DUR.map(([m, l]) => `<button type="button" data-m="${m}" class="${m === S.dur ? 'on' : ''}">${l}</button>`).join('')}</div>
+      <div class="mc-auc-sum" id="mcAucSum"></div>
+      <button type="button" class="mc-wheel-spin" id="mcAucCreate">🔨 Выставить лот</button>
+      <p class="mc-odds-note">Подарок уйдёт из коллекции на время торгов. Если ставок не будет — он вернётся. При продаже удерживается ${Math.round(MC_AUC_FEE * 100)}% комиссии.</p>
+    </div>`, { cls: 'mc-auc-ov' });
+  const selItem = () => items.find(x => x.id === S.id);
+  const sum = () => {
+    const g = selItem(); const st = Math.floor(Number($('mcAucStart').value) || 0), bl = Math.floor(Number($('mcAucBlitz').value) || 0);
+    const ends = new Date(Date.now() + S.dur * 60000);
+    $('mcAucSum').innerHTML = `<div><span>${esc(g?.emoji || '🎁')} ${esc(g?.name || '')}</span>${mcRarBadge({ ...g, cost: g?.cost || mcGiftById(g?.giftId)?.cost })}</div><div><span>Старт</span><b>${mcFmtUm(st)} УМ</b></div>${bl ? `<div><span>Блиц</span><b>${mcFmtUm(bl)} УМ</b></div>` : ''}<div><span>Завершится</span><b>${ends.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</b></div><div><span>Вы получите минимум</span><b>${mcFmtUm(st - Math.floor(st * MC_AUC_FEE))} УМ</b></div>`;
+  };
+  const pick = id => { S.id = id; el.querySelectorAll('#mcAucPick button').forEach(b => b.classList.toggle('on', b.dataset.id === id)); const g = selItem(); const base = Number(g?.cost) || Number(mcGiftById(g?.giftId)?.cost) || 50; $('mcAucStart').value = Math.max(1, Math.round(base * 0.6)); $('mcAucBlitz').value = ''; sum(); };
+  el.querySelector('#mcAucPick').addEventListener('click', e => { const b = e.target.closest('[data-id]'); if (b) pick(b.dataset.id); });
+  el.querySelector('#mcAucDurs').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; S.dur = Number(b.dataset.m); el.querySelectorAll('#mcAucDurs button').forEach(x => x.classList.toggle('on', x === b)); sum(); });
+  ['mcAucStart', 'mcAucBlitz'].forEach(i => el.querySelector('#' + i).addEventListener('input', sum));
+  pick(S.id);
+  el.querySelector(`#mcAucPick [data-id="${S.id}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  el.querySelector('#mcAucCreate').addEventListener('click', async () => {
+    const g = selItem(); if (!g) return;
+    const st = Math.floor(Number($('mcAucStart').value) || 0), bl = Math.floor(Number($('mcAucBlitz').value) || 0);
+    if (st < 1 || st > 1000000) return toast('Стартовая цена — от 1 до 1 000 000 УМ', '⚠');
+    if (bl && bl <= st) return toast('Блиц-цена должна быть больше стартовой', '⚠');
+    const btn = $('mcAucCreate'); btn.disabled = true; btn.textContent = 'Выставляем…';
+    try {
+      const snap = await get(ref(db, `gift_inventory/${me}/${g.id}`)); if (!snap.exists()) throw new Error('Подарок уже недоступен');
+      const orig = snap.val();
+      const id = push(ref(db, 'auctions')).key; const t = Date.now();
+      const item = { giftId: orig.giftId || null, name: orig.name || 'Подарок', emoji: orig.emoji || '🎁', cost: Number(orig.cost) || Number(mcGiftById(orig.giftId)?.cost) || null, fromName: orig.fromName || null };
+      await update(ref(db), {
+        [`gift_inventory/${me}/${g.id}`]: null,
+        [`auctions/${id}`]: { sellerId: me, sellerName: state.profile?.displayName || state.profile?.username || 'Пользователь', item, startPrice: st, step: Math.max(5, Math.ceil(st * 0.05)), buyNow: bl || null, createdAt: t, endsAt: t + S.dur * 60000, status: 'active', bids: 0 }
+      });
+      mcCloseSheet('mcAucNew');
+      toast('Лот выставлен на аукцион', '🔨');
+      if ($('giftOwnedSection')) renderOwnedGifts();
+      if (!document.getElementById('mcAucSheet')) mcOpenAuction('mine'); else { MCA.tab = 'mine'; document.querySelectorAll('.mc-auc-tabs button').forEach(x => x.classList.toggle('on', x.dataset.t === 'mine')); mcAucRender(); }
+    } catch (e) {
+      console.error(e); toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (auctions)' : (e?.message || 'Не удалось выставить лот'), '⚠');
+      btn.disabled = false; btn.textContent = '🔨 Выставить лот';
+    }
+  });
+}
+
+// ---------- Фоновый движок: начисления, уведомления, завершение моих торгов ----------
+function mcAucCredMsg(c) {
+  const nm = `«${c.name || 'подарок'}»`;
+  return {
+    outbid: ['Вашу ставку перебили', `${c.emoji || '🎁'} ${nm}: ${mcFmtUm(c.amount)} УМ вернулись на баланс`],
+    sold: ['Лот продан', `${c.emoji || '🎁'} ${nm} продан за ${mcFmtUm(c.price || c.amount)} УМ — вам начислено ${mcFmtUm(c.amount)} УМ`],
+    won: ['Вы выиграли аукцион', `${c.emoji || '🎁'} ${nm} теперь в вашей коллекции`],
+    returned: ['Торги завершены без ставок', `${c.emoji || '🎁'} ${nm} вернулся в вашу коллекцию`]
+  }[c.reason] || ['Аукцион', nm];
+}
+async function mcAucClaim(uid, key) {
+  let got = null;
+  const tx = await runTransaction(ref(db, `auction_credits/${uid}/${key}`), cur => { got = null; if (cur === null) return null; if (cur.claimed) return; got = cur; return { ...cur, claimed: true, claimedAt: Date.now() }; });
+  if (!tx.committed || !got) return;
+  if (Number(got.amount) > 0) { const b = await mcAddUms(uid, Number(got.amount)); mcSetBalanceUI(b); const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; }
+  const [title, body] = mcAucCredMsg(got);
+  toast(`${title}. ${body}`, got.reason === 'outbid' ? '🔔' : '🔨');
+  mcSystemNotify(title, body, { tag: 'auc_' + key }).catch(() => {});
+  if ($('giftOwnedSection')) renderOwnedGifts();
+}
+function mcAucBgInit() {
+  const uid = state.user?.uid;
+  if (!uid) { if (MCA.credUnsub) { try { MCA.credUnsub(); } catch (_) {} MCA.credUnsub = null; MCA.credUid = null; } return; }
+  if (MCA.credUid === uid) return;
+  if (MCA.credUnsub) { try { MCA.credUnsub(); } catch (_) {} }
+  MCA.credUid = uid;
+  MCA.credUnsub = onValue(ref(db, `auction_credits/${uid}`), snap => {
+    const v = snap.val() || {};
+    for (const [k, c] of Object.entries(v)) if (c && !c.claimed) mcAucClaim(uid, k).catch(e => console.warn('claim', e));
+  }, () => {});
+}
+// Раз в 30 секунд завершаем истёкшие торги, в которых я продавец или участник (сервера нет — это делают клиенты)
+async function mcAucBgSweep() {
+  const uid = state.user?.uid; if (!uid || document.visibilityState === 'hidden' && !mcAucBgSweep.force) return;
+  if (document.getElementById('mcAucSheet')) return; // окно аукциона и так всё завершает
+  try {
+    const v = (await get(query(ref(db, 'auctions'), orderByChild('endsAt'), limitToLast(200)))).val() || {};
+    const now = Date.now();
+    for (const [id, l] of Object.entries(v)) {
+      if (!l) continue;
+      const due = (l.status === 'active' && l.endsAt <= now) || (l.status === 'settling' && now - (l.settleAt || 0) > 60000);
+      if (due && (l.sellerId === uid || l.bidders?.[uid])) mcAucSettle(id);
+    }
+  } catch (_) {}
+}
+setInterval(() => { mcAucBgInit(); }, 2000);
+setInterval(() => { mcAucBgSweep(); }, 30000);
+setTimeout(() => { mcAucBgSweep(); }, 6000);
+
+Object.assign(window, { renderGiftShop, renderOwnedGifts, hideOwnedGift, mcToggleOwnedHidden, mcGiftCelebrate, mcOpenWheel, mcWheelSpin, mcOpenAuction, mcAucOpenLot, mcAucNewLot, mcAucBid, mcAucCancel, mcAucSettle, mcGiftById, mcConfettiBurst });
 
 Object.assign(window, {
   onbNext, onbPrev, onbFinish, onbAvatarChange, randomUsername,
