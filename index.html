@@ -2143,6 +2143,397 @@ html[data-theme="dark"] .mc-rar-leg, html.dark .mc-rar-leg{ color:#fcd34d; }
   .mc-gs7-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
 }
 
+
+/* ===================== Round 8: заработок, проверка возраста, каналы, боты, «Прочее» ===================== */
+:root{ --mc8-grad:linear-gradient(135deg,#6d5dfc 0%,#3b82f6 48%,#06b6d4 100%); --mc8-warm:linear-gradient(135deg,#f97316,#ec4899 55%,#8b5cf6); --mc8-shadow:0 10px 30px rgba(15,23,42,.10); --mc8-ok:#16a34a; --mc8-bad:#dc2626; }
+html[data-theme="dark"],html:not([data-theme]){ --mc8-shadow:0 12px 34px rgba(0,0,0,.35); --mc8-ok:#4ade80; --mc8-bad:#f87171; }
+
+@keyframes mc8In{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
+@keyframes mc8Pop{ 0%{ transform:scale(.6); opacity:0 } 70%{ transform:scale(1.08); opacity:1 } 100%{ transform:scale(1) } }
+@keyframes mc8Shake{ 10%,90%{ transform:translateX(-2px) } 20%,80%{ transform:translateX(4px) } 30%,50%,70%{ transform:translateX(-7px) } 40%,60%{ transform:translateX(7px) } }
+@keyframes mc8Shine{ from{ background-position:-200% 0 } to{ background-position:200% 0 } }
+@keyframes mc8Float{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(10px,-12px) } }
+@keyframes mc8Spin{ to{ transform:rotate(360deg) } }
+@keyframes mc8Pulse{ 0%{ box-shadow:0 0 0 0 rgba(99,102,241,.45) } 100%{ box-shadow:0 0 0 14px rgba(99,102,241,0) } }
+@keyframes mc8Dot{ 0%,80%,100%{ transform:translateY(0); opacity:.4 } 40%{ transform:translateY(-5px); opacity:1 } }
+.shake{ animation:mc8Shake .45s both; }
+
+/* ---------- общие элементы ---------- */
+.mc-lbl{ display:block; margin:14px 0 6px; font-size:12.5px; font-weight:700; color:var(--mc-muted); }
+.mc-inp{ width:100%; box-sizing:border-box; padding:12px 14px; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:15px; outline:none; resize:vertical; transition:border-color .2s, box-shadow .2s; }
+.mc-inp:focus{ border-color:var(--accent); box-shadow:0 0 0 3px var(--mc-accent-soft); }
+.mc-inp-at{ display:flex; align-items:center; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card-2); padding-left:12px; }
+.mc-inp-at span{ color:var(--mc-muted); font-weight:700; }
+.mc-inp-at .mc-inp{ border:0; background:transparent; box-shadow:none; padding-left:4px; }
+.mc-hint{ margin-top:6px; font-size:12px; color:var(--mc-muted); line-height:1.4; }
+.mc-hint.ok{ color:var(--mc8-ok); } .mc-hint.bad{ color:var(--mc8-bad); }
+.mc-seg{ display:flex; gap:4px; padding:4px; border-radius:14px; background:var(--mc-card-2); margin:0 0 10px; }
+.mc-seg button{ flex:1; padding:9px 6px; border:0; border-radius:11px; background:transparent; color:var(--mc-muted); font:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:background .2s, color .2s; white-space:nowrap; }
+.mc-seg button.on{ background:var(--mc-card); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
+.mc-gs7-chips button.on{ background:var(--accent); color:#fff; border-color:transparent; }
+.mc-spin8{ width:38px; height:38px; border-radius:50%; border:3px solid var(--mc-line); border-top-color:var(--accent); animation:mc8Spin .8s linear infinite; margin:0 auto; }
+.mc-skel-card,.mc-skel-grid i,.mc-skel-line{ display:block; border-radius:18px; background:linear-gradient(90deg,var(--mc-card-2) 25%,var(--mc-line) 50%,var(--mc-card-2) 75%); background-size:200% 100%; animation:mc8Shine 1.3s linear infinite; }
+.mc-skel-card{ height:150px; margin-bottom:12px; }
+.mc-skel-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } .mc-skel-grid i{ height:120px; }
+.mc-skel-line{ height:54px; border-radius:14px; margin-bottom:8px; }
+
+/* ---------- Заработать ---------- */
+.mc-earn > *{ animation:mc8In .45s var(--mc-ease-out) both; }
+.mc-earn > *:nth-child(2){ animation-delay:.05s } .mc-earn > *:nth-child(3){ animation-delay:.1s } .mc-earn > *:nth-child(4){ animation-delay:.15s }
+.mc-earn-hero{ position:relative; display:flex; align-items:center; gap:18px; padding:20px; border-radius:26px; color:#fff; background:radial-gradient(circle at 90% 10%,rgba(255,255,255,.25),transparent 45%),var(--mc8-grad); box-shadow:0 16px 36px rgba(59,130,246,.28); overflow:hidden; margin-bottom:12px; }
+.mc-earn-hero:after{ content:""; position:absolute; right:-40px; bottom:-60px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,.10); animation:mc8Float 7s ease-in-out infinite; }
+.mc-earn-ring{ position:relative; flex:none; width:104px; height:104px; }
+.mc-earn-ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
+.mc-earn-ring circle{ fill:none; stroke-width:9; stroke-linecap:round; }
+.mc-earn-ring .bg{ stroke:rgba(255,255,255,.25); } .mc-earn-ring .fg{ stroke:#fff; transition:stroke-dashoffset 1.1s var(--mc-ease-out); }
+.mc-earn-ring > div{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.mc-earn-ring b{ font-size:28px; line-height:1; font-weight:900; } .mc-earn-ring small{ font-size:11px; opacity:.85; }
+.mc-earn-hero-txt{ position:relative; z-index:1; min-width:0; }
+.mc-earn-hero-txt h2{ margin:0 0 4px; font-size:20px; letter-spacing:-.02em; } .mc-earn-hero-txt p{ margin:0 0 10px; font-size:13px; opacity:.92; line-height:1.4; }
+.mc-earn-pills{ display:flex; flex-wrap:wrap; gap:6px; }
+.mc-earn-pills span{ padding:5px 9px; border-radius:999px; background:rgba(255,255,255,.18); font-size:12px; font-weight:700; backdrop-filter:blur(4px); }
+.mc-age-gate{ display:flex; gap:14px; align-items:center; padding:16px; border-radius:22px; border:1px dashed color-mix(in srgb,var(--accent) 55%,transparent); background:var(--mc-accent-soft); margin-bottom:12px; }
+.mc-age-gate h3{ margin:0 0 4px; font-size:16px; } .mc-age-gate p{ margin:0 0 10px; font-size:13px; color:var(--mc-muted); line-height:1.4; }
+.mc-age-gate .btn{ width:auto; padding:10px 16px; }
+.mc-age-gate-art{ position:relative; flex:none; width:64px; height:64px; display:grid; place-items:center; font-size:34px; border-radius:50%; background:var(--mc-card); }
+.mc-age-gate-art span{ position:absolute; inset:-4px; border-radius:50%; border:3px solid transparent; border-top-color:var(--accent); border-right-color:var(--accent); animation:mc8Spin 2.4s linear infinite; }
+.mc-age-ok{ width:100%; display:flex; align-items:center; gap:12px; padding:12px 14px; margin-bottom:12px; border-radius:18px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.mc-age-ok > span{ font-size:26px; } .mc-age-ok div{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.mc-age-ok b{ font-size:14px; color:var(--mc8-ok); } .mc-age-ok small{ font-size:12px; color:var(--mc-muted); } .mc-age-ok em{ font-style:normal; font-size:12px; color:var(--accent); font-weight:700; white-space:nowrap; }
+.mc-checkin{ width:100%; display:flex; align-items:center; gap:12px; padding:14px; margin-bottom:14px; border-radius:22px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; text-align:left; cursor:pointer; transition:transform .2s var(--mc-spring); flex-wrap:wrap; }
+.mc-checkin:not(:disabled):active{ transform:scale(.98); }
+.mc-checkin-days{ display:flex; gap:5px; width:100%; }
+.mc-checkin-days i{ flex:1; height:34px; display:grid; place-items:center; border-radius:10px; background:var(--mc-card-2); font-style:normal; font-size:12.5px; font-weight:800; color:var(--mc-muted); transition:background .3s, color .3s; }
+.mc-checkin-days i.on{ background:var(--mc8-warm); color:#fff; }
+.mc-checkin-days i.cur{ outline:2px solid var(--accent); outline-offset:1px; color:var(--accent); animation:mc8Pulse 1.6s infinite; }
+.mc-checkin-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; } .mc-checkin-txt b{ font-size:15px; } .mc-checkin-txt small{ font-size:12.5px; color:var(--mc-muted); }
+.mc-checkin-go{ padding:9px 14px; border-radius:12px; background:var(--mc8-warm); color:#fff; font-weight:800; font-size:13px; }
+.mc-checkin.done .mc-checkin-go{ background:var(--mc-card-2); color:var(--mc8-ok); }
+.mc-checkin.locked{ opacity:.7; } .mc-checkin.locked .mc-checkin-go{ background:var(--mc-card-2); color:var(--mc-muted); }
+.mc-task-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:16px; }
+.mc-task{ --tc:#6366f1; position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:4px; min-height:150px; padding:14px; border-radius:22px; border:1px solid var(--mc-line); background:linear-gradient(160deg,color-mix(in srgb,var(--tc) 14%,var(--mc-card)),var(--mc-card) 60%); color:var(--text); font:inherit; text-align:left; cursor:pointer; overflow:hidden; animation:mc8In .45s var(--mc-ease-out) both; animation-delay:calc(var(--i,0) * 45ms); transition:transform .22s var(--mc-spring), box-shadow .22s, border-color .2s; }
+.mc-task:not(:disabled):hover{ transform:translateY(-3px); box-shadow:var(--mc8-shadow); border-color:color-mix(in srgb,var(--tc) 45%,transparent); }
+.mc-task:not(:disabled):active{ transform:scale(.97); }
+.mc-task-ico{ width:42px; height:42px; display:grid; place-items:center; flex:none; border-radius:14px; font-size:22px; background:color-mix(in srgb,var(--tc) 20%,transparent); margin-bottom:4px; }
+.mc-task b{ font-size:14.5px; overflow-wrap:anywhere; hyphens:auto; } .mc-task small{ font-size:12px; color:var(--mc-muted); line-height:1.35; }
+.mc-task-foot{ margin-top:auto; padding-top:8px; width:100%; display:flex; justify-content:space-between; align-items:center; gap:6px; font-size:12px; }
+.mc-task-foot em{ font-style:normal; font-weight:800; color:var(--tc); } .mc-task-foot em.ok{ color:var(--mc8-ok); }
+.mc-task-foot i{ font-style:normal; font-weight:700; color:var(--mc-muted); }
+.mc-task.done{ opacity:.72; cursor:default; } .mc-task.done .mc-task-ico{ filter:grayscale(.4); }
+.mc-task.locked{ cursor:pointer; } .mc-task.locked .mc-task-ico{ filter:grayscale(.8); opacity:.7; }
+.mc-earn-rules{ padding:14px 16px; border-radius:18px; background:var(--mc-card-2); font-size:13px; line-height:1.5; margin-bottom:12px; }
+.mc-earn-rules ul{ margin:6px 0 0; padding-left:18px; color:var(--mc-muted); } .mc-earn-rules li{ margin:3px 0; }
+.mc-earn-hist{ display:flex; flex-direction:column; gap:6px; margin-bottom:24px; }
+.mc-earn-hist > div{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; background:var(--mc-card); border:1px solid var(--mc-line); }
+.mc-earn-hist span{ font-size:18px; } .mc-earn-hist b{ flex:1; font-size:13.5px; min-width:0; } .mc-earn-hist small{ color:var(--mc-muted); font-size:12px; } .mc-earn-hist em{ font-style:normal; font-weight:800; color:var(--mc8-ok); }
+
+/* игры заданий */
+.mc-play{ --tc:#6366f1; }
+.mc-play-head{ display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:20px; background:linear-gradient(140deg,color-mix(in srgb,var(--tc) 18%,var(--mc-card)),var(--mc-card)); border:1px solid var(--mc-line); }
+.mc-play-head .mc-task-ico{ margin:0; } .mc-play-head div{ flex:1; min-width:0; display:flex; flex-direction:column; } .mc-play-head b{ font-size:15px; } .mc-play-head small{ font-size:12px; color:var(--mc-muted); }
+.mc-play-timer{ min-width:52px; text-align:center; padding:6px 10px; border-radius:12px; background:var(--mc-card-2); font-weight:800; font-variant-numeric:tabular-nums; }
+.mc-play-timer.warn{ background:rgba(239,68,68,.14); color:var(--mc8-bad); animation:mc8Pulse 1s infinite; }
+.mc-play-progress{ height:6px; border-radius:6px; background:var(--mc-card-2); margin:10px 2px 14px; overflow:hidden; }
+.mc-play-progress i{ display:block; height:100%; width:0; border-radius:6px; background:var(--tc); transition:width .4s var(--mc-ease-out); }
+.mc-play-box{ animation:mc8In .35s var(--mc-ease-out) both; }
+.mc-play-box > .btn{ margin-top:10px; }
+.mc-play-wait{ padding:40px 0; text-align:center; color:var(--mc-muted); }
+.mc-q-num{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--tc); margin-bottom:6px; }
+.mc-q-title{ margin:0 0 14px; font-size:19px; line-height:1.35; letter-spacing:-.01em; }
+.mc-q-opts{ display:grid; gap:8px; }
+.mc-q-opts button,.mc-tf-btns button{ padding:14px 16px; border-radius:16px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:15px; font-weight:600; text-align:left; cursor:pointer; transition:transform .15s var(--mc-spring), background .2s, border-color .2s; }
+.mc-q-opts button:not(:disabled):hover{ border-color:var(--tc); } .mc-q-opts button:active{ transform:scale(.98); }
+.mc-q-opts button.ok{ background:rgba(34,197,94,.16); border-color:#22c55e; animation:mc8Pop .35s both; }
+.mc-q-opts button.bad{ background:rgba(239,68,68,.14); border-color:#ef4444; animation:mc8Shake .4s both; }
+.mc-math-score{ display:flex; gap:8px; justify-content:center; margin-bottom:12px; }
+.mc-math-score span{ padding:6px 12px; border-radius:999px; background:var(--mc-card-2); font-size:13px; color:var(--mc-muted); } .mc-math-score b{ color:var(--text); }
+.mc-math-q{ text-align:center; font-size:38px; font-weight:900; letter-spacing:-.02em; padding:18px 0; font-variant-numeric:tabular-nums; transition:color .15s; }
+.mc-math-q.ok{ color:var(--mc8-ok); } .mc-math-q.bad{ color:var(--mc8-bad); animation:mc8Shake .35s both; }
+.mc-big-input{ width:100%; box-sizing:border-box; padding:14px; border-radius:16px; border:2px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:24px; font-weight:800; text-align:center; outline:none; margin-bottom:10px; }
+.mc-big-input:focus{ border-color:var(--tc,var(--accent)); }
+.mc-numpad{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.mc-numpad button{ padding:14px 0; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:20px; font-weight:800; cursor:pointer; transition:transform .12s; }
+.mc-numpad button:active{ transform:scale(.93); background:var(--mc-card-2); }
+.mc-ana-slots{ display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin:16px 0; }
+.mc-ana-slots i{ width:40px; height:48px; display:grid; place-items:center; border-radius:12px; border:2px dashed var(--mc-line); font-style:normal; font-size:22px; font-weight:900; transition:border-color .2s, background .2s; }
+.mc-ana-slots i.on{ border-style:solid; border-color:var(--tc); background:color-mix(in srgb,var(--tc) 12%,transparent); animation:mc8Pop .25s both; }
+.mc-ana-slots i.hint{ color:var(--mc-muted); border-color:var(--mc-muted); }
+.mc-ana-slots.ok i{ border-color:#22c55e; background:rgba(34,197,94,.16); }
+.mc-ana-tiles{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.mc-ana-tiles button{ width:46px; height:52px; border-radius:14px; border:0; background:var(--tc); color:#fff; font:inherit; font-size:22px; font-weight:900; cursor:pointer; box-shadow:0 4px 0 color-mix(in srgb,var(--tc) 60%,#000); transition:transform .12s, opacity .2s; }
+.mc-ana-tiles button:active{ transform:translateY(3px); box-shadow:none; } .mc-ana-tiles button:disabled{ opacity:.2; }
+.mc-ana-act{ display:flex; gap:8px; } .mc-ana-act .btn{ flex:1; }
+.mc-mem{ display:grid; gap:8px; perspective:800px; } .mc-mem.c3{ grid-template-columns:repeat(3,1fr); } .mc-mem.c4{ grid-template-columns:repeat(4,1fr); }
+.mc-card8{ position:relative; aspect-ratio:1; border:0; padding:0; background:transparent; cursor:pointer; transform-style:preserve-3d; transition:transform .45s var(--mc-ease-out); }
+.mc-card8 span{ position:absolute; inset:0; display:grid; place-items:center; border-radius:16px; backface-visibility:hidden; -webkit-backface-visibility:hidden; font-size:30px; }
+.mc-card8 .b{ background:var(--mc8-grad); color:#fff; font-weight:900; }
+.mc-card8 .f{ background:var(--mc-card); border:1px solid var(--mc-line); transform:rotateY(180deg); }
+.mc-card8.open,.mc-card8.got{ transform:rotateY(180deg); }
+.mc-card8.got .f{ background:rgba(34,197,94,.14); border-color:#22c55e; }
+.mc-react{ height:230px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; border-radius:26px; background:var(--mc-card-2); cursor:pointer; user-select:none; text-align:center; padding:16px; transition:background .15s; touch-action:manipulation; }
+.mc-react b{ font-size:26px; } .mc-react small{ font-size:13px; opacity:.85; }
+.mc-react.wait{ background:#dc2626; color:#fff; } .mc-react.go{ background:#16a34a; color:#fff; } .mc-react.bad{ background:#f59e0b; color:#fff; } .mc-react.done{ background:var(--mc8-grad); color:#fff; }
+.mc-react-log{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:10px; font-size:12.5px; }
+.mc-react-log span{ padding:4px 10px; border-radius:999px; background:var(--mc-card-2); font-weight:700; }
+.mc-seq{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:16px 0; }
+.mc-seq span{ min-width:48px; padding:12px 8px; border-radius:14px; background:var(--mc-card); border:1px solid var(--mc-line); text-align:center; font-size:20px; font-weight:900; font-variant-numeric:tabular-nums; animation:mc8Pop .3s both; }
+.mc-seq span:nth-child(2){ animation-delay:.05s } .mc-seq span:nth-child(3){ animation-delay:.1s } .mc-seq span:nth-child(4){ animation-delay:.15s } .mc-seq span:nth-child(5){ animation-delay:.2s }
+.mc-seq .q{ border:2px dashed var(--tc); color:var(--tc); } .mc-seq .q.ok{ border-style:solid; border-color:#22c55e; color:var(--mc8-ok); } .mc-seq .q.bad{ border-style:solid; border-color:#ef4444; color:var(--mc8-bad); }
+.mc-type-src{ padding:16px; border-radius:18px; background:var(--mc-card-2); font-size:18px; line-height:1.6; margin-bottom:10px; user-select:none; -webkit-user-select:none; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; word-break:break-word; }
+.mc-type-src span{ border-radius:3px; transition:background .1s; } .mc-type-src .ok{ color:var(--mc8-ok); } .mc-type-src .bad{ color:#fff; background:#ef4444; } .mc-type-src .cur{ box-shadow:inset 0 -3px 0 var(--tc); }
+.mc-type-in{ width:100%; box-sizing:border-box; padding:14px; border-radius:16px; border:2px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:16px; outline:none; resize:none; }
+.mc-type-in:focus{ border-color:var(--tc); }
+.mc-type-hint{ margin:8px 0 0; font-size:12.5px; color:var(--mc-muted); text-align:center; }
+.mc-color{ display:grid; gap:6px; max-width:360px; margin:10px auto; aspect-ratio:1; }
+.mc-color button{ border:0; border-radius:12px; cursor:pointer; transition:transform .12s; } .mc-color button:active{ transform:scale(.92); }
+.mc-color button.hit{ outline:4px solid var(--text); outline-offset:-4px; animation:mc8Pop .3s both; }
+.mc-tf-card{ min-height:120px; display:flex; flex-direction:column; justify-content:center; gap:8px; padding:20px; border-radius:22px; background:var(--mc-card); border:1px solid var(--mc-line); font-size:18px; font-weight:700; line-height:1.4; text-align:center; margin-bottom:12px; transition:background .2s, border-color .2s; }
+.mc-tf-card small{ font-size:13px; font-weight:500; color:var(--mc-muted); }
+.mc-tf-card.ok{ background:rgba(34,197,94,.12); border-color:#22c55e; } .mc-tf-card.bad{ background:rgba(239,68,68,.12); border-color:#ef4444; animation:mc8Shake .4s both; }
+.mc-tf-btns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } .mc-tf-btns button{ text-align:center; font-weight:800; }
+.mc-tf-btns .no{ color:var(--mc8-bad); } .mc-tf-btns .yes{ color:var(--mc8-ok); }
+.mc-simon{ position:relative; width:min(300px,80vw); aspect-ratio:1; margin:8px auto; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mc-simon button{ border:0; cursor:pointer; opacity:.55; transition:opacity .12s, transform .12s, filter .12s; }
+.mc-simon .s0{ background:#22c55e; border-radius:100% 12px 12px 12px; } .mc-simon .s1{ background:#ef4444; border-radius:12px 100% 12px 12px; } .mc-simon .s2{ background:#eab308; border-radius:12px 12px 12px 100%; } .mc-simon .s3{ background:#3b82f6; border-radius:12px 12px 100% 12px; }
+.mc-simon button.lit{ opacity:1; transform:scale(1.04); filter:brightness(1.25) drop-shadow(0 0 16px currentColor); }
+.mc-simon-c{ position:absolute; left:50%; top:50%; width:32%; aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; background:var(--mc-card); border:6px solid var(--bg); display:grid; place-items:center; font-size:24px; font-weight:900; cursor:pointer; box-shadow:var(--mc8-shadow); }
+/* результат */
+.mc-er-coin{ display:inline-grid; place-items:center; width:72px; height:72px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#fff7c2,#facc15 45%,#d97706); color:#7c2d12; font-weight:900; font-size:20px; box-shadow:0 10px 24px rgba(217,119,6,.35), inset 0 -4px 0 rgba(0,0,0,.12); animation:mc8Pop .6s var(--mc-spring) both; }
+.mc-er-bar{ height:8px; border-radius:8px; background:var(--mc-card-2); overflow:hidden; margin:12px 0 6px; } .mc-er-bar i{ display:block; height:100%; background:var(--mc8-warm); border-radius:8px; transition:width 1s var(--mc-ease-out); }
+.mc-er-sub{ margin:4px 0; font-size:13px; color:var(--mc-muted); text-align:center; }
+.mc-er-note{ margin:6px 0; padding:8px 10px; border-radius:12px; background:rgba(245,158,11,.14); font-size:12.5px; }
+
+/* ---------- Проверка возраста ---------- */
+.mc-age-overlay .mc-sheet{ width:min(520px,100%); }
+.mc-age{ padding:18px 18px 24px; overflow:auto; text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.mc-age h2,.mc-age h3{ margin:4px 0 0; letter-spacing:-.01em; }
+.mc-age .btn{ width:100%; max-width:360px; }
+.mc-age-hero{ padding:8px 0; }
+.mc-age-scan{ position:relative; width:120px; height:120px; border-radius:50%; display:grid; place-items:center; background:var(--mc-accent-soft); font-size:60px; overflow:hidden; }
+.mc-age-scan span{ position:absolute; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--accent),transparent); box-shadow:0 0 14px var(--accent); animation:mc8Scan 2s ease-in-out infinite; }
+@keyframes mc8Scan{ 0%,100%{ top:12% } 50%{ top:85% } }
+.mc-age-lead{ margin:0; font-size:13.5px; color:var(--mc-muted); line-height:1.45; max-width:420px; }
+.mc-age-steps{ list-style:none; counter-reset:s; margin:6px 0; padding:0; width:100%; max-width:420px; display:flex; flex-direction:column; gap:8px; text-align:left; }
+.mc-age-steps li{ counter-increment:s; position:relative; padding:10px 12px 10px 48px; border-radius:16px; background:var(--mc-card-2); display:flex; flex-direction:column; gap:2px; }
+.mc-age-steps li:before{ content:counter(s); position:absolute; left:12px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#fff; font-weight:800; font-size:13px; }
+.mc-age-steps b{ font-size:14px; } .mc-age-steps small{ font-size:12px; color:var(--mc-muted); }
+.mc-age-privacy{ width:100%; max-width:420px; box-sizing:border-box; padding:10px 12px; border-radius:14px; background:rgba(34,197,94,.10); font-size:12.5px; line-height:1.45; text-align:left; }
+.mc-age-tries{ font-size:12px; color:var(--mc-muted); }
+.mc-age-err{ width:100%; max-width:420px; box-sizing:border-box; padding:12px; border-radius:14px; background:rgba(239,68,68,.12); color:var(--mc8-bad); font-size:13.5px; line-height:1.45; }
+.mc-age-cam{ position:relative; width:min(260px,72vw); aspect-ratio:1; margin:6px 0; }
+.mc-age-cam video{ position:absolute; inset:10px; width:calc(100% - 20px); height:calc(100% - 20px); border-radius:50%; object-fit:cover; transform:scaleX(-1); background:#0b1220; }
+.mc-age-cam svg{ position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+.mc-age-cam circle{ fill:none; stroke-width:6; stroke-linecap:round; } .mc-age-cam .bg{ stroke:var(--mc-line); } .mc-age-cam .fg{ stroke:#22c55e; stroke-dasharray:741; stroke-dashoffset:741; transition:stroke-dashoffset .4s var(--mc-ease-out); }
+.mc-age-arrow{ position:absolute; top:50%; left:0; right:0; height:0; pointer-events:none; }
+.mc-age-arrow:before,.mc-age-arrow:after{ position:absolute; top:-20px; font-size:34px; font-weight:900; color:var(--accent); opacity:0; text-shadow:0 2px 10px rgba(0,0,0,.25); }
+.mc-age-arrow:before{ content:"‹"; left:-26px; } .mc-age-arrow:after{ content:"›"; right:-26px; }
+.mc-age-arrow.both:before,.mc-age-arrow.both:after,.mc-age-arrow.l:before,.mc-age-arrow.r:after{ opacity:1; animation:mc8Nudge 1s ease-in-out infinite; }
+@keyframes mc8Nudge{ 50%{ transform:translateX(var(--dx,-6px)) } } .mc-age-arrow:after{ --dx:6px; }
+.mc-age-chk{ list-style:none; padding:0; margin:4px 0; display:flex; flex-direction:column; gap:6px; width:100%; max-width:320px; text-align:left; }
+.mc-age-chk li{ display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:12px; background:var(--mc-card-2); font-size:13.5px; color:var(--mc-muted); transition:color .2s, background .2s; }
+.mc-age-chk li:before{ content:""; width:18px; height:18px; flex:none; border-radius:50%; border:2px solid var(--mc-line); box-sizing:border-box; }
+.mc-age-chk li.cur{ color:var(--text); } .mc-age-chk li.cur:before{ border-color:var(--accent); border-top-color:transparent; animation:mc8Spin .8s linear infinite; }
+.mc-age-chk li.done{ color:var(--mc8-ok); background:rgba(34,197,94,.10); } .mc-age-chk li.done:before{ content:"✓"; border:0; background:#22c55e; color:#fff; font-size:11px; font-weight:900; display:grid; place-items:center; }
+.mc-age-res{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.mc-age-res-badge{ width:120px; height:120px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; background:var(--mc8-grad); box-shadow:0 16px 36px rgba(59,130,246,.35); animation:mc8Pop .6s var(--mc-spring) both; }
+.mc-age-res-badge b{ font-size:44px; line-height:1; font-weight:900; } .mc-age-res-badge small{ font-size:12px; opacity:.9; }
+
+/* ---------- Каналы ---------- */
+.mc-ch{ padding-bottom:24px; }
+.mc-ch-hero{ position:relative; display:flex; align-items:flex-end; justify-content:space-between; gap:14px; padding:22px 20px; border-radius:26px; color:#fff; overflow:hidden; margin-bottom:12px; background:linear-gradient(135deg,#0ea5e9,#6366f1 55%,#a855f7); box-shadow:0 16px 36px rgba(99,102,241,.28); animation:mc8In .45s var(--mc-ease-out) both; flex-wrap:wrap; }
+.mc-ch-hero-bg{ position:absolute; inset:0; background:radial-gradient(circle at 15% 20%,rgba(255,255,255,.22),transparent 35%),radial-gradient(circle at 85% 90%,rgba(255,255,255,.16),transparent 40%); animation:mc8Float 9s ease-in-out infinite; }
+.mc-ch-hero > div:not(.mc-ch-hero-bg){ position:relative; min-width:0; }
+.mc-ch-hero small{ font-size:11px; font-weight:800; letter-spacing:.12em; opacity:.85; } .mc-ch-hero h2{ margin:4px 0; font-size:22px; letter-spacing:-.02em; } .mc-ch-hero p{ margin:0; font-size:13px; opacity:.9; }
+.mc-ch-create{ position:relative; display:flex; align-items:center; gap:6px; padding:11px 16px; border-radius:14px; border:0; background:#fff; color:#4338ca; font:inherit; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.15); transition:transform .2s var(--mc-spring); }
+.mc-ch-create span{ font-size:18px; line-height:1; } .mc-ch-create:active{ transform:scale(.95); }
+.mc-ch-search{ display:flex; align-items:center; gap:8px; padding:0 12px; border-radius:16px; border:1px solid var(--mc-line); background:var(--mc-card); margin-bottom:10px; transition:border-color .2s, box-shadow .2s; }
+.mc-ch-search:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px var(--mc-accent-soft); }
+.mc-ch-search span{ font-size:18px; color:var(--mc-muted); } .mc-ch-search input{ flex:1; min-width:0; padding:12px 0; border:0; background:transparent; color:var(--text); font:inherit; font-size:15px; outline:none; }
+.mc-ch-search button{ border:0; background:var(--mc-card-2); color:var(--mc-muted); width:26px; height:26px; border-radius:50%; cursor:pointer; }
+.mc-ch-trend{ display:flex; gap:10px; overflow-x:auto; padding:2px 2px 12px; scrollbar-width:none; scroll-snap-type:x mandatory; }
+.mc-ch-trend::-webkit-scrollbar{ display:none; }
+.mc-ch-tc{ position:relative; flex:none; width:150px; min-height:150px; padding:14px; border-radius:22px; border:0; color:#fff; text-align:left; font:inherit; cursor:pointer; display:flex; flex-direction:column; justify-content:flex-end; gap:4px; scroll-snap-align:start; overflow:hidden; animation:mc8In .45s var(--mc-ease-out) both; animation-delay:calc(var(--i,0) * 60ms); transition:transform .22s var(--mc-spring); }
+.mc-ch-tc:after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.35)); }
+.mc-ch-tc > *{ position:relative; z-index:1; } .mc-ch-tc:hover{ transform:translateY(-3px) rotate(-.5deg); }
+.mc-ch-tc .mc-ch-av{ border:2px solid rgba(255,255,255,.7); margin-bottom:auto; }
+.mc-ch-tc b{ font-size:14px; line-height:1.25; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; } .mc-ch-tc small{ font-size:12px; opacity:.9; }
+.mc-ch-rank{ position:absolute !important; top:10px; right:12px; font-size:30px; font-weight:900; opacity:.35; }
+.mc-ch-av{ flex:none; display:inline-grid; place-items:center; width:48px; height:48px; border-radius:16px; background-size:cover; background-position:center; color:#fff; font-size:24px; }
+.mc-ch-list{ display:flex; flex-direction:column; gap:8px; }
+.mc-ch-card{ display:flex; align-items:center; gap:12px; padding:12px; border-radius:20px; border:1px solid var(--mc-line); background:var(--mc-card); cursor:pointer; animation:mc8In .4s var(--mc-ease-out) both; animation-delay:calc(var(--i,0) * 35ms); transition:transform .2s var(--mc-spring), box-shadow .2s, border-color .2s; }
+.mc-ch-card:hover{ transform:translateY(-2px); box-shadow:var(--mc8-shadow); border-color:color-mix(in srgb,var(--accent) 35%,transparent); }
+.mc-ch-card-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.mc-ch-card-txt b{ font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .mc-ch-card-txt em{ font-style:normal; font-size:12px; color:var(--accent); }
+.mc-ch-card-txt small{ font-size:12.5px; color:var(--mc-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mc-ch-meta{ display:flex; gap:6px; margin-top:4px; flex-wrap:wrap; } .mc-ch-meta i{ font-style:normal; font-size:11px; padding:2px 7px; border-radius:999px; background:var(--mc-card-2); color:var(--mc-muted); font-weight:600; } .mc-ch-meta i.own{ background:var(--mc-accent-soft); color:var(--mc-accent-text); }
+.mc-ch-verif{ display:inline-grid; place-items:center; width:16px; height:16px; border-radius:50%; background:#3b82f6; color:#fff; font-size:10px; vertical-align:1px; }
+.mc-ch-join{ flex:none; padding:9px 14px; border-radius:12px; border:0; background:var(--accent); color:#fff; font:inherit; font-size:13px; font-weight:800; cursor:pointer; transition:transform .15s var(--mc-spring), background .2s; }
+.mc-ch-join:active{ transform:scale(.94); } .mc-ch-join.on{ background:var(--mc-card-2); color:var(--text); } .mc-ch-join.busy{ opacity:.6; pointer-events:none; }
+.mc-ch-list.sb{ padding:6px 8px; } .mc-ch-list.sb .mc-ch-card{ padding:10px; border-radius:16px; } .mc-ch-list.sb .mc-ch-meta{ display:none; }
+.mc-ch-hcat{ margin-left:6px; padding:1px 7px; border-radius:999px; background:var(--mc-card-2); font-size:11px; }
+/* превью */
+.mc-chp{ overflow:auto; }
+.mc-chp-cover{ position:relative; height:130px; flex:none; }
+.mc-chp-x{ position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:0; background:rgba(0,0,0,.3); color:#fff; font-size:16px; cursor:pointer; backdrop-filter:blur(6px); }
+.mc-chp-body{ padding:0 18px 22px; text-align:center; }
+.mc-chp-av{ margin-top:-48px; display:inline-block; padding:4px; border-radius:30px; background:var(--mc-card); animation:mc8Pop .5s var(--mc-spring) both; }
+.mc-chp-av .mc-ch-av{ border-radius:26px; font-size:44px; }
+.mc-chp-body h2{ margin:8px 0 2px; font-size:22px; letter-spacing:-.02em; }
+.mc-chp-user{ font-size:13px; color:var(--accent); font-weight:700; } .mc-chp-cat{ font-size:12.5px; color:var(--mc-muted); margin-top:4px; }
+.mc-chp-desc{ margin:10px auto; max-width:420px; font-size:14px; line-height:1.5; }
+.mc-chp-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+.mc-chp-stats div{ padding:10px 6px; border-radius:16px; background:var(--mc-card-2); display:flex; flex-direction:column; gap:2px; } .mc-chp-stats b{ font-size:16px; } .mc-chp-stats small{ font-size:11.5px; color:var(--mc-muted); }
+.mc-chp-act{ display:flex; gap:8px; margin-bottom:8px; } .mc-chp-act .btn{ flex:1; }
+.mc-chp-body h4{ text-align:left; margin:16px 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--mc-muted); }
+.mc-chp-posts{ display:flex; flex-direction:column; gap:8px; text-align:left; }
+.mc-chp-post{ padding:12px 14px; border-radius:16px; background:var(--mc-card-2); animation:mc8In .35s both; } .mc-chp-post p{ margin:0 0 4px; font-size:13.5px; line-height:1.45; white-space:pre-wrap; word-break:break-word; } .mc-chp-post small{ font-size:11.5px; color:var(--mc-muted); }
+.mc-chp-empty{ text-align:center; color:var(--mc-muted); font-size:13px; padding:12px 0; }
+/* создание */
+.mc-chn{ padding:4px 18px 22px; overflow:auto; }
+.mc-chn > .btn{ margin-top:18px; }
+.mc-chn-prev{ display:flex; align-items:center; gap:14px; padding:14px; border-radius:20px; background:var(--mc-card-2); margin-top:10px; }
+.mc-chn-prev .mc-ch-av{ border-radius:24px; } .mc-chn-prev div{ min-width:0; display:flex; flex-direction:column; } .mc-chn-prev b{ font-size:17px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .mc-chn-prev small{ color:var(--accent); font-size:13px; }
+.mc-chn-cats,.mc-chn-emo{ display:flex; flex-wrap:wrap; gap:6px; }
+.mc-chn-cats button{ padding:7px 11px; border-radius:999px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:13px; cursor:pointer; transition:background .2s, transform .15s; }
+.mc-chn-emo button{ width:42px; height:42px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card); font-size:20px; cursor:pointer; transition:transform .15s var(--mc-spring); }
+.mc-chn-cats button.on{ background:var(--accent); color:#fff; border-color:transparent; } .mc-chn-emo button.on{ border:2px solid var(--accent); transform:scale(1.1); background:var(--mc-accent-soft); }
+/* лента канала */
+.mc-ch-mode .msg.mc-ch-post{ max-width:min(560px,92%); }
+.mc-ch-mode .msg.mc-ch-post .msg-bubble{ border-radius:20px !important; box-shadow:0 4px 18px rgba(15,23,42,.08); }
+.mc-ch-foot{ display:flex; align-items:center; gap:4px; margin-top:8px; padding-top:7px; border-top:1px solid color-mix(in srgb,currentColor 12%,transparent); font-size:12px; }
+.mc-ch-foot .v{ display:inline-flex; align-items:center; gap:4px; opacity:.75; margin-right:auto; } .mc-ch-foot b{ font-weight:700; }
+.mc-ch-foot button{ display:inline-flex; align-items:center; gap:4px; padding:4px 9px; border-radius:999px; border:0; background:color-mix(in srgb,currentColor 9%,transparent); color:inherit; font:inherit; font-size:12px; cursor:pointer; transition:background .2s, transform .15s; }
+.mc-ch-foot button:active{ transform:scale(.94); }
+.mc-ch-bar{ display:flex; gap:8px; padding:10px 14px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--mc-line); background:var(--mc-glass); backdrop-filter:blur(14px); }
+.mc-ch-bar button{ flex:1; padding:12px; border-radius:14px; border:0; background:var(--mc-card-2); color:var(--text); font:inherit; font-weight:800; font-size:14px; cursor:pointer; transition:transform .15s; }
+.mc-ch-bar button.pri{ background:var(--accent); color:#fff; } .mc-ch-bar button:active{ transform:scale(.97); }
+.chat-input-bar.mc-ch-ro{ display:none !important; }
+/* комментарии */
+.mc-cm{ display:flex; flex-direction:column; min-height:0; flex:1; overflow:hidden; }
+.mc-cm-post{ display:flex; gap:10px; padding:12px 16px; border-bottom:1px solid var(--mc-line); background:var(--mc-card-2); }
+.mc-cm-post .mc-ch-av{ width:36px; height:36px; border-radius:12px; font-size:18px; } .mc-cm-post div{ min-width:0; } .mc-cm-post b{ font-size:13.5px; } .mc-cm-post p{ margin:2px 0 0; font-size:13px; color:var(--mc-muted); line-height:1.4; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.mc-cm-list{ flex:1; overflow:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px; min-height:180px; }
+.mc-cm-item{ display:flex; gap:8px; align-items:flex-start; animation:mc8In .3s both; }
+.mc-cm-b{ flex:1; min-width:0; padding:8px 12px; border-radius:4px 16px 16px 16px; background:var(--mc-card-2); }
+.mc-cm-item.mine .mc-cm-b{ background:var(--mc-accent-soft); }
+.mc-cm-b b{ font-size:13px; } .mc-cm-b b i{ font-style:normal; font-size:10.5px; padding:1px 6px; border-radius:999px; background:var(--accent); color:#fff; margin-left:4px; }
+.mc-cm-b p{ margin:2px 0; font-size:14px; line-height:1.4; white-space:pre-wrap; word-break:break-word; } .mc-cm-b small{ font-size:11px; color:var(--mc-muted); }
+.mc-cm-item > button{ border:0; background:transparent; color:var(--mc-muted); cursor:pointer; font-size:14px; padding:6px; border-radius:8px; }
+.mc-cm-empty{ margin:auto; text-align:center; color:var(--mc-muted); display:flex; flex-direction:column; gap:4px; padding:30px 0; } .mc-cm-empty b{ color:var(--text); }
+.mc-cm-in{ display:flex; gap:8px; align-items:flex-end; padding:10px 12px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--mc-line); }
+.mc-cm-in textarea{ flex:1; min-width:0; resize:none; max-height:120px; padding:11px 14px; border-radius:20px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:14.5px; outline:none; }
+.mc-cm-in button{ flex:none; width:42px; height:42px; border-radius:50%; border:0; background:var(--accent); color:#fff; font-size:17px; cursor:pointer; } .mc-cm-in button:disabled,.mc-cm-in textarea:disabled{ opacity:.5; }
+/* статистика */
+.mc-cst{ padding:14px 16px 24px; overflow:auto; }
+.mc-cst h4{ margin:18px 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--mc-muted); }
+.mc-cst-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.mc-cst-grid div{ padding:12px; border-radius:16px; background:var(--mc-card-2); display:flex; flex-direction:column; gap:2px; animation:mc8In .4s both; } .mc-cst-grid small{ font-size:11.5px; color:var(--mc-muted); } .mc-cst-grid b{ font-size:19px; font-variant-numeric:tabular-nums; }
+.mc-cst-bars{ display:flex; align-items:flex-end; gap:4px; height:120px; padding:8px; border-radius:16px; background:var(--mc-card-2); }
+.mc-cst-bars div{ flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:4px; }
+.mc-cst-bars i{ width:100%; min-height:3px; border-radius:6px 6px 2px 2px; background:var(--mc8-grad); transform-origin:bottom; animation:mc8Grow .6s var(--mc-ease-out) both; animation-delay:calc(var(--i,0) * 30ms); }
+@keyframes mc8Grow{ from{ transform:scaleY(0) } }
+.mc-cst-bars small{ font-size:9.5px; color:var(--mc-muted); }
+.mc-cst-top{ display:flex; flex-direction:column; gap:6px; }
+.mc-cst-top > div{ display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; background:var(--mc-card-2); }
+.mc-cst-top span{ width:24px; height:24px; flex:none; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#fff; font-size:12px; font-weight:800; }
+.mc-cst-top p{ flex:1; min-width:0; margin:0; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .mc-cst-top em{ font-style:normal; font-size:12px; color:var(--mc-muted); white-space:nowrap; }
+@media (max-width:420px){ .mc-cst-grid{ grid-template-columns:repeat(2,1fr); } .mc-earn-hero{ flex-direction:column; align-items:flex-start; } .mc-age-gate{ flex-direction:column; text-align:center; } }
+
+/* ---------- Боты ---------- */
+.mc-bot-av{ flex:none; display:inline-block; width:52px; height:52px; border-radius:17px; background-size:cover; background-position:center; }
+.mc-bot-av.sm{ width:40px; height:40px; border-radius:13px; } .mc-bot-av.lg{ width:84px; height:84px; border-radius:26px; animation:mc8Pop .5s var(--mc-spring) both; }
+.mc-bots-hero{ display:flex; align-items:center; gap:16px; padding:20px; border-radius:26px; color:#fff; background:linear-gradient(135deg,#0d9488,#0ea5e9 55%,#6366f1); box-shadow:0 16px 36px rgba(14,165,233,.25); margin-bottom:6px; overflow:hidden; animation:mc8In .45s both; }
+.mc-bots-hero small{ font-size:11px; font-weight:800; letter-spacing:.12em; opacity:.85; } .mc-bots-hero h2{ margin:4px 0; font-size:20px; letter-spacing:-.02em; } .mc-bots-hero p{ margin:0; font-size:13px; opacity:.92; line-height:1.4; }
+.mc-bots-hero-art{ position:relative; flex:none; width:96px; height:96px; }
+.mc-bots-hero-art span{ position:absolute; width:40px; height:40px; border-radius:13px; background-size:cover; border:2px solid rgba(255,255,255,.8); box-shadow:0 6px 14px rgba(0,0,0,.2); animation:mc8Float 5s ease-in-out infinite; animation-delay:calc(var(--i) * -.8s); }
+.mc-bots-hero-art span:nth-child(1){ left:0; top:0 } .mc-bots-hero-art span:nth-child(2){ left:50px; top:4px } .mc-bots-hero-art span:nth-child(3){ left:26px; top:30px; z-index:2; width:46px; height:46px } .mc-bots-hero-art span:nth-child(4){ left:2px; top:56px } .mc-bots-hero-art span:nth-child(5){ left:54px; top:56px } .mc-bots-hero-art span:nth-child(6){ display:none }
+.mc-bot-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:8px; }
+.mc-bot-card{ display:flex; align-items:center; gap:12px; padding:12px; border-radius:20px; border:1px solid var(--mc-line); background:var(--mc-card); animation:mc8In .4s both; animation-delay:calc(var(--i,0) * 50ms); transition:transform .2s var(--mc-spring), box-shadow .2s; }
+.mc-bot-card:hover{ transform:translateY(-2px); box-shadow:var(--mc8-shadow); }
+.mc-bot-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; } .mc-bot-txt b{ font-size:15px; } .mc-bot-txt em{ font-style:normal; font-size:12px; color:var(--accent); font-weight:700; } .mc-bot-txt small{ font-size:12px; color:var(--mc-muted); line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.mc-bot-tag{ margin-left:6px; font-size:11px; font-weight:600; color:var(--accent); opacity:.85; }
+.list-item.mc-bot-item .list-avatar,.list-item.mc-bot-item .avatar{ border-radius:16px !important; }
+.mc-bot-pane{ position:absolute; inset:0; z-index:40; display:flex; flex-direction:column; background:var(--bg); opacity:0; transform:translateX(18px); transition:opacity .22s var(--mc-ease-out), transform .26s var(--mc-ease-out); }
+.mc-bot-pane.open{ opacity:1; transform:none; } .mc-bot-pane.closing{ opacity:0; transform:translateX(18px); pointer-events:none; }
+.mc-bot-head{ display:flex; align-items:center; gap:10px; padding:10px 14px; padding-top:calc(10px + env(safe-area-inset-top)); border-bottom:1px solid var(--mc-line); background:var(--mc-glass); backdrop-filter:blur(14px); }
+.mc-bot-hinfo{ flex:1; min-width:0; display:flex; flex-direction:column; } .mc-bot-hinfo b{ font-size:15.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .mc-bot-hinfo small{ font-size:12px; color:var(--mc-muted); }
+.mc-bot-badge{ font-size:9.5px; padding:2px 6px; border-radius:6px; background:var(--accent); color:#fff; letter-spacing:.06em; vertical-align:2px; }
+.mc-bot-msgs{ flex:1; overflow-y:auto; padding:14px 14px 8px; display:flex; flex-direction:column; gap:6px; overscroll-behavior:contain; }
+.mc-bot-intro{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; padding:18px 12px 14px; margin:0 auto 6px; max-width:340px; }
+.mc-bot-intro b{ font-size:18px; margin-top:6px; } .mc-bot-intro small{ color:var(--accent); font-weight:700; } .mc-bot-intro p{ margin:4px 0 0; font-size:13px; color:var(--mc-muted); line-height:1.45; }
+.mc-bot-day{ align-self:center; margin:8px 0; padding:3px 10px; border-radius:999px; background:var(--mc-card-2); font-size:11.5px; color:var(--mc-muted); }
+.mc-bot-msg{ position:relative; max-width:min(520px,84%); padding:9px 13px 18px; border-radius:18px; font-size:14.5px; line-height:1.45; word-break:break-word; }
+.mc-bot-msg.in{ align-self:flex-start; background:var(--mc-card); border:1px solid var(--mc-line); border-bottom-left-radius:6px; }
+.mc-bot-msg.out{ align-self:flex-end; background:linear-gradient(115deg,#24cde8,#397cff 56%,#8758f6); color:#fff; border-bottom-right-radius:6px; }
+.mc-bot-msg.fresh{ animation:mc8In .3s var(--mc-ease-out) both; }
+.mc-bot-msg .t{ position:absolute; right:10px; bottom:4px; font-size:10.5px; opacity:.6; }
+.mc-bot-msg code{ padding:1px 5px; border-radius:6px; background:color-mix(in srgb,currentColor 12%,transparent); font-family:ui-monospace,Menlo,monospace; font-size:.92em; word-break:break-all; }
+.mc-bot-msg a{ color:inherit; text-decoration:underline; }
+.mc-bot-msg img{ display:block; max-width:100%; max-height:260px; border-radius:12px; margin-bottom:6px; background:#fff; image-rendering:auto; }
+.mc-bot-msg.typing{ display:flex; gap:4px; padding:13px 15px; } .mc-bot-msg.typing i{ width:7px; height:7px; border-radius:50%; background:var(--mc-muted); animation:mc8Dot 1.1s infinite; } .mc-bot-msg.typing i:nth-child(2){ animation-delay:.15s } .mc-bot-msg.typing i:nth-child(3){ animation-delay:.3s }
+.mc-bot-copy{ display:inline-block; margin-top:6px; padding:5px 10px; border-radius:10px; border:0; background:var(--mc-card-2); color:var(--text); font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+.mc-bot-kb{ display:none; flex-wrap:wrap; gap:6px; padding:0 12px 8px; max-height:120px; overflow-y:auto; }
+.mc-bot-kb.on{ display:flex; }
+.mc-bot-kb button{ flex:1 1 auto; min-width:calc(33% - 6px); padding:9px 10px; border-radius:12px; border:1px solid color-mix(in srgb,var(--accent) 35%,var(--mc-line)); background:var(--mc-card); color:var(--mc-accent-text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; animation:mc8In .3s both; transition:transform .12s, background .2s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mc-bot-kb button:active{ transform:scale(.95); background:var(--mc-accent-soft); }
+.mc-bot-in{ display:flex; align-items:flex-end; gap:8px; padding:8px 12px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--mc-line); background:var(--mc-glass); backdrop-filter:blur(14px); }
+.mc-bot-in textarea{ flex:1; min-width:0; resize:none; max-height:140px; padding:11px 14px; border-radius:22px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:15px; outline:none; line-height:1.35; }
+.mc-bot-in textarea:focus{ border-color:var(--accent); }
+.mc-bot-in .chat-input-btn{ font-weight:900; font-size:18px; }
+.mc-bot-cmds{ position:absolute; left:12px; right:12px; bottom:70px; max-height:50%; overflow:auto; padding:6px; border-radius:18px; background:var(--mc-card); border:1px solid var(--mc-line); box-shadow:var(--mc8-shadow); animation:mc8In .2s both; z-index:3; }
+.mc-bot-cmds.hidden{ display:none; }
+.mc-bot-cmds button{ width:100%; display:flex; align-items:center; gap:10px; padding:10px 12px; border:0; border-radius:12px; background:transparent; color:var(--text); font:inherit; text-align:left; cursor:pointer; }
+.mc-bot-cmds button:hover{ background:var(--mc-card-2); } .mc-bot-cmds b{ color:var(--accent); font-family:ui-monospace,Menlo,monospace; font-size:13.5px; } .mc-bot-cmds small{ color:var(--mc-muted); font-size:12.5px; }
+.mc-bot-cmdlist{ display:flex; flex-direction:column; gap:6px; text-align:left; } .mc-bot-cmdlist div{ display:flex; gap:10px; align-items:center; } .mc-bot-cmdlist code{ color:var(--accent); font-weight:700; }
+
+/* ---------- «Прочее» ---------- */
+.mc-home{ padding-bottom:28px; }
+.mc-home-hero{ position:relative; padding:20px; border-radius:28px; color:#fff; overflow:hidden; background:linear-gradient(140deg,#1e1b4b,#4338ca 45%,#0ea5e9); box-shadow:0 18px 40px rgba(67,56,202,.32); animation:mc8In .45s both; }
+.mc-home-orbs i{ position:absolute; border-radius:50%; filter:blur(2px); animation:mc8Float 8s ease-in-out infinite; }
+.mc-home-orbs i:nth-child(1){ width:160px; height:160px; right:-40px; top:-50px; background:radial-gradient(circle,rgba(236,72,153,.55),transparent 70%); }
+.mc-home-orbs i:nth-child(2){ width:120px; height:120px; left:-30px; bottom:-40px; background:radial-gradient(circle,rgba(34,211,238,.5),transparent 70%); animation-delay:-3s; }
+.mc-home-orbs i:nth-child(3){ width:70px; height:70px; right:30%; bottom:10px; background:radial-gradient(circle,rgba(250,204,21,.45),transparent 70%); animation-delay:-5s; }
+.mc-home-hero > *{ position:relative; }
+.mc-home-hero > small{ font-size:13px; opacity:.88; }
+.mc-home-bal{ display:flex; align-items:baseline; gap:8px; margin:4px 0 10px; } .mc-home-bal span{ font-size:40px; font-weight:900; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.05; } .mc-home-bal em{ font-style:normal; font-weight:800; opacity:.85; }
+.mc-home-prog{ display:flex; align-items:center; gap:10px; font-size:12px; opacity:.95; }
+.mc-home-bar{ flex:1; height:7px; border-radius:7px; background:rgba(255,255,255,.22); overflow:hidden; } .mc-home-bar i{ display:block; height:100%; border-radius:7px; background:linear-gradient(90deg,#fde047,#fb923c); transition:width 1s var(--mc-ease-out); }
+.mc-home-actions{ display:flex; gap:8px; margin-top:14px; }
+.mc-home-actions button{ flex:1; padding:10px 6px; border-radius:14px; border:0; background:rgba(255,255,255,.16); color:#fff; font:inherit; font-size:13px; font-weight:800; cursor:pointer; backdrop-filter:blur(6px); transition:background .2s, transform .15s; white-space:nowrap; }
+.mc-home-actions button:hover{ background:rgba(255,255,255,.26); } .mc-home-actions button:active{ transform:scale(.95); }
+.mc-home-sec{ display:flex; align-items:center; justify-content:space-between; margin:20px 2px 10px; } .mc-home-sec h3{ margin:0; font-size:17px; letter-spacing:-.01em; }
+.mc-home-more{ border:0; background:transparent; color:var(--accent); font:inherit; font-weight:700; font-size:13px; cursor:pointer; }
+.mc-home-big{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mc-home-card{ --c:#6366f1; position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:3px; min-height:128px; padding:14px; border-radius:22px; border:1px solid var(--mc-line); background:radial-gradient(circle at 100% 0%,color-mix(in srgb,var(--c) 26%,transparent),transparent 60%),var(--mc-card); color:var(--text); font:inherit; text-align:left; cursor:pointer; overflow:hidden; animation:mc8In .45s var(--mc-ease-out) both; animation-delay:calc(.08s + var(--i,0) * 55ms); transition:transform .22s var(--mc-spring), box-shadow .22s, border-color .2s; }
+.mc-home-card:hover{ transform:translateY(-3px); box-shadow:var(--mc8-shadow); border-color:color-mix(in srgb,var(--c) 45%,transparent); } .mc-home-card:active{ transform:scale(.97); }
+.mc-home-card .mc-home-ic{ width:44px; height:44px; border-radius:15px; display:grid; place-items:center; font-size:23px; background:color-mix(in srgb,var(--c) 18%,transparent); margin-bottom:auto; }
+.mc-home-card b{ font-size:15.5px; margin-top:10px; } .mc-home-card small{ font-size:12px; color:var(--mc-muted); line-height:1.35; }
+.mc-home-arr{ position:absolute; right:14px; top:14px; color:var(--c); font-weight:900; transition:transform .2s; } .mc-home-card:hover .mc-home-arr{ transform:translateX(3px); }
+.mc-home-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
+.mc-home-tile{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:12px; border-radius:18px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; text-align:left; cursor:pointer; animation:mc8In .4s both; animation-delay:calc(.15s + var(--i,0) * 35ms); transition:transform .2s var(--mc-spring), border-color .2s; }
+.mc-home-tile:hover{ transform:translateY(-2px); border-color:color-mix(in srgb,var(--accent) 40%,transparent); } .mc-home-tile:active{ transform:scale(.96); }
+.mc-home-tile .mc-home-ic{ font-size:22px; margin-bottom:6px; } .mc-home-tile b{ font-size:13.5px; } .mc-home-tile small{ font-size:11.5px; color:var(--mc-muted); line-height:1.3; }
+.mc-home-bots{ display:flex; gap:12px; overflow-x:auto; padding:2px 2px 6px; scrollbar-width:none; } .mc-home-bots::-webkit-scrollbar{ display:none; }
+.mc-home-bots button{ position:relative; flex:none; width:68px; display:flex; flex-direction:column; align-items:center; gap:5px; border:0; background:transparent; color:var(--text); font:inherit; cursor:pointer; animation:mc8Pop .4s both; animation-delay:calc(var(--i,0) * 50ms); }
+.mc-home-bots small{ font-size:11.5px; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mc-home-bots em{ position:absolute; top:-4px; right:4px; min-width:18px; height:18px; padding:0 5px; box-sizing:border-box; border-radius:9px; background:#ef4444; color:#fff; font-style:normal; font-size:11px; font-weight:800; display:grid; place-items:center; }
+
+@media (prefers-reduced-motion: reduce){
+  .mc-earn > *,.mc-task,.mc-ch-card,.mc-ch-tc,.mc-ch-hero,.mc-bot-card,.mc-bots-hero,.mc-home-card,.mc-home-tile,.mc-home-hero,.mc-home-bots button,.mc-bot-msg.fresh,.mc-bot-kb button,.mc-cst-bars i,.mc-chp-post,.mc-cm-item,.mc-play-box{ animation:none !important; }
+  .mc-earn-hero:after,.mc-ch-hero-bg,.mc-home-orbs i,.mc-bots-hero-art span,.mc-age-scan span,.mc-checkin-days i.cur{ animation:none !important; }
+  .mc-bot-pane,.mc-card8{ transition:none; }
+}
+
+/* Специфичность: глобальные правила .settings-wrap button{color:inherit} и html[data-theme] .settings-wrap input{…!important} */
+.settings-wrap .mc-ch-create{ color:#4338ca; }
+.settings-wrap .mc-ch-join{ color:#fff; } .settings-wrap .mc-ch-join.on{ color:var(--text); }
+.settings-wrap .mc-ch-tc,.settings-wrap .mc-home-actions button,.settings-wrap .mc-ana-tiles button,.settings-wrap .mc-gs7-chips button.on,.settings-wrap .mc-chn-cats button.on{ color:#fff; }
+.settings-wrap .mc-home-more{ color:var(--accent); }
+.settings-wrap .mc-tf-btns .no{ color:var(--mc8-bad); } .settings-wrap .mc-tf-btns .yes{ color:var(--mc8-ok); }
+html[data-theme] .settings-wrap .mc-ch-search input#mcChSearch{ background:transparent !important; border:0 !important; box-shadow:none !important; padding:12px 0; }
+html[data-theme] .settings-wrap #mcMA,html[data-theme] .settings-wrap #mcSA,html[data-theme] .settings-wrap #mcTI{ border-width:2px !important; background:var(--mc-card) !important; }
+html[data-theme] .settings-wrap #mcMA:focus,html[data-theme] .settings-wrap #mcSA:focus,html[data-theme] .settings-wrap #mcTI:focus{ border-color:var(--tc,var(--accent)) !important; }
+
 </style>
 </head>
 <body>
@@ -10413,7 +10804,7 @@ function mcSetMain() {
       sRow({ ico: '⎋', c: '#64748b', label: 'Выйти', act: 'confirmLogout()' }),
       sRow({ ico: '⚠️', c: '#dc2626', label: 'Удалить аккаунт', act: 'confirmDeleteAccount()', danger: true }),
     ])}
-    <div class="ms-foot">MetroChat · v21</div>
+    <div class="ms-foot">MetroChat · v23</div>
   </div>`;
 }
 
@@ -11403,6 +11794,1610 @@ setInterval(() => { mcAucBgSweep(); }, 30000);
 setTimeout(() => { mcAucBgSweep(); }, 6000);
 
 Object.assign(window, { renderGiftShop, renderOwnedGifts, hideOwnedGift, mcToggleOwnedHidden, mcGiftCelebrate, mcOpenWheel, mcWheelSpin, mcOpenAuction, mcAucOpenLot, mcAucNewLot, mcAucBid, mcAucCancel, mcAucSettle, mcGiftById, mcConfettiBurst });
+
+// =====================================================================
+// MetroChat · Round 8 — новая система заработка умов
+// Лимит 140 УМ в день, 10 разных заданий, ежедневная отметка со стриком,
+// задания доступны только после проверки возраста по лицу (модуль 9c).
+// =====================================================================
+
+const MC_EARN_CAP = 140;
+const MC_EARN_TASKS_PER_DAY = 7;
+const MCE = { day: null, rec: null, streak: null, age: null, loaded: false, busy: false, play: null, back: 'gifts' };
+
+function mcDayKey(ts = Date.now()) { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function mcPrevDayKey(day) { const [y, m, d] = day.split('-').map(Number); return mcDayKey(new Date(y, m - 1, d - 1, 12).getTime()); }
+function mcHash32(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mcSeeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function mcShuffle(arr, rnd = mcRand01) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function mcRint(a, b) { return a + Math.floor(mcRand01() * (b - a + 1)); }
+function mcPick(arr) { return arr[Math.floor(mcRand01() * arr.length)]; }
+function mcMsLeftToday() { const n = new Date(); const e = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); return e - n; }
+
+// Уровень сложности по подтверждённому возрасту: 1 (6–9) … 5 (19+)
+function mcAgeBand(age) { age = Number(age) || 0; return age < 10 ? '6-9' : age < 13 ? '10-12' : age < 16 ? '13-15' : age < 19 ? '16-18' : '19+'; }
+function mcBandLevel(band) { return ({ '6-9': 1, '10-12': 2, '13-15': 3, '16-18': 4, '19+': 5 })[band] || 3; }
+function mcEarnLevel() { return mcBandLevel(MCE.age?.band); }
+
+const MC_EARN_DEFS = {
+  quiz: { ico: '🎓', title: 'Викторина', desc: '5 вопросов по школьным предметам', max: 25, c: '#6366f1' },
+  math: { ico: '➗', title: 'Устный счёт', desc: '60 секунд — решите как можно больше примеров', max: 25, c: '#0ea5e9' },
+  anagram: { ico: '🔤', title: 'Анаграммы', desc: 'Соберите слова из перемешанных букв', max: 20, c: '#f59e0b' },
+  memory: { ico: '🧠', title: 'Память', desc: 'Найдите все пары карточек за меньшее число ходов', max: 20, c: '#ec4899' },
+  reaction: { ico: '⚡', title: 'Реакция', desc: 'Нажмите, как только круг станет зелёным', max: 15, c: '#22c55e' },
+  sequence: { ico: '🔢', title: 'Числовой ряд', desc: 'Продолжите числовой ряд', max: 20, c: '#8b5cf6' },
+  typing: { ico: '⌨️', title: 'Быстрая печать', desc: 'Наберите фразу быстро и без ошибок', max: 20, c: '#14b8a6' },
+  color: { ico: '🎨', title: 'Зоркий глаз', desc: 'Найдите квадрат другого оттенка', max: 15, c: '#ef4444' },
+  truth: { ico: '✅', title: 'Правда или ложь', desc: '8 утверждений — быстро решите, верно ли', max: 20, c: '#84cc16' },
+  simon: { ico: '🎹', title: 'Повтори мелодию', desc: 'Запомните и повторите последовательность', max: 20, c: '#f97316' }
+};
+const MC_EARN_ORDER = Object.keys(MC_EARN_DEFS);
+function mcEarnTodayTasks(uid = state.user?.uid, day = mcDayKey()) {
+  const rnd = mcSeeded(mcHash32(`${uid}|${day}|metro-tasks`));
+  return mcShuffle(MC_EARN_ORDER, rnd).slice(0, MC_EARN_TASKS_PER_DAY);
+}
+function mcCheckinReward(streakN) { return 10 + Math.min(10, Math.max(0, streakN - 1)) * 1; }
+
+async function mcEarnLoad(force = false) {
+  const uid = state.user?.uid; if (!uid) return;
+  const day = mcDayKey();
+  if (!force && MCE.loaded && MCE.day === day && MCE.uid === uid) return;
+  const [d, s, a] = await Promise.all([
+    get(ref(db, `gift_earn/${uid}/days/${day}`)).catch(() => null),
+    get(ref(db, `gift_earn/${uid}/streak`)).catch(() => null),
+    get(ref(db, `age_verify/${uid}`)).catch(() => null)
+  ]);
+  MCE.uid = uid; MCE.day = day; MCE.rec = d?.val() || { total: 0, tasks: {} };
+  MCE.streak = s?.val() || null; MCE.age = a?.val() || null; MCE.loaded = true;
+}
+function mcEarnTotal() { return Math.max(0, Math.min(MC_EARN_CAP, Number(MCE.rec?.total) || 0)); }
+function mcEarnLeft() { return MC_EARN_CAP - mcEarnTotal(); }
+function mcEarnDone(id) { return !!MCE.rec?.tasks?.[id]; }
+function mcStreakNow() {
+  const s = MCE.streak; if (!s?.last) return 0;
+  const day = mcDayKey();
+  if (s.last === day || s.last === mcPrevDayKey(day)) return Number(s.n) || 0;
+  return 0;
+}
+
+// Атомарное начисление: задание засчитывается один раз в день, сумма за день не превышает лимит.
+async function mcEarnGrant(taskId, want, meta = {}) {
+  const uid = state.user?.uid; if (!uid) throw new Error('no user');
+  const day = mcDayKey();
+  const dayRef = ref(db, `gift_earn/${uid}/days/${day}`);
+  want = Math.max(0, Math.round(Number(want) || 0));
+  const tx = await runTransaction(dayRef, cur => {
+    const c = cur && typeof cur === 'object' ? { ...cur, tasks: { ...(cur.tasks || {}) } } : { total: 0, tasks: {} };
+    if (c.tasks[taskId]) return; // уже выполнено — отмена транзакции
+    const total = Math.max(0, Number(c.total) || 0);
+    const g = Math.max(0, Math.min(want, MC_EARN_CAP - total));
+    c.tasks[taskId] = { r: g, want, at: Date.now(), ...(meta.score !== undefined ? { s: Math.round(meta.score * 100) } : {}) };
+    c.total = total + g;
+    return c;
+  });
+  if (!tx.committed) { await mcEarnLoad(true); return { ok: false, reason: 'done' }; }
+  const rec = tx.snapshot.val() || {};
+  const granted = Number(rec.tasks?.[taskId]?.r) || 0;
+  let balance = null;
+  if (granted > 0) {
+    try { balance = await mcAddUms(uid, granted); }
+    catch (e) {
+      // Возвращаем запись дня, чтобы задание можно было выполнить снова
+      try { await runTransaction(dayRef, cur => { if (!cur || !cur.tasks?.[taskId]) return cur; const c = { ...cur, tasks: { ...cur.tasks } }; delete c.tasks[taskId]; c.total = Math.max(0, (Number(c.total) || 0) - granted); return c; }); } catch (_) {}
+      throw e;
+    }
+    mcSetBalanceUI(balance);
+  }
+  MCE.rec = rec; MCE.day = day;
+  mcEarnLog(granted, taskId);
+  return { ok: true, granted, want, balance, capped: granted < want };
+}
+function mcEarnLog(n, taskId) { try { window.dispatchEvent(new CustomEvent('mc-earn', { detail: { n, taskId } })); } catch (_) {} }
+
+async function mcEarnCheckin() {
+  if (MCE.busy) return; MCE.busy = true;
+  const uid = state.user?.uid;
+  try {
+    await mcEarnLoad(true);
+    if (!mcAgeOk()) { MCE.busy = false; return mcAgeOpen(); }
+    if (mcEarnDone('checkin')) { toast('Отметка за сегодня уже получена', '✓'); return; }
+    const day = mcDayKey();
+    const prev = MCE.streak;
+    const n = prev?.last === mcPrevDayKey(day) ? (Number(prev.n) || 0) + 1 : prev?.last === day ? (Number(prev.n) || 1) : 1;
+    const res = await mcEarnGrant('checkin', mcCheckinReward(n), { score: 1 });
+    if (res.ok) {
+      const best = Math.max(Number(prev?.best) || 0, n);
+      await set(ref(db, `gift_earn/${uid}/streak`), { last: day, n, best }).catch(() => {});
+      MCE.streak = { last: day, n, best };
+      mcEarnReward('Ежедневная отметка', res, `Серия: ${n} ${mcPl8(n, 'день', 'дня', 'дней')} подряд`);
+    }
+  } catch (e) { console.error(e); toast('Не удалось получить отметку. Проверьте правила Firebase (gift_earn).', '⚠'); }
+  finally { MCE.busy = false; mcEarnRender(); }
+}
+function mcPl8(n, a, b, c) { n = Math.abs(n) % 100; const n1 = n % 10; if (n > 10 && n < 20) return c; if (n1 > 1 && n1 < 5) return b; if (n1 === 1) return a; return c; }
+
+function mcEarnSfx(kind) {
+  if (state.settings?.sound === false) return;
+  const ac = mcAC(); if (!ac) return;
+  try {
+    const out = mcOut(ac, mcVol() * 0.7); const t = ac.currentTime + 0.01;
+    if (kind === 'ok') { mcTone6(ac, out, t, mcMidi6(76), { type: 'triangle', dur: 0.12, vol: 0.22 }); mcTone6(ac, out, t + 0.08, mcMidi6(83), { type: 'triangle', dur: 0.18, vol: 0.2 }); }
+    else if (kind === 'bad') mcTone6(ac, out, t, 180, { type: 'sawtooth', dur: 0.2, vol: 0.12, glide: -60, filter: 900 });
+    else if (kind === 'tap') mcTone6(ac, out, t, 1200, { type: 'sine', dur: 0.05, vol: 0.12 });
+    else if (kind === 'win') [72, 76, 79, 84].forEach((n, i) => mcBell(ac, out, t + i * 0.09, mcMidi6(n), 1, 0.16));
+    else if (typeof kind === 'number') mcTone6(ac, out, t, kind, { type: 'triangle', dur: 0.32, vol: 0.24 });
+  } catch (_) {}
+}
+
+function mcEarnReward(title, res, extra = '') {
+  if (!res?.ok) return;
+  if (res.granted > 0) { try { mcConfettiBurst(res.granted >= 20 ? 70 : 40); } catch (_) {} mcEarnSfx('win'); }
+  const capped = res.capped ? `<p class="mc-er-note">Сработал дневной лимит ${MC_EARN_CAP} УМ: начислено ${res.granted} из ${res.want}.</p>` : '';
+  mcDialog({
+    icon: res.granted > 0 ? '<span class="mc-er-coin">УМ</span>' : '🙂', title: res.granted > 0 ? `+${res.granted} УМ` : 'Без награды',
+    text: title,
+    body: `${extra ? `<p class="mc-er-sub">${esc(extra)}</p>` : ''}${capped}<div class="mc-er-bar"><i style="width:${mcEarnTotal() / MC_EARN_CAP * 100}%"></i></div><p class="mc-er-sub">Сегодня: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ</p>`,
+    buttons: [{ label: 'К заданиям', kind: 'primary', value: true }]
+  });
+}
+
+// ---------------------------- Экран «Заработать» ----------------------------
+async function mcEarnOpen(back) {
+  if (back) MCE.back = back;
+  window.__mcOtherView = 'earn';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  mcEarnStopPlay();
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="mcEarnBack()">← ${MCE.back === 'other' ? 'Прочее' : 'Подарки'}</button><div class="settings-title">Заработать умы</div></div><div class="settings-wrap mc-earn" id="mcEarnWrap"><div class="mc-skel-card"></div><div class="mc-skel-grid"><i></i><i></i><i></i><i></i></div></div>`;
+  try { await mcEarnLoad(true); } catch (_) {}
+  mcEarnRender();
+}
+function mcEarnBack() { mcEarnStopPlay(); if (MCE.back === 'other') renderOtherHome(); else renderGiftShop(); }
+function mcEarnRender() {
+  const box = $('mcEarnWrap'); if (!box) return;
+  const total = mcEarnTotal(), left = mcEarnLeft(), pct = total / MC_EARN_CAP;
+  const tasks = mcEarnTodayTasks();
+  const ageOk = mcAgeOk();
+  const st = mcStreakNow();
+  const checkDone = mcEarnDone('checkin');
+  const nextStreak = checkDone ? st : (MCE.streak?.last === mcPrevDayKey(mcDayKey()) ? st + 1 : 1);
+  const R = 46, C = 2 * Math.PI * R;
+  const hrs = Math.floor(mcMsLeftToday() / 3600000), mins = Math.floor(mcMsLeftToday() / 60000) % 60;
+  const doneCnt = tasks.filter(mcEarnDone).length;
+  const hist = Object.entries(MCE.rec?.tasks || {}).sort((a, b) => (b[1].at || 0) - (a[1].at || 0));
+  box.innerHTML = `
+  <section class="mc-earn-hero">
+    <div class="mc-earn-ring"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="${R}" class="bg"/><circle cx="55" cy="55" r="${R}" class="fg" style="stroke-dasharray:${C};stroke-dashoffset:${C * (1 - pct)}"/></svg><div><b>${total}</b><small>из ${MC_EARN_CAP}</small></div></div>
+    <div class="mc-earn-hero-txt">
+      <small>СЕГОДНЯ ЗАРАБОТАНО</small>
+      <h2>${left > 0 ? `Ещё ${left} УМ доступно` : 'Дневной лимит собран'}</h2>
+      <p>${left > 0 ? `Лимит ${MC_EARN_CAP} УМ в день. Новые задания через ${hrs} ч ${mins} мин.` : `Возвращайтесь завтра — через ${hrs} ч ${mins} мин появятся новые задания.`}</p>
+      <div class="mc-earn-pills"><span>🔥 Серия ${st} ${mcPl8(st, 'день', 'дня', 'дней')}</span><span>✓ ${doneCnt}/${tasks.length} заданий</span><span id="mcEarnBal">💰 …</span></div>
+    </div>
+  </section>
+  ${ageOk ? `<button type="button" class="mc-age-ok" onclick="mcAgeOpen()"><span>🪪</span><div><b>Возраст подтверждён по лицу</b><small>Категория ${esc(MCE.age.band)} · задания подобраны под ваш уровень</small></div><em>Пройти заново</em></button>`
+    : `<section class="mc-age-gate"><div class="mc-age-gate-art"><span></span>🙂</div><div><h3>Подтвердите возраст по лицу</h3><p>Заработок умов доступен после короткой проверки камерой: посмотрите прямо и поверните голову. Видео обрабатывается только на вашем устройстве и никуда не отправляется.</p><button type="button" class="btn btn-primary" onclick="mcAgeOpen()">Пройти проверку · 20 секунд</button></div></section>`}
+  <button type="button" class="mc-checkin ${checkDone ? 'done' : ''} ${ageOk ? '' : 'locked'}" onclick="mcEarnCheckin()" ${checkDone ? 'disabled' : ''}>
+    <div class="mc-checkin-days">${Array.from({ length: 7 }, (_, i) => { const n = i + 1; const on = checkDone ? n <= Math.min(7, st) : n < Math.min(7, nextStreak); const cur = !checkDone && n === Math.min(7, nextStreak); return `<i class="${on ? 'on' : ''} ${cur ? 'cur' : ''}">${n === 7 ? '🎁' : n}</i>`; }).join('')}</div>
+    <div class="mc-checkin-txt"><b>${checkDone ? 'Отметка получена' : 'Ежедневная отметка'}</b><small>${checkDone ? `Завтра: +${mcCheckinReward(st + 1)} УМ` : `+${mcCheckinReward(nextStreak)} УМ · чем длиннее серия, тем больше награда`}</small></div>
+    <span class="mc-checkin-go">${checkDone ? '✓' : ageOk ? 'Забрать' : '🔒'}</span>
+  </button>
+  <div class="discovery-section-head"><div><h3>Задания дня</h3><p>Каждый день новый набор · одна попытка на задание</p></div><span class="top-pill">${doneCnt}/${tasks.length}</span></div>
+  <div class="mc-task-grid">${tasks.map((id, i) => {
+    const d = MC_EARN_DEFS[id]; const done = mcEarnDone(id); const r = MCE.rec?.tasks?.[id];
+    const lock = !ageOk ? 'age' : (!done && left <= 0) ? 'cap' : '';
+    return `<button type="button" class="mc-task ${done ? 'done' : ''} ${lock ? 'locked' : ''}" style="--tc:${d.c};--i:${i}" onclick="mcEarnStart('${id}')" ${done ? 'disabled' : ''}>
+      <span class="mc-task-ico">${d.ico}</span><b>${d.title}</b><small>${d.desc}</small>
+      <span class="mc-task-foot">${done ? `<em class="ok">✓ +${r?.r || 0} УМ</em>` : lock === 'age' ? '<em>🔒 Нужна проверка</em>' : lock === 'cap' ? '<em>Лимит на сегодня</em>' : `<em>до ${d.max} УМ</em><i>Начать →</i>`}</span>
+    </button>`;
+  }).join('')}</div>
+  <div class="mc-earn-rules"><b>Как это работает</b><ul><li>За день можно заработать не больше ${MC_EARN_CAP} УМ — это общий лимит для всех заданий и отметки.</li><li>Награда зависит от результата: чем точнее и быстрее, тем больше умов.</li><li>Сложность подбирается по возрасту, подтверждённому по лицу.</li><li>Выигрыши в колесе, продажи на аукционе и обмен подарков в лимит не входят.</li></ul></div>
+  ${hist.length ? `<div class="discovery-section-head"><div><h3>История за сегодня</h3></div></div><div class="mc-earn-hist">${hist.map(([id, r]) => `<div><span>${id === 'checkin' ? '📅' : MC_EARN_DEFS[id]?.ico || '•'}</span><b>${id === 'checkin' ? 'Ежедневная отметка' : esc(MC_EARN_DEFS[id]?.title || id)}</b><small>${new Date(r.at || 0).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</small><em>+${r.r || 0}</em></div>`).join('')}</div>` : ''}`;
+  readGiftBalance().then(b => { const x = $('mcEarnBal'); if (x) x.textContent = `💰 ${mcFmtUm(b)} УМ`; mcSetBalanceUI(b); }).catch(() => {});
+}
+
+function mcEarnStart(id) {
+  if (!MC_EARN_DEFS[id]) return;
+  if (!mcAgeOk()) return mcAgeOpen();
+  if (mcEarnDone(id)) return toast('Это задание уже выполнено сегодня', '✓');
+  if (!mcEarnTodayTasks().includes(id)) return toast('Этого задания нет в сегодняшнем наборе', '⚠');
+  if (mcEarnLeft() <= 0) return toast(`Дневной лимит ${MC_EARN_CAP} УМ уже собран`, '⏳');
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const d = MC_EARN_DEFS[id];
+  mcEarnStopPlay();
+  MCE.play = { id, t0: Date.now(), timers: [], done: false };
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="mcEarnQuit()">← Задания</button><div class="settings-title">${d.title}</div></div>
+  <div class="settings-wrap mc-play" style="--tc:${d.c}"><div class="mc-play-head"><span class="mc-task-ico">${d.ico}</span><div><b>${d.title}</b><small>${d.desc} · до ${d.max} УМ</small></div><span class="mc-play-timer" id="mcPlayTimer"></span></div><div class="mc-play-progress"><i id="mcPlayProg"></i></div><div id="mcPlayBox" class="mc-play-box"></div></div>`;
+  const fn = MC_EARN_GAMES[id];
+  try { fn($('mcPlayBox'), mcEarnLevel()); } catch (e) { console.error(e); toast('Не удалось запустить задание', '⚠'); mcEarnOpen(); }
+}
+function mcEarnStopPlay() { const p = MCE.play; if (!p) return; p.done = true; p.timers.forEach(t => { clearTimeout(t); clearInterval(t); }); p.timers = []; if (p.cleanup) try { p.cleanup(); } catch (_) {} MCE.play = null; }
+async function mcEarnQuit() {
+  const p = MCE.play;
+  if (p && !p.done && p.started) {
+    const ok = await mcConfirm('Выйти из задания?', 'Попытка будет засчитана с текущим результатом.', { okText: 'Выйти', icon: '🚪' });
+    if (!ok) return;
+    if (MCE.play === p && !p.done && typeof p.finishNow === 'function') return p.finishNow();
+  }
+  mcEarnStopPlay(); mcEarnOpen();
+}
+function mcPlayProg(f) { const x = $('mcPlayProg'); if (x) x.style.width = `${Math.max(0, Math.min(1, f)) * 100}%`; }
+function mcPlayTimerSet(txt) { const x = $('mcPlayTimer'); if (x) x.textContent = txt; }
+function mcPlayInterval(fn, ms) { const id = setInterval(fn, ms); MCE.play?.timers.push(id); return id; }
+function mcPlayTimeout(fn, ms) { const id = setTimeout(fn, ms); MCE.play?.timers.push(id); return id; }
+// Обратный отсчёт; onEnd вызывается один раз
+function mcPlayCountdown(sec, onEnd) {
+  const p = MCE.play; const end = Date.now() + sec * 1000;
+  const tick = () => { if (MCE.play !== p || p.done) return; const left = Math.max(0, end - Date.now()); mcPlayTimerSet(`${Math.ceil(left / 1000)} с`); $('mcPlayTimer')?.classList.toggle('warn', left < 10000); if (left <= 0) { clearInterval(iv); onEnd(); } };
+  const iv = mcPlayInterval(tick, 200); tick();
+}
+
+async function mcEarnFinish(score, summary = '') {
+  const p = MCE.play; if (!p || p.done) return; p.done = true;
+  p.timers.forEach(t => { clearTimeout(t); clearInterval(t); });
+  const d = MC_EARN_DEFS[p.id];
+  score = Math.max(0, Math.min(1, Number(score) || 0));
+  // Защита от слишком быстрого «прохождения» (скрипты, автокликеры)
+  const elapsed = Date.now() - p.t0;
+  if (elapsed < 2500) score = Math.min(score, 0.2);
+  const want = score > 0 ? Math.max(1, Math.round(d.max * score)) : 0;
+  const box = $('mcPlayBox');
+  if (box) box.innerHTML = `<div class="mc-play-wait"><div class="mc-spin8"></div><p>Сохраняем результат…</p></div>`;
+  try {
+    const res = await mcEarnGrant(p.id, want, { score });
+    MCE.play = null;
+    await mcEarnOpen();
+    if (!res.ok) return toast('Задание уже было выполнено сегодня', 'ℹ');
+    mcEarnReward(d.title, res, summary);
+  } catch (e) {
+    console.error('earn grant', e); MCE.play = null;
+    toast('Не удалось начислить умы. Проверьте соединение и правила Firebase (gift_earn, gift_wallet).', '⚠');
+    mcEarnOpen();
+  }
+}
+
+// ---------------------------- Банки заданий ----------------------------
+const MC_QUIZ_EXTRA = {
+  1: [['Сколько дней в неделе?', ['5', '7', '10'], 1], ['Какого цвета небо в ясный день?', ['Голубое', 'Зелёное', 'Красное'], 0], ['Сколько ног у паука?', ['6', '8', '10'], 1], ['Какое время года после зимы?', ['Осень', 'Весна', 'Лето'], 1], ['Сколько будет 10 − 4?', ['6', '5', '7'], 0], ['Кто говорит «мяу»?', ['Собака', 'Кошка', 'Корова'], 1]],
+  2: [['Сколько минут в часе?', ['60', '100', '30'], 0], ['Самый большой океан?', ['Атлантический', 'Тихий', 'Индийский'], 1], ['Сколько будет 9 × 7?', ['63', '56', '72'], 0], ['Столица России?', ['Санкт-Петербург', 'Москва', 'Казань'], 1], ['Какая планета красная?', ['Марс', 'Венера', 'Юпитер'], 0], ['Сколько сантиметров в метре?', ['10', '100', '1000'], 1]],
+  3: [['Чему равен корень из 144?', ['11', '12', '14'], 1], ['Кто написал «Евгения Онегина»?', ['Лермонтов', 'Пушкин', 'Гоголь'], 1], ['Какой элемент обозначается Fe?', ['Фтор', 'Железо', 'Фосфор'], 1], ['Сумма углов треугольника?', ['180°', '360°', '90°'], 0], ['Год полёта Гагарина?', ['1957', '1961', '1969'], 1], ['Переведите «library»', ['Библиотека', 'Лаборатория', 'Свобода'], 0]],
+  4: [['Чему равен log₂(64)?', ['5', '6', '8'], 1], ['Автор «Войны и мира»?', ['Толстой', 'Достоевский', 'Чехов'], 0], ['Скорость света ≈', ['300 000 км/с', '30 000 км/с', '3 000 км/с'], 0], ['Что такое ДНК?', ['Белок', 'Носитель наследственной информации', 'Витамин'], 1], ['sin 30° =', ['1/2', '√3/2', '1'], 0], ['Past Simple от «go»', ['goed', 'went', 'gone'], 1]],
+  5: [['Что измеряет ВВП?', ['Население', 'Стоимость произведённых товаров и услуг', 'Инфляцию'], 1], ['Кто открыл пенициллин?', ['Флеминг', 'Пастер', 'Кох'], 0], ['Сколько байт в килобайте (двоичном)?', ['1000', '1024', '1048'], 1], ['Столица Австралии?', ['Сидней', 'Канберра', 'Мельбурн'], 1], ['Сложные проценты: 1000 под 10% на 2 года', ['1200', '1210', '1100'], 1], ['Самая длинная река в мире (по большинству оценок)?', ['Амазонка', 'Нил', 'Янцзы'], 1]]
+};
+function mcQuizPool(level) {
+  const key = ['6-9', '10-12', '13-15', '16-18', '19+'][level - 1] || '19+';
+  const bank = (typeof GIFT_QUIZ_BANK !== 'undefined' && GIFT_QUIZ_BANK[key]) || {};
+  const out = [];
+  Object.values(bank).forEach(list => (list || []).forEach(q => out.push(q)));
+  (MC_QUIZ_EXTRA[level] || []).forEach(q => out.push(q));
+  return out.filter(q => Array.isArray(q) && Array.isArray(q[1]) && q[1][q[2]] !== undefined);
+}
+const MC_WORDS = {
+  1: ['кот', 'дом', 'сок', 'лес', 'мяч', 'рыба', 'луна', 'река', 'зима', 'сыр'],
+  2: ['школа', 'книга', 'птица', 'карта', 'шторм', 'лампа', 'город', 'ракета', 'весна', 'замок'],
+  3: ['планета', 'учитель', 'дельфин', 'вулкан', 'поэзия', 'энергия', 'музыка', 'граница', 'история', 'команда'],
+  4: ['гравитация', 'литература', 'революция', 'фотосинтез', 'интеграл', 'атмосфера', 'архитектор', 'алгоритм', 'вселенная', 'молекула'],
+  5: ['экономика', 'инвестиция', 'психология', 'дипломатия', 'метрополитен', 'инфраструктура', 'конкуренция', 'перспектива', 'философия', 'технология']
+};
+const MC_PHRASES = {
+  1: ['Мама мыла раму', 'Кот спит на окне', 'У нас дома есть собака'],
+  2: ['Летом мы ездили на море', 'Книга лучший друг человека', 'В лесу растут высокие ели'],
+  3: ['Метро открывается рано утром', 'Скорость света очень велика', 'Каждый день узнаю что-то новое'],
+  4: ['Программирование развивает логическое мышление', 'Москва является крупнейшим городом страны', 'Знание иностранных языков открывает двери'],
+  5: ['Своевременное планирование экономит время и деньги', 'Метрополитен перевозит миллионы пассажиров ежедневно', 'Ответственность приходит вместе с опытом и знаниями']
+};
+const MC_TRUTH = [
+  ['Солнце — это звезда', true, 1], ['У кошки шесть лап', false, 1], ['Лёд — это замёрзшая вода', true, 1], ['Рыбы дышат лёгкими', false, 1], ['В году 12 месяцев', true, 1], ['Пингвины умеют летать', false, 1],
+  ['Земля вращается вокруг Солнца', true, 2], ['Москва — столица Франции', false, 2], ['Кит — это млекопитающее', true, 2], ['7 × 8 = 54', false, 2], ['У треугольника три угла', true, 2], ['Луна светит собственным светом', false, 2],
+  ['Вода кипит при 100 °C на уровне моря', true, 3], ['Пушкин написал «Мёртвые души»', false, 3], ['Атом водорода — самый лёгкий', true, 3], ['Байкал — самое глубокое озеро мира', true, 3], ['Звук быстрее света', false, 3], ['Корень из 81 равен 9', true, 3],
+  ['ДНК имеет форму двойной спирали', true, 4], ['Число π равно ровно 3,14', false, 4], ['Электрон заряжен положительно', false, 4], ['Первая мировая началась в 1914 году', true, 4], ['Производная константы равна нулю', true, 4], ['Венера ближе к Солнцу, чем Меркурий', false, 4],
+  ['Инфляция снижает покупательную способность денег', true, 5], ['Эверест — самая высокая гора над уровнем моря', true, 5], ['Великая Китайская стена видна с Луны невооружённым глазом', false, 5], ['1 гигабайт = 1024 мегабайта (двоично)', true, 5], ['Ампер — единица напряжения', false, 5], ['Человек использует только 10% мозга', false, 5]
+];
+
+// ---------------------------- Игры ----------------------------
+const MC_EARN_GAMES = {
+  // 1. Викторина
+  quiz(box, lv) {
+    const pool = mcShuffle(mcQuizPool(lv)); const qs = pool.slice(0, 5).map(([q, a, c]) => { const opts = mcShuffle(a.map((t, i) => ({ t, ok: i === c }))); return { q, opts }; });
+    if (qs.length < 3) { box.innerHTML = '<p>Нет вопросов для вашего уровня.</p>'; return; }
+    let i = 0, right = 0; const p = MCE.play; p.started = true;
+    p.finishNow = () => mcEarnFinish(right / qs.length, `Правильных ответов: ${right} из ${qs.length}`);
+    const show = () => {
+      if (p.done) return; mcPlayProg(i / qs.length);
+      const Q = qs[i];
+      box.innerHTML = `<div class="mc-q-num">Вопрос ${i + 1} из ${qs.length}</div><h3 class="mc-q-title">${esc(Q.q)}</h3><div class="mc-q-opts">${Q.opts.map((o, k) => `<button type="button" data-k="${k}">${esc(o.t)}</button>`).join('')}</div>`;
+      let locked = false; const start = Date.now();
+      mcPlayCountdown(20, () => pickAns(-1));
+      const pickAns = k => {
+        if (locked || p.done) return; locked = true;
+        p.timers.forEach(t => clearInterval(t));
+        const btns = box.querySelectorAll('.mc-q-opts button');
+        btns.forEach((b, j) => { b.disabled = true; if (Q.opts[j].ok) b.classList.add('ok'); else if (j === k) b.classList.add('bad'); });
+        if (k >= 0 && Q.opts[k].ok) { right++; mcEarnSfx('ok'); } else mcEarnSfx('bad');
+        void start;
+        mcPlayTimeout(() => { i++; if (i >= qs.length) { mcPlayProg(1); p.finishNow(); } else show(); }, 900);
+      };
+      box.querySelectorAll('.mc-q-opts button').forEach(b => b.addEventListener('click', () => pickAns(Number(b.dataset.k))));
+    };
+    show();
+  },
+  // 2. Устный счёт
+  math(box, lv) {
+    const target = [8, 10, 12, 13, 14][lv - 1];
+    const gen = () => {
+      const t = mcRand01(); let a, b, op, ans;
+      if (lv <= 1) { a = mcRint(1, 10); b = mcRint(1, 10); if (t < 0.5) { op = '+'; ans = a + b; } else { if (b > a) [a, b] = [b, a]; op = '−'; ans = a - b; } }
+      else if (lv === 2) { if (t < 0.35) { a = mcRint(10, 60); b = mcRint(5, 40); op = '+'; ans = a + b; } else if (t < 0.65) { a = mcRint(20, 90); b = mcRint(5, a); op = '−'; ans = a - b; } else { a = mcRint(2, 9); b = mcRint(2, 9); op = '×'; ans = a * b; } }
+      else if (lv === 3) { if (t < 0.3) { a = mcRint(25, 150); b = mcRint(15, 99); op = '+'; ans = a + b; } else if (t < 0.55) { a = mcRint(50, 200); b = mcRint(10, a); op = '−'; ans = a - b; } else if (t < 0.8) { a = mcRint(3, 15); b = mcRint(3, 12); op = '×'; ans = a * b; } else { b = mcRint(2, 12); ans = mcRint(2, 12); a = b * ans; op = '÷'; } }
+      else { if (t < 0.25) { a = mcRint(100, 999); b = mcRint(100, 999); op = '+'; ans = a + b; } else if (t < 0.45) { a = mcRint(200, 999); b = mcRint(50, a); op = '−'; ans = a - b; } else if (t < 0.75) { a = mcRint(11, 29); b = mcRint(3, lv === 5 ? 19 : 12); op = '×'; ans = a * b; } else { b = mcRint(3, 19); ans = mcRint(4, 25); a = b * ans; op = '÷'; } }
+      return { s: `${a} ${op} ${b}`, ans };
+    };
+    let cur = gen(), right = 0, wrong = 0; const p = MCE.play; p.started = true;
+    const fin = () => { const sc = Math.max(0, Math.min(1, (right - wrong * 0.5) / target)); mcEarnFinish(sc, `Верно: ${right}, ошибок: ${wrong}. Цель для вашего уровня: ${target}`); };
+    p.finishNow = fin;
+    box.innerHTML = `<div class="mc-math"><div class="mc-math-score"><span>✓ <b id="mcMR">0</b></span><span>✗ <b id="mcMW">0</b></span><span>Цель <b>${target}</b></span></div><div class="mc-math-q" id="mcMQ">${cur.s} = ?</div><input id="mcMA" class="mc-big-input" inputmode="numeric" autocomplete="off" placeholder="Ответ"><div class="mc-numpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, '⌫', 0, '↵'].map(k => `<button type="button" data-k="${k}">${k}</button>`).join('')}</div></div>`;
+    const inp = $('mcMA'); setTimeout(() => inp?.focus(), 50);
+    const submit = () => {
+      if (p.done) return; const v = inp.value.trim(); if (!v) return;
+      const q = $('mcMQ');
+      if (Number(v) === cur.ans) { right++; mcEarnSfx('ok'); q.classList.remove('bad'); q.classList.add('ok'); } else { wrong++; mcEarnSfx('bad'); q.classList.remove('ok'); q.classList.add('bad'); }
+      $('mcMR').textContent = right; $('mcMW').textContent = wrong; mcPlayProg(right / target);
+      cur = gen(); inp.value = ''; setTimeout(() => { q.textContent = `${cur.s} = ?`; q.classList.remove('ok', 'bad'); }, 160);
+    };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
+    inp.addEventListener('input', () => { inp.value = inp.value.replace(/[^\d-]/g, '').slice(0, 6); if (String(cur.ans).length === inp.value.length && Number(inp.value) === cur.ans) submit(); });
+    box.querySelectorAll('.mc-numpad button').forEach(b => b.addEventListener('click', () => { const k = b.dataset.k; if (k === '⌫') inp.value = inp.value.slice(0, -1); else if (k === '↵') submit(); else { inp.value += k; inp.dispatchEvent(new Event('input')); } }));
+    mcPlayCountdown(60, fin);
+  },
+  // 3. Анаграммы
+  anagram(box, lv) {
+    const words = mcShuffle(MC_WORDS[lv] || MC_WORDS[3]).slice(0, 4);
+    let i = 0, solved = 0, hints = 0; const p = MCE.play; p.started = true;
+    const fin = () => mcEarnFinish(Math.max(0, (solved - hints * 0.25) / words.length), `Собрано слов: ${solved} из ${words.length}${hints ? `, подсказок: ${hints}` : ''}`);
+    p.finishNow = fin;
+    const scramble = w => { let s = w; for (let k = 0; k < 10 && s === w; k++) s = mcShuffle(w.split('')).join(''); return s; };
+    const show = () => {
+      if (p.done) return; mcPlayProg(i / words.length);
+      const w = words[i]; const sc = scramble(w); let built = []; let hinted = 0;
+      box.innerHTML = `<div class="mc-q-num">Слово ${i + 1} из ${words.length}</div><div class="mc-ana-slots" id="mcAS">${w.split('').map(() => '<i></i>').join('')}</div><div class="mc-ana-tiles" id="mcAT">${sc.split('').map((ch, k) => `<button type="button" data-k="${k}">${ch.toUpperCase()}</button>`).join('')}</div><div class="mc-ana-act"><button type="button" class="btn btn-secondary" id="mcAU">⌫ Стереть</button><button type="button" class="btn btn-secondary" id="mcAH">💡 Подсказка</button><button type="button" class="btn btn-secondary" id="mcAK">Пропустить</button></div>`;
+      const slots = [...box.querySelectorAll('#mcAS i')]; const tiles = [...box.querySelectorAll('#mcAT button')];
+      const paint = () => slots.forEach((s, k) => { s.textContent = built[k] ? built[k].ch.toUpperCase() : ''; s.classList.toggle('on', !!built[k]); s.classList.toggle('hint', k < hinted); });
+      const check = () => {
+        if (built.length < w.length) return;
+        const got = built.map(x => x.ch).join('');
+        if (got === w) { solved++; mcEarnSfx('ok'); $('mcAS').classList.add('ok'); mcPlayTimeout(() => { i++; i >= words.length ? fin() : show(); }, 700); }
+        else { mcEarnSfx('bad'); const el = $('mcAS'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); mcPlayTimeout(() => { built = built.slice(0, hinted); tiles.forEach(t => { if (!built.some(b => b.k === Number(t.dataset.k))) t.disabled = false; }); paint(); }, 450); }
+      };
+      tiles.forEach(t => t.addEventListener('click', () => { if (built.length >= w.length) return; built.push({ k: Number(t.dataset.k), ch: sc[Number(t.dataset.k)] }); t.disabled = true; mcEarnSfx('tap'); paint(); check(); }));
+      $('mcAU').onclick = () => { if (built.length <= hinted) return; const x = built.pop(); tiles[x.k].disabled = false; paint(); };
+      $('mcAH').onclick = () => {
+        if (hinted >= w.length - 1) return;
+        built.forEach(b => { tiles[b.k].disabled = false; }); built = [];
+        hinted++; hints += 0.5;
+        for (let k = 0; k < hinted; k++) { const t = tiles.find(tt => !tt.disabled && sc[Number(tt.dataset.k)] === w[k]); if (t) { built.push({ k: Number(t.dataset.k), ch: w[k] }); t.disabled = true; } }
+        paint(); check();
+      };
+      $('mcAK').onclick = () => { mcEarnSfx('bad'); i++; i >= words.length ? fin() : show(); };
+    };
+    show(); mcPlayCountdown(120, fin);
+  },
+  // 4. Память
+  memory(box, lv) {
+    const pairs = lv <= 1 ? 6 : 8;
+    const pool = ['🍎', '🚇', '🎈', '🐼', '⭐', '🎧', '🚀', '🍩', '🦊', '🌈', '⚽', '🎁'];
+    const cards = mcShuffle(mcShuffle(pool).slice(0, pairs).flatMap(e => [e, e]));
+    let open = [], found = 0, moves = 0, lock = false; const p = MCE.play; p.started = true;
+    const fin = () => { const eff = found === pairs ? Math.max(0.25, Math.min(1, 1 - (moves - pairs) / (pairs * 2))) : (found / pairs) * 0.5; mcEarnFinish(eff, `Пар найдено: ${found} из ${pairs}, ходов: ${moves}`); };
+    p.finishNow = fin;
+    box.innerHTML = `<div class="mc-math-score"><span>Ходы <b id="mcMM">0</b></span><span>Пары <b id="mcMF">0</b>/${pairs}</span></div><div class="mc-mem ${pairs === 6 ? 'c3' : 'c4'}">${cards.map((e, k) => `<button type="button" class="mc-card8" data-k="${k}"><span class="b">?</span><span class="f">${e}</span></button>`).join('')}</div>`;
+    const els = [...box.querySelectorAll('.mc-card8')];
+    els.forEach(el => el.addEventListener('click', () => {
+      if (lock || p.done || el.classList.contains('open') || el.classList.contains('got')) return;
+      el.classList.add('open'); open.push(el); mcEarnSfx('tap');
+      if (open.length === 2) {
+        moves++; $('mcMM').textContent = moves; lock = true;
+        const [a, b] = open;
+        if (cards[a.dataset.k] === cards[b.dataset.k]) { found++; $('mcMF').textContent = found; mcPlayProg(found / pairs); mcPlayTimeout(() => { a.classList.add('got'); b.classList.add('got'); open = []; lock = false; mcEarnSfx('ok'); if (found === pairs) mcPlayTimeout(fin, 500); }, 300); }
+        else mcPlayTimeout(() => { a.classList.remove('open'); b.classList.remove('open'); open = []; lock = false; }, 750);
+      }
+    }));
+    mcPlayCountdown(lv <= 1 ? 120 : 100, fin);
+  },
+  // 5. Реакция
+  reaction(box) {
+    const rounds = 5; let r = 0, times = [], state8 = 'idle', t0 = 0, fails = 0; const p = MCE.play; p.started = true;
+    const fin = () => { const ok = times.slice().sort((a, b) => a - b); const avg = ok.length ? ok.reduce((s, x) => s + x, 0) / ok.length : 999; const base = Math.max(0.25, Math.min(1, (750 - avg) / 450)); const sc = ok.length ? base * (ok.length / rounds) : 0; mcEarnFinish(sc, ok.length ? `Средняя реакция: ${Math.round(avg)} мс, фальстартов: ${fails}` : 'Нет засчитанных попыток'); };
+    p.finishNow = fin;
+    box.innerHTML = `<div class="mc-react" id="mcRx"><b>Нажмите, чтобы начать</b><small>Когда круг станет зелёным — нажмите как можно быстрее</small></div><div class="mc-react-log" id="mcRl"></div>`;
+    const el = $('mcRx');
+    const arm = () => { state8 = 'wait'; el.className = 'mc-react wait'; el.innerHTML = '<b>Ждите…</b><small>Не нажимайте раньше времени</small>'; mcPlayTimeout(() => { if (p.done || state8 !== 'wait') return; state8 = 'go'; t0 = performance.now(); el.className = 'mc-react go'; el.innerHTML = '<b>ЖМИТЕ!</b>'; }, 1100 + mcRand01() * 2600); };
+    const log = () => { $('mcRl').innerHTML = times.map(t => `<span>${Math.round(t)} мс</span>`).join('') + (fails ? `<span class="bad">фальстарт × ${fails}</span>` : ''); };
+    const handler = () => {
+      if (p.done) return;
+      if (state8 === 'idle' || state8 === 'shown') { arm(); return; }
+      if (state8 === 'wait') { fails++; mcEarnSfx('bad'); state8 = 'shown'; el.className = 'mc-react bad'; el.innerHTML = '<b>Фальстарт</b><small>Нажмите, чтобы повторить раунд</small>'; log(); if (fails >= 3) { r++; fails = 0; } if (r >= rounds) mcPlayTimeout(fin, 600); return; }
+      if (state8 === 'go') { const dt = performance.now() - t0; times.push(dt); r++; mcEarnSfx('ok'); mcPlayProg(r / rounds); state8 = 'shown'; el.className = 'mc-react done'; el.innerHTML = `<b>${Math.round(dt)} мс</b><small>${r < rounds ? 'Нажмите для следующего раунда' : 'Готово'}</small>`; log(); if (r >= rounds) mcPlayTimeout(fin, 800); }
+    };
+    el.addEventListener('pointerdown', e => { e.preventDefault(); handler(); });
+  },
+  // 6. Последовательности
+  sequence(box, lv) {
+    const gens = [
+      () => { const a = mcRint(1, 9), d = mcRint(2, lv + 3); return { s: [0, 1, 2, 3].map(k => a + d * k), n: a + d * 4 }; },
+      () => { const a = mcRint(1, 4), q = mcRint(2, 3); return { s: [0, 1, 2, 3].map(k => a * q ** k), n: a * q ** 4 }; },
+      () => { const a = mcRint(1, 5); return { s: [0, 1, 2, 3].map(k => (a + k) ** 2), n: (a + 4) ** 2 }; },
+      () => { let x = mcRint(1, 3), y = mcRint(2, 5); const s = [x, y]; for (let k = 0; k < 3; k++) s.push(s[s.length - 1] + s[s.length - 2]); const n = s[s.length - 1] + s[s.length - 2]; return { s, n }; },
+      () => { const a = mcRint(20, 60), d1 = mcRint(2, 6), d2 = mcRint(1, 4); const s = [a]; for (let k = 0; k < 4; k++) s.push(s[k] + (k % 2 ? -d2 : d1)); return { s, n: s[4] + (4 % 2 ? -d2 : d1) }; },
+      () => { const a = mcRint(2, 5); const s = [a]; for (let k = 1; k < 5; k++) s.push(s[k - 1] + k * (lv >= 4 ? 2 : 1)); return { s: s.slice(0, 4), n: s[4] }; }
+    ];
+    const avail = lv <= 1 ? [0, 0, 5] : lv === 2 ? [0, 1, 5, 0] : lv === 3 ? [0, 1, 2, 5, 4] : [0, 1, 2, 3, 4, 5];
+    const qs = Array.from({ length: 5 }, () => gens[mcPick(avail)]());
+    let i = 0, right = 0; const p = MCE.play; p.started = true;
+    const fin = () => mcEarnFinish(right / qs.length, `Верно продолжено рядов: ${right} из ${qs.length}`);
+    p.finishNow = fin;
+    const show = () => {
+      if (p.done) return; mcPlayProg(i / qs.length); const Q = qs[i];
+      box.innerHTML = `<div class="mc-q-num">Ряд ${i + 1} из ${qs.length}</div><div class="mc-seq">${Q.s.map(x => `<span>${x}</span>`).join('')}<span class="q">?</span></div><input id="mcSA" class="mc-big-input" inputmode="numeric" autocomplete="off" placeholder="Следующее число"><button type="button" class="btn btn-primary" id="mcSB">Ответить</button>`;
+      const inp = $('mcSA'); setTimeout(() => inp?.focus(), 50);
+      const go = () => { if (p.done) return; const v = inp.value.trim(); if (!v) return; const ok = Number(v) === Q.n; if (ok) { right++; mcEarnSfx('ok'); } else mcEarnSfx('bad'); const q = box.querySelector('.mc-seq .q'); q.textContent = Q.n; q.classList.add(ok ? 'ok' : 'bad'); inp.disabled = true; $('mcSB').disabled = true; mcPlayTimeout(() => { i++; i >= qs.length ? fin() : show(); }, 900); };
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+      $('mcSB').onclick = go;
+    };
+    show(); mcPlayCountdown(150, fin);
+  },
+  // 7. Быстрая печать
+  typing(box, lv) {
+    const phrase = mcPick(MC_PHRASES[lv] || MC_PHRASES[3]);
+    const targetCpm = [60, 90, 130, 160, 180][lv - 1];
+    let started = 0; const p = MCE.play; p.started = true;
+    const fin = (val = $('mcTI')?.value || '') => {
+      const dt = started ? (Date.now() - started) / 60000 : 1;
+      let ok = 0; for (let k = 0; k < phrase.length; k++) if (val[k] === phrase[k]) ok++;
+      const acc = ok / phrase.length; const cpm = val.length / Math.max(dt, 1 / 60);
+      const sc = acc < 0.6 ? 0 : acc * Math.min(1, cpm / targetCpm);
+      mcEarnFinish(sc, `Точность: ${Math.round(acc * 100)}%, скорость: ${Math.round(cpm)} зн/мин`);
+    };
+    p.finishNow = () => fin();
+    box.innerHTML = `<div class="mc-type-src" id="mcTS">${phrase.split('').map(c => `<span>${c === ' ' ? '&nbsp;' : esc(c)}</span>`).join('')}</div><textarea id="mcTI" class="mc-type-in" rows="2" placeholder="Начните печатать…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea><p class="mc-type-hint">Вставка текста отключена. Цель для вашего уровня — ${targetCpm} знаков в минуту.</p>`;
+    const inp = $('mcTI'); const spans = [...box.querySelectorAll('#mcTS span')];
+    inp.addEventListener('paste', e => { e.preventDefault(); toast('Вставка отключена — наберите текст вручную', '⌨️'); });
+    inp.addEventListener('drop', e => e.preventDefault());
+    inp.addEventListener('input', () => {
+      if (!started) started = Date.now();
+      const v = inp.value.replace(/\n/g, '');
+      spans.forEach((s, k) => { s.className = k < v.length ? (v[k] === phrase[k] ? 'ok' : 'bad') : k === v.length ? 'cur' : ''; });
+      mcPlayProg(v.length / phrase.length);
+      if (v.length >= phrase.length) fin(v);
+    });
+    setTimeout(() => inp.focus(), 50);
+    mcPlayCountdown(90, () => fin());
+  },
+  // 8. Зоркий глаз
+  color(box, lv) {
+    const rounds = 6; let r = 0, found = 0; const p = MCE.play; p.started = true;
+    const fin = () => mcEarnFinish(found / rounds, `Найдено: ${found} из ${rounds}`);
+    p.finishNow = fin;
+    const show = () => {
+      if (p.done) return; mcPlayProg(r / rounds);
+      const n = Math.min(6, 3 + Math.floor((r + lv) / 3)); const odd = mcRint(0, n * n - 1);
+      const h = mcRint(0, 359), s = mcRint(50, 80), l = mcRint(42, 62); const diff = Math.max(4, 16 - lv * 2 - r);
+      box.innerHTML = `<div class="mc-q-num">Раунд ${r + 1} из ${rounds}</div><div class="mc-color" style="grid-template-columns:repeat(${n},1fr)">${Array.from({ length: n * n }, (_, k) => `<button type="button" data-k="${k}" style="background:hsl(${h} ${s}% ${k === odd ? l + diff : l}%)"></button>`).join('')}</div>`;
+      let t, iv, answered = false;
+      const next = ok => { if (p.done || answered) return; answered = true; clearTimeout(t); clearInterval(iv); if (ok) { found++; mcEarnSfx('ok'); } else mcEarnSfx('bad'); box.querySelector(`.mc-color [data-k="${odd}"]`)?.classList.add('hit'); r++; mcPlayTimeout(() => r >= rounds ? fin() : show(), 550); };
+      box.querySelectorAll('.mc-color button').forEach(b => b.addEventListener('click', () => { box.querySelectorAll('.mc-color button').forEach(x => x.disabled = true); next(Number(b.dataset.k) === odd); }));
+      t = mcPlayTimeout(() => next(false), 9000);
+      const end = Date.now() + 9000; iv = mcPlayInterval(() => { const left = end - Date.now(); mcPlayTimerSet(`${Math.max(0, Math.ceil(left / 1000))} с`); if (left <= 0) clearInterval(iv); }, 200);
+    };
+    show();
+  },
+  // 9. Правда или ложь
+  truth(box, lv) {
+    const pool = MC_TRUTH.filter(x => Math.abs(x[2] - lv) <= 1);
+    const qs = mcShuffle(pool).slice(0, 8);
+    let i = 0, right = 0; const p = MCE.play; p.started = true;
+    const fin = () => mcEarnFinish(right / qs.length, `Верно: ${right} из ${qs.length}`);
+    p.finishNow = fin;
+    const show = () => {
+      if (p.done) return; mcPlayProg(i / qs.length); const Q = qs[i];
+      box.innerHTML = `<div class="mc-q-num">Утверждение ${i + 1} из ${qs.length}</div><div class="mc-tf-card" id="mcTF">${esc(Q[0])}</div><div class="mc-tf-btns"><button type="button" class="no" data-v="0">✗ Ложь</button><button type="button" class="yes" data-v="1">✓ Правда</button></div>`;
+      let done8 = false;
+      const ans = v => { if (done8 || p.done) return; done8 = true; const ok = v === Q[1]; if (ok) { right++; mcEarnSfx('ok'); } else mcEarnSfx('bad'); const c = $('mcTF'); c.classList.add(ok ? 'ok' : 'bad'); c.insertAdjacentHTML('beforeend', `<small>${Q[1] ? 'Это правда' : 'Это ложь'}</small>`); mcPlayTimeout(() => { i++; i >= qs.length ? fin() : show(); }, 850); };
+      box.querySelectorAll('.mc-tf-btns button').forEach(b => b.addEventListener('click', () => ans(b.dataset.v === '1')));
+      mcPlayTimeout(() => ans(null), 10000);
+    };
+    show();
+  },
+  // 10. Повтори мелодию
+  simon(box, lv) {
+    const target = [4, 5, 6, 7, 8][lv - 1];
+    const notes = [261.6, 329.6, 392, 523.3];
+    let seq = [], step = 0, best = 0, playing = false; const p = MCE.play; p.started = true;
+    const fin = () => mcEarnFinish(Math.min(1, best / target), `Повторено нот подряд: ${best} (цель ${target})`);
+    p.finishNow = fin;
+    box.innerHTML = `<div class="mc-math-score"><span>Длина <b id="mcSL">0</b></span><span>Цель <b>${target}</b></span></div><div class="mc-simon">${[0, 1, 2, 3].map(k => `<button type="button" data-k="${k}" class="s${k}"></button>`).join('')}<div class="mc-simon-c" id="mcSC">▶</div></div><p class="mc-type-hint" id="mcSH">Нажмите ▶, послушайте и повторите</p>`;
+    const pads = [...box.querySelectorAll('.mc-simon button')];
+    const flash = (k, ms = 380) => { pads[k].classList.add('lit'); mcEarnSfx(notes[k]); mcPlayTimeout(() => pads[k].classList.remove('lit'), ms); };
+    const playSeq = () => {
+      playing = true; step = 0; $('mcSH').textContent = 'Слушайте…';
+      const gap = Math.max(380, 650 - seq.length * 25);
+      seq.forEach((k, j) => mcPlayTimeout(() => flash(k, gap - 120), 500 + j * gap));
+      mcPlayTimeout(() => { playing = false; $('mcSH').textContent = 'Ваша очередь'; }, 500 + seq.length * gap);
+    };
+    const grow = () => { seq.push(mcRint(0, 3)); $('mcSL').textContent = seq.length - 1; playSeq(); };
+    $('mcSC').onclick = () => { if (seq.length || playing) return; $('mcSC').textContent = ''; grow(); };
+    pads.forEach(b => b.addEventListener('click', () => {
+      if (playing || !seq.length || p.done) return;
+      const k = Number(b.dataset.k); flash(k, 200);
+      if (k !== seq[step]) { mcEarnSfx('bad'); $('mcSH').textContent = 'Ошибка'; box.querySelector('.mc-simon').classList.add('shake'); mcPlayTimeout(fin, 700); playing = true; return; }
+      step++;
+      if (step === seq.length) { best = seq.length; $('mcSL').textContent = best; mcPlayProg(best / target); if (best >= target) { playing = true; mcPlayTimeout(fin, 600); } else { playing = true; mcPlayTimeout(grow, 700); } }
+    }));
+    mcPlayCountdown(120, fin);
+  }
+};
+
+// Новый вход в заработок вместо старой одноразовой викторины
+startGiftEarning = function () { return mcEarnOpen('gifts'); };
+
+Object.assign(window, { startGiftEarning, mcEarnOpen, mcEarnBack, mcEarnStart, mcEarnQuit, mcEarnCheckin, mcEarnLoad, mcEarnGrant, mcEarnRender });
+
+// =====================================================================
+// MetroChat · Round 8 — проверка возраста по лицу (для заработка умов)
+// Нейросеть face-api (TensorFlow.js) работает прямо в браузере: кадры
+// не покидают устройство, в базу сохраняется только оценка возраста.
+// Проверка «живости»: нужно посмотреть прямо и повернуть голову в обе стороны.
+// =====================================================================
+
+const MC_FACE_CDN = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15';
+const MCAGE = { api: null, loading: null, stream: null, raf: 0, run: 0 };
+const MC_AGE_MAX_TRIES = 5;
+
+function mcAgeOk() { const a = MCE.age; return !!(a && a.verified && a.method === 'face' && Number(a.age) > 0 && a.band); }
+function mcAgeTriesKey() { return `mc_age_tries_${state.user?.uid || ''}_${mcDayKey()}`; }
+function mcAgeTries() { try { return Number(localStorage.getItem(mcAgeTriesKey()) || 0); } catch (_) { return 0; } }
+function mcAgeTry() { try { localStorage.setItem(mcAgeTriesKey(), String(mcAgeTries() + 1)); } catch (_) {} }
+
+async function mcFaceApi() {
+  if (MCAGE.api) return MCAGE.api;
+  if (!MCAGE.loading) MCAGE.loading = (async () => {
+    const api = await import(/* @vite-ignore */ `${MC_FACE_CDN}/dist/face-api.esm.js`);
+    const fa = api.default && api.default.nets ? api.default : api;
+    try { if (fa.tf?.setBackend) { const ok = await fa.tf.setBackend('webgl').catch(() => false); if (!ok) await fa.tf.setBackend('cpu'); } await fa.tf?.ready?.(); } catch (_) {}
+    const M = `${MC_FACE_CDN}/model`;
+    await Promise.all([fa.nets.tinyFaceDetector.loadFromUri(M), fa.nets.faceLandmark68TinyNet.loadFromUri(M), fa.nets.ageGenderNet.loadFromUri(M)]);
+    MCAGE.api = fa; return fa;
+  })().catch(e => { MCAGE.loading = null; throw e; });
+  return MCAGE.loading;
+}
+// Один кадр: лицо, поворот головы (yaw), возраст
+async function mcFaceProbe(fa, input) {
+  const opt = new fa.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.45 });
+  const r = await fa.detectSingleFace(input, opt).withFaceLandmarks(true).withAgeAndGender();
+  if (!r) return null;
+  const pts = r.landmarks.positions; const L = pts[36], R = pts[45], N = pts[30];
+  const span = Math.max(1, R.x - L.x);
+  const yaw = (N.x - L.x) / span - 0.5;
+  const W = input.videoWidth || input.naturalWidth || input.width || 1;
+  return { age: r.age, yaw, size: r.detection.box.width / W, score: r.detection.score };
+}
+// Для проверки на статичном изображении (используется в тестах)
+async function mcAgeEstimateImage(src) {
+  const fa = await mcFaceApi();
+  const img = await new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src; });
+  return mcFaceProbe(fa, img);
+}
+
+function mcAgeStop() {
+  MCAGE.run++; cancelAnimationFrame(MCAGE.raf);
+  try { MCAGE.stream?.getTracks().forEach(t => t.stop()); } catch (_) {}
+  MCAGE.stream = null;
+}
+function mcAgeClose() { mcAgeStop(); mcCloseSheet('mcAgeSheet'); }
+
+async function mcAgeOpen() {
+  try { await mcEarnLoad(); } catch (_) {}
+  const a = MCE.age;
+  mcSheet('mcAgeSheet', `${mcSheetHead('Проверка возраста', 'mcAgeSheet')}<div class="mc-age" id="mcAgeBox"></div>`, { cls: 'mc-age-overlay' });
+  const el = document.getElementById('mcAgeSheet');
+  const origClose = el?.querySelector('.group-info-back');
+  if (origClose) origClose.setAttribute('onclick', 'mcAgeClose()');
+  mcAgeIntro(a);
+}
+function mcAgeIntro(a) {
+  const box = $('mcAgeBox'); if (!box) return;
+  const tries = mcAgeTries();
+  box.innerHTML = `
+    <div class="mc-age-hero"><div class="mc-age-scan"><span></span><b>🙂</b></div></div>
+    <h2>${mcAgeOk() ? `Текущая оценка: ${esc(a.band)}` : 'Подтвердите возраст по лицу'}</h2>
+    <p class="mc-age-lead">Это нужно для заработка умов: задания подбираются по возрасту, а проверка защищает от накрутки ботами.</p>
+    <ol class="mc-age-steps"><li><b>Посмотрите прямо в камеру</b><small>Лицо целиком в круге, хорошее освещение</small></li><li><b>Поверните голову в одну сторону</b><small>Медленно, примерно на 30°</small></li><li><b>Затем в другую сторону</b><small>Так мы убеждаемся, что перед камерой живой человек</small></li></ol>
+    <div class="mc-age-privacy">🔒 Видео обрабатывается нейросетью прямо на вашем устройстве. Кадры не сохраняются и никуда не отправляются — в профиле хранится только оценка возраста и дата проверки.</div>
+    ${tries >= MC_AGE_MAX_TRIES ? `<div class="mc-age-err">Сегодня использованы все ${MC_AGE_MAX_TRIES} попыток. Попробуйте завтра.</div>` : `<button type="button" class="btn btn-primary" id="mcAgeGo">Включить камеру</button><small class="mc-age-tries">Попыток сегодня: ${MC_AGE_MAX_TRIES - tries} из ${MC_AGE_MAX_TRIES}</small>`}`;
+  $('mcAgeGo')?.addEventListener('click', mcAgeStart);
+}
+function mcAgeSay(t, sub = '') { const a = $('mcAgeSay'); if (a) a.textContent = t; const b = $('mcAgeSub'); if (b) b.textContent = sub; }
+function mcAgeStep(n) { document.querySelectorAll('#mcAgeChk li').forEach((li, i) => { li.classList.toggle('done', i < n); li.classList.toggle('cur', i === n); }); }
+function mcAgeRing(f) { const c = $('mcAgeRing'); if (c) { const C = 2 * Math.PI * 118; c.style.strokeDasharray = C; c.style.strokeDashoffset = C * (1 - Math.max(0, Math.min(1, f))); } }
+
+async function mcAgeStart() {
+  const box = $('mcAgeBox'); if (!box) return;
+  if (mcAgeTries() >= MC_AGE_MAX_TRIES) return mcAgeIntro(MCE.age);
+  box.innerHTML = `
+    <div class="mc-age-cam"><video id="mcAgeVid" playsinline muted autoplay></video><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="118" class="bg"/><circle cx="120" cy="120" r="118" class="fg" id="mcAgeRing"/></svg><div class="mc-age-arrow" id="mcAgeArrow"></div></div>
+    <h3 id="mcAgeSay">Загружаем нейросеть…</h3><p id="mcAgeSub" class="mc-age-lead">Первый запуск может занять несколько секунд</p>
+    <ul class="mc-age-chk" id="mcAgeChk"><li>Лицо в кадре</li><li>Поворот в одну сторону</li><li>Поворот в другую сторону</li></ul>
+    <button type="button" class="btn btn-secondary" onclick="mcAgeCancel()">Отмена</button>`;
+  mcAgeRing(0);
+  const run = ++MCAGE.run;
+  let fa;
+  try {
+    const [api, stream] = await Promise.all([
+      mcFaceApi(),
+      navigator.mediaDevices?.getUserMedia ? navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false }) : Promise.reject(Object.assign(new Error('nocam'), { name: 'NotFoundError' }))
+    ]);
+    fa = api;
+    if (run !== MCAGE.run) { stream.getTracks().forEach(t => t.stop()); return; }
+    MCAGE.stream = stream;
+    const v = $('mcAgeVid'); v.srcObject = stream; await v.play().catch(() => {});
+    await new Promise(r => { if (v.readyState >= 2) r(); else v.onloadeddata = () => r(); setTimeout(r, 3000); });
+  } catch (e) {
+    console.warn('age verify start', e);
+    const msg = e?.name === 'NotAllowedError' ? 'Нет доступа к камере. Разрешите камеру для сайта в настройках браузера и попробуйте снова.'
+      : e?.name === 'NotFoundError' || e?.name === 'OverconstrainedError' ? 'Камера не найдена. Для проверки нужна фронтальная камера.'
+      : 'Не удалось загрузить нейросеть проверки. Проверьте интернет и попробуйте ещё раз.';
+    mcAgeStop();
+    if (box.isConnected) box.innerHTML = `<div class="mc-age-err">${esc(msg)}</div><button type="button" class="btn btn-primary" onclick="mcAgeStart()">Повторить</button><button type="button" class="btn btn-secondary" onclick="mcAgeClose()">Закрыть</button>`;
+    return;
+  }
+  mcAgeTry();
+  mcAgeLoop(fa, run);
+}
+function mcAgeCancel() { mcAgeStop(); mcAgeIntro(MCE.age); }
+
+function mcAgeLoop(fa, run) {
+  const v = $('mcAgeVid'); if (!v) return;
+  const st = { phase: 0, ages: [], firstSign: 0, noFace: 0, t0: Date.now(), lastOk: 0, holdA: 0, holdB: 0, multi: 0 };
+  mcAgeStep(0); mcAgeSay('Посмотрите прямо в камеру', 'Держите лицо в круге');
+  const arrow = $('mcAgeArrow');
+  let busy = false;
+  const tick = async () => {
+    if (run !== MCAGE.run) return;
+    if (!v.isConnected) return mcAgeStop();
+    if (Date.now() - st.t0 > 60000) return mcAgeFail('Время вышло. Попробуйте ещё раз при хорошем освещении.');
+    if (!busy) {
+      busy = true;
+      try {
+        const r = await mcFaceProbe(fa, v);
+        if (run !== MCAGE.run) return;
+        if (!r) { st.noFace++; if (st.noFace > 6) mcAgeSay('Лицо не найдено', 'Приблизьтесь и добавьте света'); }
+        else if (r.size < 0.18) { mcAgeSay('Подойдите ближе', 'Лицо должно занимать бо́льшую часть круга'); }
+        else {
+          st.noFace = 0;
+          if (st.phase === 0) {
+            if (Math.abs(r.yaw) < 0.09) { st.ages.push(r.age); mcAgeRing(st.ages.length / 10 * 0.5); mcAgeSay('Отлично, не двигайтесь', `Анализ… ${Math.min(100, Math.round(st.ages.length / 10 * 100))}%`); }
+            else mcAgeSay('Посмотрите прямо в камеру', 'Не поворачивайте голову');
+            if (st.ages.length >= 10) { st.phase = 1; mcAgeStep(1); mcAgeSay('Медленно поверните голову в сторону', 'Влево или вправо'); if (arrow) arrow.className = 'mc-age-arrow both'; }
+          } else if (st.phase === 1) {
+            if (Math.abs(r.yaw) > 0.13) { st.holdA++; if (st.holdA >= 2) { st.firstSign = Math.sign(r.yaw); st.phase = 2; mcAgeStep(2); mcAgeRing(0.75); mcAgeSay('Теперь в другую сторону', 'Медленно поверните голову обратно и дальше'); if (arrow) arrow.className = 'mc-age-arrow ' + (st.firstSign > 0 ? 'r' : 'l'); } }
+            else st.holdA = 0;
+          } else if (st.phase === 2) {
+            if (Math.sign(r.yaw) === -st.firstSign && Math.abs(r.yaw) > 0.13) { st.holdB++; if (st.holdB >= 2) { st.phase = 3; mcAgeRing(1); mcAgeStep(3); if (arrow) arrow.className = 'mc-age-arrow'; return mcAgeDone(st.ages); } }
+            else st.holdB = 0;
+          }
+        }
+      } catch (e) { console.warn('probe', e); }
+      finally { busy = false; }
+    }
+    MCAGE.raf = requestAnimationFrame(tick);
+  };
+  MCAGE.raf = requestAnimationFrame(tick);
+}
+function mcAgeFail(msg) {
+  mcAgeStop();
+  const box = $('mcAgeBox'); if (!box) return;
+  box.innerHTML = `<div class="mc-age-err">${esc(msg)}</div><button type="button" class="btn btn-primary" onclick="mcAgeStart()">Попробовать снова</button><button type="button" class="btn btn-secondary" onclick="mcAgeClose()">Закрыть</button>`;
+}
+function mcMedian(arr) { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; }
+
+async function mcAgeDone(ages) {
+  mcAgeStop();
+  const age = Math.max(3, Math.min(99, Math.round(mcMedian(ages))));
+  return mcAgeSave(age);
+}
+async function mcAgeSave(age) {
+  const uid = state.user?.uid; if (!uid) return;
+  const band = mcAgeBand(age);
+  const rec = { verified: true, method: 'face', liveness: true, age, band, at: Date.now() };
+  const box = $('mcAgeBox');
+  try {
+    await set(ref(db, `age_verify/${uid}`), rec);
+    MCE.age = rec;
+    mcEarnSfx('win');
+    if (box) box.innerHTML = `<div class="mc-age-res"><div class="mc-age-res-badge"><b>${age}</b><small>лет ≈</small></div><h2>Проверка пройдена</h2><p class="mc-age-lead">Категория заданий: <b>${esc(band)}</b>. Нейросеть ошибается в среднем на несколько лет; при необходимости проверку можно пройти заново.</p><button type="button" class="btn btn-primary" onclick="mcAgeClose();mcEarnOpen()">К заданиям</button></div>`;
+    try { mcConfettiBurst(50); } catch (_) {}
+    mcEarnRender();
+  } catch (e) {
+    console.error('age save', e);
+    if (box) box.innerHTML = `<div class="mc-age-err">Не удалось сохранить результат. Добавьте правило для age_verify в Firebase и повторите.</div><button type="button" class="btn btn-secondary" onclick="mcAgeClose()">Закрыть</button>`;
+  }
+}
+
+Object.assign(window, { mcAgeOpen, mcAgeClose, mcAgeStart, mcAgeCancel, mcAgeEstimateImage, mcAgeOk });
+
+// =====================================================================
+// MetroChat · Round 8 — каналы: новый каталог, карточка канала, создание,
+// просмотры и комментарии к постам, статистика для админов, панель подписчика
+// =====================================================================
+
+const MC_CH_CATS = [
+  { id: 'all', n: 'Все', e: '✨' }, { id: 'news', n: 'Новости', e: '📰' }, { id: 'tech', n: 'Технологии', e: '💻' }, { id: 'games', n: 'Игры', e: '🎮' },
+  { id: 'music', n: 'Музыка', e: '🎵' }, { id: 'study', n: 'Учёба', e: '📚' }, { id: 'fun', n: 'Юмор', e: '😂' }, { id: 'sport', n: 'Спорт', e: '⚽' },
+  { id: 'movies', n: 'Кино', e: '🎬' }, { id: 'travel', n: 'Путешествия', e: '✈️' }, { id: 'art', n: 'Творчество', e: '🎨' }, { id: 'other', n: 'Другое', e: '📢' }
+];
+const MCH = { tab: 'rec', cat: 'all', q: '', statsUnsub: null, statsCid: null, stats: {}, seen: new Set(), io: null, cmUnsub: null };
+
+function mcChCat(id) { return MC_CH_CATS.find(c => c.id === id) || MC_CH_CATS[MC_CH_CATS.length - 1]; }
+function mcChSubs(c) { return Object.values(c?.members || {}).filter(Boolean).length; }
+function mcChHue(id) { return mcHash32(String(id || 'x')) % 360; }
+function mcChCover(id) { const h = mcChHue(id); return `linear-gradient(135deg,hsl(${h} 78% 58%),hsl(${(h + 48) % 360} 80% 50%) 60%,hsl(${(h + 96) % 360} 72% 46%))`; }
+function mcChAv(id, c, size = 48) {
+  const st = `width:${size}px;height:${size}px;font-size:${Math.round(size * 0.46)}px;`;
+  if (c?.avatar) return `<span class="mc-ch-av" style="${st}background-image:url('${String(c.avatar).replace(/'/g, '%27')}')"></span>`;
+  return `<span class="mc-ch-av" style="${st}background:${mcChCover(id)}">${esc(c?.emoji || mcChCat(c?.category).e)}</span>`;
+}
+function mcChIsMember(id) { const c = state.channels?.[id]; return !!(state.chats?.[id] || c?.members?.[state.user?.uid]); }
+function mcChFmt(n) { n = Number(n) || 0; return n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + ' млн' : n >= 1e4 ? Math.round(n / 1e3) + ' тыс.' : n.toLocaleString('ru-RU'); }
+
+function mcChFiltered() {
+  const uid = state.user?.uid; const q = MCH.q.trim().toLowerCase().replace(/^@/, '');
+  let list = Object.entries(state.channels || {}).filter(([, c]) => c && c.name);
+  if (q) list = list.filter(([, c]) => [c.name, c.description, c.username].some(v => String(v || '').toLowerCase().includes(q)));
+  if (MCH.cat !== 'all') list = list.filter(([, c]) => (c.category || 'other') === MCH.cat);
+  if (MCH.tab === 'subs') list = list.filter(([id]) => mcChIsMember(id));
+  if (MCH.tab === 'mine') list = list.filter(([, c]) => c.ownerId === uid || c.admins?.[uid]);
+  if (MCH.tab === 'new') list.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+  else list.sort((a, b) => mcChSubs(b[1]) - mcChSubs(a[1]) || (b[1].createdAt || 0) - (a[1].createdAt || 0));
+  return list;
+}
+function mcChCard(id, c, i) {
+  const mem = mcChIsMember(id); const own = c.ownerId === state.user?.uid; const cat = mcChCat(c.category);
+  return `<div class="mc-ch-card" style="--i:${Math.min(i, 12)}" onclick="mcChPreview('${id}')">
+    ${mcChAv(id, c, 54)}
+    <div class="mc-ch-card-txt"><b>${esc(c.name)}${c.verified ? ' <span class="mc-ch-verif">✓</span>' : ''}</b>${c.username ? `<em>@${esc(String(c.username).replace(/^@/, ''))}</em>` : ''}<small>${esc(c.description || 'Публичный канал')}</small><span class="mc-ch-meta"><i>${cat.e} ${cat.n}</i><i>👥 ${mcChFmt(mcChSubs(c))}</i>${own ? '<i class="own">Ваш канал</i>' : ''}</span></div>
+    <button type="button" class="mc-ch-join ${mem ? 'on' : ''}" onclick="event.stopPropagation();${mem ? `openChat('${id}','channel')` : `mcChJoin('${id}',this)`}">${mem ? 'Открыть' : 'Подписаться'}</button>
+  </div>`;
+}
+
+renderOtherChannels = function (q) {
+  window.__mcOtherView = 'channels';
+  if (typeof q === 'string') MCH.q = q;
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const hadFocus = document.activeElement?.id === 'mcChSearch'; const caret = hadFocus ? document.activeElement.selectionStart : null;
+  const all = Object.values(state.channels || {}).filter(c => c && c.name);
+  const mySubs = Object.keys(state.channels || {}).filter(mcChIsMember).length;
+  const list = mcChFiltered();
+  const trend = Object.entries(state.channels || {}).filter(([, c]) => c && c.name).sort((a, b) => mcChSubs(b[1]) - mcChSubs(a[1])).slice(0, 8);
+  const tabs = [['rec', 'Популярные'], ['new', 'Новые'], ['subs', `Подписки${mySubs ? ' · ' + mySubs : ''}`], ['mine', 'Мои']];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Каналы</div></div>
+  <div class="settings-wrap mc-ch">
+    <section class="mc-ch-hero"><div class="mc-ch-hero-bg"></div><div><small>METROCHAT · КАНАЛЫ</small><h2>Читайте то, что интересно</h2><p>${mcChFmt(all.length)} ${mcPl8(all.length, 'канал', 'канала', 'каналов')} · ${mySubs} в подписках</p></div><button type="button" class="mc-ch-create" onclick="mcChCreate()"><span>＋</span>Создать канал</button></section>
+    <div class="mc-ch-search"><span>⌕</span><input id="mcChSearch" value="${esc(MCH.q)}" placeholder="Название, @username или описание" oninput="renderOtherChannels(this.value)" autocomplete="off">${MCH.q ? `<button type="button" onclick="renderOtherChannels('')">✕</button>` : ''}</div>
+    <div class="mc-seg">${tabs.map(([k, n]) => `<button type="button" class="${MCH.tab === k ? 'on' : ''}" onclick="mcChTab('${k}')">${n}</button>`).join('')}</div>
+    <div class="mc-gs7-chips">${MC_CH_CATS.map(c => `<button type="button" class="${MCH.cat === c.id ? 'on' : ''}" onclick="mcChCatSet('${c.id}')">${c.e} ${c.n}</button>`).join('')}</div>
+    ${!MCH.q && MCH.tab === 'rec' && MCH.cat === 'all' && trend.length >= 3 ? `<div class="discovery-section-head"><div><h3>В тренде</h3><p>Самые популярные каналы</p></div><span class="top-pill">ТОП</span></div>
+    <div class="mc-ch-trend">${trend.map(([id, c], i) => `<button type="button" class="mc-ch-tc" style="--i:${i};background:${mcChCover(id)}" onclick="mcChPreview('${id}')"><span class="mc-ch-rank">${i + 1}</span>${mcChAv(id, c, 46)}<b>${esc(c.name)}</b><small>👥 ${mcChFmt(mcChSubs(c))}</small></button>`).join('')}</div>` : ''}
+    <div class="discovery-section-head"><div><h3>${MCH.q ? 'Результаты поиска' : tabs.find(t => t[0] === MCH.tab)[1].split(' ·')[0]}</h3><p>${list.length} ${mcPl8(list.length, 'канал', 'канала', 'каналов')}</p></div></div>
+    <div class="mc-ch-list">${list.length ? list.slice(0, 60).map(([id, c], i) => mcChCard(id, c, i)).join('') : `<div class="empty"><div class="empty-icon">📡</div><h3>${MCH.tab === 'mine' ? 'У вас пока нет каналов' : MCH.tab === 'subs' ? 'Нет подписок' : 'Каналы не найдены'}</h3><p>${MCH.tab === 'mine' ? 'Создайте канал — это займёт минуту.' : 'Измените запрос или категорию.'}</p>${MCH.tab === 'mine' ? '<button class="btn btn-primary" style="width:auto;margin-top:10px" onclick="mcChCreate()">＋ Создать канал</button>' : ''}</div>`}</div>
+  </div>`;
+  if (hadFocus) { const i = $('mcChSearch'); i?.focus(); if (i && caret !== null) i.setSelectionRange(caret, caret); }
+};
+function mcChTab(k) { MCH.tab = k; renderOtherChannels(); }
+function mcChCatSet(k) { MCH.cat = k; renderOtherChannels(); }
+
+// Список в боковой панели (вкладка «Каналы»)
+renderChannels = function (q = '') {
+  const list = $('sbList'); if (!list) return;
+  const qq = String(q || '').toLowerCase().replace(/^@/, '');
+  const items = Object.entries(state.channels || {}).filter(([, c]) => c && c.name && (!qq || [c.name, c.description, c.username].some(v => String(v || '').toLowerCase().includes(qq))))
+    .sort((a, b) => mcChSubs(b[1]) - mcChSubs(a[1])).slice(0, qq ? 40 : 20);
+  list.innerHTML = items.length ? `<div class="mc-ch-list sb">${items.map(([id, c], i) => mcChCard(id, c, i)).join('')}</div>` : `<div class="empty"><div class="empty-icon">📢</div><h3>${qq ? 'Каналы не найдены' : 'Каналов пока нет'}</h3><p>${qq ? 'Попробуйте другое название.' : 'Создайте первый канал в разделе «Прочее».'}</p></div>`;
+};
+
+async function mcChJoin(id, btn) {
+  if (btn) { btn.disabled = true; btn.classList.add('busy'); btn.textContent = '…'; }
+  const ch = state.channels?.[id];
+  if (!ch || !state.user?.uid) { toast('Канал не найден', '⚠'); return; }
+  const uid = state.user.uid;
+  try {
+    await update(ref(db), { [`channels/${id}/members/${uid}`]: true, [`user_chats/${uid}/${id}`]: { type: 'channel', name: ch.name || 'Канал', ownerId: ch.ownerId || '', lastTs: ch.createdAt || now(), unread: 0 } });
+    state.chats = { ...(state.chats || {}), [id]: { type: 'channel', name: ch.name, ownerId: ch.ownerId, lastTs: ch.createdAt || now(), unread: 0 } };
+    state.channels[id] = { ...ch, members: { ...(ch.members || {}), [uid]: true } };
+    if (btn) { btn.classList.remove('busy'); btn.classList.add('on', 'pop'); btn.textContent = 'Открыть'; btn.disabled = false; btn.setAttribute('onclick', `event.stopPropagation();openChat('${id}','channel')`); }
+    toast(`Вы подписались на «${ch.name}»`, '🔔');
+    mcEarnSfx('ok');
+    if ($('mcChPrevSheet')) mcChPreview(id);
+  } catch (e) { console.error(e); toast(humanErr(e) || 'Не удалось подписаться', '⚠'); if (btn) { btn.disabled = false; btn.classList.remove('busy'); btn.textContent = 'Подписаться'; } }
+}
+
+async function mcChPreview(id) {
+  const c = state.channels?.[id]; if (!c) return toast('Канал не найден', '⚠');
+  const mem = mcChIsMember(id); const cat = mcChCat(c.category); const uid = state.user?.uid;
+  const own = c.ownerId === uid;
+  mcSheet('mcChPrevSheet', `<div class="mc-chp">
+    <div class="mc-chp-cover" style="background:${mcChCover(id)}"><button type="button" class="mc-chp-x" onclick="mcCloseSheet('mcChPrevSheet')">✕</button></div>
+    <div class="mc-chp-body">
+      <div class="mc-chp-av">${mcChAv(id, c, 92)}</div>
+      <h2>${esc(c.name)}</h2>${c.username ? `<div class="mc-chp-user">@${esc(String(c.username).replace(/^@/, ''))}</div>` : ''}
+      <div class="mc-chp-cat">${cat.e} ${cat.n}${own ? ' · Вы владелец' : c.admins?.[uid] ? ' · Вы администратор' : ''}</div>
+      <p class="mc-chp-desc">${esc(c.description || 'Публичный канал MetroChat')}</p>
+      <div class="mc-chp-stats"><div><b>${mcChFmt(mcChSubs(c))}</b><small>${mcPl8(mcChSubs(c), 'подписчик', 'подписчика', 'подписчиков')}</small></div><div><b id="mcChpPosts">…</b><small>публикаций</small></div><div><b>${c.createdAt ? new Date(c.createdAt).toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' }) : '—'}</b><small>создан</small></div></div>
+      <div class="mc-chp-act">${mem ? `<button type="button" class="btn btn-primary" onclick="mcCloseSheet('mcChPrevSheet');openChat('${id}','channel')">Открыть канал</button>` : `<button type="button" class="btn btn-primary" onclick="mcChJoin('${id}',this)">🔔 Подписаться</button>`}<button type="button" class="btn btn-secondary" onclick="copyChannelLink('${id}')">↗ Поделиться</button></div>
+      <h4>Последние публикации</h4><div class="mc-chp-posts" id="mcChpList"><div class="mc-skel-line"></div><div class="mc-skel-line"></div></div>
+    </div></div>`, { cls: 'mc-chp-overlay' });
+  try {
+    const snap = await get(query(ref(db, 'messages/' + id), orderByChild('createdAt'), limitToLast(30)));
+    const msgs = Object.entries(snap.val() || {}).map(([k, m]) => ({ id: k, ...m })).filter(m => m && !m.deleted && !m.system).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const pc = $('mcChpPosts'); if (pc) pc.textContent = msgs.length >= 30 ? '30+' : String(msgs.length);
+    const box = $('mcChpList'); if (!box) return;
+    const typeMap = { image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', videoCircle: '⭕ Видео', sticker: '😀 Стикер', geo: '📍 Место', weather: '🌤️ Погода' };
+    box.innerHTML = msgs.length ? msgs.slice(0, 3).map(m => `<div class="mc-chp-post"><p>${esc(mcStripFmt(m.text || (m.poll?.question ? '📊 ' + m.poll.question : '') || typeMap[m.type] || 'Публикация').slice(0, 220))}</p><small>${m.createdAt ? new Date(m.createdAt).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}</small></div>`).join('') : '<p class="mc-chp-empty">Публикаций пока нет</p>';
+  } catch (_) { const box = $('mcChpList'); if (box) box.innerHTML = '<p class="mc-chp-empty">Не удалось загрузить публикации</p>'; }
+}
+
+// ---------- Создание канала ----------
+function mcChCreate() {
+  const emojis = ['📢', '📰', '💻', '🎮', '🎵', '📚', '😂', '⚽', '🎬', '✈️', '🎨', '🚇', '🔥', '💡', '🌍', '🐾'];
+  const sel = { emoji: '📢', cat: 'other' };
+  mcSheet('mcChNew', `${mcSheetHead('Новый канал', 'mcChNew')}<div class="mc-chn">
+    <div class="mc-chn-prev" id="mcChnPrev"><span class="mc-ch-av" style="width:76px;height:76px;font-size:36px;background:${mcChCover('new')}">📢</span><div><b id="mcChnPN">Название канала</b><small id="mcChnPU">@username</small></div></div>
+    <label class="mc-lbl">Название</label><input id="mcChnName" class="mc-inp" maxlength="60" placeholder="Например, Новости метро">
+    <label class="mc-lbl">Публичная ссылка (необязательно)</label><div class="mc-inp-at"><span>@</span><input id="mcChnUser" class="mc-inp" maxlength="32" placeholder="metro_news" autocapitalize="off" spellcheck="false"></div><div class="mc-hint" id="mcChnUH">Латиница, цифры и _ · от 4 символов</div>
+    <label class="mc-lbl">Описание</label><textarea id="mcChnDesc" class="mc-inp" rows="3" maxlength="300" placeholder="О чём ваш канал?"></textarea>
+    <label class="mc-lbl">Категория</label><div class="mc-chn-cats">${MC_CH_CATS.slice(1).map(c => `<button type="button" data-c="${c.id}" class="${c.id === 'other' ? 'on' : ''}">${c.e} ${c.n}</button>`).join('')}</div>
+    <label class="mc-lbl">Значок</label><div class="mc-chn-emo">${emojis.map(e => `<button type="button" data-e="${e}" class="${e === '📢' ? 'on' : ''}">${e}</button>`).join('')}</div>
+    <button type="button" class="btn btn-primary" id="mcChnGo">Создать канал</button>
+  </div>`);
+  const root = $('mcChNew');
+  const nameI = $('mcChnName'), userI = $('mcChnUser');
+  const paint = () => { $('mcChnPN').textContent = nameI.value.trim() || 'Название канала'; $('mcChnPU').textContent = userI.value ? '@' + userI.value : 'без публичной ссылки'; const av = root.querySelector('#mcChnPrev .mc-ch-av'); av.textContent = sel.emoji; };
+  nameI.addEventListener('input', paint);
+  userI.addEventListener('input', () => { userI.value = userI.value.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 32); const ok = !userI.value || /^[a-z][a-z0-9_]{3,31}$/.test(userI.value); const taken = userI.value && Object.values(state.channels || {}).some(c => String(c?.username || '').toLowerCase() === userI.value); const h = $('mcChnUH'); h.textContent = !userI.value ? 'Латиница, цифры и _ · от 4 символов' : taken ? 'Этот адрес уже занят' : ok ? 'Адрес свободен' : 'Начните с буквы, минимум 4 символа'; h.className = 'mc-hint ' + (!userI.value ? '' : taken || !ok ? 'bad' : 'ok'); paint(); });
+  root.querySelectorAll('.mc-chn-cats button').forEach(b => b.addEventListener('click', () => { root.querySelectorAll('.mc-chn-cats button').forEach(x => x.classList.remove('on')); b.classList.add('on'); sel.cat = b.dataset.c; }));
+  root.querySelectorAll('.mc-chn-emo button').forEach(b => b.addEventListener('click', () => { root.querySelectorAll('.mc-chn-emo button').forEach(x => x.classList.remove('on')); b.classList.add('on'); sel.emoji = b.dataset.e; paint(); }));
+  setTimeout(() => nameI.focus(), 80);
+  $('mcChnGo').addEventListener('click', async () => {
+    const btn = $('mcChnGo'); if (btn.disabled) return;
+    const name = nameI.value.trim(), username = userI.value.trim(), description = $('mcChnDesc').value.trim();
+    if (name.length < 2) { nameI.focus(); return toast('Введите название канала', '⚠'); }
+    if (username && !/^[a-z][a-z0-9_]{3,31}$/.test(username)) return toast('Некорректная ссылка: латиница, от 4 символов, начинается с буквы', '⚠');
+    if (!state.user?.uid) return;
+    btn.disabled = true; btn.textContent = 'Создаём…';
+    try {
+      if (username) {
+        if (Object.values(state.channels || {}).some(c => String(c?.username || '').toLowerCase() === username)) { btn.disabled = false; btn.textContent = 'Создать канал'; return toast('Ссылка @' + username + ' уже занята', '⚠'); }
+      }
+      const uid = state.user.uid, ts = now();
+      const id = 'chn_' + push(ref(db, 'channels')).key;
+      const data = { type: 'channel', name, description, ownerId: uid, admins: { [uid]: true }, members: { [uid]: true }, createdAt: ts, category: sel.cat, emoji: sel.emoji, ...(username ? { username } : {}) };
+      const preview = { type: 'channel', name, ownerId: uid, lastTs: ts, unread: 0 };
+      await update(ref(db), { ['channels/' + id]: data, [`user_chats/${uid}/${id}`]: preview });
+      state.channels = { ...(state.channels || {}), [id]: data };
+      state.chats = { ...(state.chats || {}), [id]: preview };
+      mcCloseSheet('mcChNew');
+      try { mcConfettiBurst(50); } catch (_) {}
+      toast('Канал создан', '🎉');
+      await openChat(id, 'channel');
+    } catch (e) {
+      console.error('create channel', e); btn.disabled = false; btn.textContent = 'Создать канал';
+      toast(humanErr(e) || 'Не удалось создать канал', '⚠');
+    }
+  });
+}
+openCreateChannelModal = function () { return mcChCreate(); };
+
+// ---------- Внутри канала: просмотры, комментарии, статистика ----------
+function mcChStatsSub(cid) {
+  if (MCH.statsCid === cid) return;
+  if (MCH.statsUnsub) { try { MCH.statsUnsub(); } catch (_) {} MCH.statsUnsub = null; }
+  MCH.statsCid = cid; MCH.stats = {};
+  if (!cid) return;
+  MCH.statsUnsub = onValue(ref(db, 'channel_stats/' + cid), s => { if (MCH.statsCid !== cid) return; MCH.stats = s.val() || {}; mcChPaintCounts(); }, () => {});
+}
+function mcChViews(mid) { return Object.keys(MCH.stats?.views?.[mid] || {}).length; }
+function mcChCC(mid) { return Number(MCH.stats?.cc?.[mid]) || 0; }
+function mcChPaintCounts() {
+  document.querySelectorAll('#messages .mc-ch-foot').forEach(f => {
+    const mid = f.dataset.mid;
+    const v = f.querySelector('[data-v]'); if (v) v.textContent = mcChFmt(Math.max(1, mcChViews(mid)));
+    const c = f.querySelector('[data-c]'); if (c) c.textContent = mcChCC(mid) ? mcChFmt(mcChCC(mid)) : 'Обсудить';
+  });
+}
+function mcChObserve() {
+  if (!('IntersectionObserver' in window)) return null;
+  if (MCH.io) return MCH.io;
+  MCH.io = new IntersectionObserver(ents => ents.forEach(en => {
+    if (!en.isIntersecting) return; const mid = en.target.dataset.mid; const cid = state.chat?.id; const uid = state.user?.uid;
+    MCH.io.unobserve(en.target);
+    if (!mid || !cid || !uid || state.chat?.type !== 'channel') return;
+    const key = cid + '/' + mid; if (MCH.seen.has(key) || MCH.stats?.views?.[mid]?.[uid]) return;
+    MCH.seen.add(key);
+    set(ref(db, `channel_stats/${cid}/views/${mid}/${uid}`), true).catch(() => MCH.seen.delete(key));
+  }), { threshold: 0.6 });
+  return MCH.io;
+}
+function mcChDecorate() {
+  const c = state.chat; if (!c || c.type !== 'channel') return;
+  const box = $('messages'); if (!box) return;
+  box.classList.add('mc-ch-mode');
+  const io = mcChObserve();
+  (state.messages || []).forEach(m => {
+    if (!m || m.deleted || m.system) return;
+    const el = $('msg-' + m.id); if (!el || el.querySelector('.mc-ch-foot')) return;
+    el.classList.add('mc-ch-post');
+    const bubble = el.querySelector('.msg-bubble') || el;
+    const foot = document.createElement('div');
+    foot.className = 'mc-ch-foot'; foot.dataset.mid = m.id;
+    foot.innerHTML = `<span class="v" title="Просмотры">👁 <b data-v>${mcChFmt(Math.max(1, mcChViews(m.id)))}</b></span><button type="button" class="cm" onclick="event.stopPropagation();mcChComments('${m.id}')">💬 <b data-c>${mcChCC(m.id) ? mcChFmt(mcChCC(m.id)) : 'Обсудить'}</b></button><button type="button" class="sh" title="Поделиться" onclick="event.stopPropagation();mcChSharePost('${m.id}')">↗</button>`;
+    bubble.appendChild(foot);
+    if (io) { el.dataset.mid = m.id; io.observe(el); }
+  });
+}
+function mcChSharePost(mid) {
+  const cid = state.chat?.id; if (!cid) return;
+  const m = state.messages.find(x => x.id === mid);
+  const url = channelShareUrl(cid) + '#post-' + mid;
+  const text = `${state.chat.name}: ${mcStripFmt(m?.text || '').slice(0, 120)}\n${url}`;
+  if (navigator.share) navigator.share({ title: state.chat.name, text, url }).catch(() => {});
+  else navigator.clipboard?.writeText(url).then(() => toast('Ссылка на пост скопирована', '🔗')).catch(() => mcAlert('Ссылка на пост', '', { copy: url, icon: '🔗' }));
+}
+
+function mcChComments(mid) {
+  const cid = state.chat?.id; const c = state.chat; if (!cid || c?.type !== 'channel') return;
+  const m = state.messages.find(x => x.id === mid);
+  const uid = state.user?.uid; const isAdm = c.ownerId === uid || !!c.admins?.[uid];
+  mcSheet('mcChCm', `${mcSheetHead('Комментарии', 'mcChCm')}<div class="mc-cm">
+    <div class="mc-cm-post">${mcChAv(cid, c, 36)}<div><b>${esc(c.name)}</b><p>${esc(mcStripFmt(m?.text || (m?.poll?.question || 'Публикация')).slice(0, 300))}</p></div></div>
+    <div class="mc-cm-list" id="mcCmList"><div class="mc-skel-line"></div><div class="mc-skel-line"></div></div>
+    <div class="mc-cm-in"><textarea id="mcCmText" rows="1" maxlength="1000" placeholder="${mcChIsMember(cid) ? 'Написать комментарий…' : 'Подпишитесь, чтобы комментировать'}" ${mcChIsMember(cid) ? '' : 'disabled'}></textarea><button type="button" id="mcCmSend" ${mcChIsMember(cid) ? '' : 'disabled'}>➤</button></div>
+  </div>`, { cls: 'mc-cm-overlay' });
+  if (MCH.cmUnsub) { try { MCH.cmUnsub(); } catch (_) {} }
+  const r = query(ref(db, `channel_comments/${cid}/${mid}`), orderByChild('at'), limitToLast(200));
+  let first = true;
+  MCH.cmUnsub = onValue(r, s => {
+    const box = $('mcCmList'); if (!box) { try { MCH.cmUnsub?.(); } catch (_) {} MCH.cmUnsub = null; return; }
+    const list = Object.entries(s.val() || {}).map(([k, v]) => ({ k, ...v })).sort((a, b) => (a.at || 0) - (b.at || 0));
+    list.forEach(x => { if (x.uid && !getUser(x.uid)) fetchUserIfMissing(x.uid); });
+    box.innerHTML = list.length ? list.map(x => { const u = getUser(x.uid) || {}; const nm = u.displayName || u.firstName || x.name || 'Пользователь'; const mine = x.uid === uid; return `<div class="mc-cm-item ${mine ? 'mine' : ''}">${avatarHTML({ name: nm, avatar: u.avatar, size: 'small' })}<div class="mc-cm-b"><b>${esc(nm)}${x.uid === c.ownerId ? ' <i>автор</i>' : ''}</b><p>${esc(x.text)}</p><small>${new Date(x.at || 0).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</small></div>${mine || isAdm ? `<button type="button" title="Удалить" onclick="mcChCmDel('${mid}','${x.k}')">🗑</button>` : ''}</div>`; }).join('') : '<div class="mc-cm-empty"><span>💬</span><b>Комментариев пока нет</b><small>Начните обсуждение первым</small></div>';
+    if (first) { box.scrollTop = box.scrollHeight; first = false; } else box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+  }, () => { const box = $('mcCmList'); if (box) box.innerHTML = '<div class="mc-cm-empty"><b>Нет доступа к комментариям</b><small>Добавьте правило channel_comments в Firebase</small></div>'; });
+  const ta = $('mcCmText');
+  ta?.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(120, ta.scrollHeight) + 'px'; });
+  ta?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); mcChCmSend(mid); } });
+  $('mcCmSend')?.addEventListener('click', () => mcChCmSend(mid));
+}
+async function mcChCmSend(mid) {
+  const cid = state.chat?.id; const ta = $('mcCmText'); const uid = state.user?.uid;
+  const text = (ta?.value || '').trim(); if (!text || !cid || !uid) return;
+  if (!mcChIsMember(cid)) return toast('Подпишитесь на канал, чтобы комментировать', '🔔');
+  const btn = $('mcCmSend'); btn.disabled = true;
+  try {
+    const p = state.profile || {};
+    await set(push(ref(db, `channel_comments/${cid}/${mid}`)), { uid, name: p.displayName || p.firstName || 'Пользователь', text: text.slice(0, 1000), at: Date.now() });
+    await runTransaction(ref(db, `channel_stats/${cid}/cc/${mid}`), v => (Number(v) || 0) + 1).catch(() => {});
+    ta.value = ''; ta.style.height = 'auto'; mcEarnSfx('tap');
+  } catch (e) { console.error(e); toast('Комментарий не отправлен. Проверьте правила Firebase (channel_comments).', '⚠'); }
+  finally { btn.disabled = false; ta?.focus(); }
+}
+async function mcChCmDel(mid, k) {
+  const cid = state.chat?.id; if (!cid) return;
+  if (!(await mcConfirm('Удалить комментарий?', '', { danger: true, okText: 'Удалить' }))) return;
+  try { await remove(ref(db, `channel_comments/${cid}/${mid}/${k}`)); await runTransaction(ref(db, `channel_stats/${cid}/cc/${mid}`), v => Math.max(0, (Number(v) || 0) - 1)).catch(() => {}); }
+  catch (_) { toast('Не удалось удалить комментарий', '⚠'); }
+}
+
+function mcChStatsOpen() {
+  const c = state.chat; const uid = state.user?.uid; if (!c || c.type !== 'channel') return;
+  if (!(c.ownerId === uid || c.admins?.[uid])) return toast('Статистика доступна владельцу и администраторам', '🔒');
+  const posts = (state.messages || []).filter(m => m && !m.deleted && !m.system);
+  const subs = mcChSubs(c);
+  const views = posts.map(m => ({ m, v: mcChViews(m.id), cc: mcChCC(m.id), r: Object.keys(m.reactions || {}).length }));
+  const totalV = views.reduce((s, x) => s + x.v, 0), totalC = views.reduce((s, x) => s + x.cc, 0), totalR = views.reduce((s, x) => s + x.r, 0);
+  const avg = posts.length ? Math.round(totalV / posts.length) : 0;
+  const er = subs ? Math.min(999, Math.round((totalR + totalC) / Math.max(1, posts.length) / subs * 1000) / 10) : 0;
+  const days = Array.from({ length: 14 }, (_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 13 + i); return d; });
+  const per = days.map(d => posts.filter(m => { const t = m.createdAt || 0; return t >= d.getTime() && t < d.getTime() + 86400000; }).length);
+  const mx = Math.max(1, ...per);
+  const top = views.slice().sort((a, b) => b.v - a.v).slice(0, 5);
+  mcSheet('mcChSt', `${mcSheetHead('Статистика канала', 'mcChSt')}<div class="mc-cst">
+    <div class="mc-cst-grid"><div><small>Подписчики</small><b>${mcChFmt(subs)}</b></div><div><small>Публикации</small><b>${posts.length}</b></div><div><small>Просмотры</small><b>${mcChFmt(totalV)}</b></div><div><small>Средний охват</small><b>${mcChFmt(avg)}</b></div><div><small>Комментарии</small><b>${mcChFmt(totalC)}</b></div><div><small>Вовлечённость</small><b>${er}%</b></div></div>
+    <h4>Публикации за 14 дней</h4><div class="mc-cst-bars">${per.map((n, i) => `<div title="${days[i].toLocaleDateString('ru-RU')}: ${n}"><i style="height:${n / mx * 100}%;--i:${i}"></i><small>${days[i].getDate()}</small></div>`).join('')}</div>
+    <h4>Самые просматриваемые</h4><div class="mc-cst-top">${top.length ? top.map((x, i) => `<div><span>${i + 1}</span><p>${esc(mcStripFmt(x.m.text || x.m.poll?.question || 'Медиа').slice(0, 90))}</p><em>👁 ${x.v} · 💬 ${x.cc}</em></div>`).join('') : '<p class="mc-chp-empty">Нет публикаций</p>'}</div>
+    <p class="mc-hint">Просмотры считаются по уникальным пользователям, которые увидели пост на экране. Вовлечённость = (реакции + комментарии) на пост / подписчики.</p>
+  </div>`);
+}
+async function mcChToggleMute() {
+  const c = state.chat; const uid = state.user?.uid; if (!c || !uid) return;
+  const cur = !!state.chats?.[c.id]?.muted;
+  try { await update(ref(db, `user_chats/${uid}/${c.id}`), { muted: !cur }); if (state.chats[c.id]) state.chats[c.id].muted = !cur; toast(!cur ? 'Уведомления канала выключены' : 'Уведомления канала включены', !cur ? '🔕' : '🔔'); mcChBar(); renderChatHeader(); renderList(); }
+  catch (_) { toast('Не удалось изменить уведомления', '⚠'); }
+}
+// Нижняя панель для подписчиков (вместо неактивного поля ввода)
+function mcChBar() {
+  const panel = $('chatPanel'); if (!panel) return;
+  let bar = $('mcChBar');
+  const c = state.chat;
+  const show = c?.type === 'channel' && !canPostToChannel(c, state.user?.uid);
+  if (!show) { bar?.remove(); $('chatInputBar')?.classList.remove('mc-ch-ro'); return; }
+  const mem = mcChIsMember(c.id); const muted = !!state.chats?.[c.id]?.muted;
+  if (!bar) { bar = document.createElement('div'); bar.id = 'mcChBar'; bar.className = 'mc-ch-bar'; $('chatInputBar')?.insertAdjacentElement('afterend', bar); }
+  $('chatInputBar')?.classList.add('mc-ch-ro');
+  bar.innerHTML = mem ? `<button type="button" onclick="mcChToggleMute()">${muted ? '🔔 Включить звук' : '🔕 Без звука'}</button><button type="button" onclick="copyChannelLink('${c.id}')">↗ Поделиться</button>` : `<button type="button" class="pri" onclick="mcChJoin('${c.id}');setTimeout(mcChBar,800)">🔔 Подписаться</button>`;
+}
+
+const _mcRenderMessagesR8 = renderMessages;
+renderMessages = function (...a) {
+  const r = _mcRenderMessagesR8.apply(this, a);
+  try { if (state.chat?.type === 'channel') { mcChStatsSub(state.chat.id); mcChDecorate(); } else { $('messages')?.classList.remove('mc-ch-mode'); } } catch (e) { console.warn('ch decorate', e); }
+  return r;
+};
+const _mcRenderChatHeaderR8 = renderChatHeader;
+renderChatHeader = function (...a) {
+  const r = _mcRenderChatHeaderR8.apply(this, a);
+  try {
+    const c = state.chat;
+    if (c?.type === 'channel') {
+      const uid = state.user?.uid; const adm = c.ownerId === uid || !!c.admins?.[uid]; const cat = mcChCat(c.category); const muted = !!state.chats?.[c.id]?.muted;
+      const sub = $('chatSub'); if (sub) sub.innerHTML = `<span>${mcChFmt(mcChSubs(c))} ${mcPl8(mcChSubs(c), 'подписчик', 'подписчика', 'подписчиков')}</span>${c.category ? `<span class="mc-ch-hcat">${cat.e} ${cat.n}</span>` : ''}${muted ? '<span>🔕</span>' : ''}`;
+      const act = $('chatActions');
+      if (act) act.innerHTML = `<button class="chat-icon-btn" onclick="openChatSearch()" title="Поиск по каналу">🔍</button>${adm ? '<button class="chat-icon-btn" onclick="mcChStatsOpen()" title="Статистика">📊</button>' : ''}<button class="chat-icon-btn" onclick="mcChToggleMute()" title="${muted ? 'Включить уведомления' : 'Выключить уведомления'}">${muted ? '🔕' : '🔔'}</button><button class="chat-icon-btn" onclick="copyChannelLink('${c.id}')" title="Поделиться">↗</button>`;
+      if (!c.avatar) { const av = $('chatAvatar'); if (av) { av.style.background = mcChCover(c.id); av.textContent = c.emoji || cat.e; } }
+    }
+    mcChBar();
+  } catch (e) { console.warn('ch header', e); }
+  return r;
+};
+const _mcOpenChatR8 = openChat;
+openChat = function (chatId, type, ...rest) {
+  if (type !== 'channel') { mcChStatsSub(null); $('mcChBar')?.remove(); $('chatInputBar')?.classList.remove('mc-ch-ro'); }
+  return _mcOpenChatR8.call(this, chatId, type, ...rest);
+};
+
+Object.assign(window, { renderOtherChannels, renderChannels, openCreateChannelModal, mcChTab, mcChCatSet, mcChJoin, mcChPreview, mcChCreate, mcChComments, mcChCmDel, mcChStatsOpen, mcChToggleMute, mcChSharePost, mcChBar });
+
+// =====================================================================
+// MetroChat · Round 8 — боты. Каталог в «Прочее», добавленные боты появляются
+// в основном списке чатов с никнеймами *_bot. История хранится в Firebase
+// (bot_chats/$uid, bot_msgs/$uid/$bot), ответы считаются на устройстве.
+// =====================================================================
+
+const MCB = { uid: null, meta: {}, metaUnsub: null, open: null, msgs: [], msgUnsub: null, typing: false, game: {}, remTimer: 0 };
+
+function mcBotAvatar(b) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${b.c1}"/><stop offset="1" stop-color="${b.c2}"/></linearGradient></defs><rect width="96" height="96" rx="30" fill="url(#g)"/><text x="48" y="62" font-size="46" text-anchor="middle" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">${b.e}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+function mcBotFmt(t) {
+  let h = esc(String(t || ''));
+  h = h.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  h = h.replace(/(https?:\/\/[^\s<]+)/g, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u.length > 48 ? u.slice(0, 45) + '…' : u}</a>`);
+  return h.replace(/\n/g, '<br>');
+}
+const MC_WX_EMO = c => (typeof mcWeatherIcon === 'function' ? mcWeatherIcon(c) : '🌡️');
+const MC_WX_TXT = c => (typeof mcWeatherDesc === 'function' ? mcWeatherDesc(c) : '');
+
+// ---------------- Безопасный калькулятор ----------------
+function mcCalc(src) {
+  const s = String(src).toLowerCase().replace(/,/g, '.').replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-').replace(/\s+/g, '');
+  let i = 0;
+  const F = { sqrt: Math.sqrt, sin: x => Math.sin(x * Math.PI / 180), cos: x => Math.cos(x * Math.PI / 180), tan: x => Math.tan(x * Math.PI / 180), ln: Math.log, log: Math.log10, abs: Math.abs, round: Math.round, floor: Math.floor, ceil: Math.ceil, exp: Math.exp };
+  const peek = () => s[i];
+  const num = () => { const m = /^(\d+\.?\d*|\.\d+)(e[+-]?\d+)?/.exec(s.slice(i)); if (!m) throw new Error('Ожидалось число'); i += m[0].length; return parseFloat(m[0]); };
+  const prim = () => {
+    if (peek() === '(') { i++; const v = expr(); if (peek() !== ')') throw new Error('Не хватает скобки'); i++; return v; }
+    if (peek() === '-') { i++; return -factor(); }
+    if (peek() === '+') { i++; return factor(); }
+    const m = /^[a-zπ]+/.exec(s.slice(i));
+    if (m) { const w = m[0]; i += w.length; if (w === 'pi' || w === 'π') return Math.PI; if (w === 'e') return Math.E; if (F[w]) { const a = prim(); return F[w](a); } throw new Error('Неизвестная функция ' + w); }
+    return num();
+  };
+  const post = () => { let v = prim(); while (peek() === '!' || peek() === '%') { if (peek() === '!') { i++; if (v < 0 || v > 170 || v % 1) throw new Error('Факториал от 0 до 170'); let r = 1; for (let k = 2; k <= v; k++) r *= k; v = r; } else { i++; v = v / 100; } } return v; };
+  const factor = () => { const b = post(); if (peek() === '^') { i++; return Math.pow(b, factor()); } return b; };
+  const term = () => { let v = factor(); while (peek() === '*' || peek() === '/' || (peek() && /[\d(a-zπ]/.test(peek()))) { const op = /[*/]/.test(peek()) ? s[i++] : '*'; const r = factor(); v = op === '*' ? v * r : v / r; } return v; };
+  const expr = () => { let v = term(); while (peek() === '+' || peek() === '-') { const op = s[i++]; const r = term(); v = op === '+' ? v + r : v - r; } return v; };
+  if (!s) throw new Error('Пустое выражение');
+  const v = expr(); if (i < s.length) throw new Error('Непонятный символ «' + s[i] + '»');
+  if (!Number.isFinite(v)) throw new Error('Результат не определён');
+  return v;
+}
+function mcNumFmt(v) { const a = Math.abs(v); if (a !== 0 && (a >= 1e15 || a < 1e-6)) return v.toExponential(6); return (Math.round(v * 1e10) / 1e10).toLocaleString('ru-RU', { maximumFractionDigits: 10 }); }
+
+// ---------------- Напоминания ----------------
+function mcParseRemind(t) {
+  const s = t.trim(); const low = s.toLowerCase(); const nowD = new Date();
+  let m = /^(?:напомни(?:ть)?\s+)?через\s+(\d+(?:[.,]\d+)?|полчаса|час)\s*(секунд[уы]?|сек|минут[уы]?|мин|час(?:а|ов)?|дн(?:я|ей)?|день|с|м|ч|д)?(?![а-яё])\s*(.*)$/i.exec(low);
+  if (m) {
+    let n = m[1] === 'полчаса' ? 30 : m[1] === 'час' ? 1 : parseFloat(m[1].replace(',', '.')); let u = m[2] || (m[1] === 'полчаса' ? 'мин' : m[1] === 'час' ? 'ч' : 'мин');
+    const k = /^с/.test(u) ? 1000 : /^м/.test(u) ? 60000 : /^ч/.test(u) ? 3600000 : 86400000;
+    const text = s.slice(s.length - m[3].length).trim() || 'Напоминание';
+    return { at: Date.now() + n * k, text };
+  }
+  m = /^(?:напомни(?:ть)?\s+)?(сегодня|завтра|послезавтра|(\d{1,2})[./](\d{1,2})(?:[./](\d{2,4}))?)?\s*в\s*(\d{1,2})[:.](\d{2})\s*(.*)$/i.exec(low);
+  if (m) {
+    const d = new Date(nowD); d.setSeconds(0, 0);
+    if (m[1] === 'завтра') d.setDate(d.getDate() + 1); else if (m[1] === 'послезавтра') d.setDate(d.getDate() + 2);
+    else if (m[2]) { d.setMonth(Number(m[3]) - 1, Number(m[2])); if (m[4]) d.setFullYear(Number(m[4].length === 2 ? '20' + m[4] : m[4])); }
+    d.setHours(Number(m[5]), Number(m[6]));
+    if (!m[1] && d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+    const text = s.slice(s.length - m[7].length).trim() || 'Напоминание';
+    return { at: d.getTime(), text };
+  }
+  return null;
+}
+async function mcRemCheck() {
+  const uid = state.user?.uid; if (!uid) return;
+  const rem = MCB.meta?.remind_bot?.rem || {};
+  for (const [k, r] of Object.entries(rem)) if (r?.fired) remove(ref(db, `bot_chats/${uid}/remind_bot/rem/${k}`)).catch(() => {});
+  const due = Object.entries(rem).filter(([, r]) => r && !r.fired && r.at <= Date.now());
+  for (const [k, r] of due) {
+    try {
+      // Первый вызов может прийти с null (нет кеша) — тогда ничего не меняем, Firebase повторит с реальным значением.
+      let mine = false;
+      const tx = await runTransaction(ref(db, `bot_chats/${uid}/remind_bot/rem/${k}`), cur => { mine = false; if (!cur) return cur; if (cur.fired) return; mine = true; return { ...cur, fired: Date.now() }; });
+      if (!tx.committed || !mine) continue;
+      remove(ref(db, `bot_chats/${uid}/remind_bot/rem/${k}`)).catch(() => {});
+      await mcBotPush('remind_bot', { from: 'b', text: `⏰ **Напоминание**\n${r.text}`, kb: [['Через 10 мин', 'snooze10:' + r.text], ['Через час', 'snooze60:' + r.text]] }, { notify: true });
+      try { mcSystemNotify('⏰ Напоминание', r.text, { tag: 'remind-' + k, force: true }); } catch (_) {}
+      try { const ac = mcAC(); if (ac && state.settings?.sound !== false) { const out = mcOut(ac, mcVol()); [76, 79, 84].forEach((n, i) => mcBell(ac, out, ac.currentTime + i * 0.16, mcMidi6(n), 1.2, 0.2)); } } catch (_) {}
+      toast('⏰ ' + r.text, '🔔');
+    } catch (e) { console.warn('reminder', e); }
+  }
+}
+
+// ---------------- Описание ботов ----------------
+const MC_BOTS = [
+  { id: 'metro_bot', name: 'MetroChat', e: '🚇', c1: '#3b82f6', c2: '#7c3aed', cat: 'Помощник', desc: 'Официальный помощник: баланс, задания, советы и ответы на вопросы.',
+    cmds: [['/start', 'Начало'], ['/balance', 'Баланс умов'], ['/tips', 'Совет дня'], ['/help', 'Помощь']],
+    hello: 'Привет! Я **MetroChat бот**. Подскажу, как пользоваться мессенджером, покажу баланс умов и задания.\n\nСпросите что-нибудь: «как включить 2FA», «как создать канал», «что такое умы».',
+    kb: [['💰 Баланс', '/balance'], ['✦ Заработать', 'open:earn'], ['📡 Каналы', 'open:channels'], ['🎁 Подарки', 'open:gifts'], ['💡 Совет', '/tips']],
+    async reply(t) {
+      const l = t.toLowerCase();
+      if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn'], ['🎡 Колесо', 'open:wheel']] }; }
+      if (/^\/?(tips|совет)/.test(l)) { const tips = ['Зажмите сообщение, чтобы ответить, переслать или закрепить его.', 'В настройках можно включить двухфакторную аутентификацию для защиты аккаунта.', 'Сообщение можно запланировать: удерживайте кнопку отправки.', 'Ежедневная отметка в «Заработать» даёт до 20 УМ при длинной серии.', 'Боты появляются в списке чатов — закрепите нужного, чтобы он был сверху.', 'В каналах можно комментировать посты и смотреть число просмотров.', 'Подарки редкости «Эксклюзив» выпадают только в колесе фортуны.']; return { text: '💡 ' + mcPick(tips), kb: [['Ещё совет', '/tips']] }; }
+      const faq = [[/2fa|двухфактор|защит/, 'Откройте **Настройки → Безопасность → Двухфакторная аутентификация** и следуйте шагам.'], [/канал/, 'Каналы находятся в **Прочее → Каналы**. Там можно найти популярные каналы по категориям или нажать «Создать канал».'], [/групп/, 'Нажмите ✏️ в шапке списка чатов и выберите «Новая группа».'], [/ум[ыа]?\b|умов|заработ/, 'Умы — внутренняя валюта MetroChat. Их дают за задания в **Подарки → Заработать** (до 140 УМ в день) и тратят на подарки, колесо фортуны и аукцион.'], [/подар/, 'Подарки покупаются за умы в **Прочее → Подарки**. Подарок можно отправить другу или выставить на аукцион.'], [/звон|call/, 'В личном чате нажмите 📞 или 🎥 в шапке, чтобы позвонить.'], [/пароль/, 'Сменить пароль: **Настройки → Безопасность → Сменить пароль**.'], [/истори/, 'Истории открываются кнопкой 👤 над списком чатов.'], [/тем[аыу]|оформ|ночн/, 'Тему и ночной режим можно поменять в **Настройки → Оформление**.'], [/бот/, 'Каталог ботов — в **Прочее → Боты**. Добавленный бот появляется в списке чатов.']];
+      for (const [re, a] of faq) if (re.test(l)) return { text: a };
+      if (/^\/?(help|помощь|start|старт)/.test(l)) return { text: this.hello, kb: this.kb };
+      return { text: 'Я пока не знаю ответа на это. Попробуйте спросить про умы, каналы, группы, звонки, пароль или темы.', kb: this.kb };
+    } },
+  { id: 'weather_bot', name: 'Погода', e: '🌤️', c1: '#38bdf8', c2: '#2563eb', cat: 'Сервисы', desc: 'Погода сейчас и прогноз на 4 дня для любого города.',
+    cmds: [['/now', 'Погода в последнем городе'], ['/help', 'Помощь']],
+    hello: 'Напишите название города — пришлю погоду сейчас и прогноз на 4 дня.', kb: [['Москва', 'Москва'], ['Санкт-Петербург', 'Санкт-Петербург'], ['Казань', 'Казань'], ['Новосибирск', 'Новосибирск']],
+    async reply(t) {
+      let city = t.trim(); if (/^\/now/.test(city)) city = localStorage.getItem('mc_wxbot_city') || 'Москва';
+      if (/^\/?(help|start)/i.test(city)) return { text: this.hello, kb: this.kb };
+      const found = await mcGeoCity(city); if (!found?.length) return { text: `Не нашёл город «${city}». Проверьте название.` };
+      const p = found[0]; const d = await mcWeatherData(p.latitude, p.longitude, p.timezone);
+      localStorage.setItem('mc_wxbot_city', p.name);
+      const c = d.current || {}; const days = (d.daily?.time || []).slice(0, 4).map((date, i) => `${new Date(date + 'T12:00:00').toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric' })}: ${MC_WX_EMO(d.daily.weather_code[i])} ${Math.round(d.daily.temperature_2m_max[i])}° / ${Math.round(d.daily.temperature_2m_min[i])}°${d.daily.precipitation_probability_max?.[i] != null ? ` · 💧${d.daily.precipitation_probability_max[i]}%` : ''}`);
+      return { text: `${MC_WX_EMO(c.weather_code)} **${[p.name, p.country].filter(Boolean).join(', ')}**\nСейчас **${Math.round(c.temperature_2m)}°**, ощущается ${Math.round(c.apparent_temperature)}° · ${MC_WX_TXT(c.weather_code)}\nВлажность ${c.relative_humidity_2m}% · ветер ${Math.round(c.wind_speed_10m)} км/ч\n\n${days.join('\n')}`, kb: [['🔄 Обновить', '/now']] };
+    } },
+  { id: 'currency_bot', name: 'Курсы валют', e: '💱', c1: '#22c55e', c2: '#0d9488', cat: 'Сервисы', desc: 'Курсы ЦБ РФ и конвертация: «100 usd», «50 eur в cny».',
+    cmds: [['/rates', 'Основные курсы'], ['/help', 'Помощь']],
+    hello: 'Пришлю курсы ЦБ РФ и посчитаю конвертацию.\nПримеры: `100 usd`, `2500 руб в eur`, `50 eur в cny`.', kb: [['📊 Курсы', '/rates'], ['100 USD', '100 usd'], ['100 EUR', '100 eur']],
+    async reply(t) {
+      const r = await fetch('https://www.cbr-xml-daily.ru/daily_json.js').then(x => x.json());
+      const V = r.Valute || {}; const rate = code => code === 'RUB' ? 1 : V[code] ? V[code].Value / V[code].Nominal : null;
+      const alias = { 'руб': 'RUB', 'рубль': 'RUB', 'рублей': 'RUB', 'р': 'RUB', 'rub': 'RUB', '₽': 'RUB', 'доллар': 'USD', 'долларов': 'USD', '$': 'USD', 'евро': 'EUR', '€': 'EUR', 'юань': 'CNY', 'юаней': 'CNY', 'фунт': 'GBP', 'лира': 'TRY', 'тенге': 'KZT', 'иена': 'JPY' };
+      const code = w => { w = String(w || '').toLowerCase(); return alias[w] || (V[w.toUpperCase()] ? w.toUpperCase() : w.toUpperCase() === 'RUB' ? 'RUB' : null); };
+      const m = /^([\d\s.,]+)\s*([a-zа-яё$€₽]+)(?:\s*(?:в|to|->|=)\s*([a-zа-яё$€₽]+))?$/i.exec(t.trim());
+      if (m) {
+        const amt = parseFloat(m[1].replace(/\s/g, '').replace(',', '.')); const from = code(m[2]); const to = m[3] ? code(m[3]) : (from === 'RUB' ? 'USD' : 'RUB');
+        if (!from || !to || rate(from) == null || rate(to) == null) return { text: 'Не знаю такую валюту. Используйте коды: USD, EUR, CNY, GBP, KZT…' };
+        const res = amt * rate(from) / rate(to);
+        return { text: `**${mcNumFmt(amt)} ${from}** = **${mcNumFmt(Math.round(res * 100) / 100)} ${to}**\nКурс ЦБ РФ на ${new Date(r.Date).toLocaleDateString('ru-RU')}` };
+      }
+      const list = ['USD', 'EUR', 'CNY', 'GBP', 'TRY', 'KZT', 'JPY', 'AED'].filter(c => V[c]).map(c => { const v = V[c]; const d = v.Value - v.Previous; return `${c}: **${(v.Value / v.Nominal).toFixed(4)} ₽** ${d >= 0 ? '▲' : '▼'} ${Math.abs(d / v.Nominal).toFixed(3)}`; });
+      return { text: `📊 Курсы ЦБ РФ на ${new Date(r.Date).toLocaleDateString('ru-RU')}\n\n${list.join('\n')}`, kb: [['100 USD', '100 usd'], ['1000 ₽ в EUR', '1000 руб в eur']] };
+    } },
+  { id: 'translate_bot', name: 'Переводчик', e: '🌐', c1: '#f472b6', c2: '#8b5cf6', cat: 'Сервисы', desc: 'Перевод текста: русский ⇄ английский и ещё 8 языков.',
+    cmds: [['/to en', 'Переводить на английский'], ['/to de', 'на немецкий'], ['/help', 'Помощь']],
+    hello: 'Пришлите текст — переведу. Русский текст перевожу на выбранный язык (по умолчанию английский), остальное — на русский.', kb: [['🇬🇧 EN', '/to en'], ['🇩🇪 DE', '/to de'], ['🇫🇷 FR', '/to fr'], ['🇪🇸 ES', '/to es'], ['🇨🇳 ZH', '/to zh'], ['🇹🇷 TR', '/to tr']],
+    async reply(t) {
+      const LN = { en: 'английский', de: 'немецкий', fr: 'французский', es: 'испанский', it: 'итальянский', zh: 'китайский', ja: 'японский', tr: 'турецкий', uk: 'украинский', ar: 'арабский' };
+      const m = /^\/to\s+([a-z]{2})/i.exec(t); if (m) { const l = m[1].toLowerCase(); if (!LN[l]) return { text: 'Доступные языки: ' + Object.keys(LN).join(', ') }; localStorage.setItem('mc_tr_to', l); return { text: `Теперь перевожу русский текст на ${LN[l]}.` }; }
+      if (/^\/?(help|start)$/i.test(t)) return { text: this.hello, kb: this.kb };
+      const isRu = /[а-яё]/i.test(t); const tgt = localStorage.getItem('mc_tr_to') || 'en';
+      const pair = isRu ? `ru|${tgt}` : `${/[\u4e00-\u9fff]/.test(t) ? 'zh' : /[ğüşıöç]/i.test(t) ? 'tr' : /[äöüß]/i.test(t) ? 'de' : /[éèêàç]/i.test(t) ? 'fr' : /[ñ¿¡]/i.test(t) ? 'es' : 'en'}|ru`;
+      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(t.slice(0, 480))}&langpair=${pair}`).then(x => x.json());
+      const out = r?.responseData?.translatedText; if (!out) throw new Error('empty');
+      return { text: `🌐 ${pair.replace('|', ' → ').toUpperCase()}\n\n${out}` };
+    } },
+  { id: 'wiki_bot', name: 'Википедия', e: '📖', c1: '#94a3b8', c2: '#334155', cat: 'Знания', desc: 'Краткие статьи из Википедии по любому запросу.',
+    cmds: [['/random', 'Случайная статья'], ['/help', 'Помощь']],
+    hello: 'Напишите, что найти: «Московский метрополитен», «Чёрная дыра», «Пушкин»…', kb: [['🎲 Случайная', '/random'], ['Метрополитен', 'Метрополитен'], ['Солнечная система', 'Солнечная система']],
+    async reply(t) {
+      if (/^\/?(help|start)$/i.test(t)) return { text: this.hello, kb: this.kb };
+      let title = t.trim(); let sum;
+      if (/^\/random/.test(title)) sum = await fetch('https://ru.wikipedia.org/api/rest_v1/page/random/summary').then(x => x.json());
+      else {
+        const se = await fetch(`https://ru.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(title)}&limit=5&namespace=0&format=json&origin=*`).then(x => x.json());
+        const hits = se?.[1] || []; if (!hits.length) return { text: `По запросу «${title}» ничего не найдено.` };
+        sum = await fetch(`https://ru.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hits[0].replace(/ /g, '_'))}`).then(x => x.json());
+        if (hits.length > 1) sum.__more = hits.slice(1, 5);
+      }
+      const ex = String(sum.extract || '').slice(0, 900);
+      return { text: `📖 **${sum.title || title}**\n${ex}${sum.content_urls?.desktop?.page ? '\n\n' + sum.content_urls.desktop.page : ''}`, img: sum.thumbnail?.source || null, kb: (sum.__more || []).map(h => [h, h]).concat([['🎲 Случайная', '/random']]) };
+    } },
+  { id: 'calc_bot', name: 'Калькулятор', e: '🧮', c1: '#f59e0b', c2: '#ea580c', cat: 'Инструменты', desc: 'Выражения со скобками, степенями, %, sqrt, sin, log и факториалом.',
+    cmds: [['/help', 'Примеры']], hello: 'Пришлите выражение, например: `(2+3)*4^2`, `sqrt(144)+5!`, `15% от 2400`, `sin(30)`.', kb: [['(2+3)*4^2', '(2+3)*4^2'], ['15% от 2400', '15% от 2400'], ['sqrt(2)', 'sqrt(2)']],
+    async reply(t) {
+      if (/^\/?(help|start)$/i.test(t)) return { text: this.hello, kb: this.kb };
+      const pct = /^([\d.,]+)\s*%\s*(?:от|of)\s*([\d.,\s]+)$/i.exec(t.trim());
+      if (pct) { const a = parseFloat(pct[1].replace(',', '.')), b = parseFloat(pct[2].replace(/\s/g, '').replace(',', '.')); return { text: `${mcNumFmt(a)}% от ${mcNumFmt(b)} = **${mcNumFmt(a * b / 100)}**` }; }
+      try { const v = mcCalc(t.replace(/^=/, '')); return { text: `\`${t.trim()}\`\n= **${mcNumFmt(v)}**` }; }
+      catch (e) { return { text: '⚠️ ' + e.message + '\nПример: `(2+3)*4`' }; }
+    } },
+  { id: 'remind_bot', name: 'Напоминания', e: '⏰', c1: '#fb7185', c2: '#e11d48', cat: 'Инструменты', desc: 'Напомнит о деле: «через 10 минут позвонить маме», «завтра в 9:00 зарядка».',
+    cmds: [['/list', 'Мои напоминания'], ['/clear', 'Удалить все'], ['/help', 'Примеры']],
+    hello: 'Напишите, о чём и когда напомнить:\n• `через 15 минут выключить духовку`\n• `в 18:30 тренировка`\n• `завтра в 9:00 позвонить врачу`\n• `25.12 в 10:00 поздравить`\n\nНапоминания приходят, пока MetroChat открыт на любом вашем устройстве, а также при следующем входе.', kb: [['📋 Список', '/list'], ['Через 5 минут: тест', 'через 5 минут тест']],
+    async reply(t) {
+      const uid = state.user?.uid; const rem = MCB.meta?.remind_bot?.rem || {};
+      if (/^\/?(help|start)$/i.test(t)) return { text: this.hello, kb: this.kb };
+      if (/^\/list|^список/i.test(t)) { const l = Object.entries(rem).filter(([, r]) => r && !r.fired).sort((a, b) => a[1].at - b[1].at); return l.length ? { text: '📋 **Ваши напоминания**\n\n' + l.map(([, r], i) => `${i + 1}. ${new Date(r.at).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} — ${r.text}`).join('\n'), kb: l.slice(0, 6).map(([k], i) => [`🗑 ${i + 1}`, 'del:' + k]) } : { text: 'Напоминаний нет.' }; }
+      if (/^\/clear/i.test(t)) { await set(ref(db, `bot_chats/${uid}/remind_bot/rem`), null); return { text: 'Все напоминания удалены.' }; }
+      const sn = /^snooze(\d+):(.*)$/s.exec(t); if (sn) { t = `через ${sn[1]} минут ${sn[2]}`; }
+      const dl = /^del:(.+)$/.exec(t); if (dl) { await remove(ref(db, `bot_chats/${uid}/remind_bot/rem/${dl[1]}`)); return { text: 'Напоминание удалено.' }; }
+      const p = mcParseRemind(t);
+      if (!p) return { text: 'Не понял, когда напомнить. Примеры: `через 10 минут чай`, `в 21:00 сериал`, `завтра в 8:30 будильник`.' };
+      if (p.at - Date.now() > 366 * 86400000) return { text: 'Слишком далеко — максимум год вперёд.' };
+      if (p.at < Date.now() + 1000) return { text: 'Это время уже прошло — укажите время в будущем.' };
+      const r = push(ref(db, `bot_chats/${uid}/remind_bot/rem`)); await set(r, { at: p.at, text: p.text.slice(0, 300) });
+      return { text: `✅ Напомню **${new Date(p.at).toLocaleString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}**\n«${p.text}»`, kb: [['📋 Список', '/list'], ['Отменить', 'del:' + r.key]] };
+    } },
+  { id: 'game_bot', name: 'Игры', e: '🎲', c1: '#a855f7', c2: '#db2777', cat: 'Развлечения', desc: 'Угадай число, камень-ножницы-бумага, кости, монетка и викторина.',
+    cmds: [['/guess', 'Угадай число'], ['/rps', 'Камень-ножницы-бумага'], ['/dice', 'Кости'], ['/coin', 'Монетка'], ['/quiz', 'Вопрос викторины']],
+    hello: 'Во что сыграем?', kb: [['🔢 Угадай число', '/guess'], ['✊ КНБ', '/rps'], ['🎲 Кости', '/dice'], ['🪙 Монетка', '/coin'], ['❓ Викторина', '/quiz']],
+    async reply(t) {
+      const g = MCB.game; const l = t.toLowerCase().trim();
+      if (/^\/?(start|help|меню)$/.test(l)) return { text: this.hello, kb: this.kb };
+      if (l === '/guess') { g.guess = { n: mcRint(1, 100), tries: 0 }; return { text: 'Я загадал число от 1 до 100. Ваш вариант?' }; }
+      if (g.guess && /^\d+$/.test(l)) { const x = Number(l); g.guess.tries++; if (x === g.guess.n) { const tr = g.guess.tries; g.guess = null; return { text: `🎉 Угадали за ${tr} ${mcPl8(tr, 'попытку', 'попытки', 'попыток')}!`, kb: [['Ещё раз', '/guess'], ['Меню', '/start']] }; } return { text: x < g.guess.n ? '⬆️ Больше' : '⬇️ Меньше' }; }
+      if (l === '/rps') return { text: 'Ваш ход:', kb: [['✊ Камень', 'rps:0'], ['✌️ Ножницы', 'rps:1'], ['✋ Бумага', 'rps:2']] };
+      const rp = /^rps:(\d)$/.exec(l); if (rp) { const me = Number(rp[1]), bot = mcRint(0, 2); const n = ['✊ камень', '✌️ ножницы', '✋ бумага']; const res = me === bot ? 'Ничья 🤝' : (me + 1) % 3 === bot ? 'Вы выиграли 🎉' : 'Я выиграл 😎'; g.rps = g.rps || { w: 0, l: 0 }; if (res.startsWith('Вы')) g.rps.w++; else if (res.startsWith('Я')) g.rps.l++; return { text: `Вы: ${n[me]} · Я: ${n[bot]}\n**${res}**\nСчёт ${g.rps.w}:${g.rps.l}`, kb: [['✊', 'rps:0'], ['✌️', 'rps:1'], ['✋', 'rps:2']] }; }
+      if (l === '/dice') { const a = mcRint(1, 6) + mcRint(1, 6), b = mcRint(1, 6) + mcRint(1, 6); return { text: `🎲 Вы: **${a}** · Я: **${b}**\n${a > b ? 'Ваша победа!' : a < b ? 'Моя победа!' : 'Ничья!'}`, kb: [['🎲 Ещё', '/dice']] }; }
+      if (l === '/coin') return { text: mcRand01() < 0.5 ? '🪙 Орёл' : '🪙 Решка', kb: [['🪙 Ещё', '/coin']] };
+      if (l === '/quiz') { const q = mcPick(mcQuizPool(mcEarnLevel() || 3)); const opts = mcShuffle(q[1].map((x, i) => ({ x, ok: i === q[2] }))); g.quiz = opts.findIndex(o => o.ok); return { text: '❓ ' + q[0], kb: opts.map((o, i) => [o.x, 'qa:' + i]) }; }
+      const qa = /^qa:(\d)$/.exec(l); if (qa && g.quiz != null) { const ok = Number(qa[1]) === g.quiz; g.quiz = null; return { text: ok ? '✅ Верно!' : '❌ Неверно', kb: [['❓ Следующий', '/quiz']] }; }
+      return { text: 'Выберите игру:', kb: this.kb };
+    } },
+  { id: 'ums_bot', name: 'Кошелёк УМ', e: '💰', c1: '#facc15', c2: '#f97316', cat: 'Помощник', desc: 'Баланс умов, дневной лимит, серия отметок и быстрый переход к заданиям.',
+    cmds: [['/balance', 'Баланс'], ['/today', 'Прогресс за день'], ['/gifts', 'Мои подарки']], hello: 'Слежу за вашими умами. Что показать?', kb: [['💰 Баланс', '/balance'], ['📈 Сегодня', '/today'], ['🎁 Подарки', '/gifts'], ['✦ Задания', 'open:earn']],
+    async reply(t) {
+      const uid = state.user?.uid; await mcEarnLoad(true).catch(() => {});
+      if (/^\/gifts/.test(t)) { const inv = (await get(ref(db, `gift_inventory/${uid}`)).catch(() => null))?.val() || {}; const l = Object.values(inv); const sum = l.reduce((s, g) => s + (Number(g.cost) || 0), 0); return { text: l.length ? `🎁 Подарков: **${l.length}** на ${mcFmtUm(sum)} УМ\n${l.slice(0, 12).map(g => g.emoji).join(' ')}` : 'Подарков пока нет.', kb: [['Витрина', 'open:gifts']] }; }
+      if (/^\/today/.test(t)) { const tasks = mcEarnTodayTasks(); const done = tasks.filter(mcEarnDone).length; return { text: `📈 Сегодня: **${mcEarnTotal()} / ${MC_EARN_CAP} УМ**\nЗаданий: ${done}/${tasks.length} · отметка ${mcEarnDone('checkin') ? '✓' : 'не получена'}\nСерия: ${mcStreakNow()} ${mcPl8(mcStreakNow(), 'день', 'дня', 'дней')}${mcAgeOk() ? '' : '\n\n⚠️ Для заработка нужна проверка возраста по лицу.'}`, kb: [['✦ Задания', 'open:earn']] }; }
+      if (/^\/?(start|help)$/.test(t)) return { text: this.hello, kb: this.kb };
+      const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**`, kb: this.kb };
+    } },
+  { id: 'tools_bot', name: 'Утилиты', e: '🛠️', c1: '#64748b', c2: '#0f172a', cat: 'Инструменты', desc: 'Пароли, QR-коды, случайные числа, выбор из вариантов и счёт символов.',
+    cmds: [['/pass', 'Надёжный пароль'], ['/qr текст', 'QR-код'], ['/rand 1 100', 'Случайное число'], ['/pick а, б, в', 'Выбрать вариант'], ['/count текст', 'Посчитать символы']],
+    hello: 'Что сделать?\n• `/pass` — пароль\n• `/qr https://…` — QR-код\n• `/rand 1 100` — случайное число\n• `/pick чай, кофе` — выбрать\n• `/count текст` — символы и слова', kb: [['🔑 Пароль', '/pass'], ['🎯 1–100', '/rand 1 100'], ['🔳 QR MetroChat', '/qr https://1metroharta.github.io/metrochat/']],
+    async reply(t) {
+      const l = t.trim();
+      if (/^\/pass/.test(l)) { const n = Math.min(64, Math.max(8, Number(l.split(/\s+/)[1]) || 16)); const cs = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+'; const a = new Uint32Array(n); crypto.getRandomValues(a); const p = Array.from(a, x => cs[x % cs.length]).join(''); return { text: `🔑 \`${p}\`\nДлина ${n}. Пароль создан на устройстве и нигде не сохраняется — удалите это сообщение после копирования.`, kb: [['Ещё', '/pass ' + n], ['24 символа', '/pass 24']], copy: p }; }
+      let m = /^\/rand\s*(-?\d+)?\s*(-?\d+)?/.exec(l); if (m) { let a = Number(m[1] ?? 1), b = Number(m[2] ?? 100); if (a > b) [a, b] = [b, a]; return { text: `🎯 **${a + Math.floor(mcRand01() * (b - a + 1))}** (от ${a} до ${b})`, kb: [['Ещё', `/rand ${a} ${b}`]] }; }
+      m = /^\/pick\s+(.+)/s.exec(l); if (m) { const opts = m[1].split(/[,;\n]|\sили\s/).map(x => x.trim()).filter(Boolean); if (opts.length < 2) return { text: 'Нужно минимум два варианта через запятую.' }; return { text: `🎯 Мой выбор: **${mcPick(opts)}**` }; }
+      m = /^\/count\s+(.+)/s.exec(l); if (m) { const s = m[1]; return { text: `Символов: **${s.length}** (без пробелов ${s.replace(/\s/g, '').length})\nСлов: **${(s.match(/[\p{L}\p{N}]+/gu) || []).length}**` }; }
+      m = /^\/qr\s+(.+)/s.exec(l); if (m) { try { const q = window.mcQrcode(0, 'M'); q.addData(unescape(encodeURIComponent(m[1].slice(0, 900)))); q.make(); return { text: '🔳 QR-код готов', img: q.createDataURL(6, 3) }; } catch (_) { return { text: 'Слишком длинный текст для QR-кода.' }; } }
+      return { text: this.hello, kb: this.kb };
+    } }
+];
+const MC_BOT_MAP = Object.fromEntries(MC_BOTS.map(b => [b.id, b]));
+
+// ---------------- Данные ----------------
+function mcBotInit() {
+  const uid = state.user?.uid;
+  if (uid === MCB.uid) return;
+  if (MCB.metaUnsub) { try { MCB.metaUnsub(); } catch (_) {} MCB.metaUnsub = null; }
+  MCB.uid = uid || null; MCB.meta = {};
+  if (!uid) { mcBotClose(true); return; }
+  MCB.metaUnsub = onValue(ref(db, `bot_chats/${uid}`), s => {
+    MCB.meta = s.val() || {};
+    if (state.tab === 'chats') { try { renderList(); } catch (_) {} }
+    if (window.__mcOtherView === 'bots' && state.tab === 'other') mcBotsCatalog();
+    mcBotBadge();
+  }, () => {});
+}
+setInterval(mcBotInit, 1500);
+clearInterval(MCB.remTimer); MCB.remTimer = setInterval(() => { mcRemCheck(); }, 10000);
+function mcBotBadge() {
+  const n = Object.values(MCB.meta || {}).reduce((s, m) => s + (m?.added ? Number(m.unread) || 0 : 0), 0);
+  document.documentElement.dataset.mcBotUnread = String(n);
+}
+function mcBotAdded(id) { return !!MCB.meta?.[id]?.added; }
+
+async function mcBotPush(botId, msg, { notify = false } = {}) {
+  const uid = state.user?.uid; if (!uid) return;
+  const at = Date.now();
+  const clean = { from: msg.from, text: String(msg.text || '').slice(0, 4000), at };
+  if (msg.kb?.length) clean.kb = msg.kb.slice(0, 12).map(([a, b]) => [String(a).slice(0, 40), String(b).slice(0, 300)]);
+  if (msg.img) clean.img = String(msg.img).slice(0, 200000);
+  if (msg.copy) clean.copy = String(msg.copy).slice(0, 200);
+  await set(push(ref(db, `bot_msgs/${uid}/${botId}`)), clean);
+  const open = MCB.open === botId && document.visibilityState !== 'hidden';
+  const upd = { lastText: clean.text.replace(/\*\*|`/g, '').slice(0, 120) || (clean.img ? '🖼️ Изображение' : ''), lastTs: at, lastFrom: msg.from };
+  if (msg.from === 'b' && !open) upd.unread = (Number(MCB.meta?.[botId]?.unread) || 0) + 1;
+  await update(ref(db, `bot_chats/${uid}/${botId}`), upd).catch(() => {});
+  if (notify && !open) { try { playNotifSound('dm'); } catch (_) {} }
+}
+
+async function mcBotAdd(id, openAfter = true) {
+  const b = MC_BOT_MAP[id]; const uid = state.user?.uid; if (!b || !uid) return;
+  try {
+    if (!mcBotAdded(id)) {
+      await update(ref(db, `bot_chats/${uid}/${id}`), { added: true, addedAt: Date.now(), lastTs: Date.now(), lastText: '', unread: 0 });
+      MCB.meta[id] = { ...(MCB.meta[id] || {}), added: true, addedAt: Date.now() };
+      await mcBotPush(id, { from: 'b', text: b.hello, kb: b.kb });
+      toast(`@${id} добавлен в чаты`, '🤖');
+    }
+    if (openAfter) mcBotOpen(id);
+  } catch (e) { console.error(e); toast('Не удалось добавить бота. Добавьте правила bot_chats и bot_msgs в Firebase.', '⚠'); }
+}
+async function mcBotRemove(id) {
+  const uid = state.user?.uid; const b = MC_BOT_MAP[id]; if (!uid || !b) return;
+  if (!(await mcConfirm(`Удалить @${id}?`, 'Бот исчезнет из списка чатов, история переписки будет удалена.', { danger: true, okText: 'Удалить' }))) return;
+  try { await remove(ref(db, `bot_msgs/${uid}/${id}`)); await remove(ref(db, `bot_chats/${uid}/${id}`)); delete MCB.meta[id]; if (MCB.open === id) mcBotClose(); renderList(); toast('Бот удалён', '✓'); }
+  catch (_) { toast('Не удалось удалить бота', '⚠'); }
+}
+async function mcBotClear(id) {
+  const uid = state.user?.uid; if (!uid) return;
+  if (!(await mcConfirm('Очистить историю?', 'Сообщения с ботом будут удалены.', { okText: 'Очистить' }))) return;
+  await remove(ref(db, `bot_msgs/${uid}/${id}`)).catch(() => {});
+  await update(ref(db, `bot_chats/${uid}/${id}`), { lastText: '', unread: 0 }).catch(() => {});
+}
+
+// ---------------- Каталог в «Прочее» ----------------
+function mcBotsCatalog() {
+  window.__mcOtherView = 'bots';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const cats = [...new Set(MC_BOTS.map(b => b.cat))];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Боты</div></div>
+  <div class="settings-wrap mc-bots">
+    <section class="mc-bots-hero"><div class="mc-bots-hero-art">${MC_BOTS.slice(0, 6).map((b, i) => `<span style="--i:${i};background-image:url('${mcBotAvatar(b)}')"></span>`).join('')}</div><div><small>METROCHAT · БОТЫ</small><h2>Помощники в списке чатов</h2><p>Добавьте бота — он появится в «Чатах» рядом с друзьями. Пишите ему как обычному собеседнику.</p></div></section>
+    ${cats.map(cat => `<div class="discovery-section-head"><div><h3>${esc(cat)}</h3></div></div><div class="mc-bot-grid">${MC_BOTS.filter(b => b.cat === cat).map((b, i) => { const on = mcBotAdded(b.id); return `<div class="mc-bot-card" style="--i:${i}"><span class="mc-bot-av" style="background-image:url('${mcBotAvatar(b)}')"></span><div class="mc-bot-txt"><b>${esc(b.name)}</b><em>@${b.id}</em><small>${esc(b.desc)}</small></div><button type="button" class="mc-ch-join ${on ? 'on' : ''}" onclick="${on ? `mcBotOpen('${b.id}')` : `mcBotAdd('${b.id}')`}">${on ? 'Открыть' : 'Добавить'}</button></div>`; }).join('')}</div>`).join('')}
+  </div>`;
+}
+
+// ---------------- Список чатов ----------------
+const _mcGetAllChatsListR8 = getAllChatsList;
+getAllChatsList = function (...a) {
+  const items = _mcGetAllChatsListR8.apply(this, a);
+  if (!MCB.listing) return items;
+  try {
+    for (const [id, m] of Object.entries(MCB.meta || {})) {
+      const b = MC_BOT_MAP[id]; if (!b || !m?.added) continue;
+      items.push({ id: 'bot:' + id, type: 'bot', name: b.name, avatar: mcBotAvatar(b), code: id, lastMessage: m.lastText ? { text: m.lastText, senderId: m.lastFrom === 'u' ? state.user?.uid : '' } : null, lastTs: m.lastTs || m.addedAt || 0, unread: Number(m.unread) || 0, pinned: !!m.pinned, muted: !!m.muted });
+    }
+    items.sort((x, y) => { if (!!x.pinned !== !!y.pinned) return x.pinned ? -1 : 1; return (y.lastTs || 0) - (x.lastTs || 0); });
+  } catch (e) { console.warn('bots list', e); }
+  return items;
+};
+const _mcRenderAllChatsR8 = renderAllChats;
+renderAllChats = function (...a) { MCB.listing = true; try { return _mcRenderAllChatsR8.apply(this, a); } finally { MCB.listing = false; } };
+const _mcRenderItemsR8 = renderItems;
+renderItems = function (...a) {
+  const r = _mcRenderItemsR8.apply(this, a);
+  try {
+    document.querySelectorAll('#sbList .list-item[data-chat-type="bot"]').forEach(el => {
+      const id = String(el.dataset.chatId || '').replace(/^bot:/, '');
+      el.classList.add('mc-bot-item'); el.removeAttribute('oncontextmenu');
+      el.oncontextmenu = e => { e.preventDefault(); mcBotMenu(id); return false; };
+      el.classList.toggle('active', MCB.open === id);
+      const nm = el.querySelector('.list-name');
+      if (nm && !nm.querySelector('.mc-bot-tag')) nm.insertAdjacentHTML('beforeend', `<span class="mc-bot-tag">@${esc(id)}</span>`);
+    });
+  } catch (_) {}
+  return r;
+};
+const _mcOpenChatBotsR8 = openChat;
+openChat = function (chatId, type, ...rest) {
+  if (type === 'bot') return mcBotOpen(String(chatId).replace(/^bot:/, ''));
+  if (MCB.open) mcBotClose(true);
+  return _mcOpenChatBotsR8.call(this, chatId, type, ...rest);
+};
+const _mcCloseChatMobileR8 = closeChatMobile;
+closeChatMobile = function (...a) {
+  const back = state.returnToOther;
+  if (MCB.open) mcBotClose(true);
+  const r = _mcCloseChatMobileR8.apply(this, a);
+  if (back === 'bots' && window.innerWidth <= 760) { try { mcBotsCatalog(); } catch (_) {} }
+  return r;
+};
+
+// ---------------- Окно бота ----------------
+function mcBotOpen(id) {
+  const b = MC_BOT_MAP[id]; if (!b) return;
+  if (!mcBotAdded(id)) return mcBotAdd(id, true);
+  if (['settings', 'other', 'favorites'].includes(state.tab)) {
+    state.returnToOther = state.tab === 'other' ? (window.__mcOtherView || 'home') : null;
+    try { switchTab('chats'); } catch (_) {}
+  }
+  $('chatPanel')?.classList.remove('hidden');
+  if (state.chat) { try { showChatPlaceholder(); } catch (_) {} }
+  MCB.open = id; MCB.msgs = [];
+  const panel = $('chatPanel'); if (!panel) return;
+  $('mcBotPane')?.remove();
+  const pane = document.createElement('div'); pane.id = 'mcBotPane'; pane.className = 'mc-bot-pane';
+  pane.innerHTML = `<div class="mc-bot-head"><button type="button" class="chat-back" onclick="mcBotClose()">←</button><span class="mc-bot-av sm" style="background-image:url('${mcBotAvatar(b)}')"></span><div class="mc-bot-hinfo"><b>${esc(b.name)} <span class="mc-bot-badge">BOT</span></b><small id="mcBotStatus">@${id} · бот</small></div><button type="button" class="chat-icon-btn" onclick="mcBotMenu('${id}')" title="Меню">⋯</button></div>
+    <div class="mc-bot-msgs" id="mcBotMsgs"><div class="mc-bot-intro"><span class="mc-bot-av lg" style="background-image:url('${mcBotAvatar(b)}')"></span><b>${esc(b.name)}</b><small>@${id}</small><p>${esc(b.desc)}</p></div></div>
+    <div class="mc-bot-kb" id="mcBotKb"></div>
+    <div class="mc-bot-in"><button type="button" class="chat-input-btn" id="mcBotCmdBtn" title="Команды">/</button><textarea id="mcBotInput" rows="1" maxlength="1000" placeholder="Сообщение для @${id}…"></textarea><button type="button" class="chat-send" id="mcBotSend">➤</button></div>
+    <div class="mc-bot-cmds hidden" id="mcBotCmds">${b.cmds.map(([c, d]) => `<button type="button" data-c="${esc(c)}"><b>${esc(c)}</b><small>${esc(d)}</small></button>`).join('')}</div>`;
+  panel.appendChild(pane);
+  requestAnimationFrame(() => pane.classList.add('open'));
+  if (window.innerWidth <= 760) { document.body.classList.add('chat-open'); $('mobileNav')?.classList.add('hidden'); $('sidebar')?.classList.add('hide-mobile'); panel.classList.add('show-mobile'); }
+  const inp = $('mcBotInput');
+  inp.addEventListener('input', () => { inp.style.height = 'auto'; inp.style.height = Math.min(140, inp.scrollHeight) + 'px'; $('mcBotCmds').classList.toggle('hidden', inp.value !== '/'); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); mcBotSendText(); } });
+  $('mcBotSend').onclick = () => mcBotSendText();
+  $('mcBotCmdBtn').onclick = () => $('mcBotCmds').classList.toggle('hidden');
+  pane.querySelectorAll('#mcBotCmds button').forEach(x => x.addEventListener('click', () => { $('mcBotCmds').classList.add('hidden'); const c = x.dataset.c; if (/\s/.test(c) && /текст|а, б|1 100/.test(c)) { inp.value = c.split(' ')[0] + ' '; inp.focus(); } else mcBotSendText(c); }));
+  const uid = state.user?.uid;
+  if (MCB.msgUnsub) { try { MCB.msgUnsub(); } catch (_) {} }
+  MCB.msgUnsub = onValue(query(ref(db, `bot_msgs/${uid}/${id}`), orderByChild('at'), limitToLast(150)), s => {
+    if (MCB.open !== id) return;
+    MCB.msgs = Object.entries(s.val() || {}).map(([k, v]) => ({ k, ...v })).sort((x, y) => (x.at || 0) - (y.at || 0));
+    mcBotRender();
+  }, () => {});
+  if (Number(MCB.meta?.[id]?.unread)) update(ref(db, `bot_chats/${uid}/${id}`), { unread: 0 }).catch(() => {});
+  try { renderList(); } catch (_) {}
+  if (window.innerWidth > 760) setTimeout(() => inp.focus(), 60);
+}
+function mcBotClose(silent) {
+  const id = MCB.open; MCB.open = null;
+  if (MCB.msgUnsub) { try { MCB.msgUnsub(); } catch (_) {} MCB.msgUnsub = null; }
+  const pane = $('mcBotPane');
+  if (pane) { pane.classList.remove('open'); pane.classList.add('closing'); setTimeout(() => pane.remove(), silent ? 0 : 220); }
+  if (!silent && window.innerWidth <= 760) closeChatMobile();
+  if (id) { try { renderList(); } catch (_) {} }
+}
+function mcBotRender() {
+  const box = $('mcBotMsgs'); if (!box) return;
+  const b = MC_BOT_MAP[MCB.open]; if (!b) return;
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  let lastDay = '';
+  const html = MCB.msgs.map((m, i) => {
+    const d = new Date(m.at || 0); const day = d.toDateString(); let sep = '';
+    if (day !== lastDay) { lastDay = day; sep = `<div class="mc-bot-day">${d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}</div>`; }
+    const fresh = i >= MCB.msgs.length - 2 && Date.now() - (m.at || 0) < 4000;
+    return `${sep}<div class="mc-bot-msg ${m.from === 'u' ? 'out' : 'in'} ${fresh ? 'fresh' : ''}">${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy">` : ''}<div>${mcBotFmt(m.text)}</div>${m.copy ? `<button type="button" class="mc-bot-copy" data-copy="${esc(m.copy)}">⧉ Копировать</button>` : ''}<span class="t">${d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</span></div>`;
+  }).join('');
+  box.innerHTML = `<div class="mc-bot-intro"><span class="mc-bot-av lg" style="background-image:url('${mcBotAvatar(b)}')"></span><b>${esc(b.name)}</b><small>@${b.id}</small><p>${esc(b.desc)}</p></div>${html}${MCB.typing ? '<div class="mc-bot-msg in typing"><i></i><i></i><i></i></div>' : ''}`;
+  box.querySelectorAll('.mc-bot-copy').forEach(x => x.addEventListener('click', () => { navigator.clipboard?.writeText(x.dataset.copy).then(() => toast('Скопировано', '⧉')).catch(() => {}); }));
+  const last = [...MCB.msgs].reverse().find(m => m.from === 'b');
+  const kb = $('mcBotKb');
+  if (kb) { const keys = (MCB.msgs[MCB.msgs.length - 1]?.from === 'b' ? last?.kb : null) || []; kb.innerHTML = keys.map(([l, p]) => `<button type="button" data-p="${esc(p)}">${esc(l)}</button>`).join(''); kb.classList.toggle('on', keys.length > 0); kb.querySelectorAll('button').forEach(x => x.addEventListener('click', () => mcBotSendText(x.dataset.p, x.textContent))); }
+  if (atBottom || MCB.msgs[MCB.msgs.length - 1]?.from === 'u' || MCB.typing) box.scrollTop = box.scrollHeight;
+}
+async function mcBotSendText(payload, label) {
+  const id = MCB.open; const b = MC_BOT_MAP[id]; if (!b) return;
+  const inp = $('mcBotInput');
+  let text = payload != null ? String(payload) : (inp?.value || '').trim();
+  if (!text) return;
+  if (payload == null && inp) { inp.value = ''; inp.style.height = 'auto'; }
+  $('mcBotCmds')?.classList.add('hidden');
+  // Навигационные кнопки
+  const nav = /^open:(\w+)$/.exec(text);
+  if (nav) {
+    const go = nav[1];
+    mcBotClose(true);
+    try { switchTab('other'); } catch (_) {}
+    if (go === 'earn') mcEarnOpen('other'); else if (go === 'channels') renderOtherChannels(); else if (go === 'gifts') renderGiftShop(); else if (go === 'wheel') { renderGiftShop(); setTimeout(() => mcOpenWheel(), 200); }
+    return;
+  }
+  const visible = label || text;
+  const isPayload = /^(rps|qa|del|snooze\d+):/.test(text);
+  try { await mcBotPush(id, { from: 'u', text: isPayload ? visible : text }); } catch (e) { return toast('Сообщение не отправлено. Проверьте правила Firebase (bot_msgs).', '⚠'); }
+  MCB.typing = true; mcBotRender(); const st = $('mcBotStatus'); if (st) st.textContent = 'печатает…';
+  const t0 = Date.now();
+  let ans;
+  try { ans = await b.reply(text); } catch (e) { console.warn('bot', id, e); ans = { text: '⚠️ Сервис временно недоступен. Попробуйте ещё раз чуть позже.' }; }
+  const wait = Math.max(0, 450 + Math.min(900, String(ans?.text || '').length * 4) - (Date.now() - t0));
+  await new Promise(r => setTimeout(r, wait));
+  MCB.typing = false; if (st) st.textContent = `@${id} · бот`;
+  if (MCB.open !== id) { await mcBotPush(id, { from: 'b', ...ans }).catch(() => {}); return; }
+  try { await mcBotPush(id, { from: 'b', ...ans }); mcEarnSfx('tap'); } catch (_) { mcBotRender(); }
+}
+async function mcBotMenu(id) {
+  const b = MC_BOT_MAP[id]; if (!b) return;
+  const pinned = !!MCB.meta?.[id]?.pinned;
+  const v = await mcChoose(`@${id}`, { icon: '🤖', options: [{ value: 'pin', label: pinned ? 'Открепить' : 'Закрепить в списке', emoji: '📌' }, { value: 'cmds', label: 'Команды бота', emoji: '/' }, { value: 'clear', label: 'Очистить историю', emoji: '🧹' }, { value: 'del', label: 'Удалить бота', emoji: '🗑' }] });
+  const uid = state.user?.uid;
+  if (v === 'pin') { await update(ref(db, `bot_chats/${uid}/${id}`), { pinned: !pinned }).catch(() => {}); }
+  else if (v === 'cmds') mcAlert(`Команды @${id}`, '', { icon: b.e, html: `<div class="mc-bot-cmdlist">${b.cmds.map(([c, d]) => `<div><code>${esc(c)}</code><span>${esc(d)}</span></div>`).join('')}</div>` });
+  else if (v === 'clear') mcBotClear(id);
+  else if (v === 'del') mcBotRemove(id);
+}
+
+Object.assign(window, { mcBotsCatalog, mcBotAdd, mcBotOpen, mcBotClose, mcBotMenu, mcBotRemove, mcBotSendText, mcCalc, mcParseRemind });
+
+// =====================================================================
+// MetroChat · Round 8 — новая главная «Прочее»: кошелёк, сервисы, боты, утилиты, игры
+// =====================================================================
+const MC_HOME_ITEMS = {
+  services: [
+    { k: 'earn', i: '✦', t: 'Заработать', s: 'Задания дня · до 140 УМ', c: '#8b5cf6' },
+    { k: 'channels', i: '📡', t: 'Каналы', s: 'Подборки, поиск и свои каналы', c: '#3b82f6' },
+    { k: 'bots', i: '🤖', t: 'Боты', s: 'Погода, курсы, переводчик и др.', c: '#14b8a6' },
+    { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина, колесо и аукцион', c: '#ec4899' }
+  ],
+  tools: [
+    { k: 'weather', i: '🌤️', t: 'Погода', s: 'Прогноз на 10 дней' },
+    { k: 'app:currency', i: '💱', t: 'Курсы валют', s: 'ЦБ РФ и конвертер' },
+    { k: 'app:todo', i: '✅', t: 'Задачи', s: 'Дела и сроки' },
+    { k: 'app:timer', i: '⏱️', t: 'Таймер', s: 'Секундомер, помодоро' },
+    { k: 'notes', i: '📝', t: 'Заметки', s: 'На этом устройстве' },
+    { k: 'calculator', i: '🧮', t: 'Калькулятор', s: 'Быстрые вычисления' },
+    { k: 'app:units', i: '📏', t: 'Конвертер', s: 'Длина, вес, температура' }
+  ],
+  games: [
+    { k: 'app:g2048', i: '🧩', t: '2048', s: 'Головоломка со свайпами' },
+    { k: 'app:ttt', i: '⭕', t: 'Крестики-нолики', s: 'Против бота или вдвоём' },
+    { k: 'bot:game_bot', i: '🎲', t: 'Игровой бот', s: 'КНБ, кости, викторина' }
+  ]
+};
+function mcHomeGo(k) {
+  if (k === 'earn') return mcEarnOpen('other');
+  if (k === 'channels') return renderOtherChannels();
+  if (k === 'bots') return mcBotsCatalog();
+  if (k === 'gifts') return void renderGiftShop();
+  if (k === 'weather') return void renderWeatherApp();
+  if (k === 'notes') return renderMetroNotes();
+  if (k === 'calculator') return renderMetroCalculator();
+  if (k.startsWith('app:')) return mcOpenApp(k.slice(4));
+  if (k.startsWith('bot:')) return mcBotOpen(k.slice(4));
+}
+renderOtherHome = function () {
+  window.__mcOtherView = 'home';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const me = state.profile || {}; const name = me.firstName || String(me.displayName || '').split(' ')[0] || 'друг';
+  const h = new Date().getHours(); const hi = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
+  const tile = (x, n) => `<button type="button" class="mc-home-tile" data-go="${x.k}" style="--i:${n}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></button>`;
+  const botsOn = MC_BOTS.filter(b => mcBotAdded(b.id));
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Назад</button><div class="settings-title">Прочее</div></div>
+  <div class="settings-wrap mc-home">
+    <section class="mc-home-hero">
+      <div class="mc-home-orbs"><i></i><i></i><i></i></div>
+      <small>${esc(hi)}, ${esc(name)}</small>
+      <div class="mc-home-bal"><span id="mcHomeBal">…</span><em>УМ</em></div>
+      <div class="mc-home-prog"><div class="mc-home-bar"><i id="mcHomeBar" style="width:0%"></i></div><span id="mcHomeToday">Сегодня 0 / ${MC_EARN_CAP}</span></div>
+      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button><button type="button" id="mcHomeWheel">🎡 Колесо</button></div>
+    </section>
+    <div class="mc-home-sec"><h3>Сервисы</h3></div>
+    <div class="mc-home-big">${MC_HOME_ITEMS.services.map((x, n) => `<button type="button" class="mc-home-card" data-go="${x.k}" style="--i:${n};--c:${x.c}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small><span class="mc-home-arr">→</span></button>`).join('')}</div>
+    ${botsOn.length ? `<div class="mc-home-sec"><h3>Мои боты</h3><button type="button" class="mc-home-more" data-go="bots">Все →</button></div><div class="mc-home-bots">${botsOn.map((b, n) => `<button type="button" data-go="bot:${b.id}" style="--i:${n}"><span class="mc-bot-av" style="background-image:url('${mcBotAvatar(b)}')"></span><small>${esc(b.name)}</small>${Number(MCB.meta[b.id]?.unread) ? `<em>${MCB.meta[b.id].unread}</em>` : ''}</button>`).join('')}</div>` : ''}
+    <div class="mc-home-sec"><h3>Утилиты</h3></div>
+    <div class="mc-home-grid">${MC_HOME_ITEMS.tools.map(tile).join('')}</div>
+    <div class="mc-home-sec"><h3>Игры</h3></div>
+    <div class="mc-home-grid">${MC_HOME_ITEMS.games.map(tile).join('')}</div>
+  </div>`;
+  wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { try { mcEarnSfx('tap'); } catch (_) {} mcHomeGo(b.dataset.go); }));
+  $('mcHomeWheel')?.addEventListener('click', async () => { await renderGiftShop(); setTimeout(() => { try { mcOpenWheel(); } catch (_) {} }, 150); });
+  (async () => {
+    try {
+      const [bal] = await Promise.all([readGiftBalance(), mcEarnLoad(true).catch(() => {})]);
+      if (window.__mcOtherView !== 'home') return;
+      const el = $('mcHomeBal'); if (el) mcCountUp(el, Number(bal) || 0);
+      const t = mcEarnTotal(); const bar = $('mcHomeBar'); if (bar) bar.style.width = Math.round(t / MC_EARN_CAP * 100) + '%';
+      const td = $('mcHomeToday'); if (td) td.textContent = `Сегодня ${t} / ${MC_EARN_CAP} УМ${mcAgeOk() ? '' : ' · нужна проверка возраста'}`;
+    } catch (_) { const el = $('mcHomeBal'); if (el) el.textContent = '—'; }
+  })();
+};
+function mcCountUp(el, to, ms = 700) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = mcFmtUm(to); return; }
+  const t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / ms); const e = 1 - Math.pow(1 - k, 3); el.textContent = mcFmtUm(Math.round(to * e)); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+Object.assign(window, { renderOtherHome, mcHomeGo, mcCountUp });
 
 Object.assign(window, {
   onbNext, onbPrev, onbFinish, onbAvatarChange, randomUsername,
