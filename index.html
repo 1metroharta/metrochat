@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+<link rel="manifest" href="/metrochat/manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="/metrochat/icon-192.png">
+<link rel="apple-touch-icon" href="/metrochat/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MetroChat">
 <title>MetroChat</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -2529,65 +2534,6 @@ html[data-theme] .settings-wrap .mc-ch-search input#mcChSearch{ background:trans
 html[data-theme] .settings-wrap #mcMA,html[data-theme] .settings-wrap #mcSA,html[data-theme] .settings-wrap #mcTI{ border-width:2px !important; background:var(--mc-card) !important; }
 html[data-theme] .settings-wrap #mcMA:focus,html[data-theme] .settings-wrap #mcSA:focus,html[data-theme] .settings-wrap #mcTI:focus{ border-color:var(--tc,var(--accent)) !important; }
 
-/* MetroChat hub — вкладка «Прочее» */
-.mc-hub{display:flex;flex-direction:column;gap:14px;padding-bottom:36px;max-width:920px}
-.mc-hub-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-.mc-hub-hi{margin:0;font-size:13px;font-weight:650;color:var(--text-2)}
-.mc-hub-top h2{margin:2px 0 0;font-size:28px;line-height:1.05;letter-spacing:-.045em;font-weight:800}
-.settings-wrap .mc-hub-wallet{display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:118px;padding:10px 14px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-align:right}
-.settings-wrap .mc-hub-wallet b{font-size:22px;line-height:1.1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;font-weight:800;color:var(--text)}
-.settings-wrap .mc-hub-wallet small{font-size:11px;font-weight:650;color:var(--text-2)}
-.mc-hub-search{position:relative;display:block}
-.mc-hub-search svg{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--text-3);pointer-events:none}
-.mc-hub-search input{width:100%;height:48px;padding:0 14px 0 42px;font-size:15px}
-.mc-hub-today{display:flex;align-items:center;gap:12px;padding:14px 12px 14px 16px;border-radius:18px;border:1px solid var(--border);background:var(--surface)}
-.mc-hub-today b{display:block;font-size:14px;font-weight:750}
-.mc-hub-today span{display:block;margin-top:3px;font-size:12.5px;line-height:1.4;color:var(--text-2)}
-.settings-wrap .mc-hub-go{margin-left:auto;flex:none;height:40px;padding:0 14px;border-radius:12px;border:0;background:var(--accent)!important;color:#fff!important;font-weight:750;font-size:13.5px}
-.mc-hub-age{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;border:1px dashed color-mix(in srgb,var(--accent) 55%,transparent);background:var(--mc-accent-soft,rgba(79,140,255,.1));color:var(--text);text-align:left}
-.mc-hub-age .mc-hub-txt small{color:var(--text-2)}
-.mc-hub-cols{display:flex;flex-direction:column;gap:8px}
-.mc-hub-sec h3{margin:12px 2px 8px;font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
-.mc-hub-list{display:flex;flex-direction:column;gap:6px}
-.mc-hub-row{display:flex;align-items:center;gap:2px;min-height:64px;padding:4px;border-radius:16px;border:1px solid var(--border);background:var(--surface)}
-.mc-hub-row[hidden]{display:none!important}
-.mc-hub-sec[hidden]{display:none!important}
-.settings-wrap .mc-hub-open{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:8px;border-radius:12px;background:transparent;color:var(--text);text-align:left}
-.settings-wrap .mc-hub-open:hover{background:var(--surface-2)}
-.mc-hub-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
-.mc-hub-ico svg{width:20px;height:20px}
-.mc-hub-txt{min-width:0;display:flex;flex-direction:column;gap:2px}
-.settings-wrap .mc-hub-txt b{font-size:14.5px;font-weight:720;color:var(--text);letter-spacing:-.01em}
-.mc-hub-txt small{font-size:12px;line-height:1.3;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.settings-wrap .mc-hub-pin{width:40px;height:40px;border-radius:12px;flex:none;color:var(--text-3);font-size:16px;background:transparent}
-.settings-wrap .mc-hub-pin.on{color:var(--accent)}
-.mc-hub-none{margin:8px 2px 0;font-size:13px;color:var(--text-2)}
-.mc-clock-add{display:flex;gap:8px;margin-bottom:12px}
-.mc-clock-add select{flex:1;min-width:0;height:46px;border-radius:14px;padding:0 10px}
-.mc-clock-add .btn{width:auto;padding:0 16px}
-.mc-clock-list{display:flex;flex-direction:column;gap:8px}
-.mc-clock-row{display:flex;align-items:center;gap:10px;padding:12px 8px 12px 12px;border-radius:14px;background:var(--surface-2)}
-.mc-clock-row div{flex:1;min-width:0}
-.mc-clock-row b,.mc-clock-row small{display:block}
-.mc-clock-row small{color:var(--text-2);font-size:12px;margin-top:2px}
-.mc-clock-row strong{font-variant-numeric:tabular-nums;font-size:18px;letter-spacing:-.03em}
-.mc-pass{display:flex;flex-direction:column;gap:12px}
-.mc-pass-out{display:block;padding:16px;border-radius:14px;background:var(--surface-2);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:16px;line-height:1.45;word-break:break-all;color:var(--text)}
-.mc-pass-len{display:flex;align-items:center;gap:10px}
-.mc-pass-len input{flex:1}
-.mc-pass-opts{display:flex;flex-wrap:wrap;gap:8px 14px}
-.mc-pass-opts label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:650}
-@media (min-width:780px){
-  .mc-hub-cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-  .mc-hub-sec h3{margin-top:0}
-  .mc-hub-cols > div > .mc-hub-sec + .mc-hub-sec h3{margin-top:16px}
-}
-@media (max-width:420px){
-  .mc-hub-top h2{font-size:24px}
-  .mc-hub-today{align-items:flex-start;flex-direction:column}
-  .settings-wrap .mc-hub-go{margin-left:0}
-}
-
 </style>
 </head>
 <body>
@@ -2674,6 +2620,7 @@ var s=document.getElementById('splash');if(s){var b=document.createElement('div'
       <button class="sb-tab stories-toggle" id="storiesToggle" onclick="toggleStoriesPanel()" title="Истории"><span>👤</span><span class="stories-dot"></span></button>
       <button class="sb-tab active" data-tab="chats" onclick="switchTab('chats')"><span>💬</span> Чаты <span class="count hidden" id="cntChats">0</span></button>
       <button class="sb-tab" data-tab="groups" onclick="switchTab('groups')"><span>👥</span> Группы</button>
+      <button class="sb-tab" data-tab="bots" onclick="switchTab('bots')"><span>🤖</span> Боты</button>
       <button class="sb-tab" data-tab="other" onclick="switchTab('other')"><span>✦</span> Прочее</button>
       <button class="sb-tab" data-tab="contacts" onclick="switchTab('contacts')"><span>🔍</span> Поиск</button>
       <button class="sb-tab" data-tab="favorites" onclick="switchTab('favorites')" title="Избранное"><span>⭐</span> Избранное</button>
@@ -2720,6 +2667,7 @@ var s=document.getElementById('splash');if(s){var b=document.createElement('div'
     <div class="mobile-nav-inner">
       <button class="mobile-nav-item active" data-nav="chats" onclick="switchTab('chats')"><span class="mobile-nav-icon">💬</span><span>Чаты</span><span class="nav-count hidden" id="navCntChats">0</span></button>
       <button class="mobile-nav-item" data-nav="groups" onclick="switchTab('groups')"><span class="mobile-nav-icon">👥</span><span>Группы</span></button>
+      <button class="mobile-nav-item" data-nav="bots" onclick="switchTab('bots')"><span class="mobile-nav-icon">🤖</span><span>Боты</span></button>
       <button class="mobile-nav-item" data-nav="other" onclick="switchTab('other')"><span class="mobile-nav-icon">✦</span><span>Прочее</span></button>
       <button class="mobile-nav-item" data-nav="settings" onclick="switchTab('settings')"><span class="mobile-nav-icon">⚙️</span><span>Настройки</span></button>
     </div>
@@ -3686,8 +3634,8 @@ function switchTab(tab) {
   state.tab = tab;
   qsa('.sb-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   qsa('.mobile-nav-item').forEach(t => t.classList.toggle('active', t.dataset.nav === tab));
-  const isSettings = tab === 'settings', isOther = tab === 'other', isContacts = tab === 'contacts', isFavorites = tab === 'favorites', isChannels = tab === 'channels';
-  const isPanel = isSettings || isOther;
+  const isSettings = tab === 'settings', isOther = tab === 'other', isContacts = tab === 'contacts', isFavorites = tab === 'favorites', isChannels = tab === 'channels', isBots = tab === 'bots';
+  const isPanel = isSettings || isOther || isBots;
   const mobile = window.innerWidth <= 760;
   if (mobile) {
     document.body.classList.remove('chat-open');
@@ -3697,11 +3645,12 @@ function switchTab(tab) {
   $('settingsBtn').classList.toggle('active', isSettings);
   $('sbSearchWrap').style.display = (isPanel || isContacts || isFavorites) ? 'none' : 'block';
   $('sbSearch').placeholder = isChannels ? 'Поиск каналов…' : 'Поиск...';
-  $('sbNav').style.display = (isSettings || isOther) ? 'none' : 'flex';
-  $('sbList').style.display = (isSettings || isOther) ? 'none' : 'block';
+  $('sbNav').style.display = (isSettings || isOther || isBots) ? 'none' : 'flex';
+  $('sbList').style.display = (isSettings || isOther || isBots) ? 'none' : 'block';
   $('settingsPanel').classList.toggle('hidden', !isPanel);
   $('chatPanel').classList.toggle('hidden', isPanel || isFavorites);
   if (isSettings) renderSettings();
+  else if (isBots) mcBotsHub();
   else if (isOther) renderOtherHome();
   else if (isContacts) renderContactsSearch();
   else if (isFavorites) loadAndRenderFavorites();
@@ -7253,7 +7202,7 @@ function mcShowGroupPreview(g, code) {
 
 
 // ---------- Истории (переработка) ----------
-const STORY_LIFETIME = 24 * 60 * 60 * 1000;
+const STORY_LIFETIME = 48 * 60 * 60 * 1000;
 const MC_STORY_DAILY = 5;
 const MC_STORY_BGS = {
   midnight: 'linear-gradient(160deg,#0b1531,#1e1b4b 55%,#155e75)', ocean: 'linear-gradient(160deg,#0ea5e9,#1d4ed8 55%,#312e81)',
@@ -7547,86 +7496,6 @@ async function deleteStory(id) {
 
 
 // ---------- Новые приложения в «Прочее» ----------
-const MC_CLOCKS_PRESET = [
-  ['Моё время', ''],
-  ['Москва', 'Europe/Moscow'],
-  ['Калининград', 'Europe/Kaliningrad'],
-  ['Самара', 'Europe/Samara'],
-  ['Екатеринбург', 'Asia/Yekaterinburg'],
-  ['Новосибирск', 'Asia/Novosibirsk'],
-  ['Владивосток', 'Asia/Vladivostok'],
-  ['Минск', 'Europe/Minsk'],
-  ['Алматы', 'Asia/Almaty'],
-  ['Тбилиси', 'Asia/Tbilisi'],
-  ['Лондон', 'Europe/London'],
-  ['Берлин', 'Europe/Berlin'],
-  ['Дубай', 'Asia/Dubai'],
-  ['Дели', 'Asia/Kolkata'],
-  ['Бангкок', 'Asia/Bangkok'],
-  ['Токио', 'Asia/Tokyo'],
-  ['Сидней', 'Australia/Sydney'],
-  ['Нью-Йорк', 'America/New_York'],
-  ['Лос-Анджелес', 'America/Los_Angeles']
-];
-function mcClockFmt(tz) {
-  const opt = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  const day = { weekday: 'short', day: 'numeric', month: 'short' };
-  try {
-    const time = new Intl.DateTimeFormat('ru-RU', tz ? { ...opt, timeZone: tz } : opt).format(new Date());
-    const date = new Intl.DateTimeFormat('ru-RU', tz ? { ...day, timeZone: tz } : day).format(new Date());
-    return { time, date };
-  } catch (_) { return { time: '—', date: '' }; }
-}
-function mcAppClocks() {
-  let zones = mcLS.get('mc_clocks', [
-    { n: 'Моё время', z: '' },
-    { n: 'Москва', z: 'Europe/Moscow' },
-    { n: 'Лондон', z: 'Europe/London' },
-    { n: 'Токио', z: 'Asia/Tokyo' }
-  ]);
-  mcAppShell('Часы мира', `<div class="mc-card"><div class="mc-clock-add"><select id="mcClkAdd">${MC_CLOCKS_PRESET.map(([n, z]) => `<option value="${esc(z)}" data-n="${esc(n)}">${esc(n)}</option>`).join('')}</select><button type="button" class="btn btn-primary" id="mcClkGo">Добавить</button></div><div id="mcClkList" class="mc-clock-list"></div></div>`);
-  const draw = () => {
-    const box = $('mcClkList'); if (!box) return;
-    box.innerHTML = zones.map((c, i) => {
-      const f = mcClockFmt(c.z);
-      return `<div class="mc-clock-row"><div><b>${esc(c.n)}</b><small>${esc(f.date)}</small></div><strong>${esc(f.time)}</strong><button type="button" class="mini-btn" data-i="${i}" aria-label="Убрать">✕</button></div>`;
-    }).join('') || '<p class="set-sub">Добавьте город.</p>';
-    box.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { zones.splice(Number(b.dataset.i), 1); mcLS.set('mc_clocks', zones); draw(); });
-  };
-  $('mcClkGo').onclick = () => {
-    const sel = $('mcClkAdd'); const z = sel.value; const n = sel.selectedOptions[0]?.dataset.n || sel.value || 'Город';
-    if (zones.some(c => c.z === z && c.n === n)) return toast('Уже в списке', 'ℹ');
-    zones.push({ n, z }); mcLS.set('mc_clocks', zones); draw();
-  };
-  draw();
-  const iv = setInterval(draw, 1000);
-  mcAppCleanup = () => clearInterval(iv);
-}
-function mcAppPass() {
-  mcAppShell('Пароли', `<div class="mc-card mc-pass"><output id="mcPassOut" class="mc-pass-out">—</output><div class="mc-pass-len"><span>Длина</span><input id="mcPassLen" type="range" min="8" max="48" value="16"><b id="mcPassN">16</b></div><div class="mc-pass-opts"><label><input type="checkbox" id="mcPassU" checked> A–Z</label><label><input type="checkbox" id="mcPassL" checked> a–z</label><label><input type="checkbox" id="mcPassD" checked> 0–9</label><label><input type="checkbox" id="mcPassS" checked> !@#</label></div><div class="mc-tm-btns"><button type="button" class="btn btn-primary" id="mcPassNew">Новый пароль</button><button type="button" class="btn btn-secondary" id="mcPassCopy">Копировать</button></div><p class="set-sub">Пароль создаётся на устройстве и никуда не отправляется. Сохраните его в менеджере паролей и удалите с экрана.</p></div>`);
-  const gen = () => {
-    const n = Number($('mcPassLen').value) || 16;
-    $('mcPassN').textContent = String(n);
-    let cs = '';
-    if ($('mcPassU').checked) cs += 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-    if ($('mcPassL').checked) cs += 'abcdefghijkmnopqrstuvwxyz';
-    if ($('mcPassD').checked) cs += '23456789';
-    if ($('mcPassS').checked) cs += '!@#$%^&*-_=+?';
-    if (cs.length < 4) { $('mcPassOut').textContent = 'Отметьте наборы символов'; return; }
-    const buf = new Uint32Array(n);
-    crypto.getRandomValues(buf);
-    $('mcPassOut').textContent = Array.from(buf, x => cs[x % cs.length]).join('');
-  };
-  ['mcPassLen', 'mcPassU', 'mcPassL', 'mcPassD', 'mcPassS'].forEach(id => $(id).addEventListener('input', gen));
-  $('mcPassNew').onclick = gen;
-  $('mcPassCopy').onclick = () => {
-    const v = $('mcPassOut').textContent || '';
-    if (!v || v.includes(' ')) return;
-    navigator.clipboard?.writeText(v).then(() => toast('Пароль скопирован', '⧉')).catch(() => toast('Не удалось скопировать', '⚠'));
-  };
-  gen();
-}
-
 let mcAppCleanup = null;
 function mcAppShell(title, body) {
   if (mcAppCleanup) { try { mcAppCleanup(); } catch (_) {} mcAppCleanup = null; }
@@ -7636,7 +7505,7 @@ function mcAppShell(title, body) {
   back?.addEventListener('click', () => { if (mcAppCleanup) { try { mcAppCleanup(); } catch (_) {} mcAppCleanup = null; } }, { once: true });
 }
 function mcOpenApp(name) {
-  const map = { currency: mcAppCurrency, todo: mcAppTodo, timer: mcAppTimer, units: mcAppUnits, clocks: mcAppClocks, pass: mcAppPass, g2048: mcApp2048, ttt: mcAppTtt };
+  const map = { currency: mcAppCurrency, todo: mcAppTodo, timer: mcAppTimer, units: mcAppUnits, g2048: mcApp2048, ttt: mcAppTtt };
   (map[name] || renderOtherHome)();
 }
 const mcLS = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} } };
@@ -7914,7 +7783,10 @@ const MC_FAQ = [
     ['Почему виджет погоды показывает другой источник?', 'Погода загружается из нескольких сервисов (Open-Meteo, MET Norway, wttr.in). Если один недоступен — например, без VPN — автоматически используется следующий, а приложение запоминает самый быстрый.']
   ] },
   { cat: 'Приложения и прочее', items: [
-    ['Где находятся мини-приложения?', 'Во вкладке <b>«Прочее»</b>: погода, курсы валют, задачи, таймер и помодоро, конвертер единиц, игры 2048 и крестики-нолики.'],
+    ['Где находятся мини-приложения?', 'Инструменты — во вкладке <b>«Прочее»</b>, боты и конструктор своих ботов — во вкладке <b>«Боты»</b>, а сайты (YouTube, МЭШ, Google) — во встроенном браузере в «Прочее».'],
+    ['Что умеет Metro AI?', 'Метро AI — нейросеть в разделе «Прочее»: отвечает на вопросы, переводит и помогает управлять чатами и группами. Работает без VPN.'],
+    ['Как включить вход по паролю или лицу?', '<b>Настройки → Безопасность → Экран блокировки</b>. Пароль будет запрашиваться при каждом входе, лицо запоминается на устройстве.'],
+    ['Как сменить язык интерфейса?', 'В настройках (Язык) или кнопкой 🌐 на экране входа. Доступны русский, английский и украинский.'],
     ['Сохраняются ли мои задачи и рекорды?', 'Да, они хранятся локально на этом устройстве и не пропадают после перезагрузки страницы.'],
     ['Как сменить тему оформления?', 'В настройках оформления выберите светлую или тёмную тему. Для чатов и групп можно задать отдельные фоны для каждой темы.']
   ] }
@@ -8826,7 +8698,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = '3.0';
+const MC_VERSION = '4.0';
 const MC_SUPPORT_EMAIL = 'metrochatsupport@gmail.com';
 
 // ---------- Поддержка на экранах входа/регистрации ----------
@@ -9008,11 +8880,12 @@ const MC_WHATSNEW = {
   version: MC_VERSION,
   slides: [
     { title: 'MetroChat обновился', text: 'Версия ' + MC_VERSION + '. Листайте вправо — расскажем, что нового.', emoji: '✨', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
-    { title: 'Трансляция геопозиции', text: 'Нажмите «+» → «Геопозиция» и выберите 15 мин, 45 мин или 1 ч 30 мин. Точка обновляется раз в 30 секунд и почти не тратит трафик.', emoji: '📡', bg: 'linear-gradient(160deg,#10b981,#0d9488 55%,#155e75)' },
-    { title: 'Таблицы и форматирование', text: 'Отправляйте таблицы через «+»: растягивайте строки и столбцы, вставляйте картинки. Выделите текст — и сделайте его жирным, курсивом или зачёркнутым.', emoji: '📋', bg: 'linear-gradient(160deg,#f97316,#db2777 55%,#4c1d95)' },
-    { title: 'Музыка в историях', text: 'Добавьте к истории один из 8 фоновых треков. Мелодии создаются прямо на устройстве — без загрузок.', emoji: '🎵', bg: 'linear-gradient(160deg,#7c3aed,#4c1d95 60%,#1e1b4b)' },
-    { title: '25 подарков и обои тем', text: 'В магазине появилось 11 новых подарков, а у каждой темы — свои обои чата. Выбрать обои можно в настройках.', emoji: '🎁', bg: 'linear-gradient(160deg,#f472b6,#be185d 60%,#831843)' },
-    { title: 'Удобнее и быстрее', text: 'Голосовые — в меню «+». Уведомления можно выключить в любом чате, группе или канале. Фото и голосовые теперь загружаются один раз и хранятся на устройстве.', emoji: '⚡', bg: 'linear-gradient(160deg,#0b1531,#1e1b4b 55%,#155e75)' }
+    { title: 'Metro AI — ваш умный помощник', text: 'Нейросеть прямо в мессенджере: отвечает на вопросы, переводит, придумывает тексты и помогает управлять чатами, группами и ботами. Ищите её в разделе «Прочее».', emoji: '🧠', bg: 'linear-gradient(160deg,#7c3aed,#397cff 55%,#0ea5e9)' },
+    { title: 'Новый раздел «Боты»', text: 'Все боты теперь в одной вкладке. Можно создавать собственных ботов с командами и ответами — конструктор внутри.', emoji: '🤖', bg: 'linear-gradient(160deg,#14b8a6,#0d9488 55%,#155e75)' },
+    { title: 'Вход по паролю и лицу', text: 'В настройках → Безопасность можно включить запрос пароля при каждом входе и вход по лицу при первом входе на устройстве.', emoji: '🔐', bg: 'linear-gradient(160deg,#f97316,#db2777 55%,#4c1d95)' },
+    { title: 'Встроенный браузер', text: 'YouTube, МЭШ, Google и другие сайты — прямо в MetroChat. Раздел «Прочее» → Браузер.', emoji: '🌐', bg: 'linear-gradient(160deg,#2563eb,#4c1d95 60%,#1e1b4b)' },
+    { title: 'Истории: компактнее и удобнее', text: 'Плашка историй занимает меньше места, показываются только контакты, закрыть просмотр можно свайпом вниз. Истории живут 2 дня.', emoji: '📱', bg: 'linear-gradient(160deg,#f472b6,#be185d 60%,#831843)' },
+    { title: 'Ещё быстрее и экономнее', text: 'Жидкое стекло и плавные анимации на всех устройствах, тактильный отклик кнопок, меньше расхода трафика и выше контраст темы.', emoji: '⚡', bg: 'linear-gradient(160deg,#0b1531,#1e1b4b 55%,#155e75)' }
   ]
 };
 const MC_LOGO_SVG = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27d8f2"/><stop offset=".55" stop-color="#397cff"/><stop offset="1" stop-color="#8758f6"/></linearGradient></defs><rect width="96" height="96" rx="48" fill="url(#g)"/><path d="M26 68V30h8l14 20 14-20h8v38h-9V45L48 62 35 45v23z" fill="#fff"/></svg>');
@@ -10924,9 +10797,13 @@ function mcSetMain() {
       sRow({ ico: '⏰', c: '#f59e0b', label: 'Запланированные', sub: schedN ? `${schedN} ${mcPl6(schedN, ['сообщение', 'сообщения', 'сообщений'])}` : 'Отложенные и повторяющиеся', act: 'mcOpenScheduledList()' }),
     ])}
     ${sGroup('Безопасность', [
-      sRow({ ico: '🔐', c: '#0ea5e9', label: 'Сменить пароль', act: 'openChangePassword()' }),
-      sRow({ ico: '💻', c: '#6366f1', label: 'Мои устройства', sub: 'Активные сеансы входа', act: 'openMyDevices()' }),
-      sRow({ ico: '🛡️', c: '#10b981', label: 'Двухфакторная аутентификация', sub: mc2faStatusText(), id: 'mc2faSub', act: 'mcOpen2faSettings()' }),
+      sRow({ ico: '🛡️', c: '#0ea5e9', label: 'Блокировка и вход', sub: 'Пароль, лицо, 2FA, устройства', act: "mcSetGo('security')" }),
+    ])}
+    ${sGroup('Язык', [
+      sRow({ ico: '🌐', c: '#8b5cf6', label: 'Язык приложения', sub: MC_LANG_NAME(), right: '', act: 'mcLangOpen()' }),
+    ])}
+    ${sGroup('Поддержка', [
+      sRow({ ico: '💜', c: '#a855f7', label: 'Поддержать проект', sub: 'Поддержка пока не работает', act: 'mcSupportNote()' }),
     ])}
     ${sGroup('Другое', [
       sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку', act: 'openVerificationModal()' }),
@@ -10938,7 +10815,7 @@ function mcSetMain() {
       sRow({ ico: '⎋', c: '#64748b', label: 'Выйти', act: 'confirmLogout()' }),
       sRow({ ico: '⚠️', c: '#dc2626', label: 'Удалить аккаунт', act: 'confirmDeleteAccount()', danger: true }),
     ])}
-    <div class="ms-foot">MetroChat · v23</div>
+    <div class="ms-foot" id="mcSettingsVersion">MetroChat · v${MC_VERSION}</div>
   </div>`;
 }
 
@@ -11982,11 +11859,7 @@ async function mcEarnLoad(force = false) {
     get(ref(db, `age_verify/${uid}`)).catch(() => null)
   ]);
   MCE.uid = uid; MCE.day = day; MCE.rec = d?.val() || { total: 0, tasks: {} };
-  MCE.streak = s?.val() || null;
-  const remoteAge = a?.val() || null;
-  const localAge = mcAgeLocal();
-  MCE.age = remoteAge?.verified && (remoteAge.at || 0) >= (localAge?.at || 0) ? remoteAge : (localAge?.verified ? localAge : remoteAge || null);
-  MCE.loaded = true;
+  MCE.streak = s?.val() || null; MCE.age = a?.val() || null; MCE.loaded = true;
 }
 function mcEarnTotal() { return Math.max(0, Math.min(MC_EARN_CAP, Number(MCE.rec?.total) || 0)); }
 function mcEarnLeft() { return MC_EARN_CAP - mcEarnTotal(); }
@@ -12112,8 +11985,8 @@ function mcEarnRender() {
       <div class="mc-earn-pills"><span>🔥 Серия ${st} ${mcPl8(st, 'день', 'дня', 'дней')}</span><span>✓ ${doneCnt}/${tasks.length} заданий</span><span id="mcEarnBal">💰 …</span></div>
     </div>
   </section>
-  ${ageOk ? `<button type="button" class="mc-age-ok" onclick="mcAgeOpen()"><span>🪪</span><div><b>Возраст подтверждён</b><small>Категория ${esc(MCE.age.band)} · задания подобраны под ваш уровень</small></div><em>Пройти заново</em></button>`
-    : `<section class="mc-age-gate"><div class="mc-age-gate-art"><span></span>◎</div><div><h3>Подтвердите возраст камерой</h3><p>Короткая проверка MediaPipe в браузере: лицо в круге, одно моргание и улыбка или лёгкий поворот. Кадры не сохраняются и не уходят с устройства.</p><button type="button" class="btn btn-primary" onclick="mcAgeOpen()">Пройти проверку</button></div></section>`}
+  ${ageOk ? `<button type="button" class="mc-age-ok" onclick="mcAgeOpen()"><span>🪪</span><div><b>Возраст подтверждён по лицу</b><small>Категория ${esc(MCE.age.band)} · задания подобраны под ваш уровень</small></div><em>Пройти заново</em></button>`
+    : `<section class="mc-age-gate"><div class="mc-age-gate-art"><span></span>🙂</div><div><h3>Подтвердите возраст по лицу</h3><p>Заработок умов доступен после короткой проверки камерой: посмотрите прямо и поверните голову. Видео обрабатывается только на вашем устройстве и никуда не отправляется.</p><button type="button" class="btn btn-primary" onclick="mcAgeOpen()">Пройти проверку · 20 секунд</button></div></section>`}
   <button type="button" class="mc-checkin ${checkDone ? 'done' : ''} ${ageOk ? '' : 'locked'}" onclick="mcEarnCheckin()" ${checkDone ? 'disabled' : ''}>
     <div class="mc-checkin-days">${Array.from({ length: 7 }, (_, i) => { const n = i + 1; const on = checkDone ? n <= Math.min(7, st) : n < Math.min(7, nextStreak); const cur = !checkDone && n === Math.min(7, nextStreak); return `<i class="${on ? 'on' : ''} ${cur ? 'cur' : ''}">${n === 7 ? '🎁' : n}</i>`; }).join('')}</div>
     <div class="mc-checkin-txt"><b>${checkDone ? 'Отметка получена' : 'Ежедневная отметка'}</b><small>${checkDone ? `Завтра: +${mcCheckinReward(st + 1)} УМ` : `+${mcCheckinReward(nextStreak)} УМ · чем длиннее серия, тем больше награда`}</small></div>
@@ -12128,7 +12001,7 @@ function mcEarnRender() {
       <span class="mc-task-foot">${done ? `<em class="ok">✓ +${r?.r || 0} УМ</em>` : lock === 'age' ? '<em>🔒 Нужна проверка</em>' : lock === 'cap' ? '<em>Лимит на сегодня</em>' : `<em>до ${d.max} УМ</em><i>Начать →</i>`}</span>
     </button>`;
   }).join('')}</div>
-  <div class="mc-earn-rules"><b>Как это работает</b><ul><li>За день можно заработать не больше ${MC_EARN_CAP} УМ — это общий лимит для всех заданий и отметки.</li><li>Награда зависит от результата: чем точнее и быстрее, тем больше умов.</li><li>Сложность подбирается по возрасту, подтверждённому камерой.</li><li>Выигрыши в колесе, продажи на аукционе и обмен подарков в лимит не входят.</li></ul></div>
+  <div class="mc-earn-rules"><b>Как это работает</b><ul><li>За день можно заработать не больше ${MC_EARN_CAP} УМ — это общий лимит для всех заданий и отметки.</li><li>Награда зависит от результата: чем точнее и быстрее, тем больше умов.</li><li>Обмен подарков в лимит не входит.</li></ul></div>
   ${hist.length ? `<div class="discovery-section-head"><div><h3>История за сегодня</h3></div></div><div class="mc-earn-hist">${hist.map(([id, r]) => `<div><span>${id === 'checkin' ? '📅' : MC_EARN_DEFS[id]?.ico || '•'}</span><b>${id === 'checkin' ? 'Ежедневная отметка' : esc(MC_EARN_DEFS[id]?.title || id)}</b><small>${new Date(r.at || 0).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</small><em>+${r.r || 0}</em></div>`).join('')}</div>` : ''}`;
   readGiftBalance().then(b => { const x = $('mcEarnBal'); if (x) x.textContent = `💰 ${mcFmtUm(b)} УМ`; mcSetBalanceUI(b); }).catch(() => {});
 }
@@ -12478,96 +12351,54 @@ startGiftEarning = function () { return mcEarnOpen('gifts'); };
 
 Object.assign(window, { startGiftEarning, mcEarnOpen, mcEarnBack, mcEarnStart, mcEarnQuit, mcEarnCheckin, mcEarnLoad, mcEarnGrant, mcEarnRender });
 
-// MetroChat — проверка возраста: MediaPipe Face Landmarker (WASM).
-// Детектор лица, моргание и поза считаются на устройстве.
-// В профиль пишется только оценка возраста, не кадры.
-const MC_MP_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22';
-const MC_MP_MODEL = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
-const MCAGE = { land: null, loading: null, stream: null, run: 0, timer: 0, mode: 'VIDEO' };
+// =====================================================================
+// MetroChat · Round 8 — проверка возраста по лицу (для заработка умов)
+// Нейросеть face-api (TensorFlow.js) работает прямо в браузере: кадры
+// не покидают устройство, в базу сохраняется только оценка возраста.
+// Проверка «живости»: нужно посмотреть прямо и повернуть голову в обе стороны.
+// =====================================================================
 
-function mcAgeKey() { return 'mc_age_verify_' + (state.user?.uid || 'local'); }
-function mcAgeLocal() { try { return JSON.parse(localStorage.getItem(mcAgeKey()) || 'null'); } catch (_) { return null; } }
-function mcAgeWriteLocal(rec) { try { localStorage.setItem(mcAgeKey(), JSON.stringify(rec)); } catch (_) {} }
-function mcAgeOk() {
-  const a = MCE.age;
-  return !!(a && a.verified && Number(a.age) > 0 && a.band);
-}
+const MC_FACE_CDN = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15';
+const MCAGE = { api: null, loading: null, stream: null, raf: 0, run: 0 };
+const MC_AGE_MAX_TRIES = 5;
 
-async function mcFaceReady() {
-  if (MCAGE.land) return MCAGE.land;
-  if (!MCAGE.loading) {
-    MCAGE.loading = (async () => {
-      const vision = await import(/* @vite-ignore */ `${MC_MP_BASE}/vision_bundle.mjs`);
-      const files = await vision.FilesetResolver.forVisionTasks(`${MC_MP_BASE}/wasm`);
-      const base = { modelAssetPath: MC_MP_MODEL };
-      const common = { runningMode: 'VIDEO', numFaces: 1, outputFaceBlendshapes: true, outputFacialTransformationMatrixes: false };
-      const land = await vision.FaceLandmarker.createFromOptions(files, { baseOptions: { ...base, delegate: 'CPU' }, ...common });
-      MCAGE.land = land;
-      MCAGE.mode = 'VIDEO';
-      return land;
-    })().catch(e => { MCAGE.loading = null; throw e; });
-  }
+function mcAgeOk() { const a = MCE.age; return !!(a && a.verified && a.method === 'face' && Number(a.age) > 0 && a.band); }
+function mcAgeTriesKey() { return `mc_age_tries_${state.user?.uid || ''}_${mcDayKey()}`; }
+function mcAgeTries() { try { return Number(localStorage.getItem(mcAgeTriesKey()) || 0); } catch (_) { return 0; } }
+function mcAgeTry() { try { localStorage.setItem(mcAgeTriesKey(), String(mcAgeTries() + 1)); } catch (_) {} }
+
+async function mcFaceApi() {
+  if (MCAGE.api) return MCAGE.api;
+  if (!MCAGE.loading) MCAGE.loading = (async () => {
+    const api = await import(/* @vite-ignore */ `${MC_FACE_CDN}/dist/face-api.esm.js`);
+    const fa = api.default && api.default.nets ? api.default : api;
+    try { if (fa.tf?.setBackend) { const ok = await fa.tf.setBackend('webgl').catch(() => false); if (!ok) await fa.tf.setBackend('cpu'); } await fa.tf?.ready?.(); } catch (_) {}
+    const M = `${MC_FACE_CDN}/model`;
+    await Promise.all([fa.nets.tinyFaceDetector.loadFromUri(M), fa.nets.faceLandmark68TinyNet.loadFromUri(M), fa.nets.ageGenderNet.loadFromUri(M)]);
+    MCAGE.api = fa; return fa;
+  })().catch(e => { MCAGE.loading = null; throw e; });
   return MCAGE.loading;
 }
-
-function mcLmDist(lm, a, b) {
-  const p = lm[a], q = lm[b];
-  if (!p || !q) return 0;
-  return Math.hypot((p.x - q.x), (p.y - q.y));
+// Один кадр: лицо, поворот головы (yaw), возраст
+async function mcFaceProbe(fa, input) {
+  const opt = new fa.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.45 });
+  const r = await fa.detectSingleFace(input, opt).withFaceLandmarks(true).withAgeAndGender();
+  if (!r) return null;
+  const pts = r.landmarks.positions; const L = pts[36], R = pts[45], N = pts[30];
+  const span = Math.max(1, R.x - L.x);
+  const yaw = (N.x - L.x) / span - 0.5;
+  const W = input.videoWidth || input.naturalWidth || input.width || 1;
+  return { age: r.age, yaw, size: r.detection.box.width / W, score: r.detection.score };
 }
-function mcFaceBox(lm) {
-  let minX = 1, maxX = 0, minY = 1, maxY = 0;
-  for (const p of lm) {
-    if (p.x < minX) minX = p.x;
-    if (p.x > maxX) maxX = p.x;
-    if (p.y < minY) minY = p.y;
-    if (p.y > maxY) maxY = p.y;
-  }
-  return { w: maxX - minX, h: maxY - minY, cx: (minX + maxX) / 2, cy: (minY + maxY) / 2 };
-}
-function mcPose(lm) {
-  const L = lm[33], R = lm[263], N = lm[1];
-  if (!L || !R || !N) return { yaw: 0 };
-  const span = Math.max(1e-4, R.x - L.x);
-  return { yaw: (N.x - (L.x + R.x) / 2) / span };
-}
-function mcShape(bs, name) {
-  const cats = bs?.categories || (Array.isArray(bs) ? bs[0]?.categories : null);
-  if (!cats) return 0;
-  for (const c of cats) if (c.categoryName === name) return Number(c.score) || 0;
-  return 0;
-}
-function mcAgeFromLm(lm) {
-  const faceH = mcLmDist(lm, 10, 152);
-  const faceW = mcLmDist(lm, 234, 454);
-  if (faceH < 0.02 || faceW < 0.02) return null;
-  const eyeOpen = (mcLmDist(lm, 159, 145) + mcLmDist(lm, 386, 374)) / 2;
-  const lower = mcLmDist(lm, 2, 152);
-  const nose = mcLmDist(lm, 6, 2) || mcLmDist(lm, 168, 1);
-  const rRound = faceW / faceH;
-  const rEye = eyeOpen / faceH;
-  const rLower = lower / faceH;
-  const rNose = nose / faceH;
-  // Детское лицо круглее, с крупными глазами и короткой нижней третью.
-  let raw = 6 + (rLower - 0.28) * 150 + (0.075 - rEye) * 380 + (0.92 - rRound) * 55 + (rNose - 0.10) * 70;
-  const age = Math.round(Math.max(6, Math.min(75, raw * 0.72 + 22 * 0.28)));
-  return Number.isFinite(age) ? age : null;
-}
-
+// Для проверки на статичном изображении (используется в тестах)
 async function mcAgeEstimateImage(src) {
-  const land = await mcFaceReady();
-  if (MCAGE.mode !== 'IMAGE') { await land.setOptions({ runningMode: 'IMAGE' }); MCAGE.mode = 'IMAGE'; }
+  const fa = await mcFaceApi();
   const img = await new Promise((res, rej) => { const im = new Image(); im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = rej; im.src = src; });
-  const r = land.detect(img);
-  const lm = r?.faceLandmarks?.[0];
-  if (!lm) return null;
-  const pose = mcPose(lm);
-  return { age: mcAgeFromLm(lm), yaw: pose.yaw, size: mcFaceBox(lm).w, score: 1 };
+  return mcFaceProbe(fa, img);
 }
 
 function mcAgeStop() {
-  MCAGE.run++;
-  clearTimeout(MCAGE.timer);
+  MCAGE.run++; cancelAnimationFrame(MCAGE.raf);
   try { MCAGE.stream?.getTracks().forEach(t => t.stop()); } catch (_) {}
   MCAGE.stream = null;
 }
@@ -12575,22 +12406,23 @@ function mcAgeClose() { mcAgeStop(); mcCloseSheet('mcAgeSheet'); }
 
 async function mcAgeOpen() {
   try { await mcEarnLoad(); } catch (_) {}
-  mcFaceReady().catch(() => {});
+  const a = MCE.age;
   mcSheet('mcAgeSheet', `${mcSheetHead('Проверка возраста', 'mcAgeSheet')}<div class="mc-age" id="mcAgeBox"></div>`, { cls: 'mc-age-overlay' });
   const el = document.getElementById('mcAgeSheet');
   const origClose = el?.querySelector('.group-info-back');
   if (origClose) origClose.setAttribute('onclick', 'mcAgeClose()');
-  mcAgeIntro(MCE.age);
+  mcAgeIntro(a);
 }
 function mcAgeIntro(a) {
   const box = $('mcAgeBox'); if (!box) return;
+  const tries = mcAgeTries();
   box.innerHTML = `
-    <div class="mc-age-hero"><div class="mc-age-scan"><span></span><b>◎</b></div></div>
-    <h2>${mcAgeOk() ? `Текущая оценка: ${esc(a.band)}` : 'Проверка живого лица'}</h2>
-    <p class="mc-age-lead">Нужна, чтобы открыть задания. Работает движок MediaPipe в вашем браузере: кадры никуда не отправляются.</p>
-    <ol class="mc-age-steps"><li><b>Лицо целиком в круге</b><small>Смотрите прямо, нужен обычный свет</small></li><li><b>Моргните один раз</b><small>Так мы отличаем человека от фотографии</small></li><li><b>Улыбнитесь или чуть поверните голову</b><small>Достаточно любого из двух движений</small></li></ol>
-    <div class="mc-age-privacy">Кадры не сохраняются. В профиле остаётся только возраст, категория заданий и дата проверки.</div>
-    <button type="button" class="btn btn-primary" id="mcAgeGo">Включить камеру</button>`;
+    <div class="mc-age-hero"><div class="mc-age-scan"><span></span><b>🙂</b></div></div>
+    <h2>${mcAgeOk() ? `Текущая оценка: ${esc(a.band)}` : 'Подтвердите возраст по лицу'}</h2>
+    <p class="mc-age-lead">Это нужно для заработка умов: задания подбираются по возрасту, а проверка защищает от накрутки ботами.</p>
+    <ol class="mc-age-steps"><li><b>Посмотрите прямо в камеру</b><small>Лицо целиком в круге, хорошее освещение</small></li><li><b>Поверните голову в одну сторону</b><small>Медленно, примерно на 30°</small></li><li><b>Затем в другую сторону</b><small>Так мы убеждаемся, что перед камерой живой человек</small></li></ol>
+    <div class="mc-age-privacy">🔒 Видео обрабатывается нейросетью прямо на вашем устройстве. Кадры не сохраняются и никуда не отправляются — в профиле хранится только оценка возраста и дата проверки.</div>
+    ${tries >= MC_AGE_MAX_TRIES ? `<div class="mc-age-err">Сегодня использованы все ${MC_AGE_MAX_TRIES} попыток. Попробуйте завтра.</div>` : `<button type="button" class="btn btn-primary" id="mcAgeGo">Включить камеру</button><small class="mc-age-tries">Попыток сегодня: ${MC_AGE_MAX_TRIES - tries} из ${MC_AGE_MAX_TRIES}</small>`}`;
   $('mcAgeGo')?.addEventListener('click', mcAgeStart);
 }
 function mcAgeSay(t, sub = '') { const a = $('mcAgeSay'); if (a) a.textContent = t; const b = $('mcAgeSub'); if (b) b.textContent = sub; }
@@ -12599,96 +12431,76 @@ function mcAgeRing(f) { const c = $('mcAgeRing'); if (c) { const C = 2 * Math.PI
 
 async function mcAgeStart() {
   const box = $('mcAgeBox'); if (!box) return;
+  if (mcAgeTries() >= MC_AGE_MAX_TRIES) return mcAgeIntro(MCE.age);
   box.innerHTML = `
-    <div class="mc-age-cam"><video id="mcAgeVid" playsinline muted autoplay></video><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="118" class="bg"/><circle cx="120" cy="120" r="118" class="fg" id="mcAgeRing"/></svg></div>
-    <h3 id="mcAgeSay">Готовим камеру…</h3><p id="mcAgeSub" class="mc-age-lead">Модель скачивается один раз и дальше работает без сети</p>
-    <ul class="mc-age-chk" id="mcAgeChk"><li>Лицо в кадре</li><li>Моргание</li><li>Улыбка или поворот</li></ul>
+    <div class="mc-age-cam"><video id="mcAgeVid" playsinline muted autoplay></video><svg viewBox="0 0 240 240"><circle cx="120" cy="120" r="118" class="bg"/><circle cx="120" cy="120" r="118" class="fg" id="mcAgeRing"/></svg><div class="mc-age-arrow" id="mcAgeArrow"></div></div>
+    <h3 id="mcAgeSay">Загружаем нейросеть…</h3><p id="mcAgeSub" class="mc-age-lead">Первый запуск может занять несколько секунд</p>
+    <ul class="mc-age-chk" id="mcAgeChk"><li>Лицо в кадре</li><li>Поворот в одну сторону</li><li>Поворот в другую сторону</li></ul>
     <button type="button" class="btn btn-secondary" onclick="mcAgeCancel()">Отмена</button>`;
   mcAgeRing(0);
   const run = ++MCAGE.run;
+  let fa;
   try {
-    const [land, stream] = await Promise.all([
-      mcFaceReady(),
-      navigator.mediaDevices?.getUserMedia
-        ? navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false })
-        : Promise.reject(Object.assign(new Error('nocam'), { name: 'NotFoundError' }))
+    const [api, stream] = await Promise.all([
+      mcFaceApi(),
+      navigator.mediaDevices?.getUserMedia ? navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false }) : Promise.reject(Object.assign(new Error('nocam'), { name: 'NotFoundError' }))
     ]);
+    fa = api;
     if (run !== MCAGE.run) { stream.getTracks().forEach(t => t.stop()); return; }
-    if (MCAGE.mode !== 'VIDEO') { await land.setOptions({ runningMode: 'VIDEO' }); MCAGE.mode = 'VIDEO'; }
     MCAGE.stream = stream;
-    const v = $('mcAgeVid');
-    v.srcObject = stream;
-    await v.play().catch(() => {});
-    await new Promise(r => { if (v.readyState >= 2 && v.videoWidth) r(); else v.onloadeddata = () => r(); setTimeout(r, 2500); });
-    if (run !== MCAGE.run) return;
-    mcAgeLoop(land, run);
+    const v = $('mcAgeVid'); v.srcObject = stream; await v.play().catch(() => {});
+    await new Promise(r => { if (v.readyState >= 2) r(); else v.onloadeddata = () => r(); setTimeout(r, 3000); });
   } catch (e) {
     console.warn('age verify start', e);
-    const msg = e?.name === 'NotAllowedError' || e?.name === 'SecurityError'
-      ? 'Нет доступа к камере. Разрешите камеру для этой страницы в настройках браузера и нажмите «Повторить».'
-      : e?.name === 'NotFoundError' || e?.name === 'OverconstrainedError'
-        ? 'Камера не найдена. Нужна фронтальная камера.'
-        : 'Не удалось загрузить MediaPipe. Проверьте интернет и повторите — файл модели нужен только при первом запуске.';
+    const msg = e?.name === 'NotAllowedError' ? 'Нет доступа к камере. Разрешите камеру для сайта в настройках браузера и попробуйте снова.'
+      : e?.name === 'NotFoundError' || e?.name === 'OverconstrainedError' ? 'Камера не найдена. Для проверки нужна фронтальная камера.'
+      : 'Не удалось загрузить нейросеть проверки. Проверьте интернет и попробуйте ещё раз.';
     mcAgeStop();
     if (box.isConnected) box.innerHTML = `<div class="mc-age-err">${esc(msg)}</div><button type="button" class="btn btn-primary" onclick="mcAgeStart()">Повторить</button><button type="button" class="btn btn-secondary" onclick="mcAgeClose()">Закрыть</button>`;
+    return;
   }
+  mcAgeTry();
+  mcAgeLoop(fa, run);
 }
 function mcAgeCancel() { mcAgeStop(); mcAgeIntro(MCE.age); }
 
-function mcAgeLoop(land, run) {
+function mcAgeLoop(fa, run) {
   const v = $('mcAgeVid'); if (!v) return;
-  const st = { phase: 0, ages: [], t0: Date.now(), hold: 0, blink: 'open', live: 0, lastTs: -1, noFace: 0 };
-  mcAgeStep(0); mcAgeSay('Посмотрите прямо в камеру', 'Держите лицо внутри круга');
+  const st = { phase: 0, ages: [], firstSign: 0, noFace: 0, t0: Date.now(), lastOk: 0, holdA: 0, holdB: 0, multi: 0 };
+  mcAgeStep(0); mcAgeSay('Посмотрите прямо в камеру', 'Держите лицо в круге');
+  const arrow = $('mcAgeArrow');
+  let busy = false;
   const tick = async () => {
-    if (run !== MCAGE.run || !v.isConnected) return;
-    if (Date.now() - st.t0 > 50000) return mcAgeFail('Время вышло. Встаньте ближе к свету и повторите: лицо, моргание, улыбка.');
-    const t0 = performance.now();
-    try {
-      if (v.readyState >= 2 && v.videoWidth) {
-        let ts = performance.now();
-        if (ts <= st.lastTs) ts = st.lastTs + 1;
-        st.lastTs = ts;
-        const res = land.detectForVideo(v, ts);
-        const lm = res?.faceLandmarks?.[0];
-        const faces = res?.faceLandmarks?.length || 0;
-        if (faces > 1) mcAgeSay('В кадре должен быть один человек', 'Попросите других отойти');
-        else if (!lm) { st.noFace++; if (st.noFace > 4) mcAgeSay('Лицо не найдено', 'Приблизьтесь и включите свет'); }
+    if (run !== MCAGE.run) return;
+    if (!v.isConnected) return mcAgeStop();
+    if (Date.now() - st.t0 > 60000) return mcAgeFail('Время вышло. Попробуйте ещё раз при хорошем освещении.');
+    if (!busy) {
+      busy = true;
+      try {
+        const r = await mcFaceProbe(fa, v);
+        if (run !== MCAGE.run) return;
+        if (!r) { st.noFace++; if (st.noFace > 6) mcAgeSay('Лицо не найдено', 'Приблизьтесь и добавьте света'); }
+        else if (r.size < 0.18) { mcAgeSay('Подойдите ближе', 'Лицо должно занимать бо́льшую часть круга'); }
         else {
           st.noFace = 0;
-          const box = mcFaceBox(lm);
-          const pose = mcPose(lm);
-          const blink = (mcShape(res.faceBlendshapes?.[0] || res.faceBlendshapes, 'eyeBlinkLeft') + mcShape(res.faceBlendshapes?.[0] || res.faceBlendshapes, 'eyeBlinkRight')) / 2;
-          const smile = (mcShape(res.faceBlendshapes?.[0] || res.faceBlendshapes, 'mouthSmileLeft') + mcShape(res.faceBlendshapes?.[0] || res.faceBlendshapes, 'mouthSmileRight')) / 2;
-          if (box.w < 0.18) mcAgeSay('Подойдите ближе', 'Лицо должно занимать большую часть круга');
-          else if (box.w > 0.78) mcAgeSay('Чуть отойдите', 'Круг должен вмещать всё лицо');
-          else if (box.cx < 0.28 || box.cx > 0.72) mcAgeSay('Поставьте лицо по центру', '');
-          else if (st.phase === 0) {
-            if (Math.abs(pose.yaw) < 0.12 && blink < 0.45) {
-              const age = mcAgeFromLm(lm);
-              if (age) st.ages.push(age);
-              mcAgeRing(Math.min(1, st.ages.length / 8) * 0.4);
-              mcAgeSay('Отлично, не двигайтесь', `Снимок ${Math.min(8, st.ages.length)} из 8`);
-            } else mcAgeSay('Смотрите прямо', 'Глаза открыты, голова ровно');
-            if (st.ages.length >= 8) { st.phase = 1; st.blink = blink > 0.45 ? 'closed' : 'open'; mcAgeStep(1); mcAgeSay('Теперь моргните', 'Один обычный моргание'); }
+          if (st.phase === 0) {
+            if (Math.abs(r.yaw) < 0.09) { st.ages.push(r.age); mcAgeRing(st.ages.length / 10 * 0.5); mcAgeSay('Отлично, не двигайтесь', `Анализ… ${Math.min(100, Math.round(st.ages.length / 10 * 100))}%`); }
+            else mcAgeSay('Посмотрите прямо в камеру', 'Не поворачивайте голову');
+            if (st.ages.length >= 10) { st.phase = 1; mcAgeStep(1); mcAgeSay('Медленно поверните голову в сторону', 'Влево или вправо'); if (arrow) arrow.className = 'mc-age-arrow both'; }
           } else if (st.phase === 1) {
-            mcAgeRing(0.45 + (st.blink === 'reopen' ? 0.2 : st.blink === 'closed' ? 0.12 : 0));
-            if (st.blink === 'open' && blink > 0.55) st.blink = 'closed';
-            else if (st.blink === 'closed' && blink < 0.28) st.blink = 'reopen';
-            if (st.blink === 'reopen') { st.phase = 2; st.live = 0; mcAgeStep(2); mcAgeRing(0.72); mcAgeSay('Улыбнитесь или поверните голову', 'Подойдёт любое из двух'); }
-            else mcAgeSay('Моргните один раз', 'Медленно закройте и откройте глаза');
+            if (Math.abs(r.yaw) > 0.13) { st.holdA++; if (st.holdA >= 2) { st.firstSign = Math.sign(r.yaw); st.phase = 2; mcAgeStep(2); mcAgeRing(0.75); mcAgeSay('Теперь в другую сторону', 'Медленно поверните голову обратно и дальше'); if (arrow) arrow.className = 'mc-age-arrow ' + (st.firstSign > 0 ? 'r' : 'l'); } }
+            else st.holdA = 0;
           } else if (st.phase === 2) {
-            const turned = Math.abs(pose.yaw) > 0.1;
-            if (smile > 0.42 || turned) st.live++; else st.live = 0;
-            mcAgeSay(smile > 0.42 ? 'Улыбка видна' : turned ? 'Поворот виден' : 'Улыбнитесь или чуть поверните голову', 'Держите лицо в круге');
-            if (st.live >= 2) { mcAgeRing(1); mcAgeStep(3); return mcAgeReview(st.ages); }
+            if (Math.sign(r.yaw) === -st.firstSign && Math.abs(r.yaw) > 0.13) { st.holdB++; if (st.holdB >= 2) { st.phase = 3; mcAgeRing(1); mcAgeStep(3); if (arrow) arrow.className = 'mc-age-arrow'; return mcAgeDone(st.ages); } }
+            else st.holdB = 0;
           }
         }
-      }
-    } catch (e) { console.warn('probe', e); }
-    if (run !== MCAGE.run) return;
-    MCAGE.timer = setTimeout(tick, Math.max(40, 90 - (performance.now() - t0)));
+      } catch (e) { console.warn('probe', e); }
+      finally { busy = false; }
+    }
+    MCAGE.raf = requestAnimationFrame(tick);
   };
-  MCAGE.timer = setTimeout(tick, 60);
+  MCAGE.raf = requestAnimationFrame(tick);
 }
 function mcAgeFail(msg) {
   mcAgeStop();
@@ -12697,36 +12509,30 @@ function mcAgeFail(msg) {
 }
 function mcMedian(arr) { const a = arr.slice().sort((x, y) => x - y); const m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; }
 
-function mcAgeReview(ages) {
+async function mcAgeDone(ages) {
   mcAgeStop();
-  const age = Math.max(6, Math.min(75, Math.round(mcMedian(ages.filter(n => Number.isFinite(n))))));
-  const band = mcAgeBand(age);
-  const box = $('mcAgeBox'); if (!box) return;
-  box.innerHTML = `<div class="mc-age-res"><div class="mc-age-res-badge"><b>${age}</b><small>лет</small></div><h2>Лицо подтверждено</h2><p class="mc-age-lead">Оценка по пропорциям лица: <b>${age}</b>, категория заданий <b>${esc(band)}</b>. Если цифра совсем не та — снимите ещё раз при ровном свете.</p><button type="button" class="btn btn-primary" id="mcAgeAccept">Всё верно, продолжить</button><button type="button" class="btn btn-secondary" id="mcAgeRedo">Снять ещё раз</button></div>`;
-  $('mcAgeAccept')?.addEventListener('click', () => mcAgeSave(age));
-  $('mcAgeRedo')?.addEventListener('click', () => mcAgeStart());
+  const age = Math.max(3, Math.min(99, Math.round(mcMedian(ages))));
+  return mcAgeSave(age);
 }
-
 async function mcAgeSave(age) {
+  const uid = state.user?.uid; if (!uid) return;
   const band = mcAgeBand(age);
-  const rec = { verified: true, method: 'mediapipe', liveness: true, age, band, at: Date.now() };
+  const rec = { verified: true, method: 'face', liveness: true, age, band, at: Date.now() };
   const box = $('mcAgeBox');
-  mcAgeWriteLocal(rec);
-  MCE.age = rec;
-  let cloud = true;
-  const uid = state.user?.uid;
-  if (uid) {
-    try { await set(ref(db, `age_verify/${uid}`), rec); }
-    catch (e) { cloud = false; console.warn('age cloud', e); }
-  } else cloud = false;
-  try { mcEarnSfx('win'); } catch (_) {}
-  try { mcConfettiBurst(40); } catch (_) {}
-  if (box) box.innerHTML = `<div class="mc-age-res"><div class="mc-age-res-badge"><b>${age}</b><small>лет</small></div><h2>Проверка пройдена</h2><p class="mc-age-lead">Категория заданий: <b>${esc(band)}</b>.${cloud ? '' : ' Результат сохранён на этом устройстве — облако сейчас недоступно, задания всё равно откроются.'}</p><button type="button" class="btn btn-primary" onclick="mcAgeClose();mcEarnOpen()">К заданиям</button></div>`;
-  try { mcEarnRender(); } catch (_) {}
+  try {
+    await set(ref(db, `age_verify/${uid}`), rec);
+    MCE.age = rec;
+    mcEarnSfx('win');
+    if (box) box.innerHTML = `<div class="mc-age-res"><div class="mc-age-res-badge"><b>${age}</b><small>лет ≈</small></div><h2>Проверка пройдена</h2><p class="mc-age-lead">Категория заданий: <b>${esc(band)}</b>. Нейросеть ошибается в среднем на несколько лет; при необходимости проверку можно пройти заново.</p><button type="button" class="btn btn-primary" onclick="mcAgeClose();mcEarnOpen()">К заданиям</button></div>`;
+    try { mcConfettiBurst(50); } catch (_) {}
+    mcEarnRender();
+  } catch (e) {
+    console.error('age save', e);
+    if (box) box.innerHTML = `<div class="mc-age-err">Не удалось сохранить результат. Добавьте правило для age_verify в Firebase и повторите.</div><button type="button" class="btn btn-secondary" onclick="mcAgeClose()">Закрыть</button>`;
+  }
 }
 
-Object.assign(window, { mcAgeOpen, mcAgeClose, mcAgeStart, mcAgeCancel, mcAgeEstimateImage, mcAgeOk, mcAgeLocal });
-
+Object.assign(window, { mcAgeOpen, mcAgeClose, mcAgeStart, mcAgeCancel, mcAgeEstimateImage, mcAgeOk });
 
 // =====================================================================
 // MetroChat · Round 8 — каналы: новый каталог, карточка канала, создание,
@@ -13166,8 +12972,8 @@ const MC_BOTS = [
     async reply(t) {
       const l = t.toLowerCase();
       if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn'], ['🎡 Колесо', 'open:wheel']] }; }
-      if (/^\/?(tips|совет)/.test(l)) { const tips = ['Зажмите сообщение, чтобы ответить, переслать или закрепить его.', 'В настройках можно включить двухфакторную аутентификацию для защиты аккаунта.', 'Сообщение можно запланировать: удерживайте кнопку отправки.', 'Ежедневная отметка в «Заработать» даёт до 20 УМ при длинной серии.', 'Боты появляются в списке чатов — закрепите нужного, чтобы он был сверху.', 'В каналах можно комментировать посты и смотреть число просмотров.', 'Подарки редкости «Эксклюзив» выпадают только в колесе фортуны.']; return { text: '💡 ' + mcPick(tips), kb: [['Ещё совет', '/tips']] }; }
-      const faq = [[/2fa|двухфактор|защит/, 'Откройте **Настройки → Безопасность → Двухфакторная аутентификация** и следуйте шагам.'], [/канал/, 'Каналы находятся в **Прочее → Каналы**. Там можно найти популярные каналы по категориям или нажать «Создать канал».'], [/групп/, 'Нажмите ✏️ в шапке списка чатов и выберите «Новая группа».'], [/ум[ыа]?\b|умов|заработ/, 'Умы — внутренняя валюта MetroChat. Их дают за задания в **Подарки → Заработать** (до 140 УМ в день) и тратят на подарки, колесо фортуны и аукцион.'], [/подар/, 'Подарки покупаются за умы в **Прочее → Подарки**. Подарок можно отправить другу или выставить на аукцион.'], [/звон|call/, 'В личном чате нажмите 📞 или 🎥 в шапке, чтобы позвонить.'], [/пароль/, 'Сменить пароль: **Настройки → Безопасность → Сменить пароль**.'], [/истори/, 'Истории открываются кнопкой 👤 над списком чатов.'], [/тем[аыу]|оформ|ночн/, 'Тему и ночной режим можно поменять в **Настройки → Оформление**.'], [/бот/, 'Каталог ботов — в **Прочее → Боты**. Добавленный бот появляется в списке чатов.']];
+      if (/^\/?(tips|совет)/.test(l)) { const tips = ['Зажмите сообщение, чтобы ответить, переслать или закрепить его.', 'В настройках можно включить двухфакторную аутентификацию для защиты аккаунта.', 'Сообщение можно запланировать: удерживайте кнопку отправки.', 'Ежедневная отметка в «Заработать» даёт до 20 УМ при длинной серии.', 'Боты появляются в списке чатов — закрепите нужного, чтобы он был сверху.', 'В каналах можно комментировать посты и смотреть число просмотров.', 'Metro AI в разделе «Прочее» умеет создавать группы и управлять чатами.']; return { text: '💡 ' + mcPick(tips), kb: [['Ещё совет', '/tips']] }; }
+      const faq = [[/2fa|двухфактор|защит/, 'Откройте **Настройки → Безопасность → Двухфакторная аутентификация** и следуйте шагам.'], [/канал/, 'Каналы находятся в **Прочее → Каналы**. Там можно найти популярные каналы по категориям или нажать «Создать канал».'], [/групп/, 'Нажмите ✏️ в шапке списка чатов и выберите «Новая группа».'], [/ум[ыа]?\b|умов|заработ/, 'Умы — внутренняя валюта MetroChat. Их дают за задания в **Подарки → Заработать** (до 140 УМ в день) и тратят на подарки.'], [/подар/, 'Подарки покупаются за умы в **Прочее → Подарки**. Подарок можно отправить другу.'], [/звон|call/, 'В личном чате нажмите 📞 или 🎥 в шапке, чтобы позвонить.'], [/пароль/, 'Сменить пароль: **Настройки → Безопасность → Сменить пароль**.'], [/истори/, 'Истории открываются кнопкой 👤 над списком чатов.'], [/тем[аыу]|оформ|ночн/, 'Тему и ночной режим можно поменять в **Настройки → Оформление**.'], [/бот/, 'Каталог ботов — во вкладке **Боты**. Добавленный бот появляется в списке чатов.']];
       for (const [re, a] of faq) if (re.test(l)) return { text: a };
       if (/^\/?(help|помощь|start|старт)/.test(l)) return { text: this.hello, kb: this.kb };
       return { text: 'Я пока не знаю ответа на это. Попробуйте спросить про умы, каналы, группы, звонки, пароль или темы.', kb: this.kb };
@@ -13278,7 +13084,7 @@ const MC_BOTS = [
     async reply(t) {
       const uid = state.user?.uid; await mcEarnLoad(true).catch(() => {});
       if (/^\/gifts/.test(t)) { const inv = (await get(ref(db, `gift_inventory/${uid}`)).catch(() => null))?.val() || {}; const l = Object.values(inv); const sum = l.reduce((s, g) => s + (Number(g.cost) || 0), 0); return { text: l.length ? `🎁 Подарков: **${l.length}** на ${mcFmtUm(sum)} УМ\n${l.slice(0, 12).map(g => g.emoji).join(' ')}` : 'Подарков пока нет.', kb: [['Витрина', 'open:gifts']] }; }
-      if (/^\/today/.test(t)) { const tasks = mcEarnTodayTasks(); const done = tasks.filter(mcEarnDone).length; return { text: `📈 Сегодня: **${mcEarnTotal()} / ${MC_EARN_CAP} УМ**\nЗаданий: ${done}/${tasks.length} · отметка ${mcEarnDone('checkin') ? '✓' : 'не получена'}\nСерия: ${mcStreakNow()} ${mcPl8(mcStreakNow(), 'день', 'дня', 'дней')}${mcAgeOk() ? '' : '\n\n⚠️ Для заработка нужна проверка возраста камерой.'}`, kb: [['✦ Задания', 'open:earn']] }; }
+      if (/^\/today/.test(t)) { const tasks = mcEarnTodayTasks(); const done = tasks.filter(mcEarnDone).length; return { text: `📈 Сегодня: **${mcEarnTotal()} / ${MC_EARN_CAP} УМ**\nЗаданий: ${done}/${tasks.length} · отметка ${mcEarnDone('checkin') ? '✓' : 'не получена'}\nСерия: ${mcStreakNow()} ${mcPl8(mcStreakNow(), 'день', 'дня', 'дней')}${mcAgeOk() ? '' : '\n\n⚠️ Для заработка нужна проверка возраста по лицу.'}`, kb: [['✦ Задания', 'open:earn']] }; }
       if (/^\/?(start|help)$/.test(t)) return { text: this.hello, kb: this.kb };
       const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**`, kb: this.kb };
     } },
@@ -13527,68 +13333,29 @@ Object.assign(window, { mcBotsCatalog, mcBotAdd, mcBotOpen, mcBotClose, mcBotMen
 // =====================================================================
 // MetroChat · Round 8 — новая главная «Прочее»: кошелёк, сервисы, боты, утилиты, игры
 // =====================================================================
-// MetroChat — главная «Прочее»: поиск, избранное, недавние, сервисы.
-const MC_HUB_SVG = {
-  earn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v18"/><path d="M7.5 7.5h6.2a2.6 2.6 0 0 1 0 5.2H9"/><path d="M9 12.7h6.4a2.6 2.6 0 0 1 0 5.2H7.5"/></svg>',
-  channels: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 9.5v5"/><path d="M8 6.5v11"/><path d="M12 4v16"/><path d="M16 7.5v9"/><path d="M20 10v4"/></svg>',
-  bots: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 8V4"/><circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/><path d="M9 16h6" stroke-linecap="round"/></svg>',
-  gifts: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="11" width="16" height="9" rx="1.5"/><path d="M4 11h16"/><path d="M12 11v9"/><path d="M12 11c-2-4-6-4-6-1.5S10 11 12 11c2-4 6-4 6-1.5S14 11 12 11"/></svg>',
-  weather: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8" cy="10" r="3.2"/><path d="M10.5 15.5h6.2a3 3 0 0 0 .4-6 4.2 4.2 0 0 0-8 .8"/></svg>',
-  currency: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 7h7a3 3 0 0 1 0 6H9"/><path d="M7 13h8a3 3 0 0 1 0 6H7"/><path d="M12 4v16"/></svg>',
-  todo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 7h11"/><path d="M8 12h11"/><path d="M8 17h11"/><path d="M4.5 7l1 1 2-2"/><path d="M4.5 12l1 1 2-2"/><path d="M4.5 17l1 1 2-2"/></svg>',
-  timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7"/><path d="M12 13V9"/><path d="M9 3h6"/><path d="M12 3v2"/></svg>',
-  notes: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>',
-  calculator: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8"/><path d="M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01" stroke-linecap="round"/></svg>',
-  units: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16"/><path d="M4 16h10"/><path d="M8 4v16"/><path d="M16 12v8"/></svg>',
-  clocks: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>',
-  pass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V8a4 4 0 0 1 8 0v2"/></svg>',
-  g2048: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="6" height="6" rx="1.2"/><rect x="14" y="4" width="6" height="6" rx="1.2"/><rect x="4" y="14" width="6" height="6" rx="1.2"/><rect x="14" y="14" width="6" height="6" rx="1.2"/></svg>',
-  ttt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5l5 5M10 5L5 10"/><circle cx="17" cy="17" r="3"/><path d="M14 8h6M8 14v6"/></svg>',
-  game: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="8" width="18" height="10" rx="4"/><path d="M8 13v3M6.5 14.5h3"/><circle cx="16" cy="13" r=".8" fill="currentColor"/><circle cx="18" cy="15" r=".8" fill="currentColor"/></svg>'
-};
 const MC_HOME_ITEMS = {
   services: [
-    { k: 'earn', ico: 'earn', t: 'Заработать', s: 'Задания дня, до 140 УМ' },
-    { k: 'channels', ico: 'channels', t: 'Каналы', s: 'Подписки, поиск, свои каналы' },
-    { k: 'bots', ico: 'bots', t: 'Боты', s: 'Погода, курсы, перевод, игры' },
-    { k: 'gifts', ico: 'gifts', t: 'Подарки', s: 'Витрина, колесо, аукцион' }
+    { k: 'earn', i: '✦', t: 'Заработать', s: 'Задания дня · до 140 УМ', c: '#8b5cf6' },
+    { k: 'channels', i: '📡', t: 'Каналы', s: 'Подборки, поиск и свои каналы', c: '#3b82f6' },
+    { k: 'bots', i: '🤖', t: 'Боты', s: 'Погода, курсы, переводчик и др.', c: '#14b8a6' },
+    { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина, колесо и аукцион', c: '#ec4899' }
   ],
   tools: [
-    { k: 'weather', ico: 'weather', t: 'Погода', s: 'Сейчас и на несколько дней' },
-    { k: 'app:currency', ico: 'currency', t: 'Курсы валют', s: 'ЦБ РФ и конвертер' },
-    { k: 'app:todo', ico: 'todo', t: 'Задачи', s: 'Дела, сроки, приоритет' },
-    { k: 'app:timer', ico: 'timer', t: 'Таймер', s: 'Секундомер и помодоро' },
-    { k: 'app:clocks', ico: 'clocks', t: 'Часы мира', s: 'Города и разница с вами' },
-    { k: 'notes', ico: 'notes', t: 'Заметки', s: 'Только на этом устройстве' },
-    { k: 'calculator', ico: 'calculator', t: 'Калькулятор', s: 'Скобки, степени, проценты' },
-    { k: 'app:units', ico: 'units', t: 'Конвертер', s: 'Длина, вес, температура, данные' },
-    { k: 'app:pass', ico: 'pass', t: 'Пароли', s: 'Случайный пароль на устройстве' }
+    { k: 'weather', i: '🌤️', t: 'Погода', s: 'Прогноз на 10 дней' },
+    { k: 'app:currency', i: '💱', t: 'Курсы валют', s: 'ЦБ РФ и конвертер' },
+    { k: 'app:todo', i: '✅', t: 'Задачи', s: 'Дела и сроки' },
+    { k: 'app:timer', i: '⏱️', t: 'Таймер', s: 'Секундомер, помодоро' },
+    { k: 'notes', i: '📝', t: 'Заметки', s: 'На этом устройстве' },
+    { k: 'calculator', i: '🧮', t: 'Калькулятор', s: 'Быстрые вычисления' },
+    { k: 'app:units', i: '📏', t: 'Конвертер', s: 'Длина, вес, температура' }
   ],
   games: [
-    { k: 'app:g2048', ico: 'g2048', t: '2048', s: 'Свайпы и стрелки' },
-    { k: 'app:ttt', ico: 'ttt', t: 'Крестики-нолики', s: 'С ботом или вдвоём' },
-    { k: 'bot:game_bot', ico: 'game', t: 'Игровой бот', s: 'Кости, викторина, КНБ' }
+    { k: 'app:g2048', i: '🧩', t: '2048', s: 'Головоломка со свайпами' },
+    { k: 'app:ttt', i: '⭕', t: 'Крестики-нолики', s: 'Против бота или вдвоём' },
+    { k: 'bot:game_bot', i: '🎲', t: 'Игровой бот', s: 'КНБ, кости, викторина' }
   ]
 };
-const MC_HUB_ALL = [...MC_HOME_ITEMS.services, ...MC_HOME_ITEMS.tools, ...MC_HOME_ITEMS.games];
-function mcHubItem(k) { return MC_HUB_ALL.find(x => x.k === k); }
-function mcHubPins() { return mcLS.get('mc_hub_pins', ['earn', 'weather', 'app:todo']); }
-function mcHubRecent() { return mcLS.get('mc_hub_recent', []); }
-function mcHubTouch(k) {
-  const rec = mcHubRecent().filter(x => x !== k);
-  rec.unshift(k);
-  mcLS.set('mc_hub_recent', rec.slice(0, 8));
-}
-function mcHubTogglePin(k, ev) {
-  ev?.preventDefault(); ev?.stopPropagation();
-  const pins = mcHubPins();
-  const i = pins.indexOf(k);
-  if (i >= 0) pins.splice(i, 1); else pins.unshift(k);
-  mcLS.set('mc_hub_pins', pins.slice(0, 8));
-  renderOtherHome($('mcHubQ')?.value || '');
-}
 function mcHomeGo(k) {
-  mcHubTouch(k);
   if (k === 'earn') return mcEarnOpen('other');
   if (k === 'channels') return renderOtherChannels();
   if (k === 'bots') return mcBotsCatalog();
@@ -13599,97 +13366,40 @@ function mcHomeGo(k) {
   if (k.startsWith('app:')) return mcOpenApp(k.slice(4));
   if (k.startsWith('bot:')) return mcBotOpen(k.slice(4));
 }
-function mcHubRow(x) {
-  const pin = mcHubPins().includes(x.k);
-  return `<div class="mc-hub-row" data-hay="${esc((x.t + ' ' + x.s).toLowerCase())}"><button type="button" class="mc-hub-open" data-go="${esc(x.k)}"><span class="mc-hub-ico">${MC_HUB_SVG[x.ico] || ''}</span><span class="mc-hub-txt"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></button><button type="button" class="mc-hub-pin ${pin ? 'on' : ''}" data-pin="${esc(x.k)}" aria-label="${pin ? 'Убрать из избранного' : 'В избранное'}">${pin ? '★' : '☆'}</button></div>`;
-}
-function mcHubSection(title, items, id) {
-  if (!items.length) return '';
-  return `<section class="mc-hub-sec" id="${id}"><h3>${title}</h3><div class="mc-hub-list">${items.map(mcHubRow).join('')}</div></section>`;
-}
-renderOtherHome = function (keepQ) {
+renderOtherHome = function () {
   window.__mcOtherView = 'home';
   const wrap = $('settingsPanel'); if (!wrap) return;
-  const q = typeof keepQ === 'string' ? keepQ : '';
-  const me = state.profile || {};
-  const name = me.firstName || String(me.displayName || '').split(' ')[0] || '';
-  const h = new Date().getHours();
-  const hi = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
-  const pins = mcHubPins().map(mcHubItem).filter(Boolean);
-  const recent = mcHubRecent().filter(k => !mcHubPins().includes(k)).map(mcHubItem).filter(Boolean).slice(0, 4);
-  const botsOn = (typeof MC_BOTS !== 'undefined' ? MC_BOTS : []).filter(b => mcBotAdded(b.id)).map(b => ({ k: 'bot:' + b.id, ico: 'bots', t: b.name, s: '@' + b.id }));
-  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Чаты</button><div class="settings-title">Прочее</div></div>
-  <div class="settings-wrap mc-hub">
-    <header class="mc-hub-top">
-      <div><p class="mc-hub-hi">${esc(hi)}${name ? ', ' + esc(name) : ''}</p><h2>Сервисы</h2></div>
-      <button type="button" class="mc-hub-wallet" data-go="gifts"><b id="mcHomeBal">…</b><small>умов на счёте</small></button>
-    </header>
-    <label class="mc-hub-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4" stroke-linecap="round"/></svg><input id="mcHubQ" value="${esc(q)}" placeholder="Найти: погода, задачи, каналы…" autocomplete="off" enterkeyhint="search"></label>
-    <section class="mc-hub-today">
-      <div><b>Сегодня</b><span id="mcHomeToday">Считаем прогресс…</span></div>
-      <button type="button" class="mc-hub-go" data-go="earn">Задания</button>
+  const me = state.profile || {}; const name = me.firstName || String(me.displayName || '').split(' ')[0] || 'друг';
+  const h = new Date().getHours(); const hi = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
+  const tile = (x, n) => `<button type="button" class="mc-home-tile" data-go="${x.k}" style="--i:${n}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small></button>`;
+  const botsOn = MC_BOTS.filter(b => mcBotAdded(b.id));
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Назад</button><div class="settings-title">Прочее</div></div>
+  <div class="settings-wrap mc-home">
+    <section class="mc-home-hero">
+      <div class="mc-home-orbs"><i></i><i></i><i></i></div>
+      <small>${esc(hi)}, ${esc(name)}</small>
+      <div class="mc-home-bal"><span id="mcHomeBal">…</span><em>УМ</em></div>
+      <div class="mc-home-prog"><div class="mc-home-bar"><i id="mcHomeBar" style="width:0%"></i></div><span id="mcHomeToday">Сегодня 0 / ${MC_EARN_CAP}</span></div>
+      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button><button type="button" id="mcHomeWheel">🎡 Колесо</button></div>
     </section>
-    <div id="mcHubAge"></div>
-    <div class="mc-hub-cols">
-      <div>
-        ${mcHubSection('Избранное', pins, 'mcHubFav')}
-        ${mcHubSection('Недавние', recent, 'mcHubRecent')}
-        ${mcHubSection('Сервисы', MC_HOME_ITEMS.services, 'mcHubSvc')}
-        ${botsOn.length ? mcHubSection('Мои боты', botsOn, 'mcHubBots') : ''}
-      </div>
-      <div>
-        ${mcHubSection('Инструменты', MC_HOME_ITEMS.tools, 'mcHubTools')}
-        ${mcHubSection('Игры', MC_HOME_ITEMS.games, 'mcHubGames')}
-      </div>
-    </div>
-    <p class="mc-hub-none" id="mcHubNone" hidden>Ничего не нашлось. Попробуйте другое слово.</p>
+    <div class="mc-home-sec"><h3>Сервисы</h3></div>
+    <div class="mc-home-big">${MC_HOME_ITEMS.services.map((x, n) => `<button type="button" class="mc-home-card" data-go="${x.k}" style="--i:${n};--c:${x.c}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small><span class="mc-home-arr">→</span></button>`).join('')}</div>
+    ${botsOn.length ? `<div class="mc-home-sec"><h3>Мои боты</h3><button type="button" class="mc-home-more" data-go="bots">Все →</button></div><div class="mc-home-bots">${botsOn.map((b, n) => `<button type="button" data-go="bot:${b.id}" style="--i:${n}"><span class="mc-bot-av" style="background-image:url('${mcBotAvatar(b)}')"></span><small>${esc(b.name)}</small>${Number(MCB.meta[b.id]?.unread) ? `<em>${MCB.meta[b.id].unread}</em>` : ''}</button>`).join('')}</div>` : ''}
+    <div class="mc-home-sec"><h3>Утилиты</h3></div>
+    <div class="mc-home-grid">${MC_HOME_ITEMS.tools.map(tile).join('')}</div>
+    <div class="mc-home-sec"><h3>Игры</h3></div>
+    <div class="mc-home-grid">${MC_HOME_ITEMS.games.map(tile).join('')}</div>
   </div>`;
-  const input = $('mcHubQ');
-  const applyQ = () => {
-    const query = (input?.value || '').trim().toLowerCase();
-    let shown = 0;
-    wrap.querySelectorAll('.mc-hub-sec').forEach(sec => {
-      let n = 0;
-      sec.querySelectorAll('.mc-hub-row').forEach(row => {
-        const ok = !query || (row.dataset.hay || '').includes(query);
-        row.hidden = !ok;
-        if (ok) n++;
-      });
-      sec.hidden = n === 0;
-      shown += n;
-    });
-    const none = $('mcHubNone'); if (none) none.hidden = shown !== 0;
-  };
-  input?.addEventListener('input', applyQ);
-  if (q) applyQ();
   wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { try { mcEarnSfx('tap'); } catch (_) {} mcHomeGo(b.dataset.go); }));
-  wrap.querySelectorAll('[data-pin]').forEach(b => b.addEventListener('click', ev => mcHubTogglePin(b.dataset.pin, ev)));
-  if (q) { applyQ(); const end = input.value.length; input.focus({ preventScroll: true }); try { input.setSelectionRange(end, end); } catch (_) {} }
+  $('mcHomeWheel')?.addEventListener('click', async () => { await renderGiftShop(); setTimeout(() => { try { mcOpenWheel(); } catch (_) {} }, 150); });
   (async () => {
     try {
       const [bal] = await Promise.all([readGiftBalance(), mcEarnLoad(true).catch(() => {})]);
       if (window.__mcOtherView !== 'home') return;
       const el = $('mcHomeBal'); if (el) mcCountUp(el, Number(bal) || 0);
-      const t = mcEarnTotal();
-      const tasks = mcEarnTodayTasks();
-      const done = tasks.filter(mcEarnDone).length;
-      const todos = mcLS.get('metrochat_todo_v1', []);
-      const open = Array.isArray(todos) ? todos.filter(x => x && !x.done) : [];
-      const today = new Date().toISOString().slice(0, 10);
-      const late = open.filter(x => x.due && x.due < today).length;
-      const td = $('mcHomeToday');
-      if (td) {
-        const bits = [`${t} / ${MC_EARN_CAP} УМ`, `${done} из ${tasks.length} заданий`];
-        if (open.length) bits.push(open.length + ' ' + mcPl8(open.length, 'задача', 'задачи', 'задач') + (late ? `, ${late} просрочено` : ''));
-        if (!mcAgeOk()) bits.push('нужна проверка камерой');
-        td.textContent = bits.join(' · ');
-      }
-      const ageBox = $('mcHubAge');
-      if (ageBox && !mcAgeOk()) ageBox.innerHTML = `<button type="button" class="mc-hub-age" id="mcHubAgeGo"><span class="mc-hub-ico">${MC_HUB_SVG.pass}</span><span class="mc-hub-txt"><b>Подтвердите возраст камерой</b><small>Моргание и улыбка. Кадры остаются на устройстве.</small></span></button>`;
-      $('mcHubAgeGo')?.addEventListener('click', () => mcAgeOpen());
-    } catch (_) {
-      const el = $('mcHomeBal'); if (el && el.textContent === '…') el.textContent = '—';
-    }
+      const t = mcEarnTotal(); const bar = $('mcHomeBar'); if (bar) bar.style.width = Math.round(t / MC_EARN_CAP * 100) + '%';
+      const td = $('mcHomeToday'); if (td) td.textContent = `Сегодня ${t} / ${MC_EARN_CAP} УМ${mcAgeOk() ? '' : ' · нужна проверка возраста'}`;
+    } catch (_) { const el = $('mcHomeBal'); if (el) el.textContent = '—'; }
   })();
 };
 function mcCountUp(el, to, ms = 700) {
@@ -13698,8 +13408,7 @@ function mcCountUp(el, to, ms = 700) {
   const step = t => { const k = Math.min(1, (t - t0) / ms); const e = 1 - Math.pow(1 - k, 3); el.textContent = mcFmtUm(Math.round(to * e)); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
 }
-Object.assign(window, { renderOtherHome, mcHomeGo, mcCountUp, mcHubTogglePin });
-
+Object.assign(window, { renderOtherHome, mcHomeGo, mcCountUp });
 
 Object.assign(window, {
   onbNext, onbPrev, onbFinish, onbAvatarChange, randomUsername,
@@ -13740,6 +13449,1106 @@ Object.assign(window, {
   beginGiftQuiz, answerGiftQuestion, nextGiftQuestion, selectGiftToBuy,
   hideOwnedGift, openGiftSendPicker, giftOwnedItem
 });
+// =====================================================================
+// Round 9 · v4.0 — большой апдейт (см. начало блока)
+// =====================================================================
+// =====================================================================
+// Round 9 · v4.0 — большой апдейт (см. начало блока)
+// =====================================================================
+// =====================================================================
+// MetroChat · Round 9 (v4.0) — большой апдейт:
+//  - убраны колесо фортуны, аукцион и проверка возраста по лицу
+//  - новый раздел «Боты»: каталог, конструктор своих ботов, инструменты
+//  - Metro AI — нейросеть-помощник (управление чатами/группами/ботами)
+//  - переработан «Прочее» (компактный, красивый)
+//  - вход по паролю при каждом входе + вход по лицу (локально, без VPN)
+//  - встроенный браузер (YouTube, МЭШ, Google и др.)
+//  - истории: только контакты, живут 2 дня, свайп вниз — закрыть
+//  - окно «Что нового» после обновления
+//  - жидкое стекло, анимации, тактильный отклик, контраст, экономия трафика
+//  - языки интерфейса (RU/EN/UK), исправления настроек
+// =====================================================================
+
+// ---------------- Логотип Metro AI ----------------
+// 192x192 PNG, сгенерирован специально для Metro AI (нейросеть + ручная доводка)
+const MC_AI_LOGO = 'data:image/png;base64,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';
+
+// ===================== CSS Round 9 =====================
+(function () {
+  const css = document.createElement('style');
+  css.id = 'metrochat-round9';
+  css.textContent = `
+/* ---------- Контраст и производительность ---------- */
+html[data-theme="light"]{ --text-2:#3d4a63; --text-3:#4d5a73; }
+html[data-theme="dark"],html:not([data-theme]){ --text-2:#b9c4dc; --text-3:#9aa6c0; }
+#sbList .list-item{ content-visibility:auto; contain-intrinsic-size:64px; }
+
+/* ---------- Жидкое стекло (iOS/Android/PC) ---------- */
+html[data-theme] .sidebar{ background:color-mix(in srgb,var(--surface) 78%,transparent)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
+html[data-theme] .chat-header,html[data-theme] .chat-input-bar{ background:color-mix(in srgb,var(--surface) 72%,transparent)!important; backdrop-filter:blur(24px) saturate(150%); -webkit-backdrop-filter:blur(24px) saturate(150%); }
+html[data-theme] .mobile-nav{ background:color-mix(in srgb,var(--surface) 68%,transparent)!important; backdrop-filter:blur(28px) saturate(170%); -webkit-backdrop-filter:blur(28px) saturate(170%); border-top:1px solid var(--border); }
+html[data-theme] .modal,html[data-theme] .mc-sheet{ background:color-mix(in srgb,var(--surface) 84%,transparent)!important; backdrop-filter:blur(32px) saturate(160%); -webkit-backdrop-filter:blur(32px) saturate(160%); }
+html[data-theme] .sb-me:hover,html[data-theme] .sb-icon-btn:hover{ background:color-mix(in srgb,var(--surface-2) 60%,transparent); }
+html:not([data-theme]) .sidebar,html:not([data-theme]) .chat-header,html:not([data-theme]) .chat-input-bar,html:not([data-theme]) .mobile-nav{ background:rgba(14,20,38,.82)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
+
+/* ---------- Тактильный отклик: нажатие + ripple ---------- */
+.btn,.sb-tab,.mobile-nav-item,.ms-row,.sb-icon-btn,.chat-icon-btn,.chat-input-btn,.list-item,.mc-home-tile,.mc-home-card,.mc-story-bubble,.story-chip,.mc9-tile,.mc9-card,.mc9-list-row,.mc9-chip{ position:relative; transition:transform .18s cubic-bezier(.34,1.56,.64,1), filter .18s ease, background .18s ease, box-shadow .18s ease; }
+.mc9-press{ transform:scale(.962); filter:brightness(1.06); }
+.mc9-ripple{ position:absolute; width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,.38); transform:translate(-50%,-50%) scale(0); animation:mc9Rip .55s ease-out forwards; pointer-events:none; z-index:3; }
+@keyframes mc9Rip{ to{ transform:translate(-50%,-50%) scale(9); opacity:0; } }
+
+/* ---------- Анимации появления ---------- */
+@keyframes mc9In{ from{ opacity:0; transform:translateY(12px) scale(.99); } to{ opacity:1; transform:none; } }
+@keyframes mc9SlideUp{ from{ opacity:0; transform:translateY(26px); } to{ opacity:1; transform:none; } }
+@keyframes mc9Float{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-10px) } }
+.settings-wrap{ animation:mc9In .28s cubic-bezier(.16,1,.3,1); }
+.modal{ animation:mc9In .24s cubic-bezier(.34,1.4,.64,1); }
+
+/* ---------- Экран входа: редизайн ---------- */
+.auth-screen{ background:radial-gradient(1200px 800px at 15% 10%, #1b2a5e 0%, transparent 55%), radial-gradient(1000px 700px at 85% 90%, #3b1d63 0%, transparent 55%), linear-gradient(160deg,#0c1226,#0a0e1e 60%,#101425)!important; overflow-y:auto; }
+.auth-screen::before{ content:''; position:fixed; inset:0; pointer-events:none; background:
+ radial-gradient(600px 400px at 20% 20%, rgba(56,140,250,.16), transparent 60%),
+ radial-gradient(500px 380px at 80% 75%, rgba(168,85,247,.15), transparent 60%); animation:mc9Float 9s ease-in-out infinite; }
+.auth-card{ background:rgba(255,255,255,.075)!important; backdrop-filter:blur(32px) saturate(170%); -webkit-backdrop-filter:blur(32px) saturate(170%); border:1px solid rgba(255,255,255,.14); box-shadow:0 40px 90px rgba(0,0,0,.5), inset 0 1px rgba(255,255,255,.18)!important; border-radius:28px!important; }
+.auth-card *{ color:#eef2fb!important; }
+.auth-card input{ background:rgba(255,255,255,.08)!important; border:2px solid rgba(255,255,255,.16)!important; color:#fff!important; }
+.auth-card input:focus{ border-color:#5aa2ff!important; box-shadow:0 0 0 4px rgba(90,162,255,.18)!important; }
+.auth-card .btn-primary{ background:linear-gradient(135deg,#2f7cf6,#7c5cf6)!important; box-shadow:0 14px 34px rgba(63,108,255,.4); }
+.auth-card .btn-secondary,.auth-card .btn-ghost{ background:rgba(255,255,255,.1)!important; border:1px solid rgba(255,255,255,.16)!important; }
+.auth-logo-mark{ background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6)!important; box-shadow:0 12px 30px rgba(63,120,255,.45), inset 0 1px rgba(255,255,255,.5)!important; }
+.auth-step-dot{ background:rgba(255,255,255,.25)!important; } .auth-step-dot.active{ background:#5aa2ff!important; }
+.auth-choice{ background:rgba(255,255,255,.08)!important; color:#dbe4f5!important; }
+.auth-choice.active{ background:linear-gradient(135deg,#2f7cf6,#7c5cf6)!important; color:#fff!important; }
+.field-err,.auth-error{ color:#ffb4c8!important; }
+.mc9-lang-row{ display:flex; align-items:center; justify-content:center; gap:8px; margin:0 0 18px; font-size:13px; color:#c7d2e8; flex-wrap:wrap; }
+.mc9-lang-row button{ border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.07); color:#dbe4f5; border-radius:999px; padding:5px 13px; font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; transition:all .2s; }
+.mc9-lang-row button.on{ background:linear-gradient(135deg,#2f7cf6,#7c5cf6); border-color:transparent; color:#fff; }
+.mc9-lang-row button:active{ transform:scale(.94); }
+
+/* ---------- Истории: компактно ---------- */
+.stories-panel{ padding:8px 10px 8px!important; }
+.mc-story-bubble{ width:54px!important; flex:0 0 54px!important; gap:4px!important; }
+.mc-story-ring{ width:48px!important; height:48px!important; }
+.mc-story-name{ max-width:54px!important; font-size:10.5px!important; }
+.mc-story-add{ top:34px!important; width:19px!important; height:19px!important; font-size:13px!important; }
+.stories-panel-head{ margin-bottom:6px!important; }
+
+/* ---------- Раздел «Прочее» и «Боты» Round 9 ---------- */
+.mc9-wrap{ padding:14px 14px 40px; max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+.mc9-hero{ display:flex; align-items:center; gap:10px; padding:4px 2px; }
+.mc9-hero b{ font-size:20px; letter-spacing:-.03em; display:block; }
+.mc9-hero small{ color:var(--text-2); font-size:12.5px; }
+.mc9-bal{ margin-left:auto; text-align:right; padding:8px 14px; border-radius:14px; background:var(--mc-card-2); border:1px solid var(--mc-line); }
+.mc9-bal b{ font-size:17px; display:block; font-variant-numeric:tabular-nums; }
+.mc9-bal small{ color:var(--text-2); font-size:10.5px; font-weight:700; }
+.mc9-ai{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; border:0; cursor:pointer; padding:16px; border-radius:20px; color:#fff; font:inherit; background:linear-gradient(120deg,#1c2f6e 0%,#2b3f8f 45%,#4c2d7d 100%); box-shadow:0 14px 34px rgba(35,55,140,.35), inset 0 1px rgba(255,255,255,.16); position:relative; overflow:hidden; transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+.mc9-ai::after{ content:''; position:absolute; inset:0; background:radial-gradient(420px 200px at 85% 20%, rgba(120,180,255,.25), transparent 60%); pointer-events:none; }
+.mc9-ai:active{ transform:scale(.985); }
+.mc9-ai img{ width:52px; height:52px; border-radius:14px; flex-shrink:0; box-shadow:0 8px 20px rgba(0,0,0,.35); }
+.mc9-ai-txt{ flex:1; min-width:0; }
+.mc9-ai-txt b{ display:block; font-size:16.5px; letter-spacing:-.02em; }
+.mc9-ai-txt small{ display:block; font-size:12.5px; opacity:.85; margin-top:2px; line-height:1.35; }
+.mc9-ai-go{ flex-shrink:0; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.14); backdrop-filter:blur(8px); font-weight:800; }
+.mc9-sec{ display:flex; align-items:baseline; justify-content:space-between; margin:2px 2px -4px; }
+.mc9-sec h3{ font-size:13px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-2); font-weight:800; }
+.mc9-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+@media (max-width:480px){ .mc9-grid{ grid-template-columns:repeat(3,1fr); } }
+.mc9-tile{ border:1px solid var(--mc-line); background:var(--mc-card); border-radius:16px; padding:12px 6px 10px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; font:inherit; color:var(--text); overflow:hidden; }
+.mc9-tile span{ font-size:22px; line-height:1; filter:drop-shadow(0 3px 6px rgba(0,0,0,.18)); }
+.mc9-tile b{ font-size:11.5px; font-weight:700; text-align:center; }
+.mc9-tile:hover{ background:var(--mc-card-2); }
+.mc9-list{ display:flex; flex-direction:column; border:1px solid var(--mc-line); border-radius:18px; background:var(--mc-card); overflow:hidden; }
+.mc9-list-row{ display:flex; align-items:center; gap:12px; padding:11px 14px; border:0; background:none; cursor:pointer; font:inherit; color:var(--text); text-align:left; width:100%; }
+.mc9-list-row + .mc9-list-row{ border-top:1px solid var(--mc-line); }
+.mc9-list-row:active{ background:var(--mc-card-2); }
+.mc9-list-ico{ width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; }
+.mc9-list-txt{ flex:1; min-width:0; }
+.mc9-list-txt b{ display:block; font-size:14.5px; }
+.mc9-list-txt small{ display:block; color:var(--text-2); font-size:12.5px; margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.mc9-badge{ font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; background:var(--mc-accent-soft); color:var(--mc-accent-text,#5aa2ff); }
+
+/* ---------- Metro AI ---------- */
+.mc9-ai-panel{ display:flex; flex-direction:column; height:calc(100dvh - 60px); }
+.mc9-ai-head{ display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid var(--mc-line); background:linear-gradient(120deg,#1c2f6e,#4c2d7d); color:#fff; }
+.mc9-ai-head img{ width:40px; height:40px; border-radius:12px; }
+.mc9-ai-head b{ display:block; font-size:16px; }
+.mc9-ai-head small{ display:block; font-size:11.5px; opacity:.85; }
+.mc9-ai-msgs{ flex:1; overflow-y:auto; padding:16px 14px; display:flex; flex-direction:column; gap:10px; }
+.mc9-ai-msg{ max-width:86%; padding:11px 14px; border-radius:18px; font-size:14.5px; line-height:1.5; white-space:pre-wrap; word-break:break-word; animation:mc9In .25s ease; }
+.mc9-ai-msg.u{ align-self:flex-end; background:linear-gradient(135deg,#2f7cf6,#6d5cf6); color:#fff; border-bottom-right-radius:6px; }
+.mc9-ai-msg.a{ align-self:flex-start; background:var(--mc-card-2); color:var(--text); border:1px solid var(--mc-line); border-bottom-left-radius:6px; }
+.mc9-ai-msg.a b{ font-weight:800; }
+.mc9-ai-chips{ display:flex; gap:8px; overflow-x:auto; padding:10px 14px 2px; scrollbar-width:none; }
+.mc9-ai-chips::-webkit-scrollbar{ display:none; }
+.mc9-ai-chip{ flex-shrink:0; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); border-radius:999px; padding:7px 14px; font:inherit; font-size:13px; font-weight:650; cursor:pointer; }
+.mc9-ai-chip:active{ transform:scale(.95); }
+.mc9-ai-input{ display:flex; gap:8px; padding:10px 14px 14px; }
+.mc9-ai-input textarea{ flex:1; resize:none; min-height:46px; max-height:110px; padding:12px 16px; border-radius:22px; border:1.5px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:15px; outline:none; }
+.mc9-ai-input textarea:focus{ border-color:var(--accent); }
+.mc9-ai-send{ width:46px; height:46px; border-radius:50%; border:0; cursor:pointer; background:linear-gradient(135deg,#2f7cf6,#7c5cf6); color:#fff; font-size:18px; flex-shrink:0; box-shadow:0 8px 20px rgba(63,108,255,.35); }
+.mc9-ai-send:disabled{ opacity:.5; cursor:wait; }
+.mc9-ai-typing{ display:flex; gap:4px; align-self:flex-start; padding:14px 16px; background:var(--mc-card-2); border-radius:18px; border-bottom-left-radius:6px; }
+.mc9-ai-typing i{ width:7px; height:7px; border-radius:50%; background:var(--text-2); animation:mc9Dot 1s infinite; }
+.mc9-ai-typing i:nth-child(2){ animation-delay:.15s } .mc9-ai-typing i:nth-child(3){ animation-delay:.3s }
+@keyframes mc9Dot{ 0%,80%,100%{ transform:translateY(0); opacity:.4 } 40%{ transform:translateY(-5px); opacity:1 } }
+
+/* ---------- Конструктор ботов ---------- */
+.mc9-cb-rules{ display:flex; flex-direction:column; gap:8px; }
+.mc9-cb-rule{ display:flex; gap:8px; align-items:center; }
+.mc9-cb-rule input{ flex:1; min-width:0; padding:10px 12px; border-radius:12px; border:1.5px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:14px; }
+.mc9-cb-rule .mc9-x{ width:34px; height:34px; border-radius:10px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text-2); cursor:pointer; flex-shrink:0; }
+
+/* ---------- Браузер ---------- */
+.mc9-brow{ position:fixed; inset:0; z-index:900; background:var(--bg); display:flex; flex-direction:column; animation:mc9In .25s ease; }
+.mc9-brow-bar{ display:flex; align-items:center; gap:6px; padding:10px 12px; padding-top:max(10px,env(safe-area-inset-top)); background:color-mix(in srgb,var(--surface) 80%,transparent); backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%); border-bottom:1px solid var(--border); }
+.mc9-brow-btn{ width:38px; height:38px; border-radius:12px; border:0; background:var(--surface-2); color:var(--text); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.mc9-brow-btn:disabled{ opacity:.4; cursor:default; }
+.mc9-brow-url{ flex:1; min-width:0; padding:10px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--surface-2); color:var(--text); font:inherit; font-size:14px; outline:none; }
+.mc9-brow-url:focus{ border-color:var(--accent); }
+.mc9-brow-body{ flex:1; position:relative; background:var(--surface-2); }
+.mc9-brow-body iframe{ width:100%; height:100%; border:0; display:block; }
+.mc9-brow-home{ position:absolute; inset:0; overflow-y:auto; padding:22px 16px 40px; }
+.mc9-brow-home h3{ font-size:13px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-2); margin:4px 0 10px; }
+.mc9-brow-tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:560px; }
+.mc9-brow-tile{ border:1px solid var(--border); background:var(--surface); border-radius:18px; padding:18px 8px 14px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; font:inherit; color:var(--text); }
+.mc9-brow-tile span{ font-size:30px; } .mc9-brow-tile b{ font-size:13px; }
+.mc9-brow-tile:hover{ background:var(--surface-2); }
+.mc9-brow-hint{ position:absolute; left:12px; right:12px; bottom:12px; display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:16px; background:color-mix(in srgb,var(--surface) 88%,transparent); backdrop-filter:blur(20px); border:1px solid var(--border); box-shadow:var(--shadow-md); font-size:13px; color:var(--text-2); }
+.mc9-brow-hint button{ border:0; border-radius:10px; padding:8px 12px; background:var(--accent); color:#fff; font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+
+/* ---------- Экран блокировки ---------- */
+.mc9-lock{ position:fixed; inset:0; z-index:1200; display:flex; align-items:center; justify-content:center; padding:20px; background:radial-gradient(900px 600px at 30% 20%, rgba(43,72,150,.5), transparent 60%), rgba(8,11,24,.66); backdrop-filter:blur(26px) saturate(140%); -webkit-backdrop-filter:blur(26px) saturate(140%); animation:mc9In .3s ease; }
+.mc9-lock-card{ width:100%; max-width:360px; padding:30px 26px; border-radius:28px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); backdrop-filter:blur(30px) saturate(170%); -webkit-backdrop-filter:blur(30px) saturate(170%); box-shadow:0 40px 90px rgba(0,0,0,.5); text-align:center; animation:mc9SlideUp .35s cubic-bezier(.16,1,.3,1); }
+.mc9-lock-card *{ color:#eef2fb!important; }
+.mc9-lock-logo{ width:74px; height:74px; margin:0 auto 14px; border-radius:22px; background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6); display:flex; align-items:center; justify-content:center; font-size:34px; font-weight:900; color:#fff!important; box-shadow:0 14px 34px rgba(63,120,255,.45), inset 0 1px rgba(255,255,255,.5); }
+.mc9-lock-card h2{ margin:0 0 6px; font-size:21px; }
+.mc9-lock-card p{ margin:0 0 18px; font-size:13.5px; opacity:.8; line-height:1.5; }
+.mc9-lock-card input{ width:100%; box-sizing:border-box; padding:14px 16px; border-radius:16px; border:2px solid rgba(255,255,255,.16); background:rgba(255,255,255,.08); color:#fff!important; font:inherit; font-size:15px; outline:none; text-align:center; }
+.mc9-lock-card input:focus{ border-color:#5aa2ff; box-shadow:0 0 0 4px rgba(90,162,255,.18); }
+.mc9-lock-btn{ width:100%; margin-top:10px; padding:14px; border-radius:16px; border:0; cursor:pointer; font:inherit; font-size:15.5px; font-weight:800; background:linear-gradient(135deg,#2f7cf6,#7c5cf6); color:#fff!important; box-shadow:0 12px 28px rgba(63,108,255,.4); }
+.mc9-lock-face{ width:100%; margin-top:10px; padding:13px; border-radius:16px; border:1.5px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); cursor:pointer; font:inherit; font-size:15px; font-weight:700; color:#eef2fb!important; }
+.mc9-lock-out{ margin-top:14px; border:0; background:none; color:rgba(238,242,251,.65)!important; font:inherit; font-size:13px; cursor:pointer; }
+.mc9-lock-err{ color:#ffb4c8!important; font-size:13px; min-height:18px; margin-top:8px; }
+.mc9-lock.shake .mc9-lock-card{ animation:mc8Shake .45s both; }
+
+/* ---------- Камера (регистрация/проверка лица) ---------- */
+.mc9-cam{ position:fixed; inset:0; z-index:1300; background:rgba(5,8,18,.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:20px; animation:mc9In .25s ease; }
+.mc9-cam video{ width:min(420px,92vw); aspect-ratio:3/4; object-fit:cover; border-radius:24px; background:#000; box-shadow:0 30px 70px rgba(0,0,0,.5); }
+.mc9-cam h3{ color:#fff; margin:0; font-size:18px; }
+.mc9-cam p{ color:rgba(255,255,255,.75); margin:0; text-align:center; font-size:13.5px; max-width:340px; line-height:1.5; }
+.mc9-cam .mc9-lock-btn{ max-width:420px; }
+.mc9-cam-cancel{ border:0; background:none; color:rgba(255,255,255,.6); font:inherit; font-size:14px; cursor:pointer; }
+
+/* ---------- Настройки: страница безопасности ---------- */
+.mc9-note{ font-size:12.5px; color:var(--text-2); padding:0 4px 2px; line-height:1.45; }
+
+/* ---------- Убрано в v4.0 ---------- */
+.mc-age-gate,.mc-age-ok{ display:none!important; }
+`;
+  document.head.appendChild(css);
+})();
+
+// ===================== 1. Убираем колесо, аукцион, проверку лица =====================
+mcOpenWheel = function () { toast('Колесо фортуны отключено в этой версии', 'ℹ️'); };
+mcOpenAuction = function () { toast('Аукцион отключён в этой версии', 'ℹ️'); };
+mcAucNewLot = function () { toast('Аукцион отключён в этой версии', 'ℹ️'); };
+mcAucCountActive = async function () { return 0; };
+mcAgeOpen = function () { toast('Проверка возраста отключена', 'ℹ️'); };
+mcAgeOk = function () { return true; };
+
+// Витрина подарков без колеса и аукциона
+renderGiftShop = async function () {
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  window.__mcOtherView = 'gifts';
+  const chips = [['all', 'Все'], ['common', 'Обычные'], ['rare', 'Редкие'], ['epic', 'Эпические'], ['leg', 'Легендарные']];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div>
+  <div class="settings-wrap mc-gs7">
+    <div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите задания и отправляйте подарки друзьям.</p></div><div class="gift-wallet-coin">УМ</div></div>
+    <div class="mc-gs7-actions">
+      <button type="button" onclick="startGiftEarning()"><span>✦</span><b>Заработать</b></button>
+      <button type="button" onclick="openGiftSendPicker()"><span>↗</span><b>Подарить</b></button>
+      <button type="button" onclick="renderGiftCraft()"><span>🛠️</span><b>Крафт</b></button>
+    </div>
+    <div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>${METRO_GIFTS.length} подарков · нажмите, чтобы купить себе</p></div></div>
+    <div class="mc-gs7-chips">${chips.map(([k, l]) => `<button type="button" class="${mcShopFilter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
+    <div class="gift-shop-grid mc-gs7-grid">${METRO_GIFTS.map(g => { const r = mcGiftRarity(g); return `<button type="button" class="gift-shop-item mc-gi7 r-${r}" data-r="${r}" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${esc(g.name)}</b><small>${esc(g.desc)}</small><span class="mc-gi7-foot">${mcRarBadge(g)}<span class="gift-price">${g.cost} УМ</span></span></button>`; }).join('')}</div>
+    <div id="giftOwnedSection"></div>
+  </div>`;
+  wrap.querySelector('.mc-gs7-chips')?.addEventListener('click', e => {
+    const b = e.target.closest('[data-f]'); if (!b) return; mcShopFilter = b.dataset.f;
+    wrap.querySelectorAll('.mc-gs7-chips button').forEach(x => x.classList.toggle('on', x === b));
+    wrap.querySelectorAll('.mc-gs7-grid .mc-gi7[data-r]').forEach(x => { x.hidden = mcShopFilter !== 'all' && x.dataset.r !== mcShopFilter; });
+  });
+  const bal = await readGiftBalance(); mcSetBalanceUI(bal);
+  await renderOwnedGifts();
+};
+
+// Мои подарки — без кнопки аукциона
+renderOwnedGifts = async function () {
+  const el = $('giftOwnedSection'); if (!el || !state.user?.uid) return;
+  try {
+    const snap = await get(ref(db, `gift_inventory/${state.user.uid}`));
+    const all = Object.entries(snap.val() || {}).map(([id, v]) => ({ id, ...v })).filter(g => g && !g.purchasePending).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const hiddenN = all.filter(g => g.hidden).length;
+    const items = all.filter(g => mcOwnedShowHidden || !g.hidden);
+    const worth = all.reduce((s, g) => s + (Number(g.cost) || Number(mcGiftById(g.giftId)?.cost) || 0), 0);
+    el.innerHTML = `<div class="discovery-section-head"><div><h3>Мои подарки · ${all.length}</h3><p>Ценность коллекции: ${mcFmtUm(worth)} УМ${hiddenN ? ` · скрыто: ${hiddenN}` : ''}</p></div>${hiddenN ? `<button type="button" class="mc-chip7" onclick="mcToggleOwnedHidden()">${mcOwnedShowHidden ? 'Скрыть скрытые' : 'Показать скрытые'}</button>` : ''}</div>
+    ${items.length ? `<div class="gift-owned-list">${items.map(g => { const r = mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost }); return `<div class="gift-owned-item r-${r}${g.hidden ? ' is-hidden' : ''}"><span>${esc(g.emoji || '🎁')}</span><div><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'От ' + esc(g.fromName) : 'Ваш подарок'}${g.hidden ? ' · скрыт' : ''}</small></div><button class="mini-btn" title="${g.hidden ? 'Показать в профиле' : 'Скрыть в профиле'}" onclick="hideOwnedGift('${g.id}')">${g.hidden ? '👁' : '◉'}</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`; }).join('')}</div>` : '<p class="gift-empty-note">Пока нет подарков. Купите в витрине или получите от друзей.</p>'}`;
+  } catch (e) { el.innerHTML = '<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте подключение.</p>'; }
+};
+
+// ===================== 2. Новый «Прочее» =====================
+const MC9_OTHER = {
+  services: [
+    { k: 'gifts', i: '🎁', t: 'Подарки' },
+    { k: 'channels', i: '📡', t: 'Каналы' },
+    { k: 'earn', i: '✦', t: 'Заработать' },
+    { k: 'browser', i: '🌐', t: 'Браузер' }
+  ],
+  tools: [
+    { k: 'weather', i: '🌤️', t: 'Погода' },
+    { k: 'app:currency', i: '💱', t: 'Курсы' },
+    { k: 'app:todo', i: '✅', t: 'Задачи' },
+    { k: 'app:timer', i: '⏱️', t: 'Таймер' },
+    { k: 'notes', i: '📝', t: 'Заметки' },
+    { k: 'calculator', i: '🧮', t: 'Калькулятор' },
+    { k: 'app:units', i: '📏', t: 'Конвертер' },
+    { k: 'bots', i: '🤖', t: 'Боты' },
+    { k: 'app:g2048', i: '🧩', t: '2048' },
+    { k: 'app:ttt', i: '⭕', t: 'Крестики' },
+    { k: 'bot:game_bot', i: '🎲', t: 'Игровой бот' },
+    { k: 'faq', i: '❓', t: 'Помощь' }
+  ]
+};
+function mc9Go(k) {
+  if (k === 'gifts') return void renderGiftShop();
+  if (k === 'channels') return renderOtherChannels();
+  if (k === 'earn') return mcEarnOpen('other');
+  if (k === 'browser') return mcBrowserOpen();
+  if (k === 'bots') return switchTab('bots');
+  if (k === 'weather') return void renderWeatherApp('Москва');
+  if (k === 'notes') return renderMetroNotes();
+  if (k === 'calculator') return renderMetroCalculator();
+  if (k === 'faq') return mcOpenFaq();
+  if (k.startsWith('app:')) return mcOpenApp(k.slice(4));
+  if (k.startsWith('bot:')) return mcBotOpen(k.slice(4));
+}
+renderOtherHome = function () {
+  window.__mcOtherView = 'home';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const me = state.profile || {}; const name = me.firstName || String(me.displayName || '').split(' ')[0] || 'друг';
+  const h = new Date().getHours(); const hi = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер';
+  const tile = (x, n) => `<button type="button" class="mc9-tile" data-go="${x.k}" style="animation:mc9In .3s cubic-bezier(.16,1,.3,1) both; animation-delay:${Math.min(n * 18, 260)}ms"><span>${x.i}</span><b>${esc(x.t)}</b></button>`;
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Назад</button><div class="settings-title">Прочее</div></div>
+  <div class="settings-wrap mc9-wrap">
+    <div class="mc9-hero"><div><b>${esc(hi)}, ${esc(name)}</b><small>Что нового в MetroChat v${MC_VERSION}</small></div>
+      <div class="mc9-bal"><b id="mc9Bal">…</b><small>УМ · баланс</small></div></div>
+    <button type="button" class="mc9-ai" onclick="mcAIOpen()"><img src="${MC_AI_LOGO}" alt="Metro AI"><span class="mc9-ai-txt"><b>Metro AI</b><small>Нейросеть-помощник: вопросы, переводы и управление чатами, группами и ботами</small></span><span class="mc9-ai-go">→</span></button>
+    <div class="mc9-sec"><h3>Сервисы</h3></div>
+    <div class="mc9-grid">${MC9_OTHER.services.map(tile).join('')}</div>
+    <div class="mc9-sec"><h3>Инструменты и игры</h3></div>
+    <div class="mc9-grid">${MC9_OTHER.tools.map(tile).join('')}</div>
+    <p class="mc9-note" style="text-align:center; margin-top:6px;">MetroChat · v${MC_VERSION} · сделано с 💙</p>
+  </div>`;
+  wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => mc9Go(b.dataset.go)));
+  (async () => {
+    try { const bal = await readGiftBalance(); if (window.__mcOtherView === 'home') { const el = $('mc9Bal'); if (el) el.textContent = mcFmtUm(Number(bal) || 0); } } catch (_) { const el = $('mc9Bal'); if (el) el.textContent = '—'; }
+  })();
+};
+
+// ===================== 3. Раздел «Боты»: каталог + свои боты + инструменты =====================
+function mcCBots() { try { return JSON.parse(localStorage.getItem('mc_custom_bots') || '[]') || []; } catch (_) { return []; } }
+function mcCBotsSave(list) {
+  try { localStorage.setItem('mc_custom_bots', JSON.stringify(list)); } catch (_) {}
+  const uid = state.user?.uid; if (!uid) return;
+  const obj = {}; list.forEach(b => { obj[b.id] = b; });
+  set(ref(db, `user_bots/${uid}`), obj).catch(() => {});
+}
+async function mcCBotsLoad() {
+  const uid = state.user?.uid; if (!uid) return mcCBots();
+  let remote = [];
+  try { const s = await get(ref(db, `user_bots/${uid}`)); remote = Object.values(s.val() || {}).filter(Boolean); } catch (_) {}
+  const local = mcCBots();
+  const byId = new Map();
+  [...local, ...remote].forEach(b => { if (b && b.id) byId.set(b.id, { ...byId.get(b.id), ...b }); });
+  return [...byId.values()];
+}
+function mcBotsHub() {
+  window.__mcOtherView = 'bots';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const added = MC_BOTS.filter(b => mcBotAdded(b.id));
+  const cats = [...new Set(MC_BOTS.map(b => b.cat))];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">← Назад</button><div class="settings-title">Боты</div></div>
+  <div class="settings-wrap mc9-wrap">
+    <button type="button" class="mc9-ai" onclick="mcAIOpen()"><img src="${MC_AI_LOGO}" alt="Metro AI"><span class="mc9-ai-txt"><b>Metro AI</b><small>Нейросеть-помощник: спросите о чём угодно или управляйте чатами</small></span><span class="mc9-ai-go">→</span></button>
+    <div class="mc9-sec"><h3>Свои боты</h3><button class="mc9-badge" style="border:0;cursor:pointer;" onclick="mcBotCreateOpen()">＋ Создать</button></div>
+    <div id="mc9MyBots" class="mc9-list"></div>
+    ${added.length ? `<div class="mc9-sec"><h3>Мои боты</h3></div><div class="mc9-list">${added.map(b => `<button type="button" class="mc9-list-row" onclick="mcBotOpen('${b.id}')"><span class="mc9-list-ico" style="background:linear-gradient(135deg,${b.c1},${b.c2})">${b.e}</span><span class="mc9-list-txt"><b>${esc(b.name)}</b><small>${esc(b.desc || '')}</small></span><span class="mc9-ai-go">→</span></button>`).join('')}</div>` : ''}
+    ${cats.map(c => `<div class="mc9-sec"><h3>${esc(c)}</h3></div><div class="mc9-list">${MC_BOTS.filter(b => b.cat === c).map(b => {
+      const on = mcBotAdded(b.id);
+      return `<div class="mc9-list-row" style="cursor:default;"><span class="mc9-list-ico" style="background:linear-gradient(135deg,${b.c1},${b.c2})">${b.e}</span><span class="mc9-list-txt"><b>${esc(b.name)}</b><small>${esc(b.desc || '')}</small></span><button class="mc9-badge" style="border:0;cursor:pointer;" onclick="mcBotOpen('${b.id}')">${on ? 'Открыть' : 'Добавить'}</button></div>`;
+    }).join('')}</div>`).join('')}
+    <div class="mc9-sec"><h3>Инструменты</h3></div>
+    <div class="mc9-grid">
+      <button type="button" class="mc9-tile" onclick="renderWeatherApp('Москва')"><span>🌤️</span><b>Погода</b></button>
+      <button type="button" class="mc9-tile" onclick="mcOpenApp('currency')"><span>💱</span><b>Курсы</b></button>
+      <button type="button" class="mc9-tile" onclick="mcOpenApp('timer')"><span>⏱️</span><b>Таймер</b></button>
+      <button type="button" class="mc9-tile" onclick="mcOpenApp('todo')"><span>✅</span><b>Задачи</b></button>
+      <button type="button" class="mc9-tile" onclick="renderMetroNotes()"><span>📝</span><b>Заметки</b></button>
+      <button type="button" class="mc9-tile" onclick="renderMetroCalculator()"><span>🧮</span><b>Калькулятор</b></button>
+      <button type="button" class="mc9-tile" onclick="mcOpenApp('units')"><span>📏</span><b>Конвертер</b></button>
+      <button type="button" class="mc9-tile" onclick="mcBrowserOpen()"><span>🌐</span><b>Браузер</b></button>
+    </div>
+  </div>`;
+  mcRenderMyBots();
+}
+async function mcRenderMyBots() {
+  const el = $('mc9MyBots'); if (!el) return;
+  const list = await mcCBotsLoad();
+  el.innerHTML = list.length ? list.map(b => `<button type="button" class="mc9-list-row" onclick="mcCustomBotOpen('${b.id}')"><span class="mc9-list-ico" style="background:linear-gradient(135deg,${b.c1 || '#3b82f6'},${b.c2 || '#7c3aed'})">${esc(b.e || '🤖')}</span><span class="mc9-list-txt"><b>${esc(b.name)}</b><small>${esc(b.desc || 'Ваш бот')} · ${b.rules?.length || 0} ${mcPl8(b.rules?.length || 0, 'правило', 'правила', 'правил')}</small></span><span class="mc9-badge" style="border:0;cursor:pointer;" onclick="event.stopPropagation();mcBotCreateOpen('${b.id}')">✏️</span><span class="mc9-badge" style="border:0;cursor:pointer;background:rgba(239,68,68,.12);color:#ef4444;" onclick="event.stopPropagation();mcCBotDelete('${b.id}')">🗑</span></button>`).join('') : '<button type="button" class="mc9-list-row" onclick="mcBotCreateOpen()"><span class="mc9-list-ico" style="background:linear-gradient(135deg,#22c55e,#0d9488)">＋</span><span class="mc9-list-txt"><b>Создать первого бота</b><small>Бот с вашими командами и ответами — без кода</small></span></button>';
+}
+function mcBotCreateOpen(editId) {
+  const list = mcCBots();
+  const b = editId ? list.find(x => x.id === editId) : null;
+  const rules = b?.rules || [{ q: 'привет', a: 'Привет! Я ваш бот 🤖' }, { q: 'помощь', a: 'Напишите мне что-нибудь — я отвечу!' }];
+  const body = `
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div><label class="set-label">Имя бота</label><input id="mc9cbName" class="onb-input" style="width:100%;margin-top:6px;" maxlength="30" placeholder="Например: Мой помощник" value="${esc(b?.name || '')}"></div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;"><label class="set-label">Эмодзи</label><input id="mc9cbEmoji" class="onb-input" style="width:100%;margin-top:6px;" maxlength="4" value="${esc(b?.e || '🤖')}"></div>
+      <div style="flex:1;"><label class="set-label">Цвет 1</label><input id="mc9cbC1" class="onb-input" style="width:100%;margin-top:6px;" value="${esc(b?.c1 || '#3b82f6')}"></div>
+      <div style="flex:1;"><label class="set-label">Цвет 2</label><input id="mc9cbC2" class="onb-input" style="width:100%;margin-top:6px;" value="${esc(b?.c2 || '#7c3aed')}"></div>
+    </div>
+    <div><label class="set-label">Правила: фраза = ответ (каждое с новой строки)</label>
+      <div class="mc9-cb-rules" id="mc9cbRules" style="margin-top:6px;">
+        ${rules.map(r => `<div class="mc9-cb-rule"><input value="${esc(r.q)}" data-q placeholder="фраза"><input value="${esc(r.a)}" data-a placeholder="ответ"><button type="button" class="mc9-x" onclick="this.parentNode.remove()">✕</button></div>`).join('')}
+      </div>
+      <button type="button" class="mc9-badge" style="border:1px solid var(--mc-line);cursor:pointer;margin-top:8px;" onclick="mc9RuleAdd()">＋ Правило</button>
+    </div>
+    <p class="mc9-note">Бот отвечает на ваши фразы по правилам. Формат: <b>фраза = ответ</b>. Совпадение — по вхождению слова.</p>
+  </div>`;
+  mcDialog({
+    icon: '🤖', title: b ? 'Изменить бота' : 'Создать бота', body, wide: true,
+    buttons: [{ label: 'Отмена', value: false }, { label: b ? 'Сохранить' : 'Создать', kind: 'primary', value: true }]
+  }).then(ok => {
+    if (!ok) return;
+    const name = $('mc9cbName')?.value.trim();
+    const e = ($('mc9cbEmoji')?.value.trim() || '🤖').slice(0, 4);
+    const c1 = ($('mc9cbC1')?.value.trim() || '#3b82f6');
+    const c2 = ($('mc9cbC2')?.value.trim() || '#7c3aed');
+    const rl = [...document.querySelectorAll('#mc9cbRules .mc9-cb-rule')].map(row => ({ q: (row.querySelector('[data-q]')?.value || '').trim(), a: (row.querySelector('[data-a]')?.value || '').trim() })).filter(r => r.q && r.a);
+    if (!name) return toast('Введите имя бота', '⚠');
+    if (!rl.length) return toast('Добавьте хотя бы одно правило', '⚠');
+    const list = mcCBots();
+    const id = b?.id || 'cb_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const item = { id, name, e, c1, c2, desc: 'Ваш собственный бот', rules: rl, createdAt: Date.now() };
+    const i = list.findIndex(x => x.id === id);
+    if (i >= 0) list[i] = item; else list.push(item);
+    mcCBotsSave(list);
+    toast(b ? 'Бот обновлён' : 'Бот создан', '🤖');
+    mcRenderMyBots();
+  });
+}
+function mc9RuleAdd() {
+  const box = $('mc9cbRules'); if (!box) return;
+  const d = document.createElement('div'); d.className = 'mc9-cb-rule';
+  d.innerHTML = '<input data-q placeholder="фраза"><input data-a placeholder="ответ"><button type="button" class="mc9-x" onclick="this.parentNode.remove()">✕</button>';
+  box.appendChild(d);
+}
+function mcCBotDelete(id) {
+  mcConfirm('Удалить бота?', 'Бот и его история на этом устройстве будут удалены.', { okText: 'Удалить' }).then(ok => {
+    if (!ok) return;
+    const list = mcCBots().filter(b => b.id !== id); mcCBotsSave(list);
+    try { localStorage.removeItem('mc_cb_chat_' + id); } catch (_) {}
+    toast('Бот удалён', '🗑'); mcRenderMyBots();
+  });
+}
+function mcCustomBotOpen(id) {
+  const b = mcCBots().find(x => x.id === id); if (!b) return;
+  window.__mcOtherView = 'custombot:' + id;
+  const wrap = $('settingsPanel');
+  let hist = []; try { hist = JSON.parse(localStorage.getItem('mc_cb_chat_' + id) || '[]'); } catch (_) {}
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="mcBotsHub()">← Боты</button><div class="settings-title">${esc(b.name)}</div></div>
+  <div class="mc9-ai-panel">
+    <div class="mc9-ai-msgs" id="mc9cbMsgs"></div>
+    <div class="mc9-ai-input"><textarea id="mc9cbInput" placeholder="Написать боту…" rows="1"></textarea><button type="button" class="mc9-ai-send" id="mc9cbSend" onclick="mcCBSend('${id}')">➤</button></div>
+  </div>`;
+  const renderMsgs = () => { const m = $('mc9cbMsgs'); if (m) { m.innerHTML = hist.map(x => `<div class="mc9-ai-msg ${x.r}">${mcBotFmt(x.t)}</div>`).join(''); m.scrollTop = m.scrollHeight; } };
+  renderMsgs();
+  const inp = $('mc9cbInput');
+  inp?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); mcCBSend(id); } });
+  $('mc9cbMsgs')._save = () => { try { localStorage.setItem('mc_cb_chat_' + id, JSON.stringify(hist.slice(-60))); } catch (_) {} };
+  $('mc9cbMsgs')._hist = hist; $('mc9cbMsgs')._render = renderMsgs;
+}
+function mcCBSend(id) {
+  const inp = $('mc9cbInput'); if (!inp) return;
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = '';
+  const m = $('mc9cbMsgs'); const hist = m._hist;
+  hist.push({ r: 'u', t: text });
+  m._render(); m._save();
+  const b = mcCBots().find(x => x.id === id); if (!b) return;
+  const low = text.toLowerCase();
+  let reply = b.rules.find(r => low.includes(r.q.toLowerCase()))?.a;
+  if (!reply) reply = '🤔 Не понял. Вот что я умею:\n' + b.rules.slice(0, 6).map(r => '· «' + r.q + '»').join('\n');
+  m.insertAdjacentHTML('beforeend', '<div class="mc9-ai-typing" id="mc9cbTyping"><i></i><i></i><i></i></div>');
+  m.scrollTop = m.scrollHeight;
+  setTimeout(() => {
+    $('mc9cbTyping')?.remove();
+    hist.push({ r: 'a', t: reply });
+    m._render(); m._save();
+  }, 600 + Math.random() * 500);
+}
+
+// ===================== 4. Metro AI =====================
+const MC_AI_ENDPOINT = 'https://text.pollinations.ai/openai';
+function mcAIHist() { try { return JSON.parse(localStorage.getItem('mc_ai_hist') || '[]'); } catch (_) { return []; } }
+function mcAIHistSave(h) { try { localStorage.setItem('mc_ai_hist', JSON.stringify(h.slice(-60))); } catch (_) {} }
+function mcAIOpen() {
+  window.__mcOtherView = 'ai';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  wrap.innerHTML = `<div class="settings-header" style="padding:0;border:0;"><div class="mc9-ai-head"><button class="settings-back-btn" onclick="renderOtherHome()" style="flex-shrink:0;">←</button><img src="${MC_AI_LOGO}" alt=""><span><b>Metro AI</b><small>нейросеть · всегда под рукой</small></span></div></div>
+  <div class="mc9-ai-panel">
+    <div class="mc9-ai-msgs" id="mc9aiMsgs"></div>
+    <div class="mc9-ai-chips" id="mc9aiChips">
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Что ты умеешь?')">✨ Что ты умеешь?</button>
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Покажи мои чаты')">💬 Мои чаты</button>
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Создай группу Друзья')">👥 Создать группу</button>
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Погода в Москве')">🌤️ Погода</button>
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Переведи: как дела?')">🌍 Перевести</button>
+      <button type="button" class="mc9-ai-chip" onclick="mcAIQuick('Придумай идею для истории')">📱 Идея истории</button>
+    </div>
+    <div class="mc9-ai-input"><textarea id="mc9aiInput" placeholder="Спросите Metro AI…" rows="1"></textarea><button type="button" class="mc9-ai-send" id="mc9aiSend" onclick="mcAISend()">➤</button></div>
+  </div>`;
+  const hist = mcAIHist();
+  const m = $('mc9aiMsgs');
+  m._hist = hist;
+  m._render = () => {
+    m.innerHTML = hist.map(x => `<div class="mc9-ai-msg ${x.r}">${mcBotFmt(x.t)}</div>`).join('') || '<div class="mc9-ai-msg a">Привет! Я <b>Metro AI</b> — нейросеть внутри MetroChat.\n\nЗадайте любой вопрос, попросите перевести текст, придумать идею или помочь с мессенджером: «создай группу Друзья», «открой чат с Машей», «заглуши чат Новости», «погода в Питере».</div>';
+    m.scrollTop = m.scrollHeight;
+  };
+  m._render();
+  const inp = $('mc9aiInput');
+  inp?.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); mcAISend(); } });
+}
+function mcAIQuick(t) { const inp = $('mc9aiInput'); if (inp) inp.value = t; mcAISend(); }
+function mcAIFindChat(name) {
+  const q = name.trim().toLowerCase();
+  if (!q) return null;
+  const items = getAllChatsList();
+  return items.find(c => c.name.toLowerCase() === q) || items.find(c => c.name.toLowerCase().includes(q)) || null;
+}
+// Локальные команды управления (работают офлайн и мгновенно)
+function mcAIIntent(t) {
+  const low = t.toLowerCase().trim();
+  let m;
+  if (/^(привет|здравствуй|хай|hello|hi)[\s!,.]*$/.test(low)) return 'Привет! 👋 Я Metro AI. Спросите меня о чём угодно или попросите помочь с чатами: «создай группу», «покажи мои чаты», «переведи …».';
+  if (/что ты умеешь|что умеешь|помощь|команды|возможности/.test(low)) {
+    return 'Я умею:\n· **Отвечать на вопросы** — просто спросите\n· **Переводить** — «переведи: текст»\n· **Управлять чатами** — «покажи мои чаты», «открой чат …», «заглуши чат …», «закрепи чат …»\n· **Создавать группы** — «создай группу Название»\n· **Погода** — «погода в Городе»\n· **Идеи** — история, поздравление, сообщение\n\nОпасные действия (удаление чатов, выход из аккаунта) я не выполняю — только подскажу, где их сделать.';
+  }
+  if ((m = low.match(/(?:созда(?:й|ть)|сдела(?:й|ть))\s+(?:группу|чату|канал)\s*[«"']?([^»"'\n]+)/))) {
+    const name = m[1].trim().replace(/[»"'.]+$/, '');
+    return { act: () => { openCreateGroupModal(); const inp = $('newGroupName'); if (inp) { inp.value = name; inp.focus(); } return `Открываю создание группы — имя «${name}» уже подставлено. Нажмите «Создать» 👇`; } };
+  }
+  if (/покажи (?:мои )?чат|список чатов|мои чаты/.test(low)) {
+    const items = getAllChatsList().slice(0, 15);
+    if (!items.length) return 'У вас пока нет чатов. Найдите людей через поиск 🔍 или создайте группу.';
+    return 'Ваши чаты:\n' + items.map(c => '· ' + c.name + (c.type === 'group' ? ' (группа)' : c.type === 'channel' ? ' (канал)' : '')).join('\n') + `\n\nВсего: ${getAllChatsList().length}. Скажите «открой чат Название», чтобы перейти.`;
+  }
+  if ((m = low.match(/открой\s+чат\s+[«"']?([^»"'\n]+)/))) {
+    const c = mcAIFindChat(m[1]);
+    if (!c) return `Чат «${m[1].trim()}» не нашёл. Проверьте название или скажите «покажи мои чаты».`;
+    return { act: () => { setTimeout(() => { try { openChat(c.id, c.type); } catch (_) {} }, 250); switchTab(c.type === 'group' ? 'groups' : c.type === 'channel' ? 'chats' : 'chats'); return `Открываю «${c.name}»…`; } };
+  }
+  if ((m = low.match(/(?:заглуши|выключи звук)(?:\s+чат)?\s*[«"']?([^»"'\n]+)/))) {
+    const c = mcAIFindChat(m[1]);
+    if (!c) return `Чат «${m[1].trim()}» не нашёл.`;
+    return { act: async () => { if (!state.chats[c.id]?.muted) await toggleMuteChat(c.id); return `Чат «${c.name}» заглушен 🔕`; } };
+  }
+  if ((m = low.match(/(?:включи звук|разглуши)(?:\s+чат)?\s*[«"']?([^»"'\n]+)/))) {
+    const c = mcAIFindChat(m[1]);
+    if (!c) return `Чат «${m[1].trim()}» не нашёл.`;
+    return { act: async () => { if (state.chats[c.id]?.muted) await toggleMuteChat(c.id); return `Звук в «${c.name}» включён 🔔`; } };
+  }
+  if ((m = low.match(/закрепи\s+чат\s+[«"']?([^»"'\n]+)/))) {
+    const c = mcAIFindChat(m[1]);
+    if (!c) return `Чат «${m[1].trim()}» не нашёл.`;
+    return { act: async () => { try { await togglePinChat(c.id); } catch (_) {} return `Чат «${c.name}» закреплён 📌`; } };
+  }
+  if ((m = low.match(/погода(?:\s+(?:в|во))?\s+([^?!\n]+)/))) {
+    const city = m[1].trim();
+    return { act: () => { renderWeatherApp(city); return `Открываю погоду в «${city}»…`; } };
+  }
+  if (/^погода[\s?]*$/.test(low)) return { act: () => { renderWeatherApp('Москва'); return 'Открываю погоду…'; } };
+  if (/(сколько у меня )?чатов|статистика/.test(low)) {
+    const items = getAllChatsList();
+    return `У вас: ${items.filter(c => c.type === 'dm').length} личных чатов, ${items.filter(c => c.type === 'group').length} групп, ${items.filter(c => c.type === 'channel').length} каналов.`;
+  }
+  if (/удали|выйди из аккаунта|смени пароль/.test(low)) {
+    return 'Опасные действия (удаление, выход, пароль) я не выполняю — сделайте это вручную: **Настройки → Безопасность**. Так безопаснее 🙂';
+  }
+  return null;
+}
+async function mcAICall(userText) {
+  const chats = getAllChatsList();
+  const sys = `Ты — Metro AI, встроенный ассистент мессенджера MetroChat. Отвечай кратко и по делу (до 4 предложений), дружелюбно, на языке пользователя (обычно русский). Ты знаешь MetroChat: чаты, группы, каналы, истории (2 дня), подарки и умы, боты, звонки, встроенный браузер, вход по паролю и лицу, тёмная тема. Управление мессенджером выполняется командами: «создай группу X», «покажи мои чаты», «открой чат X», «заглуши чат X», «погода в Y». Если пользователь просит опасное (удалить аккаунт, сменить пароль) — вежливо откажись и подскажи путь в настройках. У пользователя сейчас ${chats.length} чатов.`;
+  const ctrl = new AbortController();
+  const to = setTimeout(() => ctrl.abort(), 30000);
+  try {
+    const r = await fetch(MC_AI_ENDPOINT, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'openai', messages: [{ role: 'system', content: sys }, { role: 'user', content: userText }] })
+    });
+    clearTimeout(to);
+    if (!r.ok) throw new Error('http ' + r.status);
+    const j = await r.json();
+    const txt = j?.choices?.[0]?.message?.content;
+    if (!txt) throw new Error('empty');
+    return txt.trim();
+  } finally { clearTimeout(to); }
+}
+let mcAIBusy = false;
+async function mcAISend() {
+  const inp = $('mc9aiInput'); const m = $('mc9aiMsgs');
+  if (!inp || !m || mcAIBusy) return;
+  const text = inp.value.trim(); if (!text) return;
+  inp.value = '';
+  const hist = m._hist;
+  hist.push({ r: 'u', t: text });
+  mcAIHistSave(hist);
+  m._render();
+  mcAIBusy = true;
+  const btn = $('mc9aiSend'); if (btn) btn.disabled = true;
+  m.insertAdjacentHTML('beforeend', '<div class="mc9-ai-typing" id="mc9aiTyping"><i></i><i></i><i></i></div>');
+  m.scrollTop = m.scrollHeight;
+  let reply = null;
+  const intent = mcAIIntent(text);
+  try {
+    if (intent && typeof intent === 'object' && intent.act) {
+      reply = await intent.act();
+    } else if (typeof intent === 'string') {
+      reply = intent;
+    } else {
+      reply = await mcAICall(text);
+    }
+  } catch (e) {
+    reply = 'Не удалось связаться с Metro AI 😔 Проверьте интернет и попробуйте ещё раз. Локальные команды («покажи мои чаты», «погода в Москве») работают и без сети.';
+  }
+  $('mc9aiTyping')?.remove();
+  hist.push({ r: 'a', t: reply });
+  mcAIHistSave(hist);
+  m._render();
+  mcAIBusy = false;
+  if (btn) btn.disabled = false;
+}
+
+// ===================== 5. Экран блокировки: пароль + лицо =====================
+function mcLockPwOn() { try { return localStorage.getItem('mc_lock_pw') === '1'; } catch (_) { return false; } }
+function mcLockFace() { try { const d = JSON.parse(localStorage.getItem('mc_face_v1')); return d && Array.isArray(d.desc) && d.desc.length ? d : null; } catch (_) { return null; } }
+let mcLockShown = false, mcLockTest = false;
+function mcLockNeeded() { return !!state.user && (mcLockPwOn() || !!mcLockFace()); }
+let mc9SessionUnlocked = false; // после разблокировки не блокируем заново до перезагрузки страницы
+function mcLockShow(test) {
+  if (mcLockShown) return;
+  mcLockShown = true; mcLockTest = !!test;
+  let el = $('mc9Lock');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'mc9Lock'; el.className = 'mc9-lock hidden';
+    el.innerHTML = `<div class="mc9-lock-card">
+      <div class="mc9-lock-logo">M</div>
+      <h2 id="mc9LockTitle">MetroChat заблокирован</h2>
+      <p id="mc9LockSub">Введите пароль от аккаунта, чтобы продолжить</p>
+      <input type="password" id="mc9LockPass" placeholder="Пароль" autocomplete="current-password">
+      <div class="mc9-lock-err" id="mc9LockErr"></div>
+      <button type="button" class="mc9-lock-btn" id="mc9LockGo">Разблокировать</button>
+      <button type="button" class="mc9-lock-face hidden" id="mc9LockFace">🙂 Войти по лицу</button>
+      <button type="button" class="mc9-lock-out" id="mc9LockOut">Выйти из аккаунта</button>
+    </div>`;
+    document.body.appendChild(el);
+    $('mc9LockGo').addEventListener('click', () => mcLockUnlock());
+    $('mc9LockPass').addEventListener('keydown', e => { if (e.key === 'Enter') mcLockUnlock(); });
+    $('mc9LockFace').addEventListener('click', () => mcFaceVerify());
+    $('mc9LockOut').addEventListener('click', () => { mcConfirm('Выйти из аккаунта?', 'Вы сможете войти снова в любой момент.', { okText: 'Выйти' }).then(ok => { if (ok) { mcLockShown = false; $('mc9Lock').classList.add('hidden'); confirmLogout(); } }); });
+  }
+  const hasFace = !!mcLockFace();
+  $('mc9LockFace').classList.toggle('hidden', !hasFace);
+  $('mc9LockSub').textContent = hasFace ? 'Введите пароль или войдите по лицу' : 'Введите пароль от аккаунта, чтобы продолжить';
+  if (test) { $('mc9LockTitle').textContent = 'Проверка блокировки'; $('mc9LockSub').textContent = 'Так выглядит экран блокировки при входе'; $('mc9LockOut').classList.add('hidden'); }
+  el.classList.remove('hidden');
+  setTimeout(() => $('mc9LockPass')?.focus(), 150);
+}
+function mcLockHide() { mcLockShown = false; $('mc9Lock')?.classList.add('hidden'); }
+async function mcLockUnlock() {
+  const pw = $('mc9LockPass')?.value; const err = $('mc9LockErr');
+  if (!pw) { if (err) err.textContent = 'Введите пароль'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, state.user.email, pw);
+    $('mc9LockPass').value = ''; if (err) err.textContent = '';
+    mc9SessionUnlocked = true; mcLockHide();
+    toast(mcLockTest ? 'Так будет выглядеть вход' : 'С возвращением', '🔓');
+  } catch (e) {
+    const box = $('mc9Lock');
+    box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+    if (err) err.textContent = 'Неверный пароль';
+    $('mc9LockPass').value = ''; $('mc9LockPass').focus();
+  }
+}
+
+// ---------- face-api (локально в браузере, без лимитов и VPN) ----------
+const MC9_FACE_CDN = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15';
+let mc9FaceApiP = null;
+function mc9FaceApi() {
+  if (mc9FaceApiP) return mc9FaceApiP;
+  mc9FaceApiP = (async () => {
+    const api = await import(/* @vite-ignore */ `${MC9_FACE_CDN}/dist/face-api.esm.js`);
+    const M = `${MC9_FACE_CDN}/model`;
+    await Promise.all([api.nets.tinyFaceDetector.loadFromUri(M), api.nets.faceLandmark68TinyNet.loadFromUri(M), api.nets.faceRecognitionNet.loadFromUri(M)]);
+    return api;
+  })().catch(e => { mc9FaceApiP = null; throw e; });
+  return mc9FaceApiP;
+}
+async function mcFaceDetect(api, video) {
+  const opt = new api.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.4 });
+  const r = await api.detectSingleFace(video, opt).withFaceLandmarks(true).withFaceDescriptor();
+  return r || null;
+}
+function mcFaceDist(a, b) { let s = 0; for (let i = 0; i < a.length; i++) { const d = a[i] - b[i]; s += d * d; } return Math.sqrt(s); }
+function mcFaceCam(onReady, onFail) {
+  let el = $('mc9Cam');
+  if (el) el.remove();
+  el = document.createElement('div'); el.id = 'mc9Cam'; el.className = 'mc9-cam';
+  el.innerHTML = `<video id="mc9CamV" autoplay playsinline muted></video><h3 id="mc9CamT">Камера</h3><p id="mc9CamP">Смотрите в камеру</p><button type="button" class="mc9-lock-btn hidden" id="mc9CamBtn">Дальше</button><button type="button" class="mc9-cam-cancel" id="mc9CamX">Отмена</button>`;
+  document.body.appendChild(el);
+  const v = $('mc9CamV');
+  let stream = null;
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 } })
+    .then(s => { stream = s; v.srcObject = s; onReady(v, el); })
+    .catch(e => { el.remove(); onFail(e); });
+  $('mc9CamX').addEventListener('click', () => { try { stream?.getTracks().forEach(t => t.stop()); } catch (_) {} el.remove(); onFail(new Error('cancel')); });
+  return { stop() { try { stream?.getTracks().forEach(t => t.stop()); } catch (_) {} el.remove(); } };
+}
+function mcFaceEnroll() {
+  const me = state.user; if (!me) return toast('Сначала войдите в аккаунт', '⚠');
+  let api = null, samples = [];
+  toast('Загружаем нейросеть распознавания лиц…', '⏳');
+  mc9FaceApi().then(a => { api = a; start(); }).catch(() => toast('Не удалось загрузить нейросеть. Проверьте интернет.', '⚠'));
+  function start() {
+    const cam = mcFaceCam(async (v, el) => {
+      $('mc9CamT').textContent = 'Регистрация лица';
+      $('mc9CamP').textContent = 'Смотрите прямо в камеру — снимем 3 кадра';
+      let tries = 0;
+      const timer = setInterval(async () => {
+        tries++;
+        try {
+          const r = await mcFaceDetect(api, v);
+          if (r) {
+            samples.push([...r.descriptor]);
+            $('mc9CamP').textContent = `Отлично! Образ ${samples.length} из 3`;
+            if (samples.length >= 3) {
+              clearInterval(timer);
+              try { localStorage.setItem('mc_face_v1', JSON.stringify({ desc: samples, at: Date.now() })); } catch (_) {}
+              cam.stop();
+              toast('Лицо запомнено на этом устройстве', '🙂');
+              if (mcSetPage === 'security' && state.tab === 'settings') renderSettings();
+            }
+          } else if (tries > 40) { clearInterval(timer); cam.stop(); toast('Лицо не найдено — попробуйте ещё раз', '⚠'); }
+        } catch (_) {}
+      }, 700);
+    }, () => toast('Нужен доступ к камере', '📷'));
+  }
+}
+function mcFaceVerify() {
+  const data = mcLockFace(); if (!data) return;
+  let api = null;
+  mc9FaceApi().then(a => { api = a; start(); }).catch(() => toast('Не удалось загрузить нейросеть', '⚠'));
+  function start() {
+    const cam = mcFaceCam(async (v) => {
+      $('mc9CamT').textContent = 'Вход по лицу';
+      $('mc9CamP').textContent = 'Смотрите прямо в камеру';
+      let tries = 0;
+      const timer = setInterval(async () => {
+        tries++;
+        try {
+          const r = await mcFaceDetect(api, v);
+          if (r) {
+            let best = 1e9;
+            for (const d of data.desc) best = Math.min(best, mcFaceDist(d, r.descriptor));
+            if (best < 0.52) {
+              clearInterval(timer); cam.stop(); mc9SessionUnlocked = true; mcLockHide();
+              toast('Здравствуйте! Лицо распознано', '🙂');
+            } else if (tries > 12) { clearInterval(timer); cam.stop(); toast('Лицо не распознано — войдите по паролю', '⚠'); }
+          } else if (tries > 25) { clearInterval(timer); cam.stop(); toast('Лицо не найдено', '⚠'); }
+        } catch (_) {}
+      }, 800);
+    }, () => {});
+  }
+}
+function mcFaceRemove() {
+  mcConfirm('Отключить вход по лицу?', 'На этом устройстве сохранённый образ лица будет удалён.', { okText: 'Отключить' }).then(ok => {
+    if (!ok) return;
+    try { localStorage.removeItem('mc_face_v1'); } catch (_) {}
+    toast('Вход по лицу отключён', '🙂');
+    if (mcSetPage === 'security' && state.tab === 'settings') renderSettings();
+  });
+}
+async function mcLockPwToggle() {
+  const on = mcLockPwOn();
+  if (!on) {
+    // включаем — сначала проверим пароль
+    const ok = await mcDialog({
+      icon: '🔐', title: 'Включить пароль при входе',
+      text: 'Введите пароль от аккаунта для подтверждения. После этого MetroChat будет просить пароль при каждом входе.',
+      body: '<input type="password" id="mc9PwConfirm" placeholder="Пароль" style="width:100%;box-sizing:border-box;padding:13px 15px;border-radius:14px;border:1.5px solid var(--mc-line);background:var(--mc-card-2);color:var(--text);font:inherit;font-size:15px;outline:none;">',
+      buttons: [{ label: 'Отмена', value: false }, { label: 'Включить', kind: 'primary', value: true }]
+    });
+    if (!ok) return;
+    const pw = $('mc9PwConfirm')?.value; if (!pw) return toast('Введите пароль', '⚠');
+    try {
+      await signInWithEmailAndPassword(auth, state.user.email, pw);
+      try { localStorage.setItem('mc_lock_pw', '1'); } catch (_) {}
+      toast('Пароль при входе включён', '🔐');
+    } catch (_) { toast('Неверный пароль', '⚠'); }
+  } else {
+    try { localStorage.setItem('mc_lock_pw', '0'); } catch (_) {}
+    toast('Пароль при входе выключен', '🔓');
+  }
+  if (mcSetPage === 'security' && state.tab === 'settings') renderSettings();
+}
+
+// ---------- Страница «Безопасность» в настройках ----------
+function mcSetSecurityPage() {
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const pwOn = mcLockPwOn(), face = mcLockFace();
+  wrap.innerHTML = `<div class="settings-header ms-head"><button class="settings-back-btn" onclick="mcSetGo('main')">‹ Настройки</button><div class="settings-title">Безопасность</div></div>
+  <div class="settings-wrap ms-wrap">
+    ${sGroup('Экран блокировки', [
+      sRow({ ico: '🔑', c: '#0ea5e9', label: 'Пароль при входе', sub: pwOn ? 'Включён · при каждом входе в MetroChat' : 'Выключен · включите для защиты', on: pwOn, act: 'mcLockPwToggle()' }),
+      sRow({ ico: '🙂', c: '#8b5cf6', label: 'Вход по лицу', sub: face ? 'Лицо запомнено на этом устройстве' : 'Нейросеть запомнит лицо и впустит вас', on: !!face, act: face ? 'mcFaceRemove()' : 'mcFaceEnroll()' }),
+      sRow({ ico: '🧪', c: '#f59e0b', label: 'Проверить блокировку', sub: 'Посмотреть, как выглядит вход', act: 'mcLockShow(true)' }),
+    ], 'Лицо и пароль проверяются на устройстве. Пароль подтверждается через Firebase.')}
+    ${sGroup('Аккаунт', [
+      sRow({ ico: '🔐', c: '#0ea5e9', label: 'Сменить пароль', act: 'openChangePassword()' }),
+      sRow({ ico: '💻', c: '#6366f1', label: 'Мои устройства', sub: 'Активные сеансы входа', act: 'openMyDevices()' }),
+      sRow({ ico: '🛡️', c: '#10b981', label: 'Двухфакторная аутентификация', sub: mc2faStatusText(), id: 'mc2faSub', act: 'mcOpen2faSettings()' }),
+    ])}
+    ${sGroup('Данные', [
+      sRow({ ico: '🧹', c: '#64748b', label: 'Очистить кэш медиа', sub: 'Освободит место на устройстве', act: 'mcClearMediaCache()' }),
+    ])}
+  </div>`;
+}
+async function mcClearMediaCache() {
+  try {
+    const idb = await mcIdbOpen();
+    if (idb) { await new Promise(res => { try { const tx = idb.transaction('kv', 'readwrite'); tx.objectStore('kv').clear(); tx.oncomplete = res; tx.onerror = res; } catch (_) { res(); } }); }
+    toast('Кэш медиа очищен', '🧹');
+  } catch (_) { toast('Не удалось очистить кэш', '⚠'); }
+}
+// вписываем страницу «security» в существующие настройки
+const _mcRenderSettingsR9 = renderSettings;
+renderSettings = function (...a) {
+  if (mcSetPage === 'security') { mcSetSecurityPage(); const w = $('settingsPanel'); if (w) { w.scrollTop = 0; w.querySelector('.settings-wrap')?.scrollTo?.(0, 0); } return; }
+  return _mcRenderSettingsR9(...a);
+};
+
+// ===================== 6. Встроенный браузер =====================
+const MC9_BROWSER_TILES = [
+  ['YouTube', 'https://www.youtube.com', '🎬', '#ff4e45'],
+  ['МЭШ', 'https://school.mos.ru', '🎓', '#2f7cf6'],
+  ['Google', 'https://www.google.com', '🔍', '#34a853'],
+  ['Википедия', 'https://ru.wikipedia.org', '📚', '#a855f7'],
+  ['Яндекс', 'https://ya.ru', '🚀', '#f43f5e'],
+  ['Госуслуги', 'https://gosuslugi.ru', '🏛', '#0ea5e9']
+];
+function mcBmGet() { try { return JSON.parse(localStorage.getItem('mc_bookmarks') || '[]'); } catch (_) { return []; } }
+function mcBmSave(l) { try { localStorage.setItem('mc_bookmarks', JSON.stringify(l)); } catch (_) {} }
+function mcBrowserOpen(url) {
+  let el = $('mc9Brow');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'mc9Brow'; el.className = 'mc9-brow hidden';
+    el.innerHTML = `
+    <div class="mc9-brow-bar">
+      <button type="button" class="mc9-brow-btn" id="mc9bBack" title="Назад">←</button>
+      <button type="button" class="mc9-brow-btn" id="mc9bFwd" title="Вперёд">→</button>
+      <button type="button" class="mc9-brow-btn" id="mc9bReload" title="Обновить">⟳</button>
+      <input class="mc9-brow-url" id="mc9bUrl" placeholder="Введите адрес или запрос" spellcheck="false" autocomplete="off">
+      <button type="button" class="mc9-brow-btn" id="mc9bHome" title="Главная">⌂</button>
+      <button type="button" class="mc9-brow-btn" id="mc9bExt" title="Открыть во внешнем окне">↗</button>
+      <button type="button" class="mc9-brow-btn" id="mc9bClose" title="Закрыть">✕</button>
+    </div>
+    <div class="mc9-brow-body">
+      <iframe id="mc9bFrame" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+      <div class="mc9-brow-home" id="mc9bHomeView"></div>
+      <div class="mc9-brow-hint hidden" id="mc9bHint"><span>Если сайт не открывается — он запрещает встраивание. Откройте его во внешнем окне.</span><button type="button" id="mc9bHintGo">Открыть ↗</button><button type="button" id="mc9bHintX" style="background:var(--surface-2);color:var(--text);">✕</button></div>
+    </div>`;
+    document.body.appendChild(el);
+    el._hist = []; el._hi = -1;
+    $('mc9bClose').addEventListener('click', () => el.classList.add('hidden'));
+    $('mc9bBack').addEventListener('click', () => { if (el._hi > 0) { el._hi--; mcBrowGo(el._hist[el._hi], false); } });
+    $('mc9bFwd').addEventListener('click', () => { if (el._hi < el._hist.length - 1) { el._hi++; mcBrowGo(el._hist[el._hi], false); } });
+    $('mc9bReload').addEventListener('click', () => { const f = $('mc9bFrame'); if (f && f.src) f.src = f.src; });
+    $('mc9bHome').addEventListener('click', () => mcBrowHome());
+    $('mc9bExt').addEventListener('click', () => { const u = $('mc9bUrl').value.trim(); if (u) window.open(mcBrowNorm(u), '_blank', 'noopener'); });
+    $('mc9bUrl').addEventListener('keydown', e => { if (e.key === 'Enter') mcBrowGo(e.target.value.trim()); });
+    $('mc9bHintGo').addEventListener('click', () => { const u = $('mc9bUrl').value.trim(); if (u) window.open(mcBrowNorm(u), '_blank', 'noopener'); });
+    $('mc9bHintX').addEventListener('click', () => $('mc9bHint').classList.add('hidden'));
+    el.addEventListener('keydown', e => { if (e.key === 'Escape') el.classList.add('hidden'); }, true);
+    mcBrowHome();
+  }
+  el.classList.remove('hidden');
+  if (url) mcBrowGo(url);
+}
+function mcBrowNorm(u) {
+  u = u.trim(); if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  if (/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(u)) return 'https://' + u;
+  return 'https://duckduckgo.com/?q=' + encodeURIComponent(u);
+}
+function mcBrowGo(u, push = true) {
+  const el = $('mc9Brow'); if (!el) return;
+  const url = mcBrowNorm(u); if (!url) return;
+  if (push) { el._hist = el._hist.slice(0, el._hi + 1); el._hist.push(url); el._hi = el._hist.length - 1; }
+  $('mc9bUrl').value = url;
+  $('mc9bHomeView').style.display = 'none';
+  const f = $('mc9bFrame'); f.src = url;
+  const hint = $('mc9bHint');
+  clearTimeout(el._hintT);
+  el._hintT = setTimeout(() => { hint.classList.remove('hidden'); setTimeout(() => hint.classList.add('hidden'), 9000); }, 3500);
+  f.onload = () => { try { hint.classList.add('hidden'); } catch (_) {} };
+}
+function mcBrowHome() {
+  const el = $('mc9Brow'); if (!el) return;
+  const bm = mcBmGet();
+  const hv = $('mc9bHomeView');
+  hv.style.display = 'block';
+  $('mc9bFrame').src = 'about:blank';
+  $('mc9bUrl').value = '';
+  $('mc9bHint').classList.add('hidden');
+  hv.innerHTML = `
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+    <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;">M</div>
+    <div><b style="font-size:18px;">Браузер MetroChat</b><div style="color:var(--text-2);font-size:13px;">Встроенные сайты и поиск — не выходя из мессенджера</div></div>
+  </div>
+  <h3>Популярные сайты</h3>
+  <div class="mc9-brow-tiles">${MC9_BROWSER_TILES.map(([t, u, i, c]) => `<button type="button" class="mc9-brow-tile" data-url="${u}"><span style="background:${c}1a;border-radius:14px;padding:8px 12px;">${i}</span><b>${t}</b></button>`).join('')}</div>
+  ${bm.length ? `<h3 style="margin-top:22px;">Закладки</h3><div class="mc9-brow-tiles">${bm.map(u => `<button type="button" class="mc9-brow-tile" data-url="${esc(u)}"><span>🔖</span><b style="font-size:11px;word-break:break-all;">${esc(u.replace(/^https?:\/\//, '').split('/')[0])}</b></button>`).join('')}</div>` : ''}
+  <button type="button" class="mc9-badge" style="border:1px solid var(--border);cursor:pointer;margin-top:16px;background:var(--surface);color:var(--text);" onclick="mcBmAddCur()">＋ Добавить текущую страницу в закладки</button>
+  <p style="color:var(--text-2);font-size:12.5px;max-width:480px;line-height:1.5;margin-top:18px;">Некоторые сайты (Google, YouTube) запрещают встраивание в приложения — для них используйте кнопку ↗ во внешнем окне. Википедия и большинство сайтов открываются прямо здесь.</p>`;
+  hv.querySelectorAll('[data-url]').forEach(b => b.addEventListener('click', () => mcBrowGo(b.dataset.url)));
+}
+function mcBmAddCur() {
+  const u = $('mc9bUrl').value.trim(); if (!u) return toast('Сначала откройте сайт', '🔖');
+  const bm = mcBmGet(); const url = mcBrowNorm(u);
+  if (bm.includes(url)) return toast('Уже в закладках', '🔖');
+  bm.push(url); mcBmSave(bm);
+  toast('Добавлено в закладки', '🔖'); mcBrowHome();
+}
+
+// ===================== 7. Истории: контакты + 2 дня + свайп =====================
+const _mcLoadStoriesR9 = loadStories;
+loadStories = async function () {
+  const el = $('storiesList'); if (!el || !state.user?.uid) return;
+  mcStoriesVisibility();
+  try {
+    const snap = await get(query(ref(db, 'stories'), orderByChild('createdAt'), limitToLast(60)));
+    const raw = snap.val() || {}; const cutoff = Date.now() - STORY_LIFETIME;
+    storiesCache = Object.entries(raw).map(([id, v]) => ({ id, ...v }))
+      .filter(x => Number(x.createdAt) >= cutoff && mcStoryVisible(x))
+      .filter(x => x.uid === state.user.uid || mcHasDmWith(x.uid))
+      .sort((a, b) => a.createdAt - b.createdAt);
+    const need = [...new Set(storiesCache.map(x => x.uid).filter(uid => uid && !getUser(uid)))];
+    await Promise.all(need.map(uid => fetchUserIfMissing(uid).catch(() => null)));
+    mcBuildStoryGroups(); mcRenderStoryBar();
+  } catch (e) { console.warn('Stories load:', e); el.innerHTML = '<div class="stories-loading">Не удалось загрузить истории. Проверьте подключение.</div>'; }
+};
+// «Что нового» — только для обновившихся, 2 дня
+mcWhatsNewActive = function () {
+  try {
+    const prev = localStorage.getItem('mc_prev_version');
+    if (!prev || prev === MC_VERSION) return false;
+    const k = 'mc_whatsnew_' + MC_VERSION; let t = Number(localStorage.getItem(k) || 0);
+    if (!t) { t = Date.now(); localStorage.setItem(k, String(t)); }
+    return Date.now() - t < 2 * 86400000;
+  } catch (_) { return false; }
+};
+// Свайп вниз по панели историй — свернуть
+(function () {
+  const p = $('storiesPanel'); if (!p) return;
+  let y0 = 0, dy = 0, act = false;
+  p.addEventListener('touchstart', e => { if (e.touches.length !== 1) return; y0 = e.touches[0].clientY; dy = 0; act = true; p.style.transition = 'none'; }, { passive: true });
+  p.addEventListener('touchmove', e => { if (!act) return; dy = Math.max(0, e.touches[0].clientY - y0); p.style.transform = `translateY(${Math.round(dy * 0.55)}px)`; }, { passive: true });
+  p.addEventListener('touchend', () => {
+    if (!act) return; act = false;
+    p.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)'; p.style.transform = '';
+    if (dy > 70) { try { localStorage.setItem('metrochat_stories_collapsed', '1'); } catch (_) {} mcStoriesVisibility(); toast('Истории скрыты — включить: кнопка 👤', '👤'); }
+    dy = 0;
+  }, { passive: true });
+})();
+
+// ===================== 8. «Что нового» после обновления =====================
+(function mc9ChangelogInit() {
+  try {
+    const k = 'mc_app_version';
+    const prev = localStorage.getItem(k);
+    if (prev && prev !== MC_VERSION) {
+      try { localStorage.setItem('mc_prev_version', prev); } catch (_) {}
+      try { localStorage.setItem('mc_pending_changelog', '1'); } catch (_) {}
+    }
+    localStorage.setItem(k, MC_VERSION);
+  } catch (_) {}
+})();
+function mc9ShowChangelog() {
+  try { localStorage.removeItem('mc_pending_changelog'); } catch (_) {}
+  const slides = MC_WHATSNEW.slides;
+  const body = `<div style="display:flex;flex-direction:column;gap:8px;max-height:56vh;overflow-y:auto;">${slides.map(s => `<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--mc-card-2,var(--surface-2));"><span style="font-size:22px;flex-shrink:0;">${s.emoji || '✨'}</span><span><b style="display:block;font-size:14.5px;">${esc(s.title || '')}</b><span style="font-size:13.5px;color:var(--text-2);line-height:1.45;display:block;margin-top:2px;">${esc(s.text || '')}</span></span></div>`).join('')}</div>`;
+  mcDialog({
+    icon: '✨', title: `MetroChat обновился до v${MC_VERSION}`, wide: true,
+    text: 'Что нового в этой версии:',
+    body,
+    buttons: [{ label: 'Посмотреть истории', value: 'stories' }, { label: 'Отлично', kind: 'primary', value: true }]
+  }).then(v => { if (v === 'stories') { try { localStorage.setItem('metrochat_stories_collapsed', '0'); } catch (_) {} switchTab('chats'); loadStories(); } });
+}
+
+// ===================== 9. Тактильный отклик =====================
+function mcHaptic(ms = 8) { try { navigator.vibrate && navigator.vibrate(ms); } catch (_) {} }
+(function () {
+  const SEL = '.btn,.sb-tab,.mobile-nav-item,.ms-row,.sb-icon-btn,.chat-icon-btn,.chat-input-btn,.list-item,.mc-home-tile,.mc-home-card,.mc-story-bubble,.story-chip,.mc9-tile,.mc9-ai-chip,.mc9-brow-tile,.mc9-brow-btn,.mc9-list-row,.mc-chip7,.theme-item,.mc-swatch,.gift-shop-item,.mc-task,.mc-feat';
+  document.addEventListener('pointerdown', e => {
+    const t = e.target.closest(SEL); if (!t || t.disabled) return;
+    mcHaptic(8);
+    t.classList.add('mc9-press');
+    const up = () => { t.classList.remove('mc9-press'); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', up); };
+    document.addEventListener('pointerup', up); document.addEventListener('pointercancel', up);
+    try {
+      if (getComputedStyle(t).overflow !== 'hidden' && !t.querySelector('.mc9-ripple')) {
+        const r = t.getBoundingClientRect();
+        const rip = document.createElement('span'); rip.className = 'mc9-ripple';
+        rip.style.left = (e.clientX - r.left) + 'px'; rip.style.top = (e.clientY - r.top) + 'px';
+        t.appendChild(rip);
+        setTimeout(() => rip.remove(), 600);
+      }
+    } catch (_) {}
+  }, { passive: true });
+})();
+
+// ===================== 10. Языки интерфейса =====================
+const MC_LANGS = {
+  ru: { name: 'Русский', flag: '🇷🇺', d: {} },
+  en: {
+    name: 'English', flag: '🇬🇧',
+    d: {
+      nav_chats: 'Chats', nav_groups: 'Groups', nav_bots: 'Bots', nav_other: 'More', nav_contacts: 'Search', nav_favorites: 'Saved', nav_settings: 'Settings',
+      auth_welcome: 'Welcome to MetroChat', auth_tagline: 'YOUR SPACE FOR COMMUNICATION',
+      auth_email: 'Email', auth_continue: 'Continue →', auth_pass: 'Password',
+      auth_login: 'Log in', auth_register: 'Sign up', auth_already: 'Already with us or new here?',
+      auth_back: '← Back to email', auth_forgot: 'Forgot password?', auth_change: 'Change', auth_summary: 'Your email',
+      lock_title: 'MetroChat is locked', lock_sub: 'Enter your account password to continue', lock_btn: 'Unlock', lock_face: '🙂 Sign in with face', lock_out: 'Log out'
+    }
+  },
+  uk: {
+    name: 'Українська', flag: '🇺🇦',
+    d: {
+      nav_chats: 'Чати', nav_groups: 'Групи', nav_bots: 'Боти', nav_other: 'Інше', nav_contacts: 'Пошук', nav_favorites: 'Збережені', nav_settings: 'Налаштування',
+      auth_welcome: 'Вітаємо у MetroChat', auth_tagline: 'ВАШ ПРОСТІР ДЛЯ СПІЛКУВАННЯ',
+      auth_email: 'Електронна пошта', auth_continue: 'Продовжити →', auth_pass: 'Пароль',
+      auth_login: 'Увійти', auth_register: 'Зареєструватися', auth_already: 'Вже з нами чи вперше?',
+      auth_back: '← До пошти', auth_forgot: 'Забули пароль?', auth_change: 'Змінити', auth_summary: 'Ваша пошта',
+      lock_title: 'MetroChat заблоковано', lock_sub: 'Введіть пароль від акаунта, щоб продовжити', lock_btn: 'Розблокувати', lock_face: '🙂 Вхід за обличчям', lock_out: 'Вийти з акаунта'
+    }
+  }
+};
+function mcLang() { try { return localStorage.getItem('mc_lang') || 'ru'; } catch (_) { return 'ru'; } }
+function MC_LANG_NAME() { return (MC_LANGS[mcLang()] || MC_LANGS.ru).name; }
+function mcT(key) { const l = MC_LANGS[mcLang()] || MC_LANGS.ru; return l.d[key] || MC_LANGS.ru.d[key] || ''; }
+function mcLangSet(l) { try { localStorage.setItem('mc_lang', l); } catch (_) {} location.reload(); }
+function mcLangOpen() {
+  mcDialog({
+    icon: '🌐', title: 'Язык приложения',
+    body: Object.entries(MC_LANGS).map(([k, v]) => `<button type="button" class="mc9-list-row" style="width:100%;border-radius:14px;${k === mcLang() ? 'background:var(--mc-accent-soft);' : ''}" onclick="mcLangSet('${k}')"><span class="mc9-list-ico">${v.flag}</span><span class="mc9-list-txt"><b>${v.name}</b></span>${k === mcLang() ? '<span class="mc9-badge">✓</span>' : ''}</button>`).join(''),
+    buttons: [{ label: 'Отмена', value: false }]
+  });
+}
+function mcApplyLang() {
+  const L = mcLang(); if (L === 'ru') return;
+  // Навигация
+  const icons = { chats: '💬', groups: '👥', bots: '🤖', other: '✦', contacts: '🔍', favorites: '⭐', settings: '⚙️' };
+  document.querySelectorAll('.sb-tab[data-tab]').forEach(b => {
+    const k = b.dataset.tab; if (!icons[k]) return;
+    const cnt = k === 'chats' ? ' <span class="count hidden" id="cntChats">0</span>' : '';
+    b.innerHTML = `<span>${icons[k]}</span> ${mcT('nav_' + k)}${cnt}`;
+  });
+  document.querySelectorAll('.mobile-nav-item[data-nav]').forEach(b => {
+    const k = b.dataset.nav; if (!icons[k]) return;
+    const cnt = k === 'chats' ? '<span class="nav-count hidden" id="navCntChats">0</span>' : '';
+    b.innerHTML = `<span class="mobile-nav-icon">${icons[k]}</span><span>${mcT('nav_' + k)}</span>${cnt}`;
+  });
+  // Экран входа
+  const set = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+  set('#welcomeAnimated', mcT('auth_welcome'));
+  set('.auth-logo-text p', mcT('auth_tagline'));
+  set('#authEmailStep .auth-field label', mcT('auth_email'));
+  set('#authContinue', mcT('auth_continue'));
+  set('#authPasswordStep .auth-field label', mcT('auth_pass'));
+  set('.auth-email-summary span', mcT('auth_summary'));
+  set('#authChangeEmail', mcT('auth_change'));
+  set('#authForgot', mcT('auth_forgot'));
+  set('#authBack', mcT('auth_back'));
+  set('.auth-bottom-actions > div:first-child', mcT('auth_already'));
+  document.querySelectorAll('.auth-choice').forEach(b => { b.textContent = b.dataset.tab === 'login' ? mcT('auth_login') : mcT('auth_register'); });
+  // Экран блокировки (если открыт)
+  set('#mc9LockTitle', mcT('lock_title')); set('#mc9LockSub', mcT('lock_sub'));
+  const go = $('mc9LockGo'); if (go) go.textContent = mcT('lock_btn');
+  const fc = $('mc9LockFace'); if (fc) fc.textContent = mcT('lock_face');
+  const ou = $('mc9LockOut'); if (ou) ou.textContent = mcT('lock_out');
+}
+// Переключатель языка на экране входа
+(function mc9AuthLangRow() {
+  const card = document.querySelector('#authScreen .auth-card'); if (!card) return;
+  const row = document.createElement('div'); row.className = 'mc9-lang-row';
+  row.innerHTML = '🌐 ' + Object.entries(MC_LANGS).map(([k, v]) => `<button type="button" class="${k === mcLang() ? 'on' : ''}" data-l="${k}">${v.name}</button>`).join('');
+  card.insertBefore(row, $('authForm'));
+  row.addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (b) mcLangSet(b.dataset.l); });
+})();
+
+// ===================== 11. Наблюдатель: блокировка + «что нового» + язык =====================
+(function mc9Watch() {
+  let changelogDone = false;
+  setInterval(() => {
+    // Экран входа: применить язык
+    const authVisible = !$('authScreen')?.classList.contains('hidden');
+    if (authVisible && !window.__mc9LangApplied) { mcApplyLang(); window.__mc9LangApplied = true; }
+    if (!authVisible && window.__mc9LangApplied) window.__mc9LangApplied = false;
+    // Блокировка
+    const appVisible = !$('app')?.classList.contains('hidden');
+    if (appVisible && state.user && mcLockNeeded() && !mcLockShown && !mc9SessionUnlocked) mcLockShow();
+    // Что нового
+    if (appVisible && state.user && !changelogDone) {
+      changelogDone = true;
+      try { if (localStorage.getItem('mc_pending_changelog') === '1') mc9ShowChangelog(); } catch (_) {}
+    }
+  }, 600);
+})();
+
+// ===================== 12. Мелкие правки текстов =====================
+MC_HOME_ITEMS.services = [
+  { k: 'earn', i: '✦', t: 'Заработать', s: 'Задания дня · до 140 УМ', c: '#8b5cf6' },
+  { k: 'channels', i: '📡', t: 'Каналы', s: 'Подборки, поиск и свои каналы', c: '#3b82f6' },
+  { k: 'bots', i: '🤖', t: 'Боты', s: 'Каталог и создание своих ботов', c: '#14b8a6' },
+  { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина и коллекция', c: '#ec4899' }
+];
+function mcSupportNote() {
+  mcAlert('Поддержать проект', 'Поддержка пока не работает — мы готовим способы помощи проекту (карты, крипта, звёзды). Следите за обновлениями! 💜', { icon: '💜' });
+}
+
+// ===================== Экспорт =====================
+Object.assign(window, {
+  mc9Go, mcBotsHub, mcRenderMyBots, mcBotCreateOpen, mc9RuleAdd, mcCBotDelete, mcCustomBotOpen, mcCBSend,
+  mcAIOpen, mcAIQuick, mcAISend, mcLockShow, mcLockUnlock, mcLockPwToggle, mcFaceEnroll, mcFaceVerify, mcFaceRemove,
+  mcSetSecurityPage, mcClearMediaCache, mcBrowserOpen, mcBrowGo, mcBrowHome, mcBmAddCur,
+  mcLangOpen, mcLangSet, mcApplyLang, MC_LANG_NAME, mcSupportNote, mc9ShowChangelog
+});
+
+
 </script>
 
 <script>
@@ -13816,6 +14625,8 @@ document.addEventListener('DOMContentLoaded', () => {
     under.dispatchEvent(new MouseEvent('click', {bubbles:true, cancelable:true, clientX:x, clientY:y, view:window}));
   }, true);
 })();
+
+
 </script>
 
 </body>

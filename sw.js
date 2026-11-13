@@ -1,7 +1,7 @@
-/* MetroChat service worker · v21
+/* MetroChat service worker · v40
    - уведомления: клик открывает нужный чат, кнопки «Ответить/Отклонить» для звонков
    - кэш: страница — сначала сеть (всегда свежая версия), офлайн — из кэша; библиотеки Firebase и картинки — из кэша */
-const CACHE = 'metrochat-v23';
+const CACHE = 'metrochat-v40';
 const STATIC = [/^https:\/\/www\.gstatic\.com\/firebasejs\//, /\/splash\/.+\.webp$/, /\/icon-(192|512)\.png$/];
 
 self.addEventListener('install', () => self.skipWaiting());
