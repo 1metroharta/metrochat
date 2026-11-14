@@ -2535,7 +2535,38 @@ html[data-theme] .settings-wrap #mcMA,html[data-theme] .settings-wrap #mcSA,html
 html[data-theme] .settings-wrap #mcMA:focus,html[data-theme] .settings-wrap #mcSA:focus,html[data-theme] .settings-wrap #mcTI:focus{ border-color:var(--tc,var(--accent)) !important; }
 
 </style>
-</head>
+<style id="mc-fixes-v10">
+.mc9-ai-head{padding-top:calc(env(safe-area-inset-top,0px) + 14px)!important}
+#settingsPanel{background:radial-gradient(1200px 500px at 10% -10%,rgba(79,140,255,.28),transparent 60%),radial-gradient(900px 500px at 100% 0,rgba(135,88,246,.25),transparent 60%),var(--bg)}
+.mc10-glass{background:color-mix(in srgb,var(--surface) 55%,transparent);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.35);box-shadow:0 8px 32px rgba(15,23,42,.12),inset 0 1px 0 rgba(255,255,255,.5);border-radius:20px}
+.mobile-nav-inner,.chat-header,.chat-input-bar,.modal,.settings-header{backdrop-filter:blur(22px) saturate(180%)!important;-webkit-backdrop-filter:blur(22px) saturate(180%)!important}
+.mc10-hi{padding:calc(env(safe-area-inset-top,0px) + 18px) 4px 6px;font-size:24px;font-weight:800}
+.mc10-recent{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 10px}
+.mc10-recent button{flex:0 0 auto;padding:10px 14px;font-size:13px;font-weight:600}
+.mc10-gift{display:flex;align-items:center;gap:14px;width:100%;padding:20px;margin:8px 0;border-radius:22px;color:#fff;text-align:left;background:linear-gradient(135deg,#ff9a3c,#ff5e3a);box-shadow:0 10px 28px rgba(255,120,40,.4)}
+.mc10-gift span{font-size:34px}.mc10-gift b{font-size:17px;display:block}.mc10-gift small{opacity:.9}
+.mc10-bots{display:flex;gap:12px;align-items:center;width:100%;padding:16px;margin:8px 0;text-align:left}
+.mc10-bots span{font-size:30px}.mc10-bots small{display:block;color:var(--text-2)}
+.mc10-search{width:100%;padding:12px 16px;margin:6px 0 10px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+</style><style id="mc-v11">
+:root{--mc-r:18px;--mc-blur:22px}
+.sidebar,.sb-top,.sb-nav,.sb-search,.chat-search-bar,.pinned-bar,.reply-bar,.toast,.mc-send-menu,.settings-row,.mc9-tile,.mc9-list-row,.sb-list>*,.settings-group{backdrop-filter:blur(var(--mc-blur)) saturate(170%);-webkit-backdrop-filter:blur(var(--mc-blur)) saturate(170%)}
+.mc-send-menu,.toast,.settings-group{background:color-mix(in srgb,var(--surface) 62%,transparent)!important;border:1px solid rgba(255,255,255,.28)}
+.mc9-tile,.mc9-list-row,.settings-row{background:color-mix(in srgb,var(--surface) 58%,transparent)!important}
+.messages [class*="bubble"]{border-radius:var(--mc-r)}
+.mc11-card{display:flex;align-items:center;gap:12px;padding:14px;margin:8px 0;border-radius:20px;background:color-mix(in srgb,var(--surface) 58%,transparent);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.3);box-shadow:0 8px 28px rgba(15,23,42,.1)}
+.mc11-av{width:48px;height:48px;display:grid;place-items:center;font-size:24px;border-radius:50%;flex:0 0 auto;color:#fff}
+.mc11-card b{display:block}.mc11-card small{color:var(--text-2)}.mc11-grow{flex:1;min-width:0}
+.mc11-btn{padding:9px 14px;border-radius:12px;font-weight:700;font-size:13px;background:var(--accent);color:#fff}
+.mc11-btn.g{background:var(--accent-light);color:var(--accent)}
+.mc11-ov{position:fixed;inset:0;z-index:10050;background:rgba(10,14,26,.45);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center}
+.mc11-sheet{width:min(520px,100%);max-height:88dvh;overflow:auto;padding:20px 18px calc(env(safe-area-inset-bottom,0px) + 18px);border-radius:26px 26px 0 0;background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(30px) saturate(190%);-webkit-backdrop-filter:blur(30px) saturate(190%);border:1px solid rgba(255,255,255,.3)}
+.mc11-sheet h3{margin-bottom:12px}.mc11-sheet label{display:block;font-size:12px;font-weight:700;color:var(--text-2);margin:10px 0 4px}
+.mc11-sheet input:not([type=range]):not([type=color]),.mc11-sheet textarea,.mc11-sheet select{width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.mc11-chips{display:flex;gap:8px;flex-wrap:wrap}.mc11-chip{padding:10px 16px;border-radius:14px;font-weight:800;background:var(--accent-light);color:var(--accent)}
+.mc11-chip.on{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;box-shadow:0 6px 18px rgba(236,72,153,.4)}
+.mc11-sw{width:34px;height:34px;border-radius:50%;border:3px solid transparent}.mc11-sw.on{border-color:var(--text)}
+</style></head>
 <body>
 
 <div class="splash" id="splash"><div class="splash-inner"><div class="splash-badge">MetroChat</div><h1 class="splash-greeting" id="splashGreeting">Добро пожаловать в MetroChat</h1><div class="splash-sub">Соединяем людей — быстро и безопасно</div><div class="splash-dots"><i></i><i></i><i></i></div></div></div>
@@ -2620,7 +2651,6 @@ var s=document.getElementById('splash');if(s){var b=document.createElement('div'
       <button class="sb-tab stories-toggle" id="storiesToggle" onclick="toggleStoriesPanel()" title="Истории"><span>👤</span><span class="stories-dot"></span></button>
       <button class="sb-tab active" data-tab="chats" onclick="switchTab('chats')"><span>💬</span> Чаты <span class="count hidden" id="cntChats">0</span></button>
       <button class="sb-tab" data-tab="groups" onclick="switchTab('groups')"><span>👥</span> Группы</button>
-      <button class="sb-tab" data-tab="bots" onclick="switchTab('bots')"><span>🤖</span> Боты</button>
       <button class="sb-tab" data-tab="other" onclick="switchTab('other')"><span>✦</span> Прочее</button>
       <button class="sb-tab" data-tab="contacts" onclick="switchTab('contacts')"><span>🔍</span> Поиск</button>
       <button class="sb-tab" data-tab="favorites" onclick="switchTab('favorites')" title="Избранное"><span>⭐</span> Избранное</button>
@@ -2667,7 +2697,6 @@ var s=document.getElementById('splash');if(s){var b=document.createElement('div'
     <div class="mobile-nav-inner">
       <button class="mobile-nav-item active" data-nav="chats" onclick="switchTab('chats')"><span class="mobile-nav-icon">💬</span><span>Чаты</span><span class="nav-count hidden" id="navCntChats">0</span></button>
       <button class="mobile-nav-item" data-nav="groups" onclick="switchTab('groups')"><span class="mobile-nav-icon">👥</span><span>Группы</span></button>
-      <button class="mobile-nav-item" data-nav="bots" onclick="switchTab('bots')"><span class="mobile-nav-icon">🤖</span><span>Боты</span></button>
       <button class="mobile-nav-item" data-nav="other" onclick="switchTab('other')"><span class="mobile-nav-icon">✦</span><span>Прочее</span></button>
       <button class="mobile-nav-item" data-nav="settings" onclick="switchTab('settings')"><span class="mobile-nav-icon">⚙️</span><span>Настройки</span></button>
     </div>
@@ -7786,7 +7815,7 @@ const MC_FAQ = [
     ['Где находятся мини-приложения?', 'Инструменты — во вкладке <b>«Прочее»</b>, боты и конструктор своих ботов — во вкладке <b>«Боты»</b>, а сайты (YouTube, МЭШ, Google) — во встроенном браузере в «Прочее».'],
     ['Что умеет Metro AI?', 'Метро AI — нейросеть в разделе «Прочее»: отвечает на вопросы, переводит и помогает управлять чатами и группами. Работает без VPN.'],
     ['Как включить вход по паролю или лицу?', '<b>Настройки → Безопасность → Экран блокировки</b>. Пароль будет запрашиваться при каждом входе, лицо запоминается на устройстве.'],
-    ['Как сменить язык интерфейса?', 'В настройках (Язык) или кнопкой 🌐 на экране входа. Доступны русский, английский и украинский.'],
+    ['Как сменить язык интерфейса?', 'В настройках (Язык) или кнопкой 🌐 на экране входа. Доступны русский, английский, французский, китайский, немецкий и корейский.'],
     ['Сохраняются ли мои задачи и рекорды?', 'Да, они хранятся локально на этом устройстве и не пропадают после перезагрузки страницы.'],
     ['Как сменить тему оформления?', 'В настройках оформления выберите светлую или тёмную тему. Для чатов и групп можно задать отдельные фоны для каждой темы.']
   ] }
@@ -11985,7 +12014,7 @@ function mcEarnRender() {
       <div class="mc-earn-pills"><span>🔥 Серия ${st} ${mcPl8(st, 'день', 'дня', 'дней')}</span><span>✓ ${doneCnt}/${tasks.length} заданий</span><span id="mcEarnBal">💰 …</span></div>
     </div>
   </section>
-  ${ageOk ? `<button type="button" class="mc-age-ok" onclick="mcAgeOpen()"><span>🪪</span><div><b>Возраст подтверждён по лицу</b><small>Категория ${esc(MCE.age.band)} · задания подобраны под ваш уровень</small></div><em>Пройти заново</em></button>`
+  ${ageOk ? `<button type="button" class="mc-age-ok" onclick="mcAgeOpen()"><span>🪪</span><div><b>Возраст подтверждён по лицу</b><small>Категория ${esc(MCE.age?.band||"—")} · задания подобраны под ваш уровень</small></div><em>Пройти заново</em></button>`
     : `<section class="mc-age-gate"><div class="mc-age-gate-art"><span></span>🙂</div><div><h3>Подтвердите возраст по лицу</h3><p>Заработок умов доступен после короткой проверки камерой: посмотрите прямо и поверните голову. Видео обрабатывается только на вашем устройстве и никуда не отправляется.</p><button type="button" class="btn btn-primary" onclick="mcAgeOpen()">Пройти проверку · 20 секунд</button></div></section>`}
   <button type="button" class="mc-checkin ${checkDone ? 'done' : ''} ${ageOk ? '' : 'locked'}" onclick="mcEarnCheckin()" ${checkDone ? 'disabled' : ''}>
     <div class="mc-checkin-days">${Array.from({ length: 7 }, (_, i) => { const n = i + 1; const on = checkDone ? n <= Math.min(7, st) : n < Math.min(7, nextStreak); const cur = !checkDone && n === Math.min(7, nextStreak); return `<i class="${on ? 'on' : ''} ${cur ? 'cur' : ''}">${n === 7 ? '🎁' : n}</i>`; }).join('')}</div>
@@ -14445,17 +14474,10 @@ const MC_LANGS = {
       lock_title: 'MetroChat is locked', lock_sub: 'Enter your account password to continue', lock_btn: 'Unlock', lock_face: '🙂 Sign in with face', lock_out: 'Log out'
     }
   },
-  uk: {
-    name: 'Українська', flag: '🇺🇦',
-    d: {
-      nav_chats: 'Чати', nav_groups: 'Групи', nav_bots: 'Боти', nav_other: 'Інше', nav_contacts: 'Пошук', nav_favorites: 'Збережені', nav_settings: 'Налаштування',
-      auth_welcome: 'Вітаємо у MetroChat', auth_tagline: 'ВАШ ПРОСТІР ДЛЯ СПІЛКУВАННЯ',
-      auth_email: 'Електронна пошта', auth_continue: 'Продовжити →', auth_pass: 'Пароль',
-      auth_login: 'Увійти', auth_register: 'Зареєструватися', auth_already: 'Вже з нами чи вперше?',
-      auth_back: '← До пошти', auth_forgot: 'Забули пароль?', auth_change: 'Змінити', auth_summary: 'Ваша пошта',
-      lock_title: 'MetroChat заблоковано', lock_sub: 'Введіть пароль від акаунта, щоб продовжити', lock_btn: 'Розблокувати', lock_face: '🙂 Вхід за обличчям', lock_out: 'Вийти з акаунта'
-    }
-  }
+  fr: { name: 'Français', flag: '🇫🇷', d: { nav_chats: 'Discussions', nav_groups: 'Groupes', nav_other: 'Plus', nav_contacts: 'Recherche', nav_favorites: 'Favoris', nav_settings: 'Réglages', auth_welcome: 'Bienvenue sur MetroChat', auth_email: 'E-mail', auth_pass: 'Mot de passe', auth_login: 'Se connecter', auth_register: "S'inscrire", auth_continue: 'Continuer →' } },
+  zh: { name: '中文', flag: '🇨🇳', d: { nav_chats: '聊天', nav_groups: '群组', nav_other: '更多', nav_contacts: '搜索', nav_favorites: '收藏', nav_settings: '设置', auth_welcome: '欢迎使用 MetroChat', auth_email: '邮箱', auth_pass: '密码', auth_login: '登录', auth_register: '注册', auth_continue: '继续 →' } },
+  de: { name: 'Deutsch', flag: '🇩🇪', d: { nav_chats: 'Chats', nav_groups: 'Gruppen', nav_other: 'Mehr', nav_contacts: 'Suche', nav_favorites: 'Gespeichert', nav_settings: 'Einstellungen', auth_welcome: 'Willkommen bei MetroChat', auth_email: 'E-Mail', auth_pass: 'Passwort', auth_login: 'Anmelden', auth_register: 'Registrieren', auth_continue: 'Weiter →' } },
+  ko: { name: '한국어', flag: '🇰🇷', d: { nav_chats: '채팅', nav_groups: '그룹', nav_other: '더보기', nav_contacts: '검색', nav_favorites: '저장됨', nav_settings: '설정', auth_welcome: 'MetroChat에 오신 것을 환영합니다', auth_email: '이메일', auth_pass: '비밀번호', auth_login: '로그인', auth_register: '가입', auth_continue: '계속 →' } }
 };
 function mcLang() { try { return localStorage.getItem('mc_lang') || 'ru'; } catch (_) { return 'ru'; } }
 function MC_LANG_NAME() { return (MC_LANGS[mcLang()] || MC_LANGS.ru).name; }
@@ -14549,6 +14571,152 @@ Object.assign(window, {
 });
 
 
+
+// ===== v10 fixes: single "Other" screen, no browser, no autofill leaks =====
+mcBrowserOpen = function(){ try{ toast('Браузер удалён','ℹ'); }catch(_){} };
+renderOtherHome = function () {
+  window.__mcOtherView = 'home';
+  const wrap = $('settingsPanel'); if (!wrap) return;
+  const me = state.profile || {}; const name = me.firstName || String(me.displayName || '').split(' ')[0] || '';
+  const h = new Date().getHours(); const L = mcLang();
+  const G = {ru:['Доброй ночи','Доброе утро','Добрый день','Добрый вечер'],en:['Good night','Good morning','Good afternoon','Good evening'],fr:['Bonne nuit','Bonjour','Bon après-midi','Bonsoir'],zh:['夜深了','早上好','下午好','晚上好'],de:['Gute Nacht','Guten Morgen','Guten Tag','Guten Abend'],ko:['안녕히 주무세요','좋은 아침','좋은 오후','좋은 저녁']}[L]||[];
+  const hi = (G[h < 5 ? 0 : h < 12 ? 1 : h < 18 ? 2 : 3]) || 'Hello';
+  const recent = (typeof state.chats==='object' ? Object.values(state.chats||{}) : []).slice(0,8);
+  const rc = recent.map(c => `<button class="mc10-glass" data-chat="${esc(c.id)}">${esc(c.name || c.title || '💬')}</button>`).join('');
+  const svc = [...(MC9_OTHER.services||[]), ...(MC9_OTHER.tools||[])].filter(x => x.k !== 'browser' && x.k !== 'bots');
+  const tile = x => `<button type="button" class="mc9-tile" data-go="${x.k}" data-n="${esc(String(x.n||x.t||'').toLowerCase())}"><span>${x.i}</span><b>${esc(x.n||x.t||'')}</b></button>`;
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">←</button><div class="settings-title">${mcT('nav_other')||'Прочее'}</div></div>
+  <div class="settings-wrap mc9-wrap">
+    <div class="mc10-hi">${esc(hi)}${name ? ', ' + esc(name) : ''}</div>
+    <button type="button" class="mc9-ai mc10-glass" onclick="mcAIOpen()"><img src="${MC_AI_LOGO}" alt="Metro AI"><span class="mc9-ai-txt"><b>Metro AI</b></span></button>
+    <div class="mc10-recent">${rc}</div>
+    <button type="button" class="mc10-gift" onclick="mc9Go('gifts')"><span>🎁</span><div><b>Подарки</b><small>Отправьте подарок за умы</small></div></button>
+    <button type="button" class="mc10-bots mc10-glass" onclick="mcBotsHub()"><span>🤖</span><div><b>Боты</b><small>Создавайте и настраивайте своих</small></div></button>
+    <div class="mc9-sec"><h3>Сервисы</h3></div>
+    <input class="mc10-search" id="mc10Q" type="search" placeholder="🔍 Поиск сервисов" autocomplete="off" name="mc-svc-q">
+    <div class="mc9-grid" id="mc10Grid">${svc.map(tile).join('')}</div>
+  </div>`;
+  wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => mc9Go(b.dataset.go)));
+  wrap.querySelectorAll('[data-chat]').forEach(b => b.addEventListener('click', () => { try { openChat(b.dataset.chat); } catch (_) {} }));
+  $('mc10Q').addEventListener('input', e => { const q = e.target.value.toLowerCase(); wrap.querySelectorAll('#mc10Grid .mc9-tile').forEach(t => t.style.display = t.dataset.n.includes(q) ? '' : 'none'); });
+};
+// Autofill guard: never let the password manager drop the email into search/text fields
+(function(){ const fix = r => r.querySelectorAll('input:not([type=password]):not([type=email]):not(#authEmail)').forEach(i => { if (i.closest('#authScreen,#changePasswordModal')) return; i.setAttribute('autocomplete','off'); i.setAttribute('data-lpignore','true'); i.setAttribute('data-1p-ignore',''); if(!i.name) i.name='mc-'+Math.random().toString(36).slice(2,8); });
+  new MutationObserver(() => fix(document)).observe(document.body,{childList:true,subtree:true}); fix(document); })();
+
+// ================= v11 =================
+const W=(n,f)=>{ try{ window[n]=f; }catch(_){} return f; };
+const mcMe=()=>state.user?.uid;
+const ovSheet=(html)=>{ const o=document.createElement('div'); o.className='mc11-ov'; o.innerHTML='<div class="mc11-sheet">'+html+'</div>'; o.addEventListener('mousedown',e=>{ if(e.target===o)o.remove(); }); document.body.appendChild(o); return o; };
+const isStaff=(c)=>!!c&&!!state.user&&(isGroupOwner(c,state.user.uid)||isGroupAdmin(c,state.user.uid));
+// --- Earn: shield render ---
+{ const o=mcEarnRender; mcEarnRender=W('mcEarnRender',function(){ try{ return o.apply(this,arguments);}catch(e){ console.warn('earn',e); const b=$('mcEarnWrap'); if(b) b.innerHTML='<div class="mc11-card"><div class="mc11-grow"><b>Не удалось загрузить</b><small>Проверьте соединение</small></div><button class="mc11-btn" onclick="mcEarnOpen()">Повторить</button></div>'; } }); }
+// --- Groups: members can never edit ---
+for(const n of ['addSelectedContactsToGroup', 'deleteGroupForAll', 'doAddMemberToGroup', 'editGroupAvatarChange', 'openEditGroupModal', 'saveGroupInfo', 'toggleGroupSettingByKey', 'updateGroupNumberSetting']){ try{ const o=eval(n); if(typeof o!=='function')continue; const w=function(){ const c=state.chat; if(c&&c.type==='group'&&!isStaff(c)){ toast('Изменять группу могут только владелец и администраторы','🔒'); return; } return o.apply(this,arguments); }; eval(n+'=w'); window[n]=w; }catch(e){} }
+// --- Mandatory unlock before greeting ---
+mcLockPwOn=W('mcLockPwOn',()=>true);
+// --- Bots: only user-made bots; remove catalog ---
+try{ MC_BOTS.splice(0); }catch(_){}
+mcBotsHub=W('mcBotsHub',function(){
+  window.__mcOtherView='bots'; const wrap=$('settingsPanel'); if(!wrap)return;
+  const list=mcCBots();
+  wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">←</button><div class="settings-title">Боты</div></div><div class="settings-wrap mc9-wrap">
+  <div class="mc11-card" style="background:linear-gradient(135deg,rgba(124,58,237,.85),rgba(59,130,246,.85));color:#fff"><div class="mc11-grow"><b style="font-size:17px">Студия ботов</b><small style="color:#fff;opacity:.85">Создайте бота и настройте всё: имя, цвета, характер, ответы</small></div><button class="mc11-btn" style="background:#fff;color:#4f46e5" onclick="mcBotStudio()">＋ Новый</button></div>
+  ${list.length?list.map(b=>`<div class="mc11-card"><div class="mc11-av" style="background:linear-gradient(135deg,${esc(b.c1||'#3b82f6')},${esc(b.c2||'#7c3aed')});border-radius:${b.shape==='square'?'10px':b.shape==='squircle'?'16px':'50%'}">${esc(b.e||'🤖')}</div><div class="mc11-grow"><b>${esc(b.name||'Бот')}</b><small>${esc(b.desc||'Свой бот')}</small></div><button class="mc11-btn g" onclick="mcBotStudio('${b.id}')">Настроить</button><button class="mc11-btn" onclick="mcBotOpen('${b.id}')">Чат</button></div>`).join(''):'<p class="mc9-note" style="text-align:center;margin:26px 0">Пока нет ботов — создайте первого.</p>'}</div>`;
+});
+function mcBotStudio(id){
+  const list=mcCBots(); const b=id?list.find(x=>x.id===id):null;
+  const E=['🤖','🦊','🐱','🚀','🎧','📚','💼','🎮','🌈','⚡'];
+  const o=ovSheet(`<h3>${b?'Настройка бота':'Новый бот'}</h3>
+  <label>Имя</label><input id="bsN" maxlength="30" value="${esc(b?.name||'')}" autocomplete="off">
+  <label>Эмодзи</label><div class="mc11-chips" id="bsE">${E.map(e=>`<button type="button" class="mc11-chip ${(b?.e||'🤖')===e?'on':''}" data-e="${e}">${e}</button>`).join('')}</div>
+  <label>Цвета</label><div style="display:flex;gap:10px"><input type="color" id="bsC1" value="${esc(b?.c1||'#3b82f6')}" style="height:42px;flex:1"><input type="color" id="bsC2" value="${esc(b?.c2||'#7c3aed')}" style="height:42px;flex:1"></div>
+  <label>Форма аватара</label><select id="bsS"><option value="circle">Круг</option><option value="squircle" ${b?.shape==='squircle'?'selected':''}>Скруглённый</option><option value="square" ${b?.shape==='square'?'selected':''}>Квадрат</option></select>
+  <label>Описание</label><input id="bsD" maxlength="80" value="${esc(b?.desc||'')}" autocomplete="off">
+  <label>Приветствие</label><textarea id="bsH" rows="2" maxlength="200">${esc(b?.hello||'Привет! Я ваш бот 🤖')}</textarea>
+  <label>Ответ, если не поняли</label><input id="bsF" maxlength="120" value="${esc(b?.fallback||'Не совсем понял — попробуйте иначе.')}" autocomplete="off">
+  <label>Характер</label><select id="bsT">${['дружелюбный','деловой','весёлый','краткий'].map(t=>`<option ${b?.tone===t?'selected':''}>${t}</option>`).join('')}</select>
+  <label>Задержка ответа: <span id="bsLv">${b?.delay??600}</span> мс</label><input type="range" id="bsL" min="0" max="3000" step="100" value="${b?.delay??600}" oninput="bsLv.textContent=this.value">
+  <label>Правила: «вопрос => ответ», по строке</label><textarea id="bsR" rows="4" autocomplete="off">${esc((b?.rules||[{q:'привет',a:'Привет!'}]).map(r=>r.q+' => '+r.a).join('\n'))}</textarea>
+  <div style="display:flex;gap:10px;margin-top:16px">${b?'<button class="mc11-btn g" id="bsX" style="background:rgba(239,68,68,.15);color:#ef4444">Удалить</button>':''}<span style="flex:1"></span><button class="mc11-btn g" id="bsC">Отмена</button><button class="mc11-btn" id="bsOk">Сохранить</button></div>`);
+  let emo=b?.e||'🤖'; o.querySelectorAll('[data-e]').forEach(x=>x.onclick=()=>{ emo=x.dataset.e; o.querySelectorAll('[data-e]').forEach(y=>y.classList.toggle('on',y===x)); });
+  o.querySelector('#bsC').onclick=()=>o.remove();
+  if(b) o.querySelector('#bsX').onclick=()=>{ mcCBotsSave(mcCBots().filter(x=>x.id!==id)); o.remove(); mcBotsHub(); };
+  o.querySelector('#bsOk').onclick=()=>{ const name=o.querySelector('#bsN').value.trim(); if(!name) return toast('Введите имя','⚠');
+    const rules=o.querySelector('#bsR').value.split('\n').map(l=>l.split('=>')).filter(a=>a.length>1&&a[0].trim()).map(a=>({q:a[0].trim().toLowerCase(),a:a.slice(1).join('=>').trim()}));
+    const nb={...(b||{}),id:b?.id||'cb'+Date.now().toString(36),name,e:emo,c1:o.querySelector('#bsC1').value,c2:o.querySelector('#bsC2').value,shape:o.querySelector('#bsS').value,desc:o.querySelector('#bsD').value.trim(),hello:o.querySelector('#bsH').value.trim(),fallback:o.querySelector('#bsF').value.trim(),tone:o.querySelector('#bsT').value,delay:+o.querySelector('#bsL').value,rules,cat:'Мои',custom:true};
+    const all=mcCBots(); const i=all.findIndex(x=>x.id===nb.id); if(i>=0)all[i]=nb; else all.push(nb); mcCBotsSave(all); o.remove(); mcBotsHub(); };
+}
+W('mcBotStudio',mcBotStudio); mcBotCreateOpen=W('mcBotCreateOpen',mcBotStudio);
+// --- Other screen (recent chats from real list) ---
+{ const o=renderOtherHome; renderOtherHome=W('renderOtherHome',function(){ o.apply(this,arguments); const r=document.querySelector('.mc10-recent'); if(!r)return; try{ r.innerHTML=getAllChatsList().slice(0,8).map(c=>`<button class="mc10-glass" data-chat="${esc(c.id)}" data-t="${esc(c.type)}">${esc(c.name||'💬')}</button>`).join('')||''; r.querySelectorAll('[data-chat]').forEach(b=>b.onclick=()=>{ switchTab(b.dataset.t==='group'?'groups':'chats'); setTimeout(()=>openChat(b.dataset.chat,b.dataset.t),200); }); }catch(_){} }); }
+// --- Metro AI: understands intents (incl. sending messages) ---
+function mcAIChat(q){ q=String(q||'').trim().toLowerCase().replace(/^[«"']|[»"']$/g,''); if(!q)return null; const all=getAllChatsList(); return all.find(c=>(c.name||'').toLowerCase()===q)||all.find(c=>q.length>=3&&(c.name||'').toLowerCase().includes(q))||all.find(c=>q.length>3&&(c.name||'').toLowerCase().startsWith(q.slice(0,Math.max(3,q.length-2))))||null; }
+async function mcAISendTo(c,text){ switchTab(c.type==='group'?'groups':'chats'); await openChat(c.id,c.type); await new Promise(r=>setTimeout(r,350)); const inp=$('chatInput'); inp.value=text; inp.dispatchEvent(new Event('input',{bubbles:true})); await sendMessage(); return `Отправил «${text}» в «${c.name}» ✅`; }
+const mcAIq=t=>t.replace(/^[«"'\s]+|[»"'\s.]+$/g,'');
+{ const o=mcAIIntent; mcAIIntent=W('mcAIIntent',function(t){
+  const x=String(t).trim(); let m;
+  const run=(name,txt)=>{ const c=mcAIChat(name); return c?{act:()=>mcAISendTo(c,mcAIq(txt))}:`Не нашёл чат «${name}». Скажите «покажи мои чаты».`; };
+  if((m=x.match(/^(?:отправь|напиши|пошли|скажи)\s+(?:в|во)\s+(?:чат|группу|канал)?\s*(.+)$/i))){ const rest=m[1].toLowerCase(); const c=getAllChatsList().filter(c=>c.name&&rest.startsWith(c.name.toLowerCase())).sort((a,b)=>b.name.length-a.name.length)[0]; if(c){ const txt=m[1].slice(c.name.length).trim(); if(txt) return {act:()=>mcAISendTo(c,mcAIq(txt))}; } }
+  if((m=x.match(/^(?:отправь|напиши|пошли|скажи)\s+(.+?)\s+(?:в|во)\s+(?:чат|группу|канал)?\s*(.+)$/i))) return run(m[2],m[1]);
+  if((m=x.match(/^(?:send|text|message|write)\s+(.+?)\s+(?:to|in)\s+(?:chat\s+)?(.+)$/i))) return run(m[2],m[1]);
+  if((m=x.match(/^(?:напиши|отправь|скажи)\s+(\S+)\s+(.+)$/i))&&mcAIChat(m[1])) return run(m[1],m[2]);
+  if((m=x.match(/^(?:напиши|отправь|скажи|send)\s+(.+?)\s+(?:в этот чат|сюда|here)$/i))&&state.chat) return {act:()=>mcAISendTo(state.chat,mcAIq(m[1]))};
+  return o.apply(this,arguments); }); }
+{ const oc=mcAICall; mcAICall=W('mcAICall',async function(u){
+  const chats=getAllChatsList().slice(0,25).map(c=>c.name).join('; ');
+  const sys=`Ты — Metro AI в мессенджере MetroChat. Ответь ТОЛЬКО JSON: {"reply":"краткий ответ на языке пользователя","action":null|{"type":"send","chat":"название","text":"текст"}|{"type":"open","chat":"название"}|{"type":"group","name":"название"}}. Используй action send, если пользователь просит что-то кому-то написать/отправить. Чаты пользователя: ${chats}.`;
+  try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:sys},...mcAIHist().slice(-6).map(h=>({role:h.r==='u'?'user':'assistant',content:h.t})),{role:'user',content:u}]})}); const j=await r.json(); let tx=(j?.choices?.[0]?.message?.content||'').replace(/```json|```/g,'').trim(); let p; try{p=JSON.parse(tx);}catch(_){ return tx||oc(u); }
+    const a=p.action; if(a&&a.type==='send'){ const c=mcAIChat(a.chat); if(c) return await mcAISendTo(c,a.text); return `Не нашёл чат «${a.chat}». Скажите «покажи мои чаты».`; }
+    if(a&&a.type==='open'){ const c=mcAIChat(a.chat); if(c){ switchTab('chats'); setTimeout(()=>openChat(c.id,c.type),200);} }
+    if(a&&a.type==='group'){ openCreateGroupModal(); const i=$('newGroupName'); if(i)i.value=a.name||''; }
+    return p.reply||'Готово.'; }catch(e){ return oc(u); } }); }
+// --- Paid (UM) messages via long-press on send ---
+{ const o=mcOpenSendMenu; mcOpenSendMenu=W('mcOpenSendMenu',function(){ o.apply(this,arguments); const m=document.getElementById('mcSendMenu'); if(!m)return; const b=document.createElement('button'); b.type='button'; b.dataset.a='paid'; b.innerHTML='<span class="mc-sm-ico" style="--c:#ec4899">💎</span><span><b>Отправить за умы</b><small>Платное сообщение получателю</small></span>'; m.prepend(b); b.addEventListener('click',()=>mcPaidSheet()); }); }
+async function mcPaidSheet(){
+  const inp=$('chatInput'); const text=(inp?.value||'').trim(); if(!text) return toast('Сначала напишите сообщение','⚠');
+  const c=state.chat; const to=c.type==='dm'?(c.otherUid||c.uid||Object.keys(c.members||{}).find(k=>k!==mcMe())||String(c.id).split('_').find(k=>k!==mcMe()&&k!=='dm')):c.ownerId;
+  if(!to||to===mcMe()) return toast('Платные сообщения доступны в личных чатах и каналах','ℹ');
+  const bal=await readGiftBalance(); let price=10;
+  const o=ovSheet(`<h3>💎 Платное сообщение</h3><p class="mc9-note" style="margin-bottom:10px">Получатель получит умы вместе с сообщением. Ваш баланс: <b>${mcFmtUm(bal)}</b> УМ</p><div class="mc11-chips" id="pm">${[5,10,25,50,100].map(n=>`<button type="button" class="mc11-chip ${n===10?'on':''}" data-n="${n}">${n}</button>`).join('')}</div><div style="display:flex;gap:10px;margin-top:18px"><button class="mc11-btn g" id="pmC" style="flex:1">Отмена</button><button class="mc11-btn" id="pmOk" style="flex:2;background:linear-gradient(135deg,#a855f7,#ec4899)">Отправить</button></div>`);
+  o.querySelectorAll('[data-n]').forEach(x=>x.onclick=()=>{ price=+x.dataset.n; o.querySelectorAll('[data-n]').forEach(y=>y.classList.toggle('on',y===x)); });
+  o.querySelector('#pmC').onclick=()=>o.remove();
+  o.querySelector('#pmOk').onclick=async()=>{ if(bal<price) return toast(`Нужно ${price} УМ, у вас ${bal}`,'💎'); o.remove();
+    try{ const tb=await readGiftBalance(to); await update(ref(db),{[`gift_wallet/${mcMe()}/balance`]:bal-price,[`gift_wallet/${to}/balance`]:tb+price}); inp.value=`💎 +${price} УМ · ${text}`; await sendMessage(); }catch(e){ toast('Не удалось отправить','⚠'); } };
+}
+W('mcPaidSheet',mcPaidSheet);
+// --- Gifts to channels ---
+{ new MutationObserver(()=>{ const a=$('chatActions'),c=state.chat; if(!a||!c||c.type!=='channel'||a.querySelector('#mcChGift')||!c.ownerId||c.ownerId===mcMe())return; const b=document.createElement('button'); b.id='mcChGift'; b.className='chat-icon-btn'; b.textContent='🎁'; b.title='Подарить каналу'; b.onclick=()=>{ window.__mcChGift=c.id; mcOpenGiftSendPage({toUid:c.ownerId}); }; a.prepend(b); }).observe($('chatActions')||document.body,{childList:true,subtree:true});
+  const o=mcGiftSubmit; mcGiftSubmit=W('mcGiftSubmit',async function(){ const r=await o.apply(this,arguments); if(window.__mcChGift&&mcGiftSend.gift){ try{ await set(push(ref(db,`channels/${window.__mcChGift}/gifts`)),{from:mcMe(),giftId:mcGiftSend.gift.giftId,emoji:mcGiftSend.gift.emoji||'🎁',at:Date.now()}); }catch(_){} } window.__mcChGift=null; return r; }); }
+// --- Business settings + quick replies ---
+const BZ='mc_business'; const bzGet=()=>{ try{return JSON.parse(localStorage.getItem(BZ)||'{}');}catch(_){return{};} };
+function mcBizOpen(){ const b=bzGet(); const wrap=$('settingsPanel'); window.__mcOtherView='biz';
+  wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div><div class="settings-wrap mc9-wrap"><div class="mc11-sheet" style="border-radius:22px;max-height:none">
+  <label>Название компании</label><input id="bzN" value="${esc(b.n||'')}" autocomplete="off"><label>Категория</label><input id="bzC" value="${esc(b.c||'')}" autocomplete="off"><label>Адрес</label><input id="bzA" value="${esc(b.a||'')}" autocomplete="off"><label>Сайт</label><input id="bzW" value="${esc(b.w||'')}" autocomplete="off"><label>Часы работы</label><input id="bzH" value="${esc(b.h||'Пн–Пт 9:00–18:00')}" autocomplete="off"><label>Описание</label><textarea id="bzD" rows="3">${esc(b.d||'')}</textarea>
+  <label>Приветственное сообщение</label><textarea id="bzG" rows="2">${esc(b.g||'')}</textarea><label>Сообщение «Не в сети»</label><textarea id="bzO" rows="2">${esc(b.o||'')}</textarea>
+  <label>Быстрые ответы — «/ключ => текст» (в чате набрать /ключ и пробел)</label><textarea id="bzQ" rows="4" autocomplete="off">${esc(b.q||'/цена => Прайс-лист отправлю в ближайшее время.')}</textarea>
+  <button class="mc11-btn" style="width:100%;margin-top:16px" id="bzS">Сохранить</button></div></div>`;
+  $('bzS').onclick=()=>{ const v={n:bzN.value,c:bzC.value,a:bzA.value,w:bzW.value,h:bzH.value,d:bzD.value,g:bzG.value,o:bzO.value,q:bzQ.value}; localStorage.setItem(BZ,JSON.stringify(v)); try{ set(ref(db,`user_settings/${mcMe()}/business`),v); }catch(_){} toast('Сохранено','✅'); }; }
+W('mcBizOpen',mcBizOpen);
+document.addEventListener('input',e=>{ if(e.target.id!=='chatInput')return; const m=/^(\/\S+) $/.exec(e.target.value); if(!m)return; const q=(bzGet().q||'').split('\n').map(l=>l.split('=>')).find(a=>a[0].trim()===m[1]); if(q) e.target.value=q.slice(1).join('=>').trim(); },true);
+// --- Settings main: inject Business row; Appearance: extra options ---
+{ const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ return o.apply(this,arguments)+`<div id="mcBizRow" class="mc11-card" style="cursor:pointer" onclick="mcBizOpen()"><div class="mc11-av" style="background:linear-gradient(135deg,#16a34a,#0d9488);border-radius:14px">💼</div><div class="mc11-grow"><b>Для бизнеса</b><small>Профиль компании, быстрые ответы, приветствие</small></div>›</div>`; }); }
+const UP='mc_ui_prefs'; const upGet=()=>{ try{return JSON.parse(localStorage.getItem(UP)||'{}');}catch(_){return{};} };
+function upApply(){ const u=upGet(),r=document.documentElement.style; if(u.accent){ r.setProperty('--accent',u.accent); r.setProperty('--accent-light',u.accent+'24'); } if(u.r!=null) r.setProperty('--mc-r',u.r+'px'); if(u.blur!=null) r.setProperty('--mc-blur',u.blur+'px'); r.setProperty('font-family',u.font||''); document.body.style.fontFamily=u.font||''; }
+window.mcUiSet=(k,v)=>{ const x=upGet(); x[k]=v; localStorage.setItem(UP,JSON.stringify(x)); upApply(); };
+{ const o=mcSetAppearance; mcSetAppearance=W('mcSetAppearance',function(){ const u=upGet(); const C=['#4f8cff','#8b5cf6','#ec4899','#ef4444','#f97316','#22c55e','#14b8a6','#0ea5e9'];
+  return o.apply(this,arguments)+`<div id="mcUiExtra" class="mc11-sheet" style="border-radius:22px;margin:12px 0;max-height:none"><h3>✨ Дополнительно</h3><label>Акцентный цвет</label><div class="mc11-chips">${C.map(c=>`<button type="button" class="mc11-sw ${u.accent===c?'on':''}" style="background:${c}" onclick="mcUiSet('accent','${c}');mcSetGo('appearance')"></button>`).join('')}</div><label>Скругление пузырей: ${u.r??18} px</label><input type="range" min="4" max="28" value="${u.r??18}" onchange="mcUiSet('r',+this.value);mcSetGo('appearance')"><label>Стеклянность (размытие): ${u.blur??22} px</label><input type="range" min="0" max="40" value="${u.blur??22}" onchange="mcUiSet('blur',+this.value);mcSetGo('appearance')"><label>Шрифт</label><select onchange="mcUiSet('font',this.value);mcSetGo('appearance')"><option value="">Системный</option><option value="Georgia,serif" ${u.font==='Georgia,serif'?'selected':''}>С засечками</option><option value="ui-rounded,sans-serif" ${u.font&&u.font.includes('rounded')?'selected':''}>Округлый</option><option value="ui-monospace,monospace" ${u.font&&u.font.includes('mono')?'selected':''}>Моноширинный</option></select></div>`; }); }
+upApply();
+// --- Autotranslate UI to selected language ---
+const MCI={c:(()=>{try{return JSON.parse(localStorage.getItem('mc_i18n')||'{}');}catch(_){return{};}})(),q:new Set(),busy:false,t:0};
+const CY=/[А-Яа-яЁё]/, SKIP='#messages,.sb-list,.chat-name,.chat-sub,[data-notr],textarea,input,script,style,.mc9-ai-msgs,.mc9-ai-msg';
+if(!MC_LANGS[mcLang()]) try{ localStorage.setItem('mc_lang','ru'); }catch(_){}
+function mciWalk(){ const l=mcLang(); if(l==='ru'||!document.body)return; const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT); let n; while((n=w.nextNode())){ const t=n.nodeValue; if(!CY.test(t))continue; const p=n.parentElement; if(!p||p.closest(SKIP))continue; const k=t.trim(); if(k.length<2||k.length>220)continue; const c=MCI.c[l+'|'+k]; if(c)n.nodeValue=t.replace(k,c); else MCI.q.add(k); }
+  document.querySelectorAll('[placeholder],[title]').forEach(e=>{ if(e.closest(SKIP.replace('input,',''))&&e.closest('#messages'))return; for(const a of['placeholder','title']){ const v=e.getAttribute(a); if(v&&CY.test(v)){ const c=MCI.c[l+'|'+v.trim()]; if(c)e.setAttribute(a,c); else MCI.q.add(v.trim()); } } }); mciFlush(); }
+async function mciFlush(){ if(MCI.busy||!MCI.q.size)return; MCI.busy=true; const l=mcLang(); const batch=[...MCI.q].slice(0,50); batch.forEach(x=>MCI.q.delete(x));
+  try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:`Translate each Russian UI string in the JSON array to ${MC_LANGS[l].name}. Keep emojis, numbers, punctuation and {placeholders}. Return ONLY a JSON array of the same length.`},{role:'user',content:JSON.stringify(batch)}]})}); const j=await r.json(); const a=JSON.parse((j?.choices?.[0]?.message?.content||'[]').replace(/```json|```/g,'').trim()); if(Array.isArray(a)&&a.length===batch.length){ batch.forEach((k,i)=>{ if(typeof a[i]==='string'&&a[i]){ MCI.c[l+'|'+k]=a[i]; MCI.c[l+'|'+a[i].trim()]=a[i]; } }); try{ localStorage.setItem('mc_i18n',JSON.stringify(MCI.c)); }catch(_){} } }catch(_){}
+  MCI.busy=false; mciWalk(); }
+new MutationObserver(()=>{ clearTimeout(MCI.t); MCI.t=setTimeout(mciWalk,250); }).observe(document.body,{childList:true,subtree:true,characterData:true}); setTimeout(mciWalk,800);
 </script>
 
 <script>
