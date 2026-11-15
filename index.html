@@ -2566,7 +2566,19 @@ html[data-theme] .settings-wrap #mcMA:focus,html[data-theme] .settings-wrap #mcS
 .mc11-chips{display:flex;gap:8px;flex-wrap:wrap}.mc11-chip{padding:10px 16px;border-radius:14px;font-weight:800;background:var(--accent-light);color:var(--accent)}
 .mc11-chip.on{background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;box-shadow:0 6px 18px rgba(236,72,153,.4)}
 .mc11-sw{width:34px;height:34px;border-radius:50%;border:3px solid transparent}.mc11-sw.on{border-color:var(--text)}
-</style></head>
+</style><style id="mc-v12">
+/* perf: no backdrop blur on lists/rows (it is what dropped frames); blur only on a few big surfaces */
+.sb-list>*,.settings-row,.mc9-tile,.mc9-list-row,.settings-group,.toast,.pinned-bar,.reply-bar,.chat-search-bar,.sb-search,.sb-nav,.sb-top,.sidebar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.mobile-nav-inner,.chat-header,.settings-header,.chat-input-bar,.mc11-sheet,.mc-send-menu,.mc9-lock-card,.modal{backdrop-filter:blur(var(--mc-blur,22px)) saturate(190%)!important;-webkit-backdrop-filter:blur(var(--mc-blur,22px)) saturate(190%)!important}
+.messages>*{content-visibility:auto;contain-intrinsic-size:auto 56px}.sb-list>*{content-visibility:auto;contain-intrinsic-size:auto 68px}
+.messages,.sb-list,#settingsPanel{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.messages{contain:layout style}
+body{background:radial-gradient(900px 620px at 12% -8%,color-mix(in srgb,var(--accent) 40%,transparent),transparent 62%),radial-gradient(820px 600px at 100% 6%,color-mix(in srgb,var(--wall-b,#8b5cf6) 34%,transparent),transparent 62%),radial-gradient(700px 600px at 50% 110%,color-mix(in srgb,var(--wall-a,#14b8a6) 24%,transparent),transparent 60%),var(--bg) fixed!important}
+.sidebar,.sb-list,#settingsPanel,.messages{background:transparent!important}
+.sb-list>*,.settings-row,.mc9-tile,.mc9-list-row,.ms-card,.mc11-card{background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%)!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -1px 0 rgba(255,255,255,.05),0 6px 20px rgba(0,0,0,.10)!important}
+[data-theme=light] .sb-list>*,[data-theme=light] .settings-row,[data-theme=light] .mc9-tile,[data-theme=light] .ms-card,[data-theme=light] .mc11-card{background:linear-gradient(160deg,rgba(255,255,255,.78),rgba(255,255,255,.42) 60%)!important;border-color:rgba(255,255,255,.7)!important}
+.chat-header,.settings-header,.mobile-nav-inner,.chat-input-bar{background:color-mix(in srgb,var(--surface) 46%,transparent)!important;border-color:rgba(255,255,255,.2)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+</style><style>#app{background:transparent!important}#sidebar{background:color-mix(in srgb,var(--surface) 34%,transparent)!important}.chat-area,#chatView,.main,.chat-main{background:transparent!important}</style><style>.mc11-btn{background:var(--accent-solid,var(--accent))!important}.mc11-btn.g{background:var(--accent-light)!important}</style></head>
 <body>
 
 <div class="splash" id="splash"><div class="splash-inner"><div class="splash-badge">MetroChat</div><h1 class="splash-greeting" id="splashGreeting">Добро пожаловать в MetroChat</h1><div class="splash-sub">Соединяем людей — быстро и безопасно</div><div class="splash-dots"><i></i><i></i><i></i></div></div></div>
@@ -3146,7 +3158,7 @@ authForm.addEventListener('submit', async e => {
     await setPersistence(auth, browserLocalPersistence);
     if (state.authMode === 'login') {
       mcMarkFreshSignIn('password');
-      await signInWithEmailAndPassword(auth, email, pass);
+      await signInWithEmailAndPassword(auth, email, pass); mc9SessionUnlocked = true;
     } else {
       mcMarkFreshSignIn('register');
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
@@ -4200,7 +4212,7 @@ function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
   const cacheKey = 'metrochat_msg_cache_v1_' + chatId;
   try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); } } catch(_) {}
-  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(30));
+  state.msgLim = state.msgLim || {}; const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(state.msgLim[chatId] || 40));
   let mcFirstSnap = true;
   state.chatUnsub = onValue(q, snap => {
     const prevLen = state.messages.length;
@@ -11845,7 +11857,7 @@ const MC_EARN_CAP = 140;
 const MC_EARN_TASKS_PER_DAY = 7;
 const MCE = { day: null, rec: null, streak: null, age: null, loaded: false, busy: false, play: null, back: 'gifts' };
 
-function mcDayKey(ts = Date.now()) { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function mcDayKey(ts = (Date.now()+(window.__srvOff||0))) { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function mcPrevDayKey(day) { const [y, m, d] = day.split('-').map(Number); return mcDayKey(new Date(y, m - 1, d - 1, 12).getTime()); }
 function mcHash32(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 function mcSeeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
@@ -11911,7 +11923,7 @@ async function mcEarnGrant(taskId, want, meta = {}) {
     if (c.tasks[taskId]) return; // уже выполнено — отмена транзакции
     const total = Math.max(0, Number(c.total) || 0);
     const g = Math.max(0, Math.min(want, MC_EARN_CAP - total));
-    c.tasks[taskId] = { r: g, want, at: Date.now(), ...(meta.score !== undefined ? { s: Math.round(meta.score * 100) } : {}) };
+    c.tasks[taskId] = { r: g, want, at: (Date.now()+(window.__srvOff||0)), ...(meta.score !== undefined ? { s: Math.round(meta.score * 100) } : {}) };
     c.total = total + g;
     return c;
   });
@@ -12044,7 +12056,7 @@ function mcEarnStart(id) {
   const wrap = $('settingsPanel'); if (!wrap) return;
   const d = MC_EARN_DEFS[id];
   mcEarnStopPlay();
-  MCE.play = { id, t0: Date.now(), timers: [], done: false };
+  MCE.play = { id, t0: (Date.now()+(window.__srvOff||0)), timers: [], done: false };
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="mcEarnQuit()">← Задания</button><div class="settings-title">${d.title}</div></div>
   <div class="settings-wrap mc-play" style="--tc:${d.c}"><div class="mc-play-head"><span class="mc-task-ico">${d.ico}</span><div><b>${d.title}</b><small>${d.desc} · до ${d.max} УМ</small></div><span class="mc-play-timer" id="mcPlayTimer"></span></div><div class="mc-play-progress"><i id="mcPlayProg"></i></div><div id="mcPlayBox" class="mc-play-box"></div></div>`;
   const fn = MC_EARN_GAMES[id];
@@ -12066,8 +12078,8 @@ function mcPlayInterval(fn, ms) { const id = setInterval(fn, ms); MCE.play?.time
 function mcPlayTimeout(fn, ms) { const id = setTimeout(fn, ms); MCE.play?.timers.push(id); return id; }
 // Обратный отсчёт; onEnd вызывается один раз
 function mcPlayCountdown(sec, onEnd) {
-  const p = MCE.play; const end = Date.now() + sec * 1000;
-  const tick = () => { if (MCE.play !== p || p.done) return; const left = Math.max(0, end - Date.now()); mcPlayTimerSet(`${Math.ceil(left / 1000)} с`); $('mcPlayTimer')?.classList.toggle('warn', left < 10000); if (left <= 0) { clearInterval(iv); onEnd(); } };
+  const p = MCE.play; const end = (Date.now()+(window.__srvOff||0)) + sec * 1000;
+  const tick = () => { if (MCE.play !== p || p.done) return; const left = Math.max(0, end - (Date.now()+(window.__srvOff||0))); mcPlayTimerSet(`${Math.ceil(left / 1000)} с`); $('mcPlayTimer')?.classList.toggle('warn', left < 10000); if (left <= 0) { clearInterval(iv); onEnd(); } };
   const iv = mcPlayInterval(tick, 200); tick();
 }
 
@@ -12077,7 +12089,7 @@ async function mcEarnFinish(score, summary = '') {
   const d = MC_EARN_DEFS[p.id];
   score = Math.max(0, Math.min(1, Number(score) || 0));
   // Защита от слишком быстрого «прохождения» (скрипты, автокликеры)
-  const elapsed = Date.now() - p.t0;
+  const elapsed = (Date.now()+(window.__srvOff||0)) - p.t0;
   if (elapsed < 2500) score = Math.min(score, 0.2);
   const want = score > 0 ? Math.max(1, Math.round(d.max * score)) : 0;
   const box = $('mcPlayBox');
@@ -12145,7 +12157,7 @@ const MC_EARN_GAMES = {
       if (p.done) return; mcPlayProg(i / qs.length);
       const Q = qs[i];
       box.innerHTML = `<div class="mc-q-num">Вопрос ${i + 1} из ${qs.length}</div><h3 class="mc-q-title">${esc(Q.q)}</h3><div class="mc-q-opts">${Q.opts.map((o, k) => `<button type="button" data-k="${k}">${esc(o.t)}</button>`).join('')}</div>`;
-      let locked = false; const start = Date.now();
+      let locked = false; const start = (Date.now()+(window.__srvOff||0));
       mcPlayCountdown(20, () => pickAns(-1));
       const pickAns = k => {
         if (locked || p.done) return; locked = true;
@@ -12290,7 +12302,7 @@ const MC_EARN_GAMES = {
     const targetCpm = [60, 90, 130, 160, 180][lv - 1];
     let started = 0; const p = MCE.play; p.started = true;
     const fin = (val = $('mcTI')?.value || '') => {
-      const dt = started ? (Date.now() - started) / 60000 : 1;
+      const dt = started ? ((Date.now()+(window.__srvOff||0)) - started) / 60000 : 1;
       let ok = 0; for (let k = 0; k < phrase.length; k++) if (val[k] === phrase[k]) ok++;
       const acc = ok / phrase.length; const cpm = val.length / Math.max(dt, 1 / 60);
       const sc = acc < 0.6 ? 0 : acc * Math.min(1, cpm / targetCpm);
@@ -12302,7 +12314,7 @@ const MC_EARN_GAMES = {
     inp.addEventListener('paste', e => { e.preventDefault(); toast('Вставка отключена — наберите текст вручную', '⌨️'); });
     inp.addEventListener('drop', e => e.preventDefault());
     inp.addEventListener('input', () => {
-      if (!started) started = Date.now();
+      if (!started) started = (Date.now()+(window.__srvOff||0));
       const v = inp.value.replace(/\n/g, '');
       spans.forEach((s, k) => { s.className = k < v.length ? (v[k] === phrase[k] ? 'ok' : 'bad') : k === v.length ? 'cur' : ''; });
       mcPlayProg(v.length / phrase.length);
@@ -12325,7 +12337,7 @@ const MC_EARN_GAMES = {
       const next = ok => { if (p.done || answered) return; answered = true; clearTimeout(t); clearInterval(iv); if (ok) { found++; mcEarnSfx('ok'); } else mcEarnSfx('bad'); box.querySelector(`.mc-color [data-k="${odd}"]`)?.classList.add('hit'); r++; mcPlayTimeout(() => r >= rounds ? fin() : show(), 550); };
       box.querySelectorAll('.mc-color button').forEach(b => b.addEventListener('click', () => { box.querySelectorAll('.mc-color button').forEach(x => x.disabled = true); next(Number(b.dataset.k) === odd); }));
       t = mcPlayTimeout(() => next(false), 9000);
-      const end = Date.now() + 9000; iv = mcPlayInterval(() => { const left = end - Date.now(); mcPlayTimerSet(`${Math.max(0, Math.ceil(left / 1000))} с`); if (left <= 0) clearInterval(iv); }, 200);
+      const end = (Date.now()+(window.__srvOff||0)) + 9000; iv = mcPlayInterval(() => { const left = end - (Date.now()+(window.__srvOff||0)); mcPlayTimerSet(`${Math.max(0, Math.ceil(left / 1000))} с`); if (left <= 0) clearInterval(iv); }, 200);
     };
     show();
   },
@@ -14106,6 +14118,7 @@ function mcLockShow(test) {
   if (test) { $('mc9LockTitle').textContent = 'Проверка блокировки'; $('mc9LockSub').textContent = 'Так выглядит экран блокировки при входе'; $('mc9LockOut').classList.add('hidden'); }
   el.classList.remove('hidden');
   setTimeout(() => $('mc9LockPass')?.focus(), 150);
+  if (hasFace && !test) setTimeout(() => { try { mcFaceVerify(); } catch (_) {} }, 400);
 }
 function mcLockHide() { mcLockShown = false; $('mc9Lock')?.classList.add('hidden'); }
 async function mcLockUnlock() {
@@ -14614,7 +14627,6 @@ const isStaff=(c)=>!!c&&!!state.user&&(isGroupOwner(c,state.user.uid)||isGroupAd
 // --- Groups: members can never edit ---
 for(const n of ['addSelectedContactsToGroup', 'deleteGroupForAll', 'doAddMemberToGroup', 'editGroupAvatarChange', 'openEditGroupModal', 'saveGroupInfo', 'toggleGroupSettingByKey', 'updateGroupNumberSetting']){ try{ const o=eval(n); if(typeof o!=='function')continue; const w=function(){ const c=state.chat; if(c&&c.type==='group'&&!isStaff(c)){ toast('Изменять группу могут только владелец и администраторы','🔒'); return; } return o.apply(this,arguments); }; eval(n+'=w'); window[n]=w; }catch(e){} }
 // --- Mandatory unlock before greeting ---
-mcLockPwOn=W('mcLockPwOn',()=>true);
 // --- Bots: only user-made bots; remove catalog ---
 try{ MC_BOTS.splice(0); }catch(_){}
 mcBotsHub=W('mcBotsHub',function(){
@@ -14717,6 +14729,48 @@ async function mciFlush(){ if(MCI.busy||!MCI.q.size)return; MCI.busy=true; const
   try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:`Translate each Russian UI string in the JSON array to ${MC_LANGS[l].name}. Keep emojis, numbers, punctuation and {placeholders}. Return ONLY a JSON array of the same length.`},{role:'user',content:JSON.stringify(batch)}]})}); const j=await r.json(); const a=JSON.parse((j?.choices?.[0]?.message?.content||'[]').replace(/```json|```/g,'').trim()); if(Array.isArray(a)&&a.length===batch.length){ batch.forEach((k,i)=>{ if(typeof a[i]==='string'&&a[i]){ MCI.c[l+'|'+k]=a[i]; MCI.c[l+'|'+a[i].trim()]=a[i]; } }); try{ localStorage.setItem('mc_i18n',JSON.stringify(MCI.c)); }catch(_){} } }catch(_){}
   MCI.busy=false; mciWalk(); }
 new MutationObserver(()=>{ clearTimeout(MCI.t); MCI.t=setTimeout(mciWalk,250); }).observe(document.body,{childList:true,subtree:true,characterData:true}); setTimeout(mciWalk,800);
+
+// ================= v12 =================
+// history: load older messages when scrolled to the top
+{ const box=$('messages'); let busy=false;
+  box?.addEventListener('scroll',()=>{ const c=state.chat; if(!c||busy||box.scrollTop>70)return; const lim=state.msgLim[c.id]||40; if(state.messages.length<lim)return; busy=true; state.__keep={h:box.scrollHeight,n:state.messages.length}; state.msgLim[c.id]=lim+40; subscribeMessages(c.id); setTimeout(()=>{busy=false;},1400); },{passive:true});
+  const o=renderMessages; renderMessages=W('renderMessages',function(){ const r=o.apply(this,arguments); const k=state.__keep,b=$('messages'); if(k&&b&&state.messages.length>k.n){ b.scrollTop=b.scrollHeight-k.h; state.__keep=null; } return r; }); }
+// earn limit: use the server clock, not the phone clock
+get(ref(db,'.info/serverTimeOffset')).then(x=>{ window.__srvOff=+x.val()||0; }).catch(()=>{});
+// softer sounds
+mcBell=W('mcBell',function(ac,out,t,f,dur=1.1,vol=0.16){ [[1,1],[2,0.26],[3.01,0.08]].forEach(([r,a],i)=>mcTone6(ac,out,t,f*r,{dur:dur/(1+i*0.5),vol:vol*a,attack:0.014,filter:3600})); });
+MC_SOUNDS.notif.unshift({id:'soft',name:'Мягкий',emoji:'🌿',desc:'Два тихих тона',play:(ac,o,t)=>{ const e=mcEcho(ac,o,0.17,0.22); mcTone6(ac,e,t,mcMidi6(76),{dur:.55,vol:.15,attack:.02,filter:3000}); mcTone6(ac,e,t+.14,mcMidi6(83),{dur:.8,vol:.13,attack:.02,filter:3000}); }});
+MC_SOUNDS.ring.unshift({id:'ring_calm',name:'Спокойный',emoji:'🌊',len:3.4,play:(ac,o,t)=>{ const e=mcEcho(ac,o,0.22,0.3); [69,72,76,72,81,76,72,69].forEach((n,i)=>mcTone6(ac,e,t+i*0.38,mcMidi6(n),{dur:.9,vol:.13,attack:.03,filter:2600})); }});
+Object.assign(MC_SOUND_DEFAULT,{notif:'soft',group:'soft',ring:'ring_calm'});
+{ const o=mcSoundId; mcSoundId=W('mcSoundId',function(slot){ const id=o(slot); return ['metro','drop','ring_metro','classic','ring_classic'].includes(id)?MC_SOUND_DEFAULT[slot]:id; }); }
+// translations: on-device Translator API -> Google gtx -> AI fallback
+async function mciTr(b,l){ const tl=l==='zh'?'zh-CN':l;
+  try{ if('Translator' in self){ const t=await Translator.create({sourceLanguage:'ru',targetLanguage:l}); const out=[]; for(const x of b) out.push(await t.translate(x)); return out; } }catch(_){}
+  try{ const r=await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=ru&tl='+tl+'&dt=t&q='+encodeURIComponent(b.join('\n'))); const j=await r.json(); const out=(j[0]||[]).map(x=>x[0]).join('').split('\n'); if(out.length===b.length) return out.map(x=>x.trim()); }catch(_){}
+  try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:`Translate each Russian UI string in the JSON array to ${MC_LANGS[l].name}. Return ONLY a JSON array of the same length.`},{role:'user',content:JSON.stringify(b)}]})}); const j=await r.json(); const a=JSON.parse((j?.choices?.[0]?.message?.content||'[]').replace(/```json|```/g,'').trim()); if(Array.isArray(a)&&a.length===b.length) return a; }catch(_){}
+  return null; }
+mciFlush=W('mciFlush',async function(){ if(MCI.busy||!MCI.q.size)return; MCI.busy=true; const l=mcLang(); const b=[...MCI.q].slice(0,40); b.forEach(x=>MCI.q.delete(x)); const a=await mciTr(b,l);
+  if(a){ b.forEach((k,i)=>{ if(typeof a[i]==='string'&&a[i]){ MCI.c[l+'|'+k]=a[i]; MCI.c[l+'|'+a[i].trim()]=a[i]; } }); try{ localStorage.setItem('mc_i18n',JSON.stringify(MCI.c)); }catch(_){} } else b.forEach(x=>MCI.c[l+'|'+x]=x);
+  MCI.busy=false; mciWalk(); });
+// ===== Support chat (admin = node admins/<uid>: true) =====
+const supHead=(t,back)=>`<div class="settings-header"><button class="settings-back-btn" onclick="${back}">←</button><div class="settings-title">${t}</div></div>`;
+function supThread(uid,asAdmin){ const wrap=$('settingsPanel'); window.__mcOtherView='support';
+  wrap.innerHTML=supHead(asAdmin?'Диалог с пользователем':'Поддержка',asAdmin?'mcSupportInbox()':"switchTab('settings')")+`<div class="settings-wrap"><div id="supMsgs" style="display:flex;flex-direction:column;gap:8px;min-height:50dvh;padding:6px 2px"></div><div style="display:flex;gap:8px;position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 74px)"><input id="supIn" class="mc10-search" style="margin:0;flex:1" placeholder="Сообщение" autocomplete="off" maxlength="1000"><button class="mc11-btn" id="supGo">➤</button></div></div>`;
+  if(!asAdmin) wrap.querySelector('#supMsgs').innerHTML='<p class="mc9-note" style="text-align:center">Опишите вопрос — ответит администратор.</p>';
+  const un=onValue(query(ref(db,`support_chats/${uid}/messages`),orderByChild('at'),limitToLast(100)),sn=>{ const rows=Object.values(sn.val()||{}).sort((a,b)=>a.at-b.at); const box=$('supMsgs'); if(!box){un();return;} if(rows.length) box.innerHTML=rows.map(m=>{ const mine=asAdmin?m.from==='admin':m.from===uid; return `<div style="align-self:${mine?'flex-end':'flex-start'};max-width:82%;padding:9px 13px;border-radius:16px;background:${mine?'var(--accent)':'var(--surface)'};color:${mine?'var(--accent-ink,#fff)':'var(--text)'}">${esc(m.text)}<small style="display:block;opacity:.6;font-size:10px">${new Date(m.at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}${m.from==='admin'&&!asAdmin?' · поддержка':''}</small></div>`; }).join(''); box.scrollTop=box.scrollHeight; });
+  const send=async()=>{ const i=$('supIn'),t=i.value.trim(); if(!t)return; i.value=''; const at=Date.now(); try{ await set(push(ref(db,`support_chats/${uid}/messages`)),{from:asAdmin?'admin':uid,text:t.slice(0,1000),at}); await update(ref(db,`support_chats/${uid}/meta`),{uid,name:state.profile?.displayName||state.profile?.username||'Пользователь',last:t.slice(0,80),at,unread:!asAdmin}); }catch(e){ toast('Не удалось отправить','⚠'); } };
+  $('supGo').onclick=send; $('supIn').onkeydown=e=>{ if(e.key==='Enter')send(); }; }
+function mcSupportOpen(){ supThread(state.user.uid,false); }
+async function mcSupportInbox(){ const wrap=$('settingsPanel'); wrap.innerHTML=supHead('Обращения','switchTab("settings")')+'<div class="settings-wrap" id="supList"></div>';
+  onValue(query(ref(db,'support_chats'),orderByChild('meta/at'),limitToLast(100)),sn=>{ const l=$('supList'); if(!l)return; const rows=Object.entries(sn.val()||{}).map(([u,v])=>({u,...(v.meta||{})})).filter(x=>x.at).sort((a,b)=>b.at-a.at); l.innerHTML=rows.map(r=>`<div class="mc11-card" style="cursor:pointer" data-u="${esc(r.u)}"><div class="mc11-grow"><b>${esc(r.name||r.u)}${r.unread?' 🔴':''}</b><small>${esc(r.last||'')}</small></div></div>`).join('')||'<p class="mc9-note" style="text-align:center;margin:24px">Обращений нет</p>'; l.querySelectorAll('[data-u]').forEach(e=>e.onclick=()=>{ update(ref(db,`support_chats/${e.dataset.u}/meta`),{unread:false}).catch(()=>{}); supThread(e.dataset.u,true); }); }); }
+W('mcSupportOpen',mcSupportOpen); W('mcSupportInbox',mcSupportInbox);
+{ const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ const adm=window.__mcAdmin; return o.apply(this,arguments)+`<div class="mc11-card" style="cursor:pointer" onclick="mcSupportOpen()"><div class="mc11-av" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:14px">💬</div><div class="mc11-grow"><b>Поддержка</b><small>Чат с администратором</small></div>›</div>`+(adm?`<div class="mc11-card" style="cursor:pointer" onclick="mcSupportInbox()"><div class="mc11-av" style="background:linear-gradient(135deg,#ef4444,#f97316);border-radius:14px">🛟</div><div class="mc11-grow"><b>Обращения (админ)</b><small>Ответы пользователям</small></div>›</div>`:''); }); }
+const chkAdm=()=>{ if(mcMe()) get(ref(db,'admins/'+mcMe())).then(x=>{ window.__mcAdmin=x.exists(); }).catch(()=>{}); }; chkAdm(); setTimeout(chkAdm,4000);
+
+// contrast: accent used as text must reach 4.5:1 on the surface in every theme
+function mcSafeAccent(){ const d=!!state.settings?.darkMode,rs=document.documentElement.style,a=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); if(!a)return; const safe=mcEnsure(a,d?'#1a2236':'#ffffff',4.5,d?'#ffffff':'#000000'); rs.setProperty('--accent',safe); rs.setProperty('--accent-light',hex2rgba(safe,d?0.2:0.13)); rs.setProperty('--accent-ink',d?mcEnsure(safe,'#121927',4.5,'#ffffff'):mcEnsure(safe,'#ffffff',4.5,'#000000')); }
+{ const o=applySettings; applySettings=W('applySettings',function(){ const r=o.apply(this,arguments); mcSafeAccent(); return r; }); const u=upApply; upApply=W('upApply',function(){ u.apply(this,arguments); mcSafeAccent(); }); }
+try{ applySettings(); }catch(_){}
 </script>
 
 <script>
