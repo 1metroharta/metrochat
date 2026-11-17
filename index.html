@@ -649,8 +649,8 @@ body{--mc-safe-text:var(--text,#20242b)} .settings-wrap,.settings-panel,.modal-c
 html[data-theme="light"]{
   color-scheme:light;
   --bg:#eef1f6; --surface:#ffffff; --surface-2:#f1f4f9; --surface-3:#e6eaf1;
-  --text:#0d1526; --text-2:#435069; --text-3:#5b6780;
-  --border:rgba(16,24,40,.11); --border-strong:rgba(16,24,40,.18);
+  --text:#0b1220; --text-2:#313d52; --text-3:#475268;
+  --border:rgba(16,24,40,.14); --border-strong:rgba(16,24,40,.22);
   --hover:rgba(16,24,40,.05); --press:rgba(16,24,40,.08);
   --shadow-sm:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.06);
   --shadow-md:0 6px 20px rgba(16,24,40,.08);
@@ -1005,7 +1005,7 @@ html[data-theme] [style*="color: var(--accent)"]:not([style*="background"]),html
 <style id="metrochat-design-v4">
 /* ================= MetroChat design v4 (round 2) ================= */
 :root{ --mc-ease:cubic-bezier(.2,.8,.2,1); --mc-ease-out:cubic-bezier(.16,1,.3,1); --mc-spring:cubic-bezier(.34,1.56,.64,1); --mc-r:16px; --mc-r-sm:12px; }
-html[data-theme="light"]{ --mc-card:#ffffff; --mc-card-2:#f3f6fb; --mc-line:rgba(16,24,40,.10); --mc-muted:#4a566e; --mc-glass:rgba(255,255,255,.86); --mc-accent-soft:rgba(59,111,240,.10); --mc-accent-text:#2459d8; }
+html[data-theme="light"]{ --mc-card:#ffffff; --mc-card-2:#f3f6fb; --mc-line:rgba(16,24,40,.14); --mc-muted:#374257; --mc-glass:rgba(255,255,255,.9); --mc-accent-soft:rgba(59,111,240,.10); --mc-accent-text:#2459d8; }
 html[data-theme="dark"],html:not([data-theme]){ --mc-card:#141c2c; --mc-card-2:#1b2438; --mc-line:rgba(160,175,210,.14); --mc-muted:#aab5cc; --mc-glass:rgba(18,25,40,.86); --mc-accent-soft:rgba(117,166,255,.14); --mc-accent-text:#8fb6ff; }
 
 /* ---------- Splash (общий фон для «Добро пожаловать» и «Доброе утро, ник») ---------- */
@@ -1983,17 +1983,6 @@ html[data-theme="dark"] .mc-rar-leg, html.dark .mc-rar-leg{ color:#fcd34d; }
 .mc-gs7-actions button span{ font-size:22px; line-height:1; }
 .mc-gs7-actions button b{ font-size:13.5px; }
 .mc-gs7-actions button:hover{ border-color:var(--accent); } .mc-gs7-actions button:active{ transform:scale(.96); }
-.mc-gs7-feat{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
-.mc-feat{ position:relative; display:flex; align-items:center; gap:14px; padding:16px; border-radius:22px; border:0; cursor:pointer; text-align:left; color:#fff; font:inherit; overflow:hidden; min-height:96px; transition:transform .25s var(--mc-spring), box-shadow .25s; }
-.mc-feat:hover{ transform:translateY(-2px); } .mc-feat:active{ transform:scale(.98); }
-.mc-feat-wheel{ background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.25),transparent 40%),linear-gradient(130deg,#7c3aed,#db2777 60%,#f59e0b); box-shadow:0 14px 30px rgba(219,39,119,.28); }
-.mc-feat-auc{ background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.22),transparent 40%),linear-gradient(130deg,#0f766e,#0891b2 55%,#2563eb); box-shadow:0 14px 30px rgba(8,145,178,.26); }
-.mc-feat-art{ flex:none; width:58px; height:58px; display:grid; place-items:center; font-size:34px; border-radius:18px; background:rgba(255,255,255,.18); }
-.mc-mini-wheel{ width:44px; height:44px; border-radius:50%; background:conic-gradient(#f43f5e 0 12.5%,#f59e0b 0 25%,#22c55e 0 37.5%,#06b6d4 0 50%,#3b82f6 0 62.5%,#8b5cf6 0 75%,#ec4899 0 87.5%,#eab308 0); border:3px solid #fff; box-shadow:0 0 0 2px rgba(0,0,0,.12); animation:mcSpin7 6s linear infinite; }
-@keyframes mcSpin7{ to{ transform:rotate(360deg); } }
-.mc-feat-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
-.mc-feat-txt b{ font-size:17px; } .mc-feat-txt small{ font-size:12.5px; opacity:.92; line-height:1.35; }
-.mc-feat-go{ font-size:26px; opacity:.8; }
 .mc-gs7-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 0 12px; scrollbar-width:none; }
 .mc-gs7-chips::-webkit-scrollbar{ display:none; }
 .mc-gs7-chips button, .mc-chip7{ flex:none; padding:7px 14px; border-radius:999px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
@@ -2015,132 +2004,9 @@ html[data-theme="dark"] .mc-rar-leg, html.dark .mc-rar-leg{ color:#fcd34d; }
 .gift-owned-item.r-epic > span:first-child{ filter:drop-shadow(0 0 8px rgba(168,85,247,.5)); }
 .gift-owned-item.r-leg > span:first-child, .gift-owned-item.r-excl > span:first-child{ filter:drop-shadow(0 0 9px rgba(245,158,11,.6)); }
 
-/* Колесо фортуны */
-.mc-wheel-ov .mc-sheet, .mc-auc-ov .mc-sheet{ max-width:560px; }
-.mc-wheel-bal{ margin-left:auto; padding:6px 12px; border-radius:999px; background:var(--mc-accent-soft); color:var(--mc-accent-text, var(--accent)); font-weight:800; font-size:13.5px; white-space:nowrap; }
-.mc-wheel-body{ padding:6px 18px 22px; display:flex; flex-direction:column; align-items:center; gap:14px; }
-.mc-wheel-stage{ position:relative; width:min(340px,82vw); aspect-ratio:1; margin-top:12px; }
-.mc-wheel-glow{ position:absolute; inset:-14px; border-radius:50%; background:conic-gradient(from 0deg,#f43f5e,#f59e0b,#22c55e,#06b6d4,#8b5cf6,#ec4899,#f43f5e); filter:blur(22px); opacity:.35; animation:mcSpin7 12s linear infinite; }
-.mc-wheel-wrap{ position:absolute; inset:0; border-radius:50%; padding:7px; background:linear-gradient(145deg,#fde68a,#d97706 45%,#fbbf24 70%,#92400e); box-shadow:0 18px 40px rgba(0,0,0,.28), inset 0 2px 4px rgba(255,255,255,.6); }
-.mc-wheel-svg{ width:100%; height:100%; display:block; border-radius:50%; }
-.mc-wheel-rot{ transform-origin:0 0; will-change:transform; }
-.mc-wheel-svg text{ font-family:inherit; paint-order:stroke; stroke:rgba(0,0,0,.25); stroke-width:2px; }
-.mc-wheel-bulbs circle{ fill:#fff7cc; }
-.mc-wheel-bulbs .b0{ animation:mcBulb7 1s steps(1) infinite; } .mc-wheel-bulbs .b1{ animation:mcBulb7 1s steps(1) infinite .5s; }
-@keyframes mcBulb7{ 0%{ fill:#fff7cc; filter:drop-shadow(0 0 3px #fde047); } 50%{ fill:#a16207; filter:none; } }
-.mc-wheel-wrap.win{ animation:mcWin7 .5s ease-in-out 3; }
-@keyframes mcWin7{ 50%{ box-shadow:0 0 0 8px rgba(250,204,21,.45), 0 18px 40px rgba(0,0,0,.28); } }
-.mc-wheel-pointer{ position:absolute; top:-12px; left:50%; z-index:3; width:34px; height:44px; margin-left:-17px; transform-origin:50% 10px; background:linear-gradient(180deg,#fff,#e2e8f0); clip-path:polygon(50% 100%,0 22%,18% 0,82% 0,100% 22%); filter:drop-shadow(0 4px 6px rgba(0,0,0,.35)); }
-.mc-wheel-pointer::after{ content:''; position:absolute; left:50%; top:9px; width:10px; height:10px; margin-left:-5px; border-radius:50%; background:#ef4444; }
-.mc-wheel-pointer.kick{ animation:mcKick7 .12s ease-out; }
-@keyframes mcKick7{ 40%{ transform:rotate(-14deg); } }
-.mc-wheel-hub{ position:absolute; left:50%; top:50%; z-index:2; width:27%; aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; border:4px solid #fde68a; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#fff; font:inherit; background:radial-gradient(circle at 35% 30%,#fb7185,#e11d48 55%,#9f1239); box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 2px 6px rgba(255,255,255,.35); transition:transform .2s var(--mc-spring); }
-.mc-wheel-hub b{ font-size:clamp(10px,3.2vw,13px); letter-spacing:.06em; } .mc-wheel-hub small{ font-size:clamp(9px,2.6vw,11px); opacity:.9; font-weight:700; }
-.mc-wheel-hub:hover:not(:disabled){ transform:translate(-50%,-50%) scale(1.06); }
-.mc-wheel-hub:disabled{ filter:saturate(.6); cursor:wait; }
-.mc-wheel-result{ min-height:44px; text-align:center; font-size:14.5px; color:var(--mc-muted); display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; max-width:420px; }
-.mc-wheel-result b{ color:var(--text); }
-.mc-wr-pop{ font-size:30px; display:inline-block; animation:mcGift7 .7s var(--mc-spring) both; }
-.mc-wheel-spin{ width:100%; max-width:420px; min-height:52px; border:0; border-radius:16px; cursor:pointer; color:#fff; font:inherit; font-weight:800; font-size:16px; background:linear-gradient(115deg,#7c3aed,#db2777 55%,#f59e0b); box-shadow:0 12px 26px rgba(219,39,119,.3); transition:transform .2s var(--mc-spring), opacity .2s; }
-.mc-wheel-spin:active:not(:disabled){ transform:scale(.97); }
-.mc-wheel-spin:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
-.mc-wheel-pity{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:8px; padding:12px 14px; border-radius:16px; background:var(--mc-card-2); }
-.mc-wheel-pity b{ display:block; font-size:13.5px; } .mc-wheel-pity small{ font-size:12.5px; color:var(--mc-muted); }
-.mc-wheel-pbar{ height:8px; border-radius:99px; background:var(--mc-line); overflow:hidden; }
-.mc-wheel-pbar i{ display:block; height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,#a855f7,#ec4899); transition:width .6s var(--mc-ease-out); }
-.mc-wheel-odds{ width:100%; max-width:420px; border-radius:16px; background:var(--mc-card-2); padding:0 14px; }
-.mc-wheel-odds summary{ cursor:pointer; padding:13px 0; font-weight:800; font-size:14px; list-style:none; display:flex; justify-content:space-between; }
-.mc-wheel-odds summary::after{ content:'›'; transform:rotate(90deg); transition:transform .2s; } .mc-wheel-odds[open] summary::after{ transform:rotate(-90deg); }
-.mc-wheel-odds summary::-webkit-details-marker{ display:none; }
-.mc-odds{ display:flex; flex-direction:column; gap:2px; }
-.mc-odds div{ display:grid; grid-template-columns:12px 1fr auto; gap:10px; align-items:center; padding:7px 0; border-bottom:1px solid var(--mc-line); font-size:13.5px; }
-.mc-odds .sw{ width:12px; height:12px; border-radius:4px; }
-.mc-odds-note{ font-size:12px; line-height:1.5; color:var(--mc-muted); margin:10px 0 14px; }
-.mc-wheel-hist{ width:100%; max-width:420px; }
-.mc-wheel-hist h4, .mc-auc-hist h4{ font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--mc-muted); margin:6px 0 8px; }
-.mc-wh-row{ display:grid; grid-template-columns:32px 1fr auto; gap:10px; align-items:center; padding:8px 10px; border-radius:12px; margin-bottom:4px; background:var(--mc-card-2); }
-.mc-wh-row span{ font-size:22px; text-align:center; } .mc-wh-row b{ font-size:13.5px; } .mc-wh-row small{ font-size:12px; color:var(--mc-muted); }
-.mc-wh-row.r-epic{ box-shadow:inset 3px 0 0 #a855f7; } .mc-wh-row.r-leg{ box-shadow:inset 3px 0 0 #f59e0b; } .mc-wh-row.r-excl{ box-shadow:inset 3px 0 0 #ef4444; } .mc-wh-row.r-rare{ box-shadow:inset 3px 0 0 #3b82f6; }
-
-/* Аукцион */
-.mc-auc-hero{ margin:4px 18px 12px; padding:14px 16px; border-radius:18px; display:flex; align-items:center; gap:12px; background:linear-gradient(130deg,rgba(15,118,110,.12),rgba(37,99,235,.12)); border:1px solid var(--mc-line); }
-.mc-auc-hero div{ flex:1; min-width:0; } .mc-auc-hero b{ display:block; font-size:15px; margin-bottom:3px; } .mc-auc-hero small{ font-size:12.5px; color:var(--mc-muted); line-height:1.4; display:block; }
-.mc-auc-hero .btn{ width:auto !important; flex:none; white-space:nowrap; }
-.mc-auc-tabs{ display:flex; gap:4px; margin:0 18px 10px; padding:4px; border-radius:14px; background:var(--mc-card-2); }
-.mc-auc-tabs button{ flex:1; padding:8px 4px; border:0; border-radius:10px; background:transparent; color:var(--mc-muted); font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
-.mc-auc-tabs button.on{ background:var(--mc-card); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.08); }
-.mc-auc-search{ display:flex; gap:8px; margin:0 18px 10px; }
-.mc-auc-search input, .mc-auc-search select{ height:40px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:14px; padding:0 12px; min-width:0; }
-.mc-auc-search input{ flex:1; } .mc-auc-search select{ flex:none; width:auto; }
-.mc-auc-list{ display:flex; flex-direction:column; gap:8px; padding:0 18px 22px; }
-.mc-auc-card{ display:grid; grid-template-columns:56px 1fr auto; gap:12px; align-items:center; padding:12px; border-radius:18px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); text-align:left; font:inherit; cursor:pointer; transition:transform .2s var(--mc-spring), border-color .2s; }
-.mc-auc-card:hover{ border-color:var(--accent); } .mc-auc-card:active{ transform:scale(.985); }
-.mc-auc-card.is-done{ opacity:.7; }
-.mc-auc-em{ width:56px; height:56px; display:grid; place-items:center; font-size:32px; border-radius:16px; background:var(--mc-card-2); }
-.mc-auc-card.r-epic .mc-auc-em{ background:rgba(168,85,247,.14); } .mc-auc-card.r-leg .mc-auc-em{ background:rgba(245,158,11,.16); } .mc-auc-card.r-excl .mc-auc-em{ background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(245,158,11,.2)); } .mc-auc-card.r-rare .mc-auc-em{ background:rgba(59,130,246,.12); }
-.mc-auc-info{ min-width:0; display:flex; flex-direction:column; gap:3px; }
-.mc-auc-info > b{ font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.mc-auc-info > small{ font-size:12px; color:var(--mc-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.mc-auc-meta{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:12.5px; color:var(--mc-muted); }
-.mc-auc-meta b{ color:var(--text); }
-.mc-auc-right{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
-.mc-auc-time{ font-variant-numeric:tabular-nums; font-weight:800; font-size:13.5px; padding:4px 9px; border-radius:10px; background:var(--mc-card-2); white-space:nowrap; }
-.mc-auc-time.soon, .mc-auc-stats b.soon{ color:#ef4444; }
-.mc-auc-tag{ font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px; background:var(--mc-card-2); color:var(--mc-muted); white-space:nowrap; }
-.mc-auc-tag.lead{ background:rgba(34,197,94,.15); color:#16a34a; } .mc-auc-tag.out{ background:rgba(239,68,68,.14); color:#dc2626; } .mc-auc-tag.mine{ background:var(--mc-accent-soft); color:var(--mc-accent-text, var(--accent)); }
-.mc-auc-empty{ display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:34px 16px; }
-.mc-auc-empty span{ font-size:46px; } .mc-auc-empty b{ font-size:16px; } .mc-auc-empty small{ font-size:13px; color:var(--mc-muted); max-width:300px; }
-.mc-auc-empty .btn{ width:auto !important; margin-top:6px; }
-.mc-auc-skel{ height:82px; border-radius:18px; background:linear-gradient(90deg,var(--mc-card-2) 25%,var(--mc-line) 50%,var(--mc-card-2) 75%); background-size:200% 100%; animation:mcSkel7 1.2s linear infinite; }
-.mc-auc-skel.big{ height:220px; margin:18px; }
-@keyframes mcSkel7{ to{ background-position:-200% 0; } }
-.mc-auc-lot{ padding:4px 18px 22px; display:flex; flex-direction:column; gap:14px; }
-.mc-auc-lot-top{ display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; padding:18px 12px; border-radius:22px; background:var(--mc-card-2); }
-.mc-auc-lot-top h3{ margin:0; font-size:20px; } .mc-auc-lot-top small{ color:var(--mc-muted); font-size:12.5px; }
-.mc-auc-lot-top > div{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; }
-.mc-auc-lot-em{ font-size:72px; line-height:1; animation:mcGift7 .6s var(--mc-spring) both; }
-.mc-auc-lot-top.r-epic{ background:radial-gradient(circle at 50% 30%,rgba(168,85,247,.22),var(--mc-card-2) 70%); }
-.mc-auc-lot-top.r-leg{ background:radial-gradient(circle at 50% 30%,rgba(245,158,11,.24),var(--mc-card-2) 70%); }
-.mc-auc-lot-top.r-excl{ background:radial-gradient(circle at 50% 30%,rgba(239,68,68,.24),var(--mc-card-2) 70%); }
-.mc-auc-val{ font-size:12px; color:var(--mc-muted); }
-.mc-auc-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.mc-auc-stats > div{ padding:12px 10px; border-radius:16px; background:var(--mc-card); border:1px solid var(--mc-line); display:flex; flex-direction:column; gap:3px; min-width:0; }
-.mc-auc-stats small{ font-size:11.5px; color:var(--mc-muted); } .mc-auc-stats b{ font-size:16px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .mc-auc-stats span{ font-size:11.5px; color:var(--mc-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.mc-auc-bid{ display:flex; flex-direction:column; gap:10px; }
-.mc-auc-bid label{ font-size:13px; font-weight:700; color:var(--mc-muted); }
-.mc-auc-amt{ display:grid; grid-template-columns:48px 1fr 48px; gap:8px; }
-.mc-auc-amt button{ height:48px; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font-size:22px; font-weight:700; cursor:pointer; }
-.mc-auc-amt input{ height:48px; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); text-align:center; font:inherit; font-size:20px; font-weight:800; min-width:0; }
-.mc-auc-quick{ display:flex; gap:8px; }
-.mc-auc-quick button{ flex:1; height:36px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-weight:700; font-size:13px; cursor:pointer; }
-.mc-auc-quick button:hover{ border-color:var(--accent); }
-.mc-auc-bid .mc-wheel-spin, .mc-auc-new .mc-wheel-spin{ max-width:none; background:linear-gradient(115deg,#0f766e,#0891b2 55%,#2563eb); box-shadow:0 12px 26px rgba(8,145,178,.28); }
-.mc-auc-blitz, .mc-auc-cancel{ width:100% !important; }
-.mc-auc-note{ font-size:13px; line-height:1.45; padding:10px 12px; border-radius:12px; background:var(--mc-card-2); color:var(--mc-muted); }
-.mc-auc-note.ok{ background:rgba(34,197,94,.12); color:var(--text); } .mc-auc-note.bad{ background:rgba(239,68,68,.10); color:var(--text); }
-.mc-auc-hist > div{ display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; padding:9px 12px; border-radius:12px; margin-bottom:4px; background:var(--mc-card-2); font-size:13.5px; }
-.mc-auc-hist > div.top{ box-shadow:inset 3px 0 0 #22c55e; }
-.mc-auc-hist small{ color:var(--mc-muted); font-size:12px; }
-.mc-auc-new{ padding:4px 18px 22px; display:flex; flex-direction:column; gap:10px; }
-.mc-auc-pick{ display:flex; gap:8px; overflow-x:auto; padding:4px 2px 8px; scroll-snap-type:x proximity; }
-.mc-auc-pick button{ flex:none; width:88px; display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:16px; border:1.5px solid var(--mc-line); background:var(--mc-card); color:var(--text); cursor:pointer; scroll-snap-align:start; font:inherit; }
-.mc-auc-pick button span{ font-size:30px; } .mc-auc-pick button small{ font-size:11.5px; font-weight:700; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.mc-auc-pick button.on{ border-color:var(--accent); background:var(--mc-accent-soft); box-shadow:0 0 0 3px var(--mc-accent-soft); }
-.mc-auc-form{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.mc-auc-form label{ display:flex; flex-direction:column; gap:5px; font-size:12.5px; font-weight:700; color:var(--mc-muted); }
-.mc-auc-form input{ height:44px; padding:0 12px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card-2); color:var(--text); font:inherit; font-size:15px; min-width:0; }
-.mc-auc-durs{ display:flex; gap:6px; flex-wrap:wrap; }
-.mc-auc-durs button{ padding:8px 12px; border-radius:12px; border:1px solid var(--mc-line); background:var(--mc-card); color:var(--text); font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
-.mc-auc-durs button.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
-.mc-auc-sum{ display:flex; flex-direction:column; gap:2px; padding:10px 14px; border-radius:14px; background:var(--mc-card-2); }
-.mc-auc-sum div{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:5px 0; font-size:13.5px; }
-.mc-auc-sum div span{ color:var(--mc-muted); }
+/* Колесо фортуны и аукцион удалены из MetroChat (v4.1): CSS вычищен полностью */
 @media (max-width:520px){
-  .mc-gs7-feat{ grid-template-columns:1fr; }
-  .mc-auc-hero{ flex-direction:column; align-items:stretch; } .mc-auc-hero .btn{ width:100% !important; }
-  .mc-auc-card{ grid-template-columns:48px 1fr auto; gap:10px; padding:10px; } .mc-auc-em{ width:48px; height:48px; font-size:28px; }
-  .mc-auc-form{ grid-template-columns:1fr; }
-  .mc-gs7-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+.mc-gs7-grid{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
 }
 
 
@@ -2165,6 +2031,10 @@ html[data-theme="dark"],html:not([data-theme]){ --mc8-shadow:0 12px 34px rgba(0,
 .mc-inp-at{ display:flex; align-items:center; border-radius:14px; border:1px solid var(--mc-line); background:var(--mc-card-2); padding-left:12px; }
 .mc-inp-at span{ color:var(--mc-muted); font-weight:700; }
 .mc-inp-at .mc-inp{ border:0; background:transparent; box-shadow:none; padding-left:4px; }
+
+// Колесо фортуны и аукцион удалены из кода полностью (v4.1). Оставлены только живые экспорты.
+Object.assign(window, { hideOwnedGift, mcToggleOwnedHidden, mcGiftCelebrate, mcGiftById, mcConfettiBurst });
+
 .mc-hint{ margin-top:6px; font-size:12px; color:var(--mc-muted); line-height:1.4; }
 .mc-hint.ok{ color:var(--mc8-ok); } .mc-hint.bad{ color:var(--mc8-bad); }
 .mc-seg{ display:flex; gap:4px; padding:4px; border-radius:14px; background:var(--mc-card-2); margin:0 0 10px; }
@@ -4257,9 +4127,17 @@ function renderPinnedBar() {
 }
 function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
-  const cacheKey = 'metrochat_msg_cache_v1_' + chatId;
-  try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); } } catch(_) {}
-  state.msgLim = state.msgLim || {}; const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(state.msgLim[chatId] || 40));
+  state.msgLim = state.msgLim || {};
+  // Кэш показываем только при первом открытии чата за сессию: при дозагрузке
+  // истории (лимит вырос) подмешивать старый кэш из 30 сообщений нельзя —
+  // иначе история «мигает» и урезается до 30.
+  state.__mcMsgCached = state.__mcMsgCached || {};
+  if (!state.__mcMsgCached[chatId]) {
+    state.__mcMsgCached[chatId] = true;
+    const cacheKey = 'metrochat_msg_cache_v1_' + chatId;
+    try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); } } catch(_) {}
+  }
+  const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(state.msgLim[chatId] || 80));
   let mcFirstSnap = true;
   state.chatUnsub = onValue(q, snap => {
     const prevLen = state.messages.length;
@@ -4267,7 +4145,7 @@ function subscribeMessages(chatId) {
     const mcWasFirst = mcFirstSnap; mcFirstSnap = false;
     const data = snap.val() || {};
     state.messages = Object.entries(data).map(([id, m]) => ({ id, ...m })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-    try { localStorage.setItem(cacheKey, JSON.stringify(state.messages.slice(-30))); } catch(_) {}
+    try { localStorage.setItem(cacheKey, JSON.stringify(state.messages.slice(-80))); } catch(_) {}
     state.messages.forEach(m => { if (m.senderId && !getUser(m.senderId)) fetchUserIfMissing(m.senderId); });
     renderMessages(); renderPinnedBar();
     const mcNewMsgs = (prevLen > 0 && mcPrevLastTs) ? state.messages.filter(m => Number(m.createdAt || 0) > mcPrevLastTs) : [];
@@ -4353,11 +4231,31 @@ function renderMessages() {
     const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== state.user.uid);
     if (tu.length) { const names = tu.map(t => getUser(t.uid)?.firstName || 'Кто-то').join(', '); html += `<div class="typing">${esc(names)} печатает...</div>`; }
   }
-  if (html && box.__mcHtml === html && box.__mcChat === state.chat.id && box.__mcFirst && box.__mcFirst === box.firstChild) { box.__mcSkip = true; if (atBottom) box.scrollTop = box.scrollHeight; return; }
+  if (html && box.__mcHtml === html && box.__mcChat === state.chat.id && box.__mcFirst && box.__mcFirst === box.firstChild) { box.__mcSkip = true; if (atBottom) mcPinBottom(box); return; }
   box.__mcSkip = false;
   box.innerHTML = html; box.__mcHtml = html; box.__mcChat = state.chat.id; box.__mcFirst = box.firstChild;
-  if (atBottom) box.scrollTop = box.scrollHeight;
+  if (atBottom) mcPinBottom(box);
 }
+// Закрепление внизу: после перестроения DOM картинки/видео дозагружаются и
+// меняют высоту — без повторного пина чат «остаётся» в середине истории.
+function mcPinBottom(box) {
+  const chatId = state.chat?.id;
+  const pin = () => { if (state.chat?.id === chatId && state.messagesAtBottom) box.scrollTop = box.scrollHeight; };
+  box.scrollTop = box.scrollHeight;
+  if (box.__mcPinRaf) cancelAnimationFrame(box.__mcPinRaf);
+  box.__mcPinRaf = requestAnimationFrame(pin);
+  setTimeout(pin, 80); setTimeout(pin, 250); setTimeout(pin, 700);
+}
+// Картинки/медиа в сообщениях дозагружаются уже после рендера — держим низ,
+// если пользователь и так был внизу.
+document.addEventListener('load', e => {
+  const t = e.target;
+  if (!t || !state?.messagesAtBottom || !state?.chat) return;
+  if (t.classList?.contains('msg-image') || t.tagName === 'VIDEO' || t.tagName === 'IMG') {
+    const box = $('messages');
+    if (box && box.contains(t)) mcPinBottom(box);
+  }
+}, true);
 function formatDuration(sec) { const m = Math.floor(sec / 60); const s = Math.floor(sec % 60); return m + ':' + String(s).padStart(2, '0'); }
 function scrollToMsg(msgId) { const el = $('msg-' + msgId); if (!el) return; el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('highlight'); setTimeout(() => el.classList.remove('highlight'), 1600); }
 function scrollToFirstPinned() { const p = state.messages.find(m => m.pinned); if (p) scrollToMsg(p.id); }
@@ -10891,13 +10789,10 @@ function mcSetMain() {
     ${sGroup('Язык', [
       sRow({ ico: '🌐', c: '#8b5cf6', label: 'Язык приложения', sub: MC_LANG_NAME(), right: '', act: 'mcLangOpen()' }),
     ])}
-    ${sGroup('Поддержка', [
-      sRow({ ico: '💜', c: '#a855f7', label: 'Поддержать проект', sub: 'Поддержка пока не работает', act: 'mcSupportNote()' }),
-    ])}
     ${sGroup('Другое', [
       sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку', act: 'openVerificationModal()' }),
       sRow({ ico: '❓', c: '#a855f7', label: 'Вопросы и ответы', act: 'mcOpenFaq()' }),
-      sRow({ ico: '✉️', c: '#ec4899', label: 'Поддержка', sub: 'metrochatsupport@gmail.com', href: 'mailto:metrochatsupport@gmail.com?subject=MetroChat' }),
+      sRow({ ico: '🛟', c: '#0ea5e9', label: 'Чат поддержки', sub: 'Ответим в приложении', act: 'mcSupportOpen()' }),
       sRow({ ico: '📄', c: '#64748b', label: 'Политика конфиденциальности', href: 'https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy' }),
     ])}
     ${sGroup('Аккаунт', [
@@ -11305,47 +11200,6 @@ mcGiftCelebrate = function (gift, toName) {
   return mcDialog({ icon: `<span class="mc-dlg-gift">${esc(gift.emoji || '🎁')}</span>`, title: 'Подарок отправлен', text: `${toName} получит «${gift.name}» в свою коллекцию.`, buttons: [{ label: 'Отлично', kind: 'primary', value: true }], dismissValue: true });
 };
 
-// ---------- Витрина подарков (новый дизайн) ----------
-let mcShopFilter = 'all';
-renderGiftShop = async function () {
-  const wrap = $('settingsPanel'); if (!wrap) return;
-  window.__mcOtherView = 'gifts';
-  const chips = [['all', 'Все'], ['common', 'Обычные'], ['rare', 'Редкие'], ['epic', 'Эпические'], ['leg', 'Легендарные']];
-  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div>
-  <div class="settings-wrap mc-gs7">
-    <div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите тесты, крутите колесо, торгуйтесь на аукционе.</p></div><div class="gift-wallet-coin">УМ</div></div>
-    <div class="mc-gs7-actions">
-      <button type="button" onclick="startGiftEarning()"><span>✦</span><b>Заработать</b></button>
-      <button type="button" onclick="openGiftSendPicker()"><span>↗</span><b>Подарить</b></button>
-      <button type="button" onclick="renderGiftCraft()"><span>🛠️</span><b>Крафт</b></button>
-    </div>
-    <div class="mc-gs7-feat">
-      <button type="button" class="mc-feat mc-feat-wheel" onclick="mcOpenWheel()">
-        <span class="mc-feat-art"><span class="mc-mini-wheel"></span></span>
-        <span class="mc-feat-txt"><b>Колесо фортуны</b><small>${MC_WHEEL_COST} УМ за вращение · до ${mcFmtUm(1500)} УМ и эксклюзивы</small></span><span class="mc-feat-go">›</span>
-      </button>
-      <button type="button" class="mc-feat mc-feat-auc" onclick="mcOpenAuction()">
-        <span class="mc-feat-art">🔨</span>
-        <span class="mc-feat-txt"><b>Аукцион</b><small id="mcAucFeatSub">Покупайте и продавайте подарки</small></span><span class="mc-feat-go">›</span>
-      </button>
-    </div>
-    <div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>${METRO_GIFTS.length} подарков · нажмите, чтобы купить себе</p></div></div>
-    <div class="mc-gs7-chips">${chips.map(([k, l]) => `<button type="button" class="${mcShopFilter === k ? 'on' : ''}" data-f="${k}">${l}</button>`).join('')}</div>
-    <div class="gift-shop-grid mc-gs7-grid">${METRO_GIFTS.map(g => { const r = mcGiftRarity(g); return `<button type="button" class="gift-shop-item mc-gi7 r-${r}" data-r="${r}" onclick="selectGiftToBuy('${g.id}')"${mcShopFilter !== 'all' && mcShopFilter !== r ? ' hidden' : ''}><span class="gift-emoji">${g.emoji}</span><b>${esc(g.name)}</b><small>${esc(g.desc)}</small><span class="mc-gi7-foot">${mcRarBadge(g)}<span class="gift-price">${g.cost} УМ</span></span></button>`; }).join('')}</div>
-    <div class="discovery-section-head"><div><h3>Эксклюзивы колеса</h3><p>Не продаются — их можно только выиграть или купить на аукционе</p></div></div>
-    <div class="gift-shop-grid mc-gs7-grid">${MC_GIFTS_EXCL.map(g => `<button type="button" class="gift-shop-item mc-gi7 r-excl" onclick="mcOpenWheel()"><span class="gift-emoji">${g.emoji}</span><b>${esc(g.name)}</b><small>Ценность ${mcFmtUm(g.cost)} УМ</small><span class="mc-gi7-foot">${mcRarBadge(g)}<span class="gift-price">🎡</span></span></button>`).join('')}</div>
-    <div id="giftOwnedSection"></div>
-  </div>`;
-  wrap.querySelector('.mc-gs7-chips')?.addEventListener('click', e => {
-    const b = e.target.closest('[data-f]'); if (!b) return; mcShopFilter = b.dataset.f;
-    wrap.querySelectorAll('.mc-gs7-chips button').forEach(x => x.classList.toggle('on', x === b));
-    wrap.querySelectorAll('.mc-gs7-grid .mc-gi7[data-r]').forEach(x => { x.hidden = mcShopFilter !== 'all' && x.dataset.r !== mcShopFilter; });
-  });
-  const bal = await readGiftBalance(); mcSetBalanceUI(bal);
-  await renderOwnedGifts();
-  mcAucCountActive().then(n => { const s = $('mcAucFeatSub'); if (s && n) s.textContent = `Активных лотов: ${n} · делайте ставки`; }).catch(() => {});
-};
-
 // Мои подарки: раньше скрытый подарок пропадал навсегда — теперь его можно вернуть в профиль
 let mcOwnedShowHidden = false;
 renderOwnedGifts = async function () {
@@ -11357,7 +11211,7 @@ renderOwnedGifts = async function () {
     const items = all.filter(g => mcOwnedShowHidden || !g.hidden);
     const worth = all.reduce((s, g) => s + (Number(g.cost) || Number(mcGiftById(g.giftId)?.cost) || 0), 0);
     el.innerHTML = `<div class="discovery-section-head"><div><h3>Мои подарки · ${all.length}</h3><p>Ценность коллекции: ${mcFmtUm(worth)} УМ${hiddenN ? ` · скрыто: ${hiddenN}` : ''}</p></div>${hiddenN ? `<button type="button" class="mc-chip7" onclick="mcToggleOwnedHidden()">${mcOwnedShowHidden ? 'Скрыть скрытые' : 'Показать скрытые'}</button>` : ''}</div>
-    ${items.length ? `<div class="gift-owned-list">${items.map(g => { const r = mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost }); return `<div class="gift-owned-item r-${r}${g.hidden ? ' is-hidden' : ''}"><span>${esc(g.emoji || '🎁')}</span><div><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'От ' + esc(g.fromName) : 'Ваш подарок'}${g.hidden ? ' · скрыт' : ''}</small></div><button class="mini-btn" title="${g.hidden ? 'Показать в профиле' : 'Скрыть в профиле'}" onclick="hideOwnedGift('${g.id}')">${g.hidden ? '👁' : '◉'}</button><button class="mini-btn" title="Выставить на аукцион" onclick="mcAucNewLot('${g.id}')">🔨</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`; }).join('')}</div>` : '<p class="gift-empty-note">Пока нет подарков. Купите в витрине, выиграйте в колесе или на аукционе.</p>'}`;
+    ${items.length ? `<div class="gift-owned-list">${items.map(g => { const r = mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost }); return `<div class="gift-owned-item r-${r}${g.hidden ? ' is-hidden' : ''}"><span>${esc(g.emoji || '🎁')}</span><div><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'От ' + esc(g.fromName) : 'Ваш подарок'}${g.hidden ? ' · скрыт' : ''}</small></div><button class="mini-btn" title="${g.hidden ? 'Показать в профиле' : 'Скрыть в профиле'}" onclick="hideOwnedGift('${g.id}')">${g.hidden ? '👁' : '◉'}</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`; }).join('')}</div>` : '<p class="gift-empty-note">Пока нет подарков. Купите в витрине или получите от друзей.</p>'}`;
   } catch (e) { el.innerHTML = '<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>'; }
 };
 function mcToggleOwnedHidden() { mcOwnedShowHidden = !mcOwnedShowHidden; renderOwnedGifts(); }
@@ -11371,531 +11225,6 @@ hideOwnedGift = async function (id) {
 };
 
 // =====================================================================
-// Колесо фортуны
-// =====================================================================
-const MC_WHEEL_COST = 300;
-const MC_WHEEL_PITY = 25; // гарантированный эпический подарок, если 25 вращений подряд без эпика и выше
-// Порядок — как на колесе (по часовой стрелке от верха). p — шанс в процентах (сумма = 100).
-const MC_WHEEL = [
-  { id: 'u50', type: 'ums', v: 50, p: 10, ico: '🪙', label: '50', c1: '#475569', c2: '#334155' },
-  { id: 'g_common', type: 'gift', tier: 'common', p: 12, ico: '🎁', label: 'Подарок', c1: '#16a34a', c2: '#15803d' },
-  { id: 'u100', type: 'ums', v: 100, p: 14, ico: '🪙', label: '100', c1: '#0891b2', c2: '#0e7490' },
-  { id: 'g_rare', type: 'gift', tier: 'rare', p: 14, ico: '💙', label: 'Редкий', c1: '#2563eb', c2: '#1d4ed8' },
-  { id: 'u200', type: 'ums', v: 200, p: 16, ico: '💰', label: '200', c1: '#0d9488', c2: '#0f766e' },
-  { id: 'g_epic', type: 'gift', tier: 'epic', p: 7, ico: '💜', label: 'Эпик', c1: '#9333ea', c2: '#7e22ce' },
-  { id: 'u300', type: 'ums', v: 300, p: 14, ico: '🔁', label: '300', c1: '#4f46e5', c2: '#4338ca' },
-  { id: 'g_leg', type: 'gift', tier: 'leg', p: 3, ico: '🧡', label: 'Легенда', c1: '#ea580c', c2: '#c2410c' },
-  { id: 'u500', type: 'ums', v: 500, p: 8, ico: '💎', label: '500', c1: '#db2777', c2: '#be185d' },
-  { id: 'g_excl', type: 'gift', tier: 'excl', p: 0.4, ico: '👑', label: 'Эксклюзив', c1: '#dc2626', c2: '#991b1b' },
-  { id: 'u1500', type: 'ums', v: 1500, p: 1.6, ico: '🏆', label: '1500', c1: '#ca8a04', c2: '#a16207' }
-];
-const MC_WHEEL_EV = Math.round(MC_WHEEL.reduce((s, x) => s + x.p / 100 * (x.type === 'ums' ? x.v : mcWheelTierAvg(x.tier)), 0));
-function mcWheelTierAvg(tier) { const pool = mcWheelPool(tier); return pool.length ? pool.reduce((s, g) => s + g.cost, 0) / pool.length : 0; }
-function mcWheelPool(tier) { return tier === 'excl' ? MC_GIFTS_EXCL : METRO_GIFTS.filter(g => mcGiftRarity(g) === tier); }
-const MCW = { rot: 0, spinning: false, stats: null, hist: [] };
-
-function mcWheelSvg() {
-  const n = MC_WHEEL.length, R = 150, seg = 360 / n;
-  const pt = (a, r) => { const rad = (a - 90) * Math.PI / 180; return [(r * Math.cos(rad)).toFixed(2), (r * Math.sin(rad)).toFixed(2)]; };
-  let defs = '', paths = '', labels = '', bulbs = '';
-  MC_WHEEL.forEach((s, i) => {
-    const a0 = i * seg, a1 = (i + 1) * seg, [x0, y0] = pt(a0, R - 8), [x1, y1] = pt(a1, R - 8);
-    defs += `<radialGradient id="mcwg${i}" cx="0" cy="0" r="150" gradientUnits="userSpaceOnUse"><stop offset="0.25" stop-color="${s.c2}"/><stop offset="1" stop-color="${s.c1}"/></radialGradient>`;
-    paths += `<path d="M0 0 L${x0} ${y0} A${R - 8} ${R - 8} 0 0 1 ${x1} ${y1} Z" fill="url(#mcwg${i})" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>`;
-    const mid = a0 + seg / 2;
-    labels += `<g transform="rotate(${mid})"><text x="0" y="-112" text-anchor="middle" font-size="22">${s.ico}</text><text x="0" y="-84" text-anchor="middle" font-size="${s.label.length > 6 ? 10.5 : 13}" font-weight="800" fill="#fff" style="letter-spacing:.02em">${s.label}</text></g>`;
-  });
-  for (let i = 0; i < 22; i++) { const [bx, by] = pt(i * 360 / 22, R - 3); bulbs += `<circle class="b${i % 2}" cx="${bx}" cy="${by}" r="3.2"/>`; }
-  return `<svg viewBox="-152 -152 304 304" class="mc-wheel-svg" aria-hidden="true"><defs>${defs}</defs>
-    <circle r="150" fill="#1e1b4b"/><g class="mc-wheel-rot" id="mcWheelRot">${paths}${labels}</g>
-    <g class="mc-wheel-bulbs">${bulbs}</g></svg>`;
-}
-async function mcWheelLoad() {
-  const uid = state.user?.uid; if (!uid) return;
-  try {
-    const [st, h] = await Promise.all([get(ref(db, `gift_wheel/${uid}/stats`)), get(query(ref(db, `gift_wheel/${uid}/history`), orderByChild('at'), limitToLast(30)))]);
-    MCW.stats = st.val() || { spins: 0, pity: 0, won: 0 };
-    MCW.hist = Object.values(h.val() || {}).sort((a, b) => b.at - a.at);
-  } catch (e) { MCW.stats = MCW.stats || { spins: 0, pity: 0, won: 0 }; }
-}
-async function mcOpenWheel() {
-  if (!state.user?.uid) return toast('Войдите в аккаунт', '⚠');
-  const el = mcSheet('mcWheelSheet', `${mcSheetHead('Колесо фортуны', 'mcWheelSheet', `<span class="mc-wheel-bal" id="mcWheelBal">… УМ</span>`)}
-    <div class="mc-wheel-body">
-      <div class="mc-wheel-stage">
-        <div class="mc-wheel-glow"></div>
-        <div class="mc-wheel-pointer" id="mcWheelPtr"></div>
-        <div class="mc-wheel-wrap" id="mcWheelWrap">${mcWheelSvg()}</div>
-        <button type="button" class="mc-wheel-hub" id="mcWheelHub" aria-label="Крутить"><b>КРУТИТЬ</b><small>${MC_WHEEL_COST} УМ</small></button>
-      </div>
-      <div class="mc-wheel-result" id="mcWheelRes" aria-live="polite">Испытайте удачу — призы до ${mcFmtUm(1500)} УМ и эксклюзивные подарки</div>
-      <button type="button" class="mc-wheel-spin" id="mcWheelSpin">🎡 Крутить за ${MC_WHEEL_COST} УМ</button>
-      <div class="mc-wheel-pity"><div><b>Гарантия эпика</b><small id="mcWheelPityTxt">…</small></div><div class="mc-wheel-pbar"><i id="mcWheelPity"></i></div></div>
-      <details class="mc-wheel-odds"><summary>Шансы выигрыша</summary>
-        <div class="mc-odds">${MC_WHEEL.slice().sort((a, b) => b.p - a.p).map(s => `<div><span class="sw" style="background:${s.c1}"></span><span>${s.ico} ${s.type === 'ums' ? `${s.v} УМ` : `${MC_RARITY[s.tier].n} подарок`}</span><b>${String(s.p).replace('.', ',')}%</b></div>`).join('')}</div>
-        <p class="mc-odds-note">Результат определяется криптографическим генератором случайных чисел до начала анимации. Средний выигрыш — около ${MC_WHEEL_EV} УМ за вращение. Если ${MC_WHEEL_PITY} вращений подряд не выпадает эпический подарок или лучше, следующее вращение гарантированно даёт эпический подарок.</p>
-      </details>
-      <div class="mc-wheel-hist"><h4>Последние выигрыши</h4><div id="mcWheelHist"></div></div>
-    </div>`, { cls: 'mc-wheel-ov' });
-  el.querySelector('#mcWheelSpin').addEventListener('click', mcWheelSpin);
-  el.querySelector('#mcWheelHub').addEventListener('click', mcWheelSpin);
-  $('mcWheelRot').style.transform = `rotate(${MCW.rot}deg)`;
-  readGiftBalance().then(b => { const x = $('mcWheelBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
-  await mcWheelLoad(); mcWheelRenderMeta();
-}
-function mcWheelRenderMeta() {
-  const s = MCW.stats || { pity: 0, spins: 0 };
-  const left = Math.max(1, MC_WHEEL_PITY - (s.pity || 0));
-  const p = $('mcWheelPity'); if (p) p.style.width = `${Math.min(100, (s.pity || 0) / MC_WHEEL_PITY * 100)}%`;
-  const t = $('mcWheelPityTxt'); if (t) t.textContent = left <= 1 ? 'Следующее вращение — гарантированный эпический подарок' : `Осталось вращений: ${left} · всего вращений: ${s.spins || 0}`;
-  const h = $('mcWheelHist');
-  if (h) h.innerHTML = MCW.hist.length ? MCW.hist.slice(0, 12).map(x => `<div class="mc-wh-row r-${x.rar || 'common'}"><span>${esc(x.emoji || '🪙')}</span><b>${esc(x.title || '')}</b><small>${mcAgo7(x.at)}</small></div>`).join('') : '<p class="gift-empty-note">Здесь появятся ваши выигрыши.</p>';
-}
-function mcAgo7(ts) {
-  const d = Math.max(0, Date.now() - Number(ts || 0)) / 1000;
-  if (d < 60) return 'только что'; if (d < 3600) return `${Math.floor(d / 60)} мин назад`; if (d < 86400) return `${Math.floor(d / 3600)} ч назад`;
-  return new Date(ts).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-}
-function mcWheelPick(pity) {
-  if (pity + 1 >= MC_WHEEL_PITY) return MC_WHEEL.findIndex(s => s.id === 'g_epic');
-  let r = mcRand01() * 100;
-  for (let i = 0; i < MC_WHEEL.length; i++) { r -= MC_WHEEL[i].p; if (r < 0) return i; }
-  return 0;
-}
-function mcWheelTick(strength = 1) {
-  if (state.settings?.sound === false) return;
-  const ac = mcAC(); if (!ac) return;
-  try { const out = mcOut(ac, mcVol() * 0.5); const t = ac.currentTime + 0.005; mcTone6(ac, out, t, 1900 + Math.random() * 200, { type: 'square', dur: 0.03, vol: 0.12 * strength, attack: 0.001, filter: 3000 }); } catch (_) {}
-}
-function mcWheelFanfare(big) {
-  if (state.settings?.sound === false) return;
-  const ac = mcAC(); if (!ac) return;
-  try {
-    const out = mcOut(ac, mcVol()); const t = ac.currentTime + 0.02;
-    const notes = big ? [72, 76, 79, 84, 88, 91] : [72, 76, 79, 84];
-    notes.forEach((n, i) => mcBell(ac, out, t + i * 0.1, mcMidi6(n), big ? 1.6 : 1, 0.18));
-  } catch (_) {}
-}
-async function mcWheelSpin() {
-  if (MCW.spinning) return;
-  const uid = state.user?.uid; if (!uid) return;
-  const btn = $('mcWheelSpin'), hub = $('mcWheelHub'), res = $('mcWheelRes');
-  MCW.spinning = true; if (btn) btn.disabled = true; if (hub) hub.disabled = true;
-  let charged = false;
-  try {
-    if (!MCW.stats) await mcWheelLoad();
-    const spend = await mcSpendUms(uid, MC_WHEEL_COST);
-    if (!spend.ok) {
-      const x = $('mcWheelBal'); if (x) x.textContent = `${mcFmtUm(spend.balance)} УМ`;
-      if (res) res.textContent = `Нужно ${MC_WHEEL_COST} УМ, у вас ${mcFmtUm(spend.balance)}. Пройдите тест в «Заработать».`;
-      return toast(`Недостаточно умов: нужно ${MC_WHEEL_COST}`, '🎡');
-    }
-    charged = true;
-    const pity = Number(MCW.stats?.pity || 0);
-    const idx = mcWheelPick(pity), seg = MC_WHEEL[idx];
-    // Определяем приз и сразу сохраняем его — даже если закрыть окно во время анимации, выигрыш не потеряется
-    let prize, balance = spend.balance;
-    if (seg.type === 'ums') {
-      balance = await mcAddUms(uid, seg.v);
-      prize = { emoji: seg.ico, title: `${seg.v} УМ`, rar: seg.v >= 500 ? 'leg' : seg.v >= 300 ? 'epic' : 'common', ums: seg.v };
-    } else {
-      const pool = mcWheelPool(seg.tier); const g = pool[Math.floor(mcRand01() * pool.length)] || METRO_GIFTS[0];
-      await set(push(ref(db, `gift_inventory/${uid}`)), { giftId: g.id, name: g.name, emoji: g.emoji, cost: g.cost, fromName: 'Колесо фортуны', createdAt: Date.now(), hidden: false, wheel: true });
-      prize = { emoji: g.emoji, title: g.name, rar: seg.tier, gift: g };
-    }
-    charged = false;
-    const big = ['epic', 'leg', 'excl'].includes(seg.tier) || (seg.ums || seg.v) >= 500;
-    const newPity = ['epic', 'leg', 'excl'].includes(seg.tier) ? 0 : pity + 1;
-    MCW.stats = { spins: Number(MCW.stats?.spins || 0) + 1, pity: newPity, won: Number(MCW.stats?.won || 0) + (seg.type === 'ums' ? seg.v : prize.gift.cost), last: Date.now() };
-    const hist = { at: Date.now(), seg: seg.id, emoji: prize.emoji, title: prize.title, rar: prize.rar };
-    update(ref(db, `gift_wheel/${uid}`), { stats: MCW.stats }).catch(e => console.warn('wheel stats', e));
-    set(push(ref(db, `gift_wheel/${uid}/history`)), hist).catch(e => console.warn('wheel hist', e));
-    if (res) res.textContent = 'Колесо вращается…';
-    await mcWheelAnimate(idx);
-    MCW.hist.unshift(hist); mcWheelRenderMeta();
-    const bx = $('mcWheelBal'); if (bx) bx.textContent = `${mcFmtUm(balance)} УМ`;
-    mcSetBalanceUI(balance);
-    if (res) res.innerHTML = `<span class="mc-wr-pop r-${prize.rar}">${esc(prize.emoji)}</span> ${seg.type === 'ums' ? `Вы выиграли <b>${seg.v} УМ</b>` : `Вы выиграли подарок <b>${esc(prize.title)}</b> · ${MC_RARITY[seg.tier].n}`}`;
-    $('mcWheelWrap')?.classList.add('win'); setTimeout(() => $('mcWheelWrap')?.classList.remove('win'), 1600);
-    mcWheelFanfare(big); if (big) mcConfettiBurst(big ? 90 : 40);
-    if (navigator.vibrate && state.settings?.vibration !== false) try { navigator.vibrate(big ? [60, 40, 120] : 40); } catch (_) {}
-    if (big) {
-      await mcDialog({ icon: `<span class="mc-dlg-gift">${esc(prize.emoji)}</span>`, title: seg.type === 'ums' ? `+${seg.v} УМ` : prize.title, text: seg.type === 'ums' ? 'Крупный выигрыш — умы уже на балансе.' : `${MC_RARITY[seg.tier].n} подарок добавлен в вашу коллекцию.`, buttons: [{ label: 'Забрать', kind: 'primary', value: true }], dismissValue: true });
-    }
-    if ($('giftOwnedSection')) renderOwnedGifts();
-  } catch (e) {
-    console.error('wheel', e);
-    if (charged) { try { const b = await mcAddUms(uid, MC_WHEEL_COST); mcSetBalanceUI(b); } catch (_) {} }
-    toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (gift_wheel)' : 'Не удалось прокрутить колесо, умы возвращены', '⚠');
-    if (res) res.textContent = 'Что-то пошло не так. Умы возвращены.';
-  } finally {
-    MCW.spinning = false; const b = $('mcWheelSpin'), h = $('mcWheelHub'); if (b) b.disabled = false; if (h) h.disabled = false;
-  }
-}
-function mcWheelAnimate(idx) {
-  return new Promise(resolve => {
-    const g = $('mcWheelRot'); if (!g) return resolve();
-    const n = MC_WHEEL.length, seg = 360 / n;
-    const center = idx * seg + seg / 2, jitter = (mcRand01() - 0.5) * seg * 0.7;
-    const cur = MCW.rot, curMod = ((cur % 360) + 360) % 360;
-    const target = ((360 - center - jitter) % 360 + 360) % 360;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const turns = reduce ? 1 : 6;
-    const end = cur + turns * 360 + ((target - curMod + 360) % 360);
-    const dur = reduce ? 1200 : 5600, t0 = performance.now();
-    const ease = t => 1 - Math.pow(1 - t, 4);
-    let lastSeg = Math.floor(cur / seg); const ptr = $('mcWheelPtr');
-    const frame = now => {
-      const t = Math.min(1, (now - t0) / dur), a = cur + (end - cur) * ease(t);
-      g.style.transform = `rotate(${a}deg)`;
-      const s = Math.floor((a + seg / 2) / seg);
-      if (s !== lastSeg) { lastSeg = s; mcWheelTick(1 - t * 0.6); if (ptr) { ptr.classList.remove('kick'); void ptr.offsetWidth; ptr.classList.add('kick'); } }
-      if (t < 1 && document.body.contains(g)) requestAnimationFrame(frame);
-      else { MCW.rot = end; resolve(); }
-    };
-    requestAnimationFrame(frame);
-  });
-}
-
-// =====================================================================
-// Аукцион подарков
-// auctions/{id}: { sellerId, sellerName, item, startPrice, step, buyNow, createdAt, endsAt, status, topBid, bids, bidders }
-// auction_bids/{id}/{bidId}: { uid, name, amount, at }
-// auction_credits/{uid}/{key}: { amount, reason, auctionId, name, emoji, at, claimed }  — начисления и уведомления
-// Деньги ставки списываются сразу (эскроу). Перебитому участнику умы возвращаются начислением.
-// =====================================================================
-const MC_AUC_FEE = 0.05;
-const MC_AUC_SNIPE = 60000;
-const MC_AUC_DUR = [[15, '15 мин'], [60, '1 час'], [360, '6 часов'], [1440, '1 день'], [4320, '3 дня']];
-const MCA = { lots: {}, unsub: null, tab: 'active', tick: null, settling: new Set(), credUnsub: null, credUid: null, bgIv: null, lotUnsub: null };
-function mcAucMinBid(lot) { const top = lot.topBid?.amount; return top ? top + Math.max(Number(lot.step) || 0, Math.ceil(top * 0.05), 5) : Math.max(1, Number(lot.startPrice) || 1); }
-function mcAucPrice(lot) { return lot.topBid?.amount || lot.startPrice || 0; }
-function mcAucLeft(ms) {
-  if (ms <= 0) return 'завершается…';
-  const s = Math.floor(ms / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60;
-  if (d) return `${d} д ${h} ч`; if (h) return `${h} ч ${p2(m)} мин`; return `${m}:${p2(ss)}`;
-}
-async function mcAucCountActive() {
-  const v = (await get(query(ref(db, 'auctions'), orderByChild('createdAt'), limitToLast(200)))).val() || {};
-  return Object.values(v).filter(l => l && l.status === 'active' && l.endsAt > Date.now()).length;
-}
-function mcOpenAuction(tab) {
-  if (!state.user?.uid) return toast('Войдите в аккаунт', '⚠');
-  if (tab) MCA.tab = tab;
-  const tabs = [['active', 'Лоты'], ['bids', 'Мои ставки'], ['mine', 'Мои лоты'], ['done', 'Завершённые']];
-  const el = mcSheet('mcAucSheet', `${mcSheetHead('Аукцион', 'mcAucSheet', `<span class="mc-wheel-bal" id="mcAucBal">… УМ</span>`)}
-    <div class="mc-auc-hero"><div><b>Аукцион подарков</b><small>Ставка списывается сразу и возвращается, если вас перебьют. Ставка в последнюю минуту продлевает торги. Комиссия продавца — ${Math.round(MC_AUC_FEE * 100)}%.</small></div><button type="button" class="btn btn-primary" onclick="mcAucNewLot()">+ Выставить</button></div>
-    <div class="mc-auc-tabs" role="tablist">${tabs.map(([k, l]) => `<button type="button" data-t="${k}" class="${MCA.tab === k ? 'on' : ''}">${l}</button>`).join('')}</div>
-    <div class="mc-auc-search"><input id="mcAucQ" type="search" placeholder="Поиск по названию подарка" autocomplete="off"><select id="mcAucSort"><option value="end">Скоро конец</option><option value="new">Новые</option><option value="cheap">Дешевле</option><option value="exp">Дороже</option></select></div>
-    <div id="mcAucList" class="mc-auc-list"><div class="mc-auc-skel"></div><div class="mc-auc-skel"></div></div>`, { cls: 'mc-auc-ov' });
-  el.querySelector('.mc-auc-tabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; MCA.tab = b.dataset.t; el.querySelectorAll('.mc-auc-tabs button').forEach(x => x.classList.toggle('on', x === b)); mcAucRender(); });
-  el.querySelector('#mcAucQ').addEventListener('input', mcAucRender);
-  el.querySelector('#mcAucSort').addEventListener('change', mcAucRender);
-  el.querySelector('#mcAucList').addEventListener('click', e => { const c = e.target.closest('[data-lot]'); if (c) mcAucOpenLot(c.dataset.lot); });
-  readGiftBalance().then(b => { const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
-  if (MCA.unsub) { try { MCA.unsub(); } catch (_) {} }
-  MCA.unsub = onValue(query(ref(db, 'auctions'), orderByChild('createdAt'), limitToLast(200)), snap => {
-    if (!document.getElementById('mcAucSheet')) { try { MCA.unsub?.(); } catch (_) {} MCA.unsub = null; return; }
-    MCA.lots = snap.val() || {}; mcAucRender(); mcAucSettleDue();
-  }, e => { const l = $('mcAucList'); if (l) l.innerHTML = `<p class="gift-empty-note">Нет доступа к аукциону. Добавьте новые правила Firebase (auctions).</p>`; });
-  clearInterval(MCA.tick);
-  MCA.tick = setInterval(() => {
-    if (!document.getElementById('mcAucSheet') && !document.getElementById('mcAucLot')) { clearInterval(MCA.tick); MCA.tick = null; if (MCA.unsub) { try { MCA.unsub(); } catch (_) {} MCA.unsub = null; } return; }
-    document.querySelectorAll('[data-ends]').forEach(x => { const ms = Number(x.dataset.ends) - Date.now(); x.textContent = mcAucLeft(ms); x.classList.toggle('soon', ms < 5 * 60000); });
-    mcAucSettleDue();
-  }, 1000);
-}
-function mcAucRender() {
-  const list = $('mcAucList'); if (!list) return;
-  const me = state.user?.uid, now = Date.now();
-  const q = ($('mcAucQ')?.value || '').trim().toLowerCase(), sort = $('mcAucSort')?.value || 'end';
-  let lots = Object.entries(MCA.lots).map(([id, l]) => ({ id, ...l })).filter(l => l && l.item);
-  if (MCA.tab === 'active') lots = lots.filter(l => l.status === 'active');
-  else if (MCA.tab === 'bids') lots = lots.filter(l => l.bidders?.[me]);
-  else if (MCA.tab === 'mine') lots = lots.filter(l => l.sellerId === me);
-  else lots = lots.filter(l => l.status !== 'active');
-  if (q) lots = lots.filter(l => String(l.item.name || '').toLowerCase().includes(q));
-  const cmp = { end: (a, b) => (a.status === 'active' ? 0 : 1) - (b.status === 'active' ? 0 : 1) || a.endsAt - b.endsAt, new: (a, b) => b.createdAt - a.createdAt, cheap: (a, b) => mcAucPrice(a) - mcAucPrice(b), exp: (a, b) => mcAucPrice(b) - mcAucPrice(a) }[sort];
-  if (MCA.tab === 'done') lots.sort((a, b) => (b.doneAt || b.endsAt) - (a.doneAt || a.endsAt)); else lots.sort(cmp);
-  if (!lots.length) {
-    const empty = { active: ['🔨', 'Пока нет активных лотов', 'Выставьте свой подарок первым — он появится здесь у всех.'], bids: ['🙋', 'Вы ещё не делали ставок', 'Откройте вкладку «Лоты» и выберите подарок.'], mine: ['📦', 'У вас нет лотов', 'Нажмите «+ Выставить», чтобы продать подарок.'], done: ['🏁', 'Завершённых торгов пока нет', ''] }[MCA.tab];
-    list.innerHTML = `<div class="mc-auc-empty"><span>${empty[0]}</span><b>${empty[1]}</b><small>${empty[2]}</small>${MCA.tab !== 'done' && MCA.tab !== 'bids' ? '<button type="button" class="btn btn-primary" onclick="mcAucNewLot()">Выставить подарок</button>' : ''}</div>`;
-    return;
-  }
-  list.innerHTML = lots.map(l => {
-    const r = mcGiftRarity(l.item), active = l.status === 'active';
-    let badge = '';
-    if (active && l.topBid?.uid === me) badge = '<span class="mc-auc-tag lead">Вы лидируете</span>';
-    else if (active && l.bidders?.[me]) badge = '<span class="mc-auc-tag out">Вас перебили</span>';
-    else if (active && l.sellerId === me) badge = '<span class="mc-auc-tag mine">Ваш лот</span>';
-    else if (!active) badge = l.status === 'cancelled' ? '<span class="mc-auc-tag">Снят</span>' : l.winner === me ? '<span class="mc-auc-tag lead">Вы выиграли</span>' : l.winner ? '<span class="mc-auc-tag">Продан</span>' : '<span class="mc-auc-tag">Без ставок</span>';
-    return `<button type="button" class="mc-auc-card r-${r}${active ? '' : ' is-done'}" data-lot="${l.id}">
-      <span class="mc-auc-em">${esc(l.item.emoji || '🎁')}</span>
-      <span class="mc-auc-info"><b>${esc(l.item.name || 'Подарок')}</b><small>${mcRarBadge(l.item)} · от ${esc(l.sellerName || 'пользователя')}</small>
-        <span class="mc-auc-meta"><span>${l.topBid ? 'Ставка' : 'Старт'} <b>${mcFmtUm(mcAucPrice(l))} УМ</b></span><span>${l.bids || 0} ${mcPl6(l.bids || 0, ['ставка', 'ставки', 'ставок'])}</span>${l.buyNow && active ? `<span>Блиц ${mcFmtUm(l.buyNow)}</span>` : ''}</span></span>
-      <span class="mc-auc-right">${badge}${active ? `<span class="mc-auc-time" data-ends="${l.endsAt}">${mcAucLeft(l.endsAt - now)}</span>` : `<span class="mc-auc-time">${l.finalPrice ? mcFmtUm(l.finalPrice) + ' УМ' : '—'}</span>`}</span>
-    </button>`;
-  }).join('');
-}
-function mcAucOpenLot(id) {
-  const me = state.user?.uid;
-  const el = mcSheet('mcAucLot', `${mcSheetHead('Лот', 'mcAucLot')}<div id="mcAucLotBody" class="mc-auc-lot"><div class="mc-auc-skel big"></div></div>`, { cls: 'mc-auc-ov' });
-  let lot = MCA.lots[id] ? { id, ...MCA.lots[id] } : null, bids = [];
-  const draw = () => {
-    const b = $('mcAucLotBody'); if (!b || !lot) return;
-    const active = lot.status === 'active', min = mcAucMinBid(lot), mine = lot.sellerId === me, lead = lot.topBid?.uid === me;
-    const cur = Number($('mcAucAmt')?.value || 0);
-    b.innerHTML = `
-      <div class="mc-auc-lot-top r-${mcGiftRarity(lot.item)}"><span class="mc-auc-lot-em">${esc(lot.item.emoji || '🎁')}</span><h3>${esc(lot.item.name || 'Подарок')}</h3><div>${mcRarBadge(lot.item)}${lot.item.cost ? `<span class="mc-auc-val">Цена в витрине: ${mcFmtUm(lot.item.cost)} УМ</span>` : ''}</div><small>Продавец: ${esc(lot.sellerName || '—')}</small></div>
-      <div class="mc-auc-stats">
-        <div><small>${lot.topBid ? 'Текущая ставка' : 'Стартовая цена'}</small><b>${mcFmtUm(mcAucPrice(lot))} УМ</b>${lot.topBid ? `<span>${lead ? 'ваша' : esc(lot.topBid.name || '')}</span>` : ''}</div>
-        <div><small>${active ? 'До конца' : 'Статус'}</small><b ${active ? `data-ends="${lot.endsAt}"` : ''}>${active ? mcAucLeft(lot.endsAt - Date.now()) : lot.status === 'cancelled' ? 'Снят' : lot.winner === me ? 'Ваш' : lot.winner ? 'Продан' : lot.status === 'settling' ? 'Подводим итоги' : 'Без ставок'}</b>${lot.extended ? `<span>продлён ×${lot.extended}</span>` : ''}</div>
-        <div><small>Ставок</small><b>${lot.bids || 0}</b>${lot.buyNow ? `<span>блиц ${mcFmtUm(lot.buyNow)}</span>` : ''}</div>
-      </div>
-      ${active && !mine ? `<div class="mc-auc-bid">
-        ${lead ? '<div class="mc-auc-note ok">Ваша ставка лидирует. Можно повысить её — прошлая сумма вернётся.</div>' : lot.bidders?.[me] ? '<div class="mc-auc-note bad">Вашу ставку перебили — умы уже возвращены на баланс.</div>' : ''}
-        <label>Ваша ставка (минимум ${mcFmtUm(min)} УМ)</label>
-        <div class="mc-auc-amt"><button type="button" data-d="-1">−</button><input id="mcAucAmt" type="number" inputmode="numeric" min="${min}" step="1" value="${Math.max(min, cur || 0)}"><button type="button" data-d="1">+</button></div>
-        <div class="mc-auc-quick">${[min, min + Math.max(5, Math.ceil(min * 0.1)), min + Math.max(10, Math.ceil(min * 0.25))].map(v => `<button type="button" data-v="${v}">${mcFmtUm(v)}</button>`).join('')}</div>
-        <button type="button" class="mc-wheel-spin" id="mcAucBidGo">Сделать ставку</button>
-        ${lot.buyNow && lot.buyNow >= min ? `<button type="button" class="btn btn-secondary mc-auc-blitz" id="mcAucBuyNow">⚡ Купить сразу за ${mcFmtUm(lot.buyNow)} УМ</button>` : ''}
-      </div>` : ''}
-      ${active && mine ? `<div class="mc-auc-note">Это ваш лот. ${lot.topBid ? `После завершения вы получите ${mcFmtUm(lot.topBid.amount - Math.floor(lot.topBid.amount * MC_AUC_FEE))} УМ (комиссия ${Math.round(MC_AUC_FEE * 100)}%).` : 'Пока ставок нет — лот можно снять с торгов.'}</div>${!lot.topBid ? '<button type="button" class="btn btn-secondary mc-auc-cancel" id="mcAucCancel">Снять с торгов</button>' : ''}` : ''}
-      <div class="mc-auc-hist"><h4>История ставок</h4>${bids.length ? bids.map((x, i) => `<div class="${i === 0 ? 'top' : ''}"><span>${x.uid === me ? 'Вы' : esc(x.name || 'Участник')}</span><b>${mcFmtUm(x.amount)} УМ</b><small>${mcAgo7(x.at)}</small></div>`).join('') : '<p class="gift-empty-note">Ставок пока нет — станьте первым.</p>'}</div>`;
-    b.querySelector('#mcAucBidGo')?.addEventListener('click', () => mcAucBid(id, Number($('mcAucAmt')?.value || 0)));
-    b.querySelector('#mcAucBuyNow')?.addEventListener('click', () => mcAucBid(id, lot.buyNow, { blitz: true }));
-    b.querySelector('#mcAucCancel')?.addEventListener('click', () => mcAucCancel(id));
-    b.querySelectorAll('.mc-auc-quick [data-v]').forEach(x => x.addEventListener('click', () => { const i = $('mcAucAmt'); if (i) i.value = x.dataset.v; }));
-    b.querySelectorAll('.mc-auc-amt [data-d]').forEach(x => x.addEventListener('click', () => { const i = $('mcAucAmt'); if (!i) return; const st = Math.max(5, Math.ceil(min * 0.05)); i.value = Math.max(min, (Number(i.value) || min) + Number(x.dataset.d) * st); }));
-  };
-  const offL = onValue(ref(db, 'auctions/' + id), s => { if (!document.getElementById('mcAucLot')) return offL(); const v = s.val(); if (!v) { $('mcAucLotBody') && ($('mcAucLotBody').innerHTML = '<p class="gift-empty-note">Лот не найден.</p>'); return; } lot = { id, ...v }; draw(); if (v.status === 'active' && v.endsAt <= Date.now()) mcAucSettle(id); }, () => {});
-  const offB = onValue(query(ref(db, 'auction_bids/' + id), orderByChild('at'), limitToLast(30)), s => { if (!document.getElementById('mcAucLot')) return offB(); bids = Object.values(s.val() || {}).sort((a, b) => b.amount - a.amount || b.at - a.at); draw(); }, () => {});
-  draw();
-  if (!MCA.tick) MCA.tick = setInterval(() => {
-    if (!document.getElementById('mcAucSheet') && !document.getElementById('mcAucLot')) { clearInterval(MCA.tick); MCA.tick = null; return; }
-    document.querySelectorAll('[data-ends]').forEach(x => { const ms = Number(x.dataset.ends) - Date.now(); x.textContent = mcAucLeft(ms); x.classList.toggle('soon', ms < 5 * 60000); });
-  }, 1000);
-}
-async function mcAucBid(id, amount, { blitz = false } = {}) {
-  const me = state.user?.uid; if (!me || MCA.bidBusy) return;
-  amount = Math.floor(Number(amount) || 0);
-  const lot0 = MCA.lots[id] || (await get(ref(db, 'auctions/' + id)).catch(() => null))?.val?.();
-  if (!lot0 || lot0.status !== 'active') return toast('Торги уже завершены', '⏱');
-  if (lot0.sellerId === me) return toast('Нельзя делать ставки на свой лот', '⚠');
-  const min = mcAucMinBid(lot0);
-  if (amount < min) return toast(`Минимальная ставка — ${mcFmtUm(min)} УМ`, '⚠');
-  const prevMine = lot0.topBid?.uid === me ? lot0.topBid.amount : 0;
-  const ok = await mcConfirm(blitz ? 'Купить сразу?' : 'Подтвердите ставку', `${lot0.item.emoji || '🎁'} «${lot0.item.name}» — ${mcFmtUm(amount)} УМ спишутся сейчас${prevMine ? `, а прошлая ставка ${mcFmtUm(prevMine)} УМ вернётся` : ''}. ${blitz ? 'Лот сразу станет вашим.' : 'Если вас перебьют, умы вернутся.'}`, { okText: blitz ? 'Купить' : 'Поставить' });
-  if (!ok) return;
-  MCA.bidBusy = true; const btn = $('mcAucBidGo'); if (btn) { btn.disabled = true; btn.textContent = 'Отправляем…'; }
-  const name = state.profile?.displayName || state.profile?.username || 'Участник';
-  let charged = false;
-  try {
-    const sp = await mcSpendUms(me, amount);
-    if (!sp.ok) return toast(`Недостаточно умов: нужно ${mcFmtUm(amount)}, у вас ${mcFmtUm(sp.balance)}`, '💸');
-    charged = true;
-    let prev = null, okBid = false, why = '';
-    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => {
-      okBid = false; prev = null; why = '';
-      if (cur === null) return null;
-      const t = Date.now();
-      if (cur.status !== 'active' || t >= cur.endsAt) { why = 'ended'; return; }
-      if (cur.sellerId === me) { why = 'own'; return; }
-      const mn = mcAucMinBid(cur); if (amount < mn) { why = 'low:' + mn; return; }
-      prev = cur.topBid || null;
-      let endsAt = cur.endsAt, ext = cur.extended || 0;
-      if (cur.buyNow && amount >= cur.buyNow) endsAt = t;
-      else if (endsAt - t < MC_AUC_SNIPE) { endsAt = t + MC_AUC_SNIPE; ext++; }
-      okBid = true;
-      return { ...cur, topBid: { uid: me, name, amount, at: t }, bids: (cur.bids || 0) + 1, endsAt, extended: ext, bidders: { ...(cur.bidders || {}), [me]: true } };
-    });
-    if (!tx.committed || !okBid) {
-      await mcAddUms(me, amount); charged = false;
-      return toast(why.startsWith('low') ? `Кто-то успел раньше. Минимум теперь ${mcFmtUm(why.split(':')[1])} УМ` : why === 'own' ? 'Нельзя делать ставки на свой лот' : 'Торги уже завершены', '⏱');
-    }
-    charged = false;
-    set(push(ref(db, 'auction_bids/' + id)), { uid: me, name, amount, at: Date.now() }).catch(() => {});
-    if (prev?.uid === me) { const b = await mcAddUms(me, prev.amount); mcSetBalanceUI(b); }
-    else if (prev?.uid) await mcAucCredit(prev.uid, `${id}_ob_${prev.at}`, { amount: prev.amount, reason: 'outbid', auctionId: id, name: lot0.item.name, emoji: lot0.item.emoji || '🎁' });
-    readGiftBalance().then(b => { mcSetBalanceUI(b); const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; });
-    const after = tx.snapshot?.val();
-    if (after && after.endsAt <= Date.now()) { await mcAucSettle(id); mcConfettiBurst(60); toast(`«${lot0.item.name}» теперь ваш`, '🎉'); }
-    else toast(`Ставка ${mcFmtUm(amount)} УМ принята`, '🔨');
-  } catch (e) {
-    console.error('bid', e);
-    if (charged) { try { await mcAddUms(me, amount); } catch (_) {} }
-    toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (auctions)' : 'Ставка не прошла, умы возвращены', '⚠');
-  } finally { MCA.bidBusy = false; }
-}
-// Начисление с уникальным ключом — повторный вызов не создаст дубль
-async function mcAucCredit(uid, key, data) {
-  key = String(key).replace(/[.#$\[\]\/]/g, '_');
-  for (let i = 0; i < 3; i++) {
-    try { await runTransaction(ref(db, `auction_credits/${uid}/${key}`), cur => cur ? undefined : { ...data, at: Date.now(), claimed: false }); return true; }
-    catch (e) { console.warn('credit', e); await new Promise(r => setTimeout(r, 600 * (i + 1))); }
-  }
-  return false;
-}
-function mcAucSettleDue() {
-  const now = Date.now();
-  for (const [id, l] of Object.entries(MCA.lots)) {
-    if (!l) continue;
-    if (l.status === 'active' && l.endsAt <= now) mcAucSettle(id);
-    else if (l.status === 'settling' && now - (l.settleAt || 0) > 60000) mcAucSettle(id);
-  }
-}
-async function mcAucSettle(id) {
-  if (MCA.settling.has(id) || !state.user?.uid) return;
-  MCA.settling.add(id);
-  try {
-    let lot = null; const me = state.user.uid;
-    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => {
-      lot = null; if (cur === null) return null;
-      const stuck = cur.status === 'settling' && Date.now() - (cur.settleAt || 0) > 60000;
-      if (!(cur.status === 'active' && Date.now() >= cur.endsAt) && !stuck) return;
-      lot = cur; return { ...cur, status: 'settling', settleAt: Date.now(), settler: me };
-    });
-    if (!tx.committed || !lot) return;
-    const it = { giftId: lot.item.giftId || null, name: lot.item.name, emoji: lot.item.emoji, cost: lot.item.cost || null, createdAt: Date.now(), hidden: false, auction: id };
-    const fin = { status: 'done', doneAt: Date.now(), settleAt: null };
-    if (lot.topBid?.uid) {
-      await runTransaction(ref(db, `gift_inventory/${lot.topBid.uid}/au_${id}`), cur => cur ? undefined : { ...it, fromName: 'Аукцион · ' + (lot.sellerName || ''), wonFor: lot.topBid.amount });
-      const pay = lot.topBid.amount - Math.floor(lot.topBid.amount * MC_AUC_FEE);
-      await mcAucCredit(lot.sellerId, `${id}_sold`, { amount: pay, reason: 'sold', auctionId: id, name: lot.item.name, emoji: lot.item.emoji, price: lot.topBid.amount });
-      await mcAucCredit(lot.topBid.uid, `${id}_won`, { amount: 0, reason: 'won', auctionId: id, name: lot.item.name, emoji: lot.item.emoji, price: lot.topBid.amount });
-      Object.assign(fin, { winner: lot.topBid.uid, finalPrice: lot.topBid.amount });
-    } else {
-      await runTransaction(ref(db, `gift_inventory/${lot.sellerId}/au_${id}`), cur => cur ? undefined : { ...it, ...(lot.item || {}), fromName: lot.item.fromName || 'Возврат с аукциона', hidden: false });
-      await mcAucCredit(lot.sellerId, `${id}_ret`, { amount: 0, reason: 'returned', auctionId: id, name: lot.item.name, emoji: lot.item.emoji });
-      Object.assign(fin, { winner: null, finalPrice: null });
-    }
-    await update(ref(db, 'auctions/' + id), fin);
-  } catch (e) { console.warn('settle', id, e); }
-  finally { setTimeout(() => MCA.settling.delete(id), 3000); }
-}
-async function mcAucCancel(id) {
-  const me = state.user?.uid; if (!me) return;
-  if (!(await mcConfirm('Снять лот с торгов?', 'Подарок вернётся в вашу коллекцию.', { okText: 'Снять', danger: true }))) return;
-  let lot = null;
-  try {
-    const tx = await runTransaction(ref(db, 'auctions/' + id), cur => { lot = null; if (cur === null) return null; if (cur.sellerId !== me || cur.status !== 'active' || cur.topBid) return; lot = cur; return { ...cur, status: 'cancelled', doneAt: Date.now() }; });
-    if (!tx.committed || !lot) return toast('Нельзя снять: уже есть ставки или торги завершены', '⚠');
-    await runTransaction(ref(db, `gift_inventory/${me}/au_${id}`), cur => cur ? undefined : { ...lot.item, createdAt: Date.now(), hidden: false });
-    toast('Лот снят, подарок вернулся в коллекцию', '✓');
-    if ($('giftOwnedSection')) renderOwnedGifts();
-  } catch (e) { console.error(e); toast('Не удалось снять лот', '⚠'); }
-}
-async function mcAucNewLot(preId) {
-  const me = state.user?.uid; if (!me) return toast('Войдите в аккаунт', '⚠');
-  let inv = {};
-  try { inv = (await get(ref(db, `gift_inventory/${me}`))).val() || {}; } catch (e) { return toast('Не удалось загрузить подарки', '⚠'); }
-  const items = Object.entries(inv).map(([id, v]) => ({ id, ...v })).filter(g => g && !g.purchasePending).sort((a, b) => (Number(b.cost) || 0) - (Number(a.cost) || 0));
-  if (!items.length) return mcDialog({ icon: '📦', title: 'Нечего выставить', text: 'Сначала получите подарок: купите его в витрине или выиграйте в колесе фортуны.', buttons: [{ label: 'Понятно', kind: 'primary', value: true }], dismissValue: true });
-  const S = { id: items.some(x => x.id === preId) ? preId : items[0].id, dur: 60 };
-  const el = mcSheet('mcAucNew', `${mcSheetHead('Выставить на аукцион', 'mcAucNew')}
-    <div class="mc-auc-new">
-      <label class="mc-sch-lbl">Подарок</label>
-      <div class="mc-auc-pick" id="mcAucPick">${items.map(g => `<button type="button" data-id="${g.id}" class="r-${mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost })}"><span>${esc(g.emoji || '🎁')}</span><small>${esc(g.name || 'Подарок')}</small></button>`).join('')}</div>
-      <div class="mc-auc-form">
-        <label>Стартовая цена, УМ<input id="mcAucStart" type="number" inputmode="numeric" min="1" step="1"></label>
-        <label>Блиц-цена (необязательно)<input id="mcAucBlitz" type="number" inputmode="numeric" min="0" step="1" placeholder="нет"></label>
-      </div>
-      <label class="mc-sch-lbl">Длительность</label>
-      <div class="mc-auc-durs" id="mcAucDurs">${MC_AUC_DUR.map(([m, l]) => `<button type="button" data-m="${m}" class="${m === S.dur ? 'on' : ''}">${l}</button>`).join('')}</div>
-      <div class="mc-auc-sum" id="mcAucSum"></div>
-      <button type="button" class="mc-wheel-spin" id="mcAucCreate">🔨 Выставить лот</button>
-      <p class="mc-odds-note">Подарок уйдёт из коллекции на время торгов. Если ставок не будет — он вернётся. При продаже удерживается ${Math.round(MC_AUC_FEE * 100)}% комиссии.</p>
-    </div>`, { cls: 'mc-auc-ov' });
-  const selItem = () => items.find(x => x.id === S.id);
-  const sum = () => {
-    const g = selItem(); const st = Math.floor(Number($('mcAucStart').value) || 0), bl = Math.floor(Number($('mcAucBlitz').value) || 0);
-    const ends = new Date(Date.now() + S.dur * 60000);
-    $('mcAucSum').innerHTML = `<div><span>${esc(g?.emoji || '🎁')} ${esc(g?.name || '')}</span>${mcRarBadge({ ...g, cost: g?.cost || mcGiftById(g?.giftId)?.cost })}</div><div><span>Старт</span><b>${mcFmtUm(st)} УМ</b></div>${bl ? `<div><span>Блиц</span><b>${mcFmtUm(bl)} УМ</b></div>` : ''}<div><span>Завершится</span><b>${ends.toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</b></div><div><span>Вы получите минимум</span><b>${mcFmtUm(st - Math.floor(st * MC_AUC_FEE))} УМ</b></div>`;
-  };
-  const pick = id => { S.id = id; el.querySelectorAll('#mcAucPick button').forEach(b => b.classList.toggle('on', b.dataset.id === id)); const g = selItem(); const base = Number(g?.cost) || Number(mcGiftById(g?.giftId)?.cost) || 50; $('mcAucStart').value = Math.max(1, Math.round(base * 0.6)); $('mcAucBlitz').value = ''; sum(); };
-  el.querySelector('#mcAucPick').addEventListener('click', e => { const b = e.target.closest('[data-id]'); if (b) pick(b.dataset.id); });
-  el.querySelector('#mcAucDurs').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; S.dur = Number(b.dataset.m); el.querySelectorAll('#mcAucDurs button').forEach(x => x.classList.toggle('on', x === b)); sum(); });
-  ['mcAucStart', 'mcAucBlitz'].forEach(i => el.querySelector('#' + i).addEventListener('input', sum));
-  pick(S.id);
-  el.querySelector(`#mcAucPick [data-id="${S.id}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' });
-  el.querySelector('#mcAucCreate').addEventListener('click', async () => {
-    const g = selItem(); if (!g) return;
-    const st = Math.floor(Number($('mcAucStart').value) || 0), bl = Math.floor(Number($('mcAucBlitz').value) || 0);
-    if (st < 1 || st > 1000000) return toast('Стартовая цена — от 1 до 1 000 000 УМ', '⚠');
-    if (bl && bl <= st) return toast('Блиц-цена должна быть больше стартовой', '⚠');
-    const btn = $('mcAucCreate'); btn.disabled = true; btn.textContent = 'Выставляем…';
-    try {
-      const snap = await get(ref(db, `gift_inventory/${me}/${g.id}`)); if (!snap.exists()) throw new Error('Подарок уже недоступен');
-      const orig = snap.val();
-      const id = push(ref(db, 'auctions')).key; const t = Date.now();
-      const item = { giftId: orig.giftId || null, name: orig.name || 'Подарок', emoji: orig.emoji || '🎁', cost: Number(orig.cost) || Number(mcGiftById(orig.giftId)?.cost) || null, fromName: orig.fromName || null };
-      await update(ref(db), {
-        [`gift_inventory/${me}/${g.id}`]: null,
-        [`auctions/${id}`]: { sellerId: me, sellerName: state.profile?.displayName || state.profile?.username || 'Пользователь', item, startPrice: st, step: Math.max(5, Math.ceil(st * 0.05)), buyNow: bl || null, createdAt: t, endsAt: t + S.dur * 60000, status: 'active', bids: 0 }
-      });
-      mcCloseSheet('mcAucNew');
-      toast('Лот выставлен на аукцион', '🔨');
-      if ($('giftOwnedSection')) renderOwnedGifts();
-      if (!document.getElementById('mcAucSheet')) mcOpenAuction('mine'); else { MCA.tab = 'mine'; document.querySelectorAll('.mc-auc-tabs button').forEach(x => x.classList.toggle('on', x.dataset.t === 'mine')); mcAucRender(); }
-    } catch (e) {
-      console.error(e); toast(/permission|denied/i.test(String(e?.code || e?.message)) ? 'Нет доступа: обновите правила Firebase (auctions)' : (e?.message || 'Не удалось выставить лот'), '⚠');
-      btn.disabled = false; btn.textContent = '🔨 Выставить лот';
-    }
-  });
-}
-
-// ---------- Фоновый движок: начисления, уведомления, завершение моих торгов ----------
-function mcAucCredMsg(c) {
-  const nm = `«${c.name || 'подарок'}»`;
-  return {
-    outbid: ['Вашу ставку перебили', `${c.emoji || '🎁'} ${nm}: ${mcFmtUm(c.amount)} УМ вернулись на баланс`],
-    sold: ['Лот продан', `${c.emoji || '🎁'} ${nm} продан за ${mcFmtUm(c.price || c.amount)} УМ — вам начислено ${mcFmtUm(c.amount)} УМ`],
-    won: ['Вы выиграли аукцион', `${c.emoji || '🎁'} ${nm} теперь в вашей коллекции`],
-    returned: ['Торги завершены без ставок', `${c.emoji || '🎁'} ${nm} вернулся в вашу коллекцию`]
-  }[c.reason] || ['Аукцион', nm];
-}
-async function mcAucClaim(uid, key) {
-  let got = null;
-  const tx = await runTransaction(ref(db, `auction_credits/${uid}/${key}`), cur => { got = null; if (cur === null) return null; if (cur.claimed) return; got = cur; return { ...cur, claimed: true, claimedAt: Date.now() }; });
-  if (!tx.committed || !got) return;
-  if (Number(got.amount) > 0) { const b = await mcAddUms(uid, Number(got.amount)); mcSetBalanceUI(b); const x = $('mcAucBal'); if (x) x.textContent = `${mcFmtUm(b)} УМ`; }
-  const [title, body] = mcAucCredMsg(got);
-  toast(`${title}. ${body}`, got.reason === 'outbid' ? '🔔' : '🔨');
-  mcSystemNotify(title, body, { tag: 'auc_' + key }).catch(() => {});
-  if ($('giftOwnedSection')) renderOwnedGifts();
-}
-function mcAucBgInit() {
-  const uid = state.user?.uid;
-  if (!uid) { if (MCA.credUnsub) { try { MCA.credUnsub(); } catch (_) {} MCA.credUnsub = null; MCA.credUid = null; } return; }
-  if (MCA.credUid === uid) return;
-  if (MCA.credUnsub) { try { MCA.credUnsub(); } catch (_) {} }
-  MCA.credUid = uid;
-  MCA.credUnsub = onValue(ref(db, `auction_credits/${uid}`), snap => {
-    const v = snap.val() || {};
-    for (const [k, c] of Object.entries(v)) if (c && !c.claimed) mcAucClaim(uid, k).catch(e => console.warn('claim', e));
-  }, () => {});
-}
-// Раз в 30 секунд завершаем истёкшие торги, в которых я продавец или участник (сервера нет — это делают клиенты)
-async function mcAucBgSweep() {
-  const uid = state.user?.uid; if (!uid || document.visibilityState === 'hidden' && !mcAucBgSweep.force) return;
-  if (document.getElementById('mcAucSheet')) return; // окно аукциона и так всё завершает
-  try {
-    const v = (await get(query(ref(db, 'auctions'), orderByChild('endsAt'), limitToLast(200)))).val() || {};
-    const now = Date.now();
-    for (const [id, l] of Object.entries(v)) {
-      if (!l) continue;
-      const due = (l.status === 'active' && l.endsAt <= now) || (l.status === 'settling' && now - (l.settleAt || 0) > 60000);
-      if (due && (l.sellerId === uid || l.bidders?.[uid])) mcAucSettle(id);
-    }
-  } catch (_) {}
-}
-setInterval(() => { mcAucBgInit(); }, 2000);
-setInterval(() => { mcAucBgSweep(); }, 30000);
-setTimeout(() => { mcAucBgSweep(); }, 6000);
-
-Object.assign(window, { renderGiftShop, renderOwnedGifts, hideOwnedGift, mcToggleOwnedHidden, mcGiftCelebrate, mcOpenWheel, mcWheelSpin, mcOpenAuction, mcAucOpenLot, mcAucNewLot, mcAucBid, mcAucCancel, mcAucSettle, mcGiftById, mcConfettiBurst });
-
-// =====================================================================
 // MetroChat · Round 8 — новая система заработка умов
 // Лимит 140 УМ в день, 10 разных заданий, ежедневная отметка со стриком,
 // задания доступны только после проверки возраста по лицу (модуль 9c).
@@ -11905,14 +11234,28 @@ const MC_EARN_CAP = 140;
 const MC_EARN_TASKS_PER_DAY = 7;
 const MCE = { day: null, rec: null, streak: null, age: null, loaded: false, busy: false, play: null, back: 'gifts' };
 
-function mcDayKey(ts = (Date.now()+(window.__srvOff||0))) { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+// Серверное время, устойчивое к смене часов на устройстве:
+// якорь (wall0+perf0) снимается при загрузке, дальше идём по монотонному performance.now(),
+// а смещение __srvOff (из .info/serverTimeOffset) приводит это к серверному времени.
+window.__mcWall0 = Date.now();
+try { window.__mcPerf0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : -1; } catch (_) { window.__mcPerf0 = -1; }
+function mcSrvNow() {
+  const off = +window.__srvOff || 0;
+  try {
+    if (window.__mcPerf0 >= 0 && typeof performance !== 'undefined' && performance.now) {
+      return Math.round(window.__mcWall0 + (performance.now() - window.__mcPerf0) + off);
+    }
+  } catch (_) {}
+  return Date.now() + off;
+}
+function mcDayKey(ts = mcSrvNow()) { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function mcPrevDayKey(day) { const [y, m, d] = day.split('-').map(Number); return mcDayKey(new Date(y, m - 1, d - 1, 12).getTime()); }
 function mcHash32(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 function mcSeeded(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 function mcShuffle(arr, rnd = mcRand01) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function mcRint(a, b) { return a + Math.floor(mcRand01() * (b - a + 1)); }
 function mcPick(arr) { return arr[Math.floor(mcRand01() * arr.length)]; }
-function mcMsLeftToday() { const n = new Date(); const e = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); return e - n; }
+function mcMsLeftToday() { const n = new Date(mcSrvNow()); const e = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); return e - n; }
 
 // Уровень сложности по подтверждённому возрасту: 1 (6–9) … 5 (19+)
 function mcAgeBand(age) { age = Number(age) || 0; return age < 10 ? '6-9' : age < 13 ? '10-12' : age < 16 ? '13-15' : age < 19 ? '16-18' : '19+'; }
@@ -11971,7 +11314,7 @@ async function mcEarnGrant(taskId, want, meta = {}) {
     if (c.tasks[taskId]) return; // уже выполнено — отмена транзакции
     const total = Math.max(0, Number(c.total) || 0);
     const g = Math.max(0, Math.min(want, MC_EARN_CAP - total));
-    c.tasks[taskId] = { r: g, want, at: (Date.now()+(window.__srvOff||0)), ...(meta.score !== undefined ? { s: Math.round(meta.score * 100) } : {}) };
+    c.tasks[taskId] = { r: g, want, at: { '.sv': 'timestamp' }, ...(meta.score !== undefined ? { s: Math.round(meta.score * 100) } : {}) };
     c.total = total + g;
     return c;
   });
@@ -12104,7 +11447,7 @@ function mcEarnStart(id) {
   const wrap = $('settingsPanel'); if (!wrap) return;
   const d = MC_EARN_DEFS[id];
   mcEarnStopPlay();
-  MCE.play = { id, t0: (Date.now()+(window.__srvOff||0)), timers: [], done: false };
+  MCE.play = { id, t0: (mcSrvNow()), timers: [], done: false };
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="mcEarnQuit()">← Задания</button><div class="settings-title">${d.title}</div></div>
   <div class="settings-wrap mc-play" style="--tc:${d.c}"><div class="mc-play-head"><span class="mc-task-ico">${d.ico}</span><div><b>${d.title}</b><small>${d.desc} · до ${d.max} УМ</small></div><span class="mc-play-timer" id="mcPlayTimer"></span></div><div class="mc-play-progress"><i id="mcPlayProg"></i></div><div id="mcPlayBox" class="mc-play-box"></div></div>`;
   const fn = MC_EARN_GAMES[id];
@@ -12126,8 +11469,8 @@ function mcPlayInterval(fn, ms) { const id = setInterval(fn, ms); MCE.play?.time
 function mcPlayTimeout(fn, ms) { const id = setTimeout(fn, ms); MCE.play?.timers.push(id); return id; }
 // Обратный отсчёт; onEnd вызывается один раз
 function mcPlayCountdown(sec, onEnd) {
-  const p = MCE.play; const end = (Date.now()+(window.__srvOff||0)) + sec * 1000;
-  const tick = () => { if (MCE.play !== p || p.done) return; const left = Math.max(0, end - (Date.now()+(window.__srvOff||0))); mcPlayTimerSet(`${Math.ceil(left / 1000)} с`); $('mcPlayTimer')?.classList.toggle('warn', left < 10000); if (left <= 0) { clearInterval(iv); onEnd(); } };
+  const p = MCE.play; const end = (mcSrvNow()) + sec * 1000;
+  const tick = () => { if (MCE.play !== p || p.done) return; const left = Math.max(0, end - (mcSrvNow())); mcPlayTimerSet(`${Math.ceil(left / 1000)} с`); $('mcPlayTimer')?.classList.toggle('warn', left < 10000); if (left <= 0) { clearInterval(iv); onEnd(); } };
   const iv = mcPlayInterval(tick, 200); tick();
 }
 
@@ -12137,7 +11480,7 @@ async function mcEarnFinish(score, summary = '') {
   const d = MC_EARN_DEFS[p.id];
   score = Math.max(0, Math.min(1, Number(score) || 0));
   // Защита от слишком быстрого «прохождения» (скрипты, автокликеры)
-  const elapsed = (Date.now()+(window.__srvOff||0)) - p.t0;
+  const elapsed = (mcSrvNow()) - p.t0;
   if (elapsed < 2500) score = Math.min(score, 0.2);
   const want = score > 0 ? Math.max(1, Math.round(d.max * score)) : 0;
   const box = $('mcPlayBox');
@@ -12205,7 +11548,7 @@ const MC_EARN_GAMES = {
       if (p.done) return; mcPlayProg(i / qs.length);
       const Q = qs[i];
       box.innerHTML = `<div class="mc-q-num">Вопрос ${i + 1} из ${qs.length}</div><h3 class="mc-q-title">${esc(Q.q)}</h3><div class="mc-q-opts">${Q.opts.map((o, k) => `<button type="button" data-k="${k}">${esc(o.t)}</button>`).join('')}</div>`;
-      let locked = false; const start = (Date.now()+(window.__srvOff||0));
+      let locked = false; const start = (mcSrvNow());
       mcPlayCountdown(20, () => pickAns(-1));
       const pickAns = k => {
         if (locked || p.done) return; locked = true;
@@ -12350,7 +11693,7 @@ const MC_EARN_GAMES = {
     const targetCpm = [60, 90, 130, 160, 180][lv - 1];
     let started = 0; const p = MCE.play; p.started = true;
     const fin = (val = $('mcTI')?.value || '') => {
-      const dt = started ? ((Date.now()+(window.__srvOff||0)) - started) / 60000 : 1;
+      const dt = started ? ((mcSrvNow()) - started) / 60000 : 1;
       let ok = 0; for (let k = 0; k < phrase.length; k++) if (val[k] === phrase[k]) ok++;
       const acc = ok / phrase.length; const cpm = val.length / Math.max(dt, 1 / 60);
       const sc = acc < 0.6 ? 0 : acc * Math.min(1, cpm / targetCpm);
@@ -12362,7 +11705,7 @@ const MC_EARN_GAMES = {
     inp.addEventListener('paste', e => { e.preventDefault(); toast('Вставка отключена — наберите текст вручную', '⌨️'); });
     inp.addEventListener('drop', e => e.preventDefault());
     inp.addEventListener('input', () => {
-      if (!started) started = (Date.now()+(window.__srvOff||0));
+      if (!started) started = (mcSrvNow());
       const v = inp.value.replace(/\n/g, '');
       spans.forEach((s, k) => { s.className = k < v.length ? (v[k] === phrase[k] ? 'ok' : 'bad') : k === v.length ? 'cur' : ''; });
       mcPlayProg(v.length / phrase.length);
@@ -12385,7 +11728,7 @@ const MC_EARN_GAMES = {
       const next = ok => { if (p.done || answered) return; answered = true; clearTimeout(t); clearInterval(iv); if (ok) { found++; mcEarnSfx('ok'); } else mcEarnSfx('bad'); box.querySelector(`.mc-color [data-k="${odd}"]`)?.classList.add('hit'); r++; mcPlayTimeout(() => r >= rounds ? fin() : show(), 550); };
       box.querySelectorAll('.mc-color button').forEach(b => b.addEventListener('click', () => { box.querySelectorAll('.mc-color button').forEach(x => x.disabled = true); next(Number(b.dataset.k) === odd); }));
       t = mcPlayTimeout(() => next(false), 9000);
-      const end = (Date.now()+(window.__srvOff||0)) + 9000; iv = mcPlayInterval(() => { const left = end - (Date.now()+(window.__srvOff||0)); mcPlayTimerSet(`${Math.max(0, Math.ceil(left / 1000))} с`); if (left <= 0) clearInterval(iv); }, 200);
+      const end = (mcSrvNow()) + 9000; iv = mcPlayInterval(() => { const left = end - (mcSrvNow()); mcPlayTimerSet(`${Math.max(0, Math.ceil(left / 1000))} с`); if (left <= 0) clearInterval(iv); }, 200);
     };
     show();
   },
@@ -12748,7 +12091,10 @@ function mcChCreate() {
   const emojis = ['📢', '📰', '💻', '🎮', '🎵', '📚', '😂', '⚽', '🎬', '✈️', '🎨', '🚇', '🔥', '💡', '🌍', '🐾'];
   const sel = { emoji: '📢', cat: 'other' };
   mcSheet('mcChNew', `${mcSheetHead('Новый канал', 'mcChNew')}<div class="mc-chn">
-    <div class="mc-chn-prev" id="mcChnPrev"><span class="mc-ch-av" style="width:76px;height:76px;font-size:36px;background:${mcChCover('new')}">📢</span><div><b id="mcChnPN">Название канала</b><small id="mcChnPU">@username</small></div></div>
+    <div class="mc-chn-prev" id="mcChnPrev"><span class="mc-ch-av" id="mcChnAv" style="width:76px;height:76px;font-size:36px;background:${mcChCover('new')}">📢</span><div><b id="mcChnPN">Название канала</b><small id="mcChnPU">@username</small></div></div>
+    <button type="button" class="mc11-btn g" id="mcChnPhoto" style="width:100%;margin:2px 0 4px">📷 Добавить фото канала</button>
+    <div class="mc-hint" id="mcChnPH">Фото обязательно — так канал видят подписчики</div>
+    <input type="file" id="mcChnFile" accept="image/*" class="hidden">
     <label class="mc-lbl">Название</label><input id="mcChnName" class="mc-inp" maxlength="60" placeholder="Например, Новости метро">
     <label class="mc-lbl">Публичная ссылка (необязательно)</label><div class="mc-inp-at"><span>@</span><input id="mcChnUser" class="mc-inp" maxlength="32" placeholder="metro_news" autocapitalize="off" spellcheck="false"></div><div class="mc-hint" id="mcChnUH">Латиница, цифры и _ · от 4 символов</div>
     <label class="mc-lbl">Описание</label><textarea id="mcChnDesc" class="mc-inp" rows="3" maxlength="300" placeholder="О чём ваш канал?"></textarea>
@@ -12758,7 +12104,24 @@ function mcChCreate() {
   </div>`);
   const root = $('mcChNew');
   const nameI = $('mcChnName'), userI = $('mcChnUser');
-  const paint = () => { $('mcChnPN').textContent = nameI.value.trim() || 'Название канала'; $('mcChnPU').textContent = userI.value ? '@' + userI.value : 'без публичной ссылки'; const av = root.querySelector('#mcChnPrev .mc-ch-av'); av.textContent = sel.emoji; };
+  let avatar = null;
+  const fileI = $('mcChnFile');
+  const pickPhoto = () => fileI.click();
+  $('mcChnPhoto').addEventListener('click', pickPhoto);
+  $('mcChnAv').addEventListener('click', pickPhoto);
+  fileI.addEventListener('change', async () => {
+    const f = fileI.files?.[0]; if (!f) return;
+    try {
+      const raw = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
+      const small = await mcShrinkDataImg(raw, 256, 0.82);
+      if (!small) throw new Error('bad image');
+      avatar = small;
+      const av = $('mcChnAv'); av.style.backgroundImage = `url('${avatar.replace(/'/g, '%27')}')`; av.textContent = ''; av.style.fontSize = '0';
+      const ph = $('mcChnPH'); ph.textContent = 'Фото добавлено ✓'; ph.className = 'mc-hint ok';
+    } catch (e) { toast('Не удалось обработать фото. Выберите другое', '⚠'); }
+    fileI.value = '';
+  });
+  const paint = () => { $('mcChnPN').textContent = nameI.value.trim() || 'Название канала'; $('mcChnPU').textContent = userI.value ? '@' + userI.value : 'без публичной ссылки'; const av = root.querySelector('#mcChnPrev .mc-ch-av'); if (!av.style.backgroundImage) av.textContent = sel.emoji; };
   nameI.addEventListener('input', paint);
   userI.addEventListener('input', () => { userI.value = userI.value.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 32); const ok = !userI.value || /^[a-z][a-z0-9_]{3,31}$/.test(userI.value); const taken = userI.value && Object.values(state.channels || {}).some(c => String(c?.username || '').toLowerCase() === userI.value); const h = $('mcChnUH'); h.textContent = !userI.value ? 'Латиница, цифры и _ · от 4 символов' : taken ? 'Этот адрес уже занят' : ok ? 'Адрес свободен' : 'Начните с буквы, минимум 4 символа'; h.className = 'mc-hint ' + (!userI.value ? '' : taken || !ok ? 'bad' : 'ok'); paint(); });
   root.querySelectorAll('.mc-chn-cats button').forEach(b => b.addEventListener('click', () => { root.querySelectorAll('.mc-chn-cats button').forEach(x => x.classList.remove('on')); b.classList.add('on'); sel.cat = b.dataset.c; }));
@@ -12768,6 +12131,7 @@ function mcChCreate() {
     const btn = $('mcChnGo'); if (btn.disabled) return;
     const name = nameI.value.trim(), username = userI.value.trim(), description = $('mcChnDesc').value.trim();
     if (name.length < 2) { nameI.focus(); return toast('Введите название канала', '⚠'); }
+    if (!avatar) { toast('Добавьте фото канала', '📷'); setTimeout(pickPhoto, 350); return; }
     if (username && !/^[a-z][a-z0-9_]{3,31}$/.test(username)) return toast('Некорректная ссылка: латиница, от 4 символов, начинается с буквы', '⚠');
     if (!state.user?.uid) return;
     btn.disabled = true; btn.textContent = 'Создаём…';
@@ -12777,8 +12141,8 @@ function mcChCreate() {
       }
       const uid = state.user.uid, ts = now();
       const id = 'chn_' + push(ref(db, 'channels')).key;
-      const data = { type: 'channel', name, description, ownerId: uid, admins: { [uid]: true }, members: { [uid]: true }, createdAt: ts, category: sel.cat, emoji: sel.emoji, ...(username ? { username } : {}) };
-      const preview = { type: 'channel', name, ownerId: uid, lastTs: ts, unread: 0 };
+      const data = { type: 'channel', name, description, ownerId: uid, admins: { [uid]: true }, members: { [uid]: true }, createdAt: ts, category: sel.cat, emoji: sel.emoji, avatar, ...(username ? { username } : {}) };
+      const preview = { type: 'channel', name, ownerId: uid, lastTs: ts, unread: 0, avatar };
       await update(ref(db), { ['channels/' + id]: data, [`user_chats/${uid}/${id}`]: preview });
       state.channels = { ...(state.channels || {}), [id]: data };
       state.chats = { ...(state.chats || {}), [id]: preview };
@@ -13060,7 +12424,7 @@ const MC_BOTS = [
     kb: [['💰 Баланс', '/balance'], ['✦ Заработать', 'open:earn'], ['📡 Каналы', 'open:channels'], ['🎁 Подарки', 'open:gifts'], ['💡 Совет', '/tips']],
     async reply(t) {
       const l = t.toLowerCase();
-      if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn'], ['🎡 Колесо', 'open:wheel']] }; }
+      if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn'], ['🎁 Витрина', 'open:gifts']] }; }
       if (/^\/?(tips|совет)/.test(l)) { const tips = ['Зажмите сообщение, чтобы ответить, переслать или закрепить его.', 'В настройках можно включить двухфакторную аутентификацию для защиты аккаунта.', 'Сообщение можно запланировать: удерживайте кнопку отправки.', 'Ежедневная отметка в «Заработать» даёт до 20 УМ при длинной серии.', 'Боты появляются в списке чатов — закрепите нужного, чтобы он был сверху.', 'В каналах можно комментировать посты и смотреть число просмотров.', 'Metro AI в разделе «Прочее» умеет создавать группы и управлять чатами.']; return { text: '💡 ' + mcPick(tips), kb: [['Ещё совет', '/tips']] }; }
       const faq = [[/2fa|двухфактор|защит/, 'Откройте **Настройки → Безопасность → Двухфакторная аутентификация** и следуйте шагам.'], [/канал/, 'Каналы находятся в **Прочее → Каналы**. Там можно найти популярные каналы по категориям или нажать «Создать канал».'], [/групп/, 'Нажмите ✏️ в шапке списка чатов и выберите «Новая группа».'], [/ум[ыа]?\b|умов|заработ/, 'Умы — внутренняя валюта MetroChat. Их дают за задания в **Подарки → Заработать** (до 140 УМ в день) и тратят на подарки.'], [/подар/, 'Подарки покупаются за умы в **Прочее → Подарки**. Подарок можно отправить другу.'], [/звон|call/, 'В личном чате нажмите 📞 или 🎥 в шапке, чтобы позвонить.'], [/пароль/, 'Сменить пароль: **Настройки → Безопасность → Сменить пароль**.'], [/истори/, 'Истории открываются кнопкой 👤 над списком чатов.'], [/тем[аыу]|оформ|ночн/, 'Тему и ночной режим можно поменять в **Настройки → Оформление**.'], [/бот/, 'Каталог ботов — во вкладке **Боты**. Добавленный бот появляется в списке чатов.']];
       for (const [re, a] of faq) if (re.test(l)) return { text: a };
@@ -13390,7 +12754,7 @@ async function mcBotSendText(payload, label) {
     const go = nav[1];
     mcBotClose(true);
     try { switchTab('other'); } catch (_) {}
-    if (go === 'earn') mcEarnOpen('other'); else if (go === 'channels') renderOtherChannels(); else if (go === 'gifts') renderGiftShop(); else if (go === 'wheel') { renderGiftShop(); setTimeout(() => mcOpenWheel(), 200); }
+    if (go === 'earn') mcEarnOpen('other'); else if (go === 'channels') renderOtherChannels(); else if (go === 'gifts') renderGiftShop();
     return;
   }
   const visible = label || text;
@@ -13427,7 +12791,7 @@ const MC_HOME_ITEMS = {
     { k: 'earn', i: '✦', t: 'Заработать', s: 'Задания дня · до 140 УМ', c: '#8b5cf6' },
     { k: 'channels', i: '📡', t: 'Каналы', s: 'Подборки, поиск и свои каналы', c: '#3b82f6' },
     { k: 'bots', i: '🤖', t: 'Боты', s: 'Погода, курсы, переводчик и др.', c: '#14b8a6' },
-    { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина, колесо и аукцион', c: '#ec4899' }
+    { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина, крафт и отправка друзьям', c: '#ec4899' }
   ],
   tools: [
     { k: 'weather', i: '🌤️', t: 'Погода', s: 'Прогноз на 10 дней' },
@@ -13469,7 +12833,7 @@ renderOtherHome = function () {
       <small>${esc(hi)}, ${esc(name)}</small>
       <div class="mc-home-bal"><span id="mcHomeBal">…</span><em>УМ</em></div>
       <div class="mc-home-prog"><div class="mc-home-bar"><i id="mcHomeBar" style="width:0%"></i></div><span id="mcHomeToday">Сегодня 0 / ${MC_EARN_CAP}</span></div>
-      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button><button type="button" id="mcHomeWheel">🎡 Колесо</button></div>
+      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button></div>
     </section>
     <div class="mc-home-sec"><h3>Сервисы</h3></div>
     <div class="mc-home-big">${MC_HOME_ITEMS.services.map((x, n) => `<button type="button" class="mc-home-card" data-go="${x.k}" style="--i:${n};--c:${x.c}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small><span class="mc-home-arr">→</span></button>`).join('')}</div>
@@ -13480,7 +12844,6 @@ renderOtherHome = function () {
     <div class="mc-home-grid">${MC_HOME_ITEMS.games.map(tile).join('')}</div>
   </div>`;
   wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { try { mcEarnSfx('tap'); } catch (_) {} mcHomeGo(b.dataset.go); }));
-  $('mcHomeWheel')?.addEventListener('click', async () => { await renderGiftShop(); setTimeout(() => { try { mcOpenWheel(); } catch (_) {} }, 150); });
   (async () => {
     try {
       const [bal] = await Promise.all([readGiftBalance(), mcEarnLoad(true).catch(() => {})]);
@@ -13560,7 +12923,7 @@ Object.assign(window, {
 
 // ---------------- Логотип Metro AI ----------------
 // 192x192 PNG, сгенерирован специально для Metro AI (нейросеть + ручная доводка)
-const MC_AI_LOGO = 'data:image/png;base64,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';
+const MC_AI_LOGO = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27d8f2"/><stop offset=".55" stop-color="#397cff"/><stop offset="1" stop-color="#8758f6"/></linearGradient><radialGradient id="mbg" cx=".28" cy=".18" r="1.15"><stop offset="0" stop-color="#1a2f5e"/><stop offset=".6" stop-color="#0c1430"/><stop offset="1" stop-color="#060a18"/></radialGradient><radialGradient id="msh" cx=".3" cy=".22" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".5"/><stop offset=".4" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="192" height="192" rx="46" fill="url(#mbg)"/><circle cx="96" cy="100" r="72" fill="url(#mg)" opacity=".9"/><circle cx="96" cy="100" r="72" fill="url(#msh)"/><polyline points="44,144 44,63 96,115 148,63 148,144" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44" cy="144" r="11" fill="#fff"/><circle cx="44" cy="144" r="5" fill="#8758f6"/><circle cx="96" cy="115" r="11" fill="#fff"/><circle cx="96" cy="115" r="5" fill="#397cff"/><circle cx="148" cy="144" r="11" fill="#fff"/><circle cx="148" cy="144" r="5" fill="#27d8f2"/><ellipse cx="62" cy="44" rx="30" ry="13" fill="#fff" opacity=".28" transform="rotate(-16 62 44)"/></svg>`);
 
 // ===================== CSS Round 9 =====================
 (function () {
@@ -13572,13 +12935,15 @@ html[data-theme="light"]{ --text-2:#3d4a63; --text-3:#4d5a73; }
 html[data-theme="dark"],html:not([data-theme]){ --text-2:#b9c4dc; --text-3:#9aa6c0; }
 #sbList .list-item{ content-visibility:auto; contain-intrinsic-size:64px; }
 
-/* ---------- Жидкое стекло (iOS/Android/PC) ---------- */
-html[data-theme] .sidebar{ background:color-mix(in srgb,var(--surface) 78%,transparent)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
-html[data-theme] .chat-header,html[data-theme] .chat-input-bar{ background:color-mix(in srgb,var(--surface) 72%,transparent)!important; backdrop-filter:blur(24px) saturate(150%); -webkit-backdrop-filter:blur(24px) saturate(150%); }
-html[data-theme] .mobile-nav{ background:color-mix(in srgb,var(--surface) 68%,transparent)!important; backdrop-filter:blur(28px) saturate(170%); -webkit-backdrop-filter:blur(28px) saturate(170%); border-top:1px solid var(--border); }
-html[data-theme] .modal,html[data-theme] .mc-sheet{ background:color-mix(in srgb,var(--surface) 84%,transparent)!important; backdrop-filter:blur(32px) saturate(160%); -webkit-backdrop-filter:blur(32px) saturate(160%); }
-html[data-theme] .sb-me:hover,html[data-theme] .sb-icon-btn:hover{ background:color-mix(in srgb,var(--surface-2) 60%,transparent); }
-html:not([data-theme]) .sidebar,html:not([data-theme]) .chat-header,html:not([data-theme]) .chat-input-bar,html:not([data-theme]) .mobile-nav{ background:rgba(14,20,38,.82)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
+/* ---------- Жидкое стекло (iOS/Android/PC) — включается тумблером, по умолчанию выкл. ---------- */
+html[data-glass=on][data-theme] .sidebar{ background:color-mix(in srgb,var(--surface) 55%,transparent)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
+html[data-glass=on][data-theme] .chat-header,html[data-glass=on][data-theme] .chat-input-bar{ background:color-mix(in srgb,var(--surface) 52%,transparent)!important; backdrop-filter:blur(24px) saturate(150%); -webkit-backdrop-filter:blur(24px) saturate(150%); }
+html[data-glass=on][data-theme] .mobile-nav{ background:color-mix(in srgb,var(--surface) 50%,transparent)!important; backdrop-filter:blur(28px) saturate(170%); -webkit-backdrop-filter:blur(28px) saturate(170%); border-top:1px solid var(--border); }
+html[data-glass=on][data-theme] .modal,html[data-glass=on][data-theme] .mc-sheet{ background:color-mix(in srgb,var(--surface) 68%,transparent)!important; backdrop-filter:blur(32px) saturate(160%); -webkit-backdrop-filter:blur(32px) saturate(160%); }
+html[data-glass=on][data-theme] .sb-me:hover,html[data-glass=on][data-theme] .sb-icon-btn:hover{ background:color-mix(in srgb,var(--surface-2) 45%,transparent); }
+html[data-glass=on][data-theme] .btn{ background:color-mix(in srgb,var(--surface) 42%,transparent); backdrop-filter:blur(14px) saturate(150%); -webkit-backdrop-filter:blur(14px) saturate(150%); border:1px solid color-mix(in srgb,var(--border) 70%,transparent); }
+html[data-glass=on][data-theme] .btn-primary{ background:var(--accent-solid,var(--accent))!important; color:var(--accent-ink,#fff)!important; backdrop-filter:none; -webkit-backdrop-filter:none; }
+html[data-glass=on]:not([data-theme]) .sidebar,html[data-glass=on]:not([data-theme]) .chat-header,html[data-glass=on]:not([data-theme]) .chat-input-bar,html[data-glass=on]:not([data-theme]) .mobile-nav{ background:rgba(14,20,38,.55)!important; backdrop-filter:blur(28px) saturate(160%); -webkit-backdrop-filter:blur(28px) saturate(160%); }
 
 /* ---------- Тактильный отклик: нажатие + ripple ---------- */
 .btn,.sb-tab,.mobile-nav-item,.ms-row,.sb-icon-btn,.chat-icon-btn,.chat-input-btn,.list-item,.mc-home-tile,.mc-home-card,.mc-story-bubble,.story-chip,.mc9-tile,.mc9-card,.mc9-list-row,.mc9-chip{ position:relative; transition:transform .18s cubic-bezier(.34,1.56,.64,1), filter .18s ease, background .18s ease, box-shadow .18s ease; }
@@ -13737,11 +13102,7 @@ html:not([data-theme]) .sidebar,html:not([data-theme]) .chat-header,html:not([da
   document.head.appendChild(css);
 })();
 
-// ===================== 1. Убираем колесо, аукцион, проверку лица =====================
-mcOpenWheel = function () { toast('Колесо фортуны отключено в этой версии', 'ℹ️'); };
-mcOpenAuction = function () { toast('Аукцион отключён в этой версии', 'ℹ️'); };
-mcAucNewLot = function () { toast('Аукцион отключён в этой версии', 'ℹ️'); };
-mcAucCountActive = async function () { return 0; };
+// Колесо фортуны и аукцион удалены из MetroChat (v4.1) — вместе со всем кодом.
 mcAgeOpen = function () { toast('Проверка возраста отключена', 'ℹ️'); };
 mcAgeOk = function () { return true; };
 
@@ -13837,7 +13198,7 @@ renderOtherHome = function () {
     <div class="mc9-grid">${MC9_OTHER.services.map(tile).join('')}</div>
     <div class="mc9-sec"><h3>Инструменты и игры</h3></div>
     <div class="mc9-grid">${MC9_OTHER.tools.map(tile).join('')}</div>
-    <p class="mc9-note" style="text-align:center; margin-top:6px;">MetroChat · v${MC_VERSION} · сделано с 💙</p>
+    <p class="mc9-note" style="text-align:center; margin-top:6px;">MetroChat</p>
   </div>`;
   wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => mc9Go(b.dataset.go)));
   (async () => {
@@ -14080,7 +13441,7 @@ function mcAIIntent(t) {
 }
 async function mcAICall(userText) {
   const chats = getAllChatsList();
-  const sys = `Ты — Metro AI, встроенный ассистент мессенджера MetroChat. Отвечай кратко и по делу (до 4 предложений), дружелюбно, на языке пользователя (обычно русский). Ты знаешь MetroChat: чаты, группы, каналы, истории (2 дня), подарки и умы, боты, звонки, встроенный браузер, вход по паролю и лицу, тёмная тема. Управление мессенджером выполняется командами: «создай группу X», «покажи мои чаты», «открой чат X», «заглуши чат X», «погода в Y». Если пользователь просит опасное (удалить аккаунт, сменить пароль) — вежливо откажись и подскажи путь в настройках. У пользователя сейчас ${chats.length} чатов.`;
+  const sys = `Ты — Metro AI, встроенный ассистент мессенджера MetroChat. Отвечай кратко и по делу (до 5 предложений), дружелюбно и живо, всегда на языке пользователя (обычно русский). Ты умеешь всё, что умеет MetroChat: личные чаты и группы, каналы с комментариями и бустами, истории с лайками и комментариями (живут 2 дня), подарки за умы (виртуальная валюта УМ), ежедневные задания и викторины, боты, голосовые и видеозвонки, встроенный браузер, погода, заметки, калькулятор, вход по паролю/лицу и двухфакторная защита через приложение-аутентификатор. Ты умеешь считать, переводить, объяснять школьные темы простыми словами, помогать составлять тексты сообщений и посты для каналов. Управление мессенджером выполняется командами: «создай группу X», «покажи мои чаты», «открой чат X», «заглуши чат X», «отправь X в чат Y», «погода в Y». Если пользователь просит опасное (удалить аккаунт, сменить пароль) — вежливо откажись и подскажи путь в настройках. Пользователь сейчас видит ${chats.length} чатов.`;
   const ctrl = new AbortController();
   const to = setTimeout(() => ctrl.abort(), 30000);
   try {
@@ -14619,16 +13980,13 @@ MC_HOME_ITEMS.services = [
   { k: 'bots', i: '🤖', t: 'Боты', s: 'Каталог и создание своих ботов', c: '#14b8a6' },
   { k: 'gifts', i: '🎁', t: 'Подарки', s: 'Витрина и коллекция', c: '#ec4899' }
 ];
-function mcSupportNote() {
-  mcAlert('Поддержать проект', 'Поддержка пока не работает — мы готовим способы помощи проекту (карты, крипта, звёзды). Следите за обновлениями! 💜', { icon: '💜' });
-}
 
 // ===================== Экспорт =====================
 Object.assign(window, {
   mc9Go, mcBotsHub, mcRenderMyBots, mcBotCreateOpen, mc9RuleAdd, mcCBotDelete, mcCustomBotOpen, mcCBSend,
   mcAIOpen, mcAIQuick, mcAISend, mcLockShow, mcLockUnlock, mcLockPwToggle, mcFaceEnroll, mcFaceVerify, mcFaceRemove,
   mcSetSecurityPage, mcClearMediaCache, mcBrowserOpen, mcBrowGo, mcBrowHome, mcBmAddCur,
-  mcLangOpen, mcLangSet, mcApplyLang, MC_LANG_NAME, mcSupportNote, mc9ShowChangelog
+  mcLangOpen, mcLangSet, mcApplyLang, MC_LANG_NAME, mc9ShowChangelog
 });
 
 
@@ -14776,12 +14134,12 @@ function mciWalk(){ const l=mcLang(); if(l==='ru'||!document.body)return; const 
 async function mciFlush(){ if(MCI.busy||!MCI.q.size)return; MCI.busy=true; const l=mcLang(); const batch=[...MCI.q].slice(0,50); batch.forEach(x=>MCI.q.delete(x));
   try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:`Translate each Russian UI string in the JSON array to ${MC_LANGS[l].name}. Keep emojis, numbers, punctuation and {placeholders}. Return ONLY a JSON array of the same length.`},{role:'user',content:JSON.stringify(batch)}]})}); const j=await r.json(); const a=JSON.parse((j?.choices?.[0]?.message?.content||'[]').replace(/```json|```/g,'').trim()); if(Array.isArray(a)&&a.length===batch.length){ batch.forEach((k,i)=>{ if(typeof a[i]==='string'&&a[i]){ MCI.c[l+'|'+k]=a[i]; MCI.c[l+'|'+a[i].trim()]=a[i]; } }); try{ localStorage.setItem('mc_i18n',JSON.stringify(MCI.c)); }catch(_){} } }catch(_){}
   MCI.busy=false; mciWalk(); }
-new MutationObserver(()=>{ clearTimeout(MCI.t); MCI.t=setTimeout(mciWalk,250); }).observe(document.body,{childList:true,subtree:true,characterData:true}); setTimeout(mciWalk,800);
+new MutationObserver(()=>{ clearTimeout(MCI.t); MCI.t=setTimeout(mciWalk,350); }).observe(document.body,{childList:true,subtree:true}); setTimeout(mciWalk,800);
 
 // ================= v12 =================
 // history: load older messages when scrolled to the top
 { const box=$('messages'); let busy=false;
-  box?.addEventListener('scroll',()=>{ const c=state.chat; if(!c||busy||box.scrollTop>70)return; const lim=state.msgLim[c.id]||40; if(state.messages.length<lim)return; busy=true; state.__keep={h:box.scrollHeight,n:state.messages.length}; state.msgLim[c.id]=lim+40; subscribeMessages(c.id); setTimeout(()=>{busy=false;},1400); },{passive:true});
+  box?.addEventListener('scroll',()=>{ const c=state.chat; if(!c||busy||box.scrollTop>70)return; const lim=state.msgLim[c.id]||80; if(state.messages.length<lim)return; busy=true; state.__keep={h:box.scrollHeight,n:state.messages.length}; state.msgLim[c.id]=lim+60; subscribeMessages(c.id); setTimeout(()=>{busy=false;},1000); },{passive:true});
   const o=renderMessages; renderMessages=W('renderMessages',function(){ const r=o.apply(this,arguments); const k=state.__keep,b=$('messages'); if(k&&b&&state.messages.length>k.n){ b.scrollTop=b.scrollHeight-k.h; state.__keep=null; } return r; }); }
 // earn limit: use the server clock, not the phone clock
 get(ref(db,'.info/serverTimeOffset')).then(x=>{ window.__srvOff=+x.val()||0; }).catch(()=>{});
@@ -14812,7 +14170,7 @@ function mcSupportOpen(){ supThread(state.user.uid,false); }
 async function mcSupportInbox(){ const wrap=$('settingsPanel'); wrap.innerHTML=supHead('Обращения','switchTab("settings")')+'<div class="settings-wrap" id="supList"></div>';
   onValue(query(ref(db,'support_chats'),orderByChild('meta/at'),limitToLast(100)),sn=>{ const l=$('supList'); if(!l)return; const rows=Object.entries(sn.val()||{}).map(([u,v])=>({u,...(v.meta||{})})).filter(x=>x.at).sort((a,b)=>b.at-a.at); l.innerHTML=rows.map(r=>`<div class="mc11-card" style="cursor:pointer" data-u="${esc(r.u)}"><div class="mc11-grow"><b>${esc(r.name||r.u)}${r.unread?' 🔴':''}</b><small>${esc(r.last||'')}</small></div></div>`).join('')||'<p class="mc9-note" style="text-align:center;margin:24px">Обращений нет</p>'; l.querySelectorAll('[data-u]').forEach(e=>e.onclick=()=>{ update(ref(db,`support_chats/${e.dataset.u}/meta`),{unread:false}).catch(()=>{}); supThread(e.dataset.u,true); }); }); }
 W('mcSupportOpen',mcSupportOpen); W('mcSupportInbox',mcSupportInbox);
-{ const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ return o.apply(this,arguments)+`<a class="mc11-card" style="text-decoration:none;color:inherit" href="mailto:${MC_SUPPORT_EMAIL}"><div class="mc11-av" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);border-radius:14px">✉️</div><div class="mc11-grow"><b>Поддержка</b><small>Написать на почту</small></div>›</a>`; }); }
+{ const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ return o.apply(this,arguments); }); }
 const chkAdm=()=>{ if(mcMe()) get(ref(db,'admins/'+mcMe())).then(x=>{ window.__mcAdmin=x.exists(); }).catch(()=>{}); }; chkAdm(); setTimeout(chkAdm,4000);
 
 // contrast: accent used as text must reach 4.5:1 on the surface in every theme
@@ -14865,11 +14223,10 @@ async function mcBizProfile(uid){ try{ const box=$('publicProfileContent'); if(!
   box.prepend(d); d.querySelectorAll('[data-i]').forEach(btn=>btn.onclick=async()=>{ const x=sv[+btn.dataset.i]; const bal=await readGiftBalance(); if(bal<x.price) return toast(`Нужно ${x.price} УМ, у вас ${bal}`,'💎'); if(!await mcConfirm('Заказать услугу?',`«${x.name}» за ${x.price} УМ. Умы спишутся сразу.`,{okText:'Оплатить'})) return;
     try{ const tb=await readGiftBalance(uid); await update(ref(db),{[`gift_wallet/${mcMe()}/balance`]:bal-x.price,[`gift_wallet/${uid}/balance`]:tb+x.price,[`service_orders/${uid}/${push(ref(db,'service_orders')).key}`]:{buyer:mcMe(),buyerName:state.profile?.displayName||state.profile?.username||'',name:x.name,price:x.price,at:Date.now()}}); toast('Заказ оформлен','🛒'); }catch(_){ toast('Не удалось оформить заказ','⚠'); } }); }catch(e){ console.warn('biz',e); } }
 { const o=openPublicProfile; openPublicProfile=W('openPublicProfile',function(u){ const r=o.apply(this,arguments); Promise.resolve(r).then(()=>setTimeout(()=>mcBizProfile(u),60)); return r; }); }
-// --- Do not disturb ---
-const dndOn=()=>{ try{ const d=JSON.parse(localStorage.getItem('mc_dnd')||'null'); if(!d||!d.on)return false; const t=new Date(),m=t.getHours()*60+t.getMinutes(),[a,b]=[d.from,d.to].map(x=>{const[h,mm]=x.split(':');return +h*60+ +mm;}); return a<=b?m>=a&&m<b:m>=a||m<b; }catch(_){ return false; } };
+// --- Do not disturb: настройка удалена, всегда выключено ---
+const dndOn=()=>false;
 { const o=mcSystemNotify; mcSystemNotify=W('mcSystemNotify',function(){ return dndOn()?Promise.resolve(false):o.apply(this,arguments); }); const p=mcPlaySlot; mcPlaySlot=W('mcPlaySlot',function(){ return dndOn()?undefined:p.apply(this,arguments); }); }
-window.mcDndOpen=()=>{ const d=JSON.parse(localStorage.getItem('mc_dnd')||'{"on":false,"from":"23:00","to":"07:00"}'); const o=ovSheet(`<h3>🌙 Не беспокоить</h3><p class="mc9-note">В это время не будет звуков и уведомлений.</p><label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="dOn" style="width:auto" ${d.on?'checked':''}> Включить по расписанию</label><label>С</label><input type="time" id="dF" value="${d.from}"><label>До</label><input type="time" id="dT" value="${d.to}"><button class="mc11-btn" id="dS" style="width:100%;margin-top:14px">Сохранить</button>`); o.querySelector('#dS').onclick=()=>{ localStorage.setItem('mc_dnd',JSON.stringify({on:o.querySelector('#dOn').checked,from:o.querySelector('#dF').value,to:o.querySelector('#dT').value})); o.remove(); toast('Сохранено','🌙'); }; };
-{ const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ return o.apply(this,arguments)+`<div class="mc11-card" style="cursor:pointer" onclick="mcDndOpen()"><div class="mc11-av" style="background:linear-gradient(135deg,#6366f1,#0ea5e9);border-radius:14px">🌙</div><div class="mc11-grow"><b>Не беспокоить</b><small>Тихие часы для звуков и уведомлений</small></div>›</div>`; }); }
+window.mcDndOpen=null; try{ localStorage.removeItem('mc_dnd'); }catch(_){}
 
 // gift cards: rebuild every profile gift grid after render (date + giver, optional anonymity)
 async function mcGiftCards(uid){ try{ const gs=[...document.querySelectorAll('.profile-gifts-grid:not([data-v13])')]; if(!gs.length||!uid)return; const vis=Object.values((await get(ref(db,'gift_inventory/'+uid))).val()||{}).filter(x=>x&&!x.hidden&&!x.purchasePending).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)); const html=vis.map(g=>`<div class="mc13-gift"><span class="e">${esc(g.emoji||'🎁')}</span><b>${esc(g.name||'Подарок')}</b><small>${mcGiftDate(g.createdAt)}</small><em>${(g.anon&&uid!==mcMe())||!g.fromName?'Отправитель скрыт':'от '+esc(g.fromName)}</em></div>`).join(''); gs.forEach(g=>{ g.dataset.v13=1; g.innerHTML=html; }); }catch(_){} }
@@ -14882,8 +14239,8 @@ function mcIconApply(i){ const url=mcIconPng(i); const set=(rel,sz)=>{ let l=doc
 window.mcIconSet=i=>{ localStorage.setItem('mc_icon',i); mcIconApply(i); toast('Иконка обновлена. Чтобы сменить её на экране «Домой», переустановите приложение','🎨'); mcSetGo('appearance'); };
 if(localStorage.getItem('mc_icon')!=null) mcIconApply(+localStorage.getItem('mc_icon'));
 // glass toggle + global text size + accent fill
-{ const u0=upApply; upApply=W('upApply',function(){ u0.apply(this,arguments); const u=upGet(),d=document.documentElement; d.dataset.glass=u.glass==='off'?'off':'on'; if(u.accent){ d.style.setProperty('--accent-solid',mcEnsure(u.accent,'#ffffff',3.2,'#1d4ed8')); } }); const a0=applySettings; applySettings=W('applySettings',function(){ const r=a0.apply(this,arguments); document.documentElement.style.setProperty('--fz',(parseFloat(state.settings?.fontSize)||14)/14); return r; }); }
-{ const o=mcSetAppearance; mcSetAppearance=W('mcSetAppearance',function(){ const u=upGet(),ic=+(localStorage.getItem('mc_icon')||0); return o.apply(this,arguments)+`<div id="mcUiExtra2" class="mc11-sheet" style="border-radius:22px;margin:12px 0;max-height:none"><h3>🫧 Стекло и иконка</h3><label style="display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--text)">Жидкое стекло<input type="checkbox" style="width:auto" ${u.glass==='off'?'':'checked'} onchange="mcUiSet('glass',this.checked?'on':'off')"></label><label>Иконка приложения</label><div class="mc11-chips">${[0,1,2,3,4,5].map(i=>`<img src="${mcIconPng(i,96)}" width="56" height="56" alt="" style="border-radius:14px;border:3px solid ${i===ic?'var(--text)':'transparent'}" onclick="mcIconSet(${i})">`).join('')}</div></div>`; }); }
+{ const u0=upApply; upApply=W('upApply',function(){ u0.apply(this,arguments); const u=upGet(),d=document.documentElement; d.dataset.glass=(u.glass==='on')?'on':'off'; if(u.accent){ d.style.setProperty('--accent-solid',mcEnsure(u.accent,state.settings?.darkMode?'#121927':'#ffffff',4.5,state.settings?.darkMode?'#ffffff':'#000000')); } }); const a0=applySettings; applySettings=W('applySettings',function(){ const r=a0.apply(this,arguments); document.documentElement.style.setProperty('--fz',(parseFloat(state.settings?.fontSize)||14)/14); return r; }); }
+{ const o=mcSetAppearance; mcSetAppearance=W('mcSetAppearance',function(){ const u=upGet(),ic=+(localStorage.getItem('mc_icon')||0); return o.apply(this,arguments)+`<div id="mcUiExtra2" class="mc11-sheet" style="border-radius:22px;margin:12px 0;max-height:none"><h3>🫧 Стекло и иконка</h3><label style="display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--text)">Жидкое стекло<input type="checkbox" style="width:auto" ${u.glass==='on'?'checked':''} onchange="mcUiSet('glass',this.checked?'on':'off')"></label><label>Иконка приложения</label><div class="mc11-chips">${[0,1,2,3,4,5].map(i=>`<img src="${mcIconPng(i,96)}" width="56" height="56" alt="" style="border-radius:14px;border:3px solid ${i===ic?'var(--text)':'transparent'}" onclick="mcIconSet(${i})">`).join('')}</div></div>`; }); }
 upApply(); try{ applySettings(); }catch(_){}
 // stories: like works even if the story is not in the local cache
 { const o=toggleStoryLike; toggleStoryLike=W('toggleStoryLike',async function(id){ if(!storiesCache.find(x=>x.id===id)){ try{ const v=(await get(ref(db,'stories/'+id))).val(); if(v) storiesCache.push({id,...v}); }catch(_){} } return o.apply(this,arguments); }); }
@@ -14901,7 +14258,7 @@ async function mcPaidDecorate(){ const box=$('messages'); if(!box)return; const 
 { let t=0; const b=$('messages'); if(b) new MutationObserver(()=>{ clearTimeout(t); t=setTimeout(mcPaidDecorate,120); }).observe(b,{childList:true,subtree:true}); }
 // ---- Metro AI: fast, smarter, own animation, no tab bar ----
 const mcAILocal=q=>{ const t=String(q).trim().toLowerCase(),d=new Date(); if(/(который час|сколько времени|what time|time is it)/.test(t)) return 'Сейчас '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}); if(/(какое сегодня число|какая сегодня дата|какой сегодня день|what.?s the date|today.?s date)/.test(t)) return 'Сегодня '+d.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); const m=t.replace(/,/g,'.').match(/^(?:посчитай|сколько будет|реши|calc|=)?\s*([\d\s+\-*/().%^]+?)\s*\??$/); if(m&&/\d\s*[+\-*/%^]\s*[\d(]/.test(m[1])){ try{ const v=Function('"use strict";return ('+m[1].replace(/\^/g,'**')+')')(); if(isFinite(v)) return m[1].trim()+' = '+(+v.toFixed(8)); }catch(_){} } return null; };
-async function mcLLM(msgs,fast=true){ const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),14000); try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model:fast?'openai-fast':'openai',messages:msgs,max_tokens:450,temperature:.7})}); const j=await r.json(); return (j?.choices?.[0]?.message?.content||'').trim(); } finally{ clearTimeout(tm); } }
+async function mcLLM(msgs,fast=true){ const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),14000); try{ const r=await fetch(MC_AI_ENDPOINT,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model:fast?'openai-fast':'openai',messages:msgs,max_tokens:700,temperature:.7})}); const j=await r.json(); return (j?.choices?.[0]?.message?.content||'').trim(); } finally{ clearTimeout(tm); } }
 { const prev=mcAICall; mcAICall=W('mcAICall',async function(u){ const loc=mcAILocal(u); if(loc) return loc; if(/(отправ|напиш|скажи|передай|пошли|send |text |message |write to|открой|open chat|создай групп|create group)/i.test(u)) return prev.apply(this,arguments);
   const hist=(typeof mcAIHist==='function'?mcAIHist():[]).slice(-6).map(h=>({role:h.r==='u'?'user':'assistant',content:h.t}));
   const sys={role:'system',content:'Ты — Metro AI, умный дружелюбный помощник мессенджера MetroChat. Отвечай по существу и кратко (до 6 предложений) на языке собеседника. Ты можешь ответить на любой вопрос: знания, объяснения, советы, перевод, идеи, код. Про MetroChat знаешь: чаты, группы, каналы с бустами, истории, подарки, умы (внутренняя валюта), заработок умов, боты, 2FA, темы. Если не знаешь — скажи честно.'};
