@@ -2756,6 +2756,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser, setPersistence, browserLocalPersistence, updatePassword, EmailAuthProvider, reauthenticateWithCredential, sendEmailVerification, sendPasswordResetEmail, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getDatabase, ref, set, get, push, update, remove, onValue, onDisconnect, query, orderByChild, limitToLast, increment, onChildAdded, runTransaction, startAt } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-functions.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDIpe10bCclSO4C3KmYWT6vseRdR5wOnRA",
@@ -2770,6 +2771,8 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
+const mcFunctions = getFunctions(fbApp, "europe-west1");
+const mcMetroAiCallable = httpsCallable(mcFunctions, "metroAi", { timeout: 10000 });
 let currentDeviceSessionId = null;
 let deviceHeartbeatTimer = null;
 let deviceRevocationUnsub = null;
@@ -3597,7 +3600,7 @@ function subscribeAll() {
   // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
   state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; mcRafOnce('galochka', () => { renderList(); updateUserStrip(); if (state.chat) { renderChatHeader(); renderMessages(); } if (state.tab === 'settings') renderSettings(); }); }, err => console.warn('Verification subscription:', err)));
   // «Печатает…» теперь слушается только для открытого чата (typing_v2/<chatId>), см. mcTypingSubscribe.
-  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, () => {}));
+  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, err => { console.error('user_chats permission/read error:',err); const l=$('sbList'); if(l&&!Object.keys(state.chats||{}).length) l.innerHTML='<div class="empty"><div class="empty-icon">🔒</div><h3>Не удалось загрузить чаты</h3><p>Firebase отклонил чтение user_chats. Данные не удалены. Проверьте правила Realtime Database.</p></div>'; }));
   // Ограничиваем стартовую подписку: не скачиваем всю историю всех каналов на каждом входе.
   state.subs.push(onValue(query(ref(db, 'channels'), orderByChild('createdAt'), limitToLast(30)), snap => {
     state.channels = snap.val() || {};
@@ -5838,10 +5841,17 @@ function renderOtherChannels(q='') {
   </div>`;
   if(hadSearch){const input=$('otherChannelSearch');input?.focus();if(input&&oldCaret!==null)input.setSelectionRange(oldCaret,oldCaret);}
 }
-async function readGiftBalance(uid=state.user?.uid){try{const s=await get(ref(db,`gift_wallet/${uid}/balance`));return Number(s.val()||0)}catch(e){console.warn('Gift balance read:',e);return 0}}
+async function readGiftBalance(uid=state.user?.uid){
+ if(!uid) throw new Error('Нет активного пользователя');
+ const snap=await get(ref(db,`gift_wallet/${uid}/balance`));
+ if(!snap.exists()) return 0;
+ const value=Number(snap.val());
+ if(!Number.isFinite(value)||value<0) throw new Error('Некорректное значение баланса');
+ return value;
+}
 async function renderGiftShop(){
  const wrap=$('settingsPanel');if(!wrap)return;wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите короткие тесты и отправляйте подарки.</p></div><div class="gift-wallet-coin">УМ</div></div><button class="btn btn-primary gift-earn-wide" onclick="startGiftEarning()">✦ Заработать подарки</button><button class="btn btn-secondary gift-send-wide" onclick="openGiftSendPicker()">↗ Подарить подарок</button><button class="btn btn-secondary gift-send-wide" onclick="renderGiftCraft()">🛠️ Крафт подарков</button><div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>Выберите подарок для себя или друга</p></div></div><div class="gift-shop-grid">${METRO_GIFTS.map(g=>`<button class="gift-shop-item" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><span class="gift-price">${g.cost} УМ</span></button>`).join('')}</div><div id="giftOwnedSection"></div></div>`;
- const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;await renderOwnedGifts();
+ try{const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;}catch(e){console.warn('Gift balance unavailable:',e);if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`— <span>баланс не загружен</span>`;const card=$('giftBalanceValue')?.closest('.gift-wallet-card');if(card&&!card.querySelector('.mc-wallet-error'))card.insertAdjacentHTML('beforeend','<p class="mc-wallet-error">Не удалось получить баланс из Firebase. Сумма не сброшена.</p>');} await renderOwnedGifts();
 }
 async function renderOwnedGifts(){const el=$('giftOwnedSection');if(!el||!state.user?.uid)return;try{const snap=await get(ref(db,`gift_inventory/${state.user.uid}`));const items=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v})).filter(g=>!g.hidden&&!g.purchasePending);el.innerHTML=`<div class="discovery-section-head"><div><h3>Мои подарки</h3><p>Подарки, отображаемые в вашем профиле</p></div></div>${items.length?`<div class="gift-owned-list">${items.map(g=>`<div class="gift-owned-item"><span>${esc(g.emoji||'🎁')}</span><div><b>${esc(g.name||'Подарок')}</b><small>${g.fromName?'От '+esc(g.fromName)+(g.anon?' (скрыто)':''):'Ваш подарок'} · ${mcGiftDate(g.createdAt)}</small></div><button class="mini-btn" title="Скрыть в профиле" onclick="hideOwnedGift('${g.id}')">◉</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`).join('')}</div>`:'<p class="gift-empty-note">Пока нет подарков. Выберите подарок в витрине или заработайте умы.</p>'}`;}catch(e){el.innerHTML='<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте Firebase Rules.</p>';}}
 function mcSetBalanceUI(v){if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${esc(String(v))} <span>умов</span>`;}
@@ -5881,8 +5891,9 @@ async function selectGiftToBuy(id){
   const wallet=ref(db,`gift_wallet/${uid}/balance`);
   let charged=false;
   try{
-    let before=0;
-    try{const s=await get(wallet);before=Number(s.val()||0);if(!Number.isFinite(before))before=0;}catch(readErr){console.warn('Gift balance read:',readErr);}
+    const beforeSnap=await get(wallet);
+    const before=beforeSnap.exists()?Number(beforeSnap.val()):0;
+    if(!Number.isFinite(before)||before<0)throw new Error('Не удалось проверить баланс');
     if(before<cost){mcSetBalanceUI(before);return toast(`Нужно ${cost} умов. Сейчас у вас ${before}.`,'🎁');}
     const res=await mcSpendUms(uid,cost);
     mcSetBalanceUI(res.balance);
@@ -6852,28 +6863,33 @@ async function mcOpenGiftSendPage(opts = {}) {
   Object.assign(mcGiftSend, { to: opts.toUid && opts.toUid !== state.user.uid ? opts.toUid : null, gift: null, tab: opts.ownedId ? 'owned' : 'shop', birthday: !!opts.birthday, busy: false });
   if (mcGiftSend.to) await fetchUserIfMissing(mcGiftSend.to).catch(() => {});
   mcSheet('mcGiftSheet', `${mcSheetHead(mcGiftSend.birthday ? 'Подарок на день рождения' : 'Отправить подарок', 'mcGiftSheet', '<span class="mc-gift-balance" id="mcGiftBal">… умов</span>')}<div class="mc-sheet-body" id="mcGiftBody"><div class="stories-loading">Загрузка…</div></div>`, { cls: 'mc-gift-sheet' });
-  try {
-    const [inv, bal] = await Promise.all([get(ref(db, `gift_inventory/${state.user.uid}`)).catch(() => null), get(ref(db, `gift_wallet/${state.user.uid}/balance`)).catch(() => null)]);
-    mcGiftSend.owned = Object.entries(inv?.val() || {}).map(([id, v]) => ({ id, ...v })).filter(g => g && !g.purchasePending);
-    mcGiftSend.balance = Number(bal?.val() || 0) || 0;
-  } catch (_) {}
+  mcGiftSend.balance = null; mcGiftSend.balanceError = false; mcGiftSend.inventoryError = false;
+  const [invResult, balResult] = await Promise.allSettled([
+    get(ref(db, `gift_inventory/${state.user.uid}`)),
+    get(ref(db, `gift_wallet/${state.user.uid}/balance`))
+  ]);
+  if(invResult.status==='fulfilled') mcGiftSend.owned=Object.entries(invResult.value.val()||{}).map(([id,v])=>({id,...v})).filter(g=>g&&!g.purchasePending);
+  else { mcGiftSend.owned=[]; mcGiftSend.inventoryError=true; console.warn('Gift inventory read:',invResult.reason); }
+  if(balResult.status==='fulfilled') { const v=balResult.value.exists()?Number(balResult.value.val()):0; if(Number.isFinite(v)&&v>=0)mcGiftSend.balance=v; else mcGiftSend.balanceError=true; }
+  else { mcGiftSend.balanceError=true; console.warn('Gift wallet read:',balResult.reason); }
   if (opts.ownedId) { const g = mcGiftSend.owned.find(x => x.id === opts.ownedId); if (g) mcGiftSend.gift = { kind: 'owned', id: g.id, name: g.name, emoji: g.emoji, giftId: g.giftId }; }
   mcRenderGiftSend();
 }
 function mcRenderGiftSend() {
   const body = $('mcGiftBody'); if (!body) return;
-  const bal = $('mcGiftBal'); if (bal) bal.textContent = `${mcGiftSend.balance} умов`;
+  const bal = $('mcGiftBal'); if (bal) bal.textContent = mcGiftSend.balance===null ? 'Баланс не загружен' : `${mcGiftSend.balance} умов`;
   const to = mcGiftSend.to;
   const peers = [...new Set(Object.values(state.chats || {}).filter(c => c?.type === 'dm' && c.peerId).map(c => c.peerId))].filter(uid => uid !== state.user.uid && !state.blocked?.[uid]).slice(0, 30);
   const recipient = to ? (() => { const u = getUser(to) || {}; return `<div class="mc-recipient">${avatarHTML({ name: mcUserName(to), avatar: u.avatar, size: 'small' })}<div class="mc-recipient-info"><b>${esc(mcUserName(to))}</b><small>${u.username ? '@' + esc(u.username) : ''}${mcIsBirthdayToday(u.birthday) ? ' · 🎂 сегодня день рождения' : ''}</small></div><button type="button" class="mini-btn" onclick="mcGiftPickRecipient(null)">Изменить</button></div>`; })()
     : `<div class="mc-gift-search"><span>@</span><input id="mcGiftUser" placeholder="юзернейм получателя" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn btn-primary" onclick="mcGiftFindUser()">Найти</button></div>
        ${peers.length ? `<div class="mc-peer-strip">${peers.map(uid => { const u = getUser(uid) || {}; return `<button type="button" class="mc-peer" onclick="mcGiftPickRecipient('${uid}')">${avatarHTML({ name: mcUserName(uid), avatar: u.avatar, size: 'small' })}<span>${esc(mcUserName(uid).split(' ')[0])}</span>${mcIsBirthdayToday(u.birthday) ? '<i>🎂</i>' : ''}</button>`; }).join('')}</div>` : '<p class="set-sub">Контактов пока нет — найдите получателя по юзернейму.</p>'}`;
   const sel = mcGiftSend.gift;
-  const shop = METRO_GIFTS.map(g => { const active = sel?.kind === 'shop' && sel.id === g.id; const can = mcGiftSend.balance >= Number(g.cost); return `<button type="button" class="mc-gift-tile ${active ? 'active' : ''} ${can ? '' : 'is-locked'}" onclick="mcGiftPick('shop','${g.id}')"><span class="mc-gift-emoji">${esc(g.emoji)}</span><b>${esc(g.name)}</b><small>${Number(g.cost)} умов</small></button>`; }).join('');
+  const shop = METRO_GIFTS.map(g => { const active = sel?.kind === 'shop' && sel.id === g.id; const can = mcGiftSend.balance !== null && mcGiftSend.balance >= Number(g.cost); return `<button type="button" class="mc-gift-tile ${active ? 'active' : ''} ${can ? '' : 'is-locked'}" onclick="mcGiftPick('shop','${g.id}')"><span class="mc-gift-emoji">${esc(g.emoji)}</span><b>${esc(g.name)}</b><small>${Number(g.cost)} умов</small></button>`; }).join('');
   const owned = mcGiftSend.owned.length ? mcGiftSend.owned.map(g => { const active = sel?.kind === 'owned' && sel.id === g.id; return `<button type="button" class="mc-gift-tile ${active ? 'active' : ''}" onclick="mcGiftPick('owned','${g.id}')"><span class="mc-gift-emoji">${esc(g.emoji || '🎁')}</span><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'от ' + esc(g.fromName) : 'из коллекции'}</small></button>`; }).join('') : '<p class="set-sub" style="grid-column:1/-1;text-align:center;padding:18px 0">У вас пока нет подарков. Купите подарок во вкладке «Витрина».</p>';
   const giftLabel = sel ? `${sel.emoji || '🎁'} ${sel.name}${sel.kind === 'shop' ? ` · ${sel.cost} умов` : ''}` : '';
   const ready = !!(to && sel);
   body.innerHTML = `
+    ${mcGiftSend.balanceError?'<div class="mc-wallet-error">Баланс временно недоступен. Покупка за УМ заблокирована до успешной проверки — значение не считается нулём.</div>':''}${mcGiftSend.inventoryError?'<div class="mc-wallet-error">Не удалось загрузить вашу коллекцию подарков. Проверьте доступ Firebase.</div>':''}
     <div class="mc-step"><div class="mc-step-n">1</div><div class="mc-step-t">Кому</div></div>${recipient}
     <div class="mc-step"><div class="mc-step-n">2</div><div class="mc-step-t">Какой подарок</div></div>
     <div class="mc-seg mc-gift-tabs"><button type="button" class="${mcGiftSend.tab === 'shop' ? 'active' : ''}" onclick="mcGiftTab('shop')">🛍 Витрина</button><button type="button" class="${mcGiftSend.tab === 'owned' ? 'active' : ''}" onclick="mcGiftTab('owned')">🎒 Мои подарки (${mcGiftSend.owned.length})</button></div>
@@ -6889,7 +6905,7 @@ function mcRenderGiftSend() {
 }
 function mcGiftTab(t) { mcGiftSend.tab = t; mcRenderGiftSend(); }
 function mcGiftPick(kind, id) {
-  if (kind === 'shop') { const g = METRO_GIFTS.find(x => x.id === id); if (!g) return; if (mcGiftSend.balance < Number(g.cost)) toast(`Нужно ${g.cost} умов, у вас ${mcGiftSend.balance}`, '🎁'); mcGiftSend.gift = { kind, id, name: g.name, emoji: g.emoji, cost: Number(g.cost), giftId: g.id }; }
+  if (kind === 'shop') { const g = METRO_GIFTS.find(x => x.id === id); if (!g) return; if (mcGiftSend.balance===null) return toast('Сначала восстановите чтение баланса Firebase.','⚠'); if (mcGiftSend.balance < Number(g.cost)) toast(`Нужно ${g.cost} умов, у вас ${mcGiftSend.balance}`, '🎁'); mcGiftSend.gift = { kind, id, name: g.name, emoji: g.emoji, cost: Number(g.cost), giftId: g.id }; }
   else { const g = mcGiftSend.owned.find(x => x.id === id); if (!g) return; mcGiftSend.gift = { kind, id, name: g.name || 'Подарок', emoji: g.emoji || '🎁', giftId: g.giftId || id }; }
   mcRenderGiftSend();
 }
@@ -6907,6 +6923,7 @@ async function mcGiftFindUser() {
 async function mcGiftSubmit() {
   const { to, gift } = mcGiftSend; const me = state.user?.uid;
   if (!to || !gift || !me || mcGiftSend.busy) return;
+  if(gift.kind==='shop'&&mcGiftSend.balance===null)return toast('Покупка отключена: баланс пока не удалось проверить.','⚠');
   if (state.blocked?.[to]) return toast('Пользователь в чёрном списке', '🚫');
   const note = ($('mcGiftNote')?.value || '').trim().slice(0, 160);
   const notify = $('mcGiftNotify') ? $('mcGiftNotify').checked : true;
@@ -7243,7 +7260,7 @@ async function loadStories() {
     const need = [...new Set(storiesCache.map(x => x.uid).filter(uid => uid && !getUser(uid)))];
     await Promise.all(need.map(uid => fetchUserIfMissing(uid).catch(() => null)));
     mcBuildStoryGroups(); mcRenderStoryBar();
-  } catch (e) { console.warn('Stories load:', e); el.innerHTML = '<div class="stories-loading">Не удалось загрузить истории. Проверьте правила Firebase.</div>'; }
+  } catch (e) { console.warn('Stories load:', e); el.innerHTML = '<div class="stories-loading">Firebase отклонил чтение stories. Проверьте Rules для stories и story_media. Истории не удалены.</div>'; }
 }
 function mcBuildStoryGroups() {
   const me = state.user?.uid; const seen = mcStorySeen(); const by = new Map();
@@ -12391,7 +12408,7 @@ const MC_BOTS = [
     kb: [['💰 Баланс', '/balance'], ['✦ Заработать', 'open:earn'], ['📡 Каналы', 'open:channels'], ['🎁 Подарки', 'open:gifts'], ['💡 Совет', '/tips']],
     async reply(t) {
       const l = t.toLowerCase();
-      if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn'], ['🎡 Колесо', 'open:wheel']] }; }
+      if (/^\/?(balance|баланс)/.test(l) || l.includes('баланс')) { await mcEarnLoad(true).catch(() => {}); const b = await readGiftBalance(); return { text: `💰 Баланс: **${mcFmtUm(b)} УМ**\nСегодня заработано: ${mcEarnTotal()} / ${MC_EARN_CAP} УМ`, kb: [['✦ Заработать', 'open:earn']] }; }
       if (/^\/?(tips|совет)/.test(l)) { const tips = ['Зажмите сообщение, чтобы ответить, переслать или закрепить его.', 'В настройках можно включить двухфакторную аутентификацию для защиты аккаунта.', 'Сообщение можно запланировать: удерживайте кнопку отправки.', 'Ежедневная отметка в «Заработать» даёт до 20 УМ при длинной серии.', 'Боты появляются в списке чатов — закрепите нужного, чтобы он был сверху.', 'В каналах можно комментировать посты и смотреть число просмотров.', 'Metro AI в разделе «Прочее» умеет создавать группы и управлять чатами.']; return { text: '💡 ' + mcPick(tips), kb: [['Ещё совет', '/tips']] }; }
       const faq = [[/2fa|двухфактор|защит/, 'Откройте **Настройки → Безопасность → Двухфакторная аутентификация** и следуйте шагам.'], [/канал/, 'Каналы находятся в **Прочее → Каналы**. Там можно найти популярные каналы по категориям или нажать «Создать канал».'], [/групп/, 'Нажмите ✏️ в шапке списка чатов и выберите «Новая группа».'], [/ум[ыа]?\b|умов|заработ/, 'Умы — внутренняя валюта MetroChat. Их дают за задания в **Подарки → Заработать** (до 140 УМ в день) и тратят на подарки.'], [/подар/, 'Подарки покупаются за умы в **Прочее → Подарки**. Подарок можно отправить другу.'], [/звон|call/, 'В личном чате нажмите 📞 или 🎥 в шапке, чтобы позвонить.'], [/пароль/, 'Сменить пароль: **Настройки → Безопасность → Сменить пароль**.'], [/истори/, 'Истории открываются кнопкой 👤 над списком чатов.'], [/тем[аыу]|оформ|ночн/, 'Тему и ночной режим можно поменять в **Настройки → Оформление**.'], [/бот/, 'Каталог ботов — во вкладке **Боты**. Добавленный бот появляется в списке чатов.']];
       for (const [re, a] of faq) if (re.test(l)) return { text: a };
@@ -12800,7 +12817,7 @@ renderOtherHome = function () {
       <small>${esc(hi)}, ${esc(name)}</small>
       <div class="mc-home-bal"><span id="mcHomeBal">…</span><em>УМ</em></div>
       <div class="mc-home-prog"><div class="mc-home-bar"><i id="mcHomeBar" style="width:0%"></i></div><span id="mcHomeToday">Сегодня 0 / ${MC_EARN_CAP}</span></div>
-      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button><button type="button" id="mcHomeWheel">🎡 Колесо</button></div>
+      <div class="mc-home-actions"><button type="button" data-go="earn">✦ Задания</button><button type="button" data-go="gifts">🎁 Витрина</button></div>
     </section>
     <div class="mc-home-sec"><h3>Сервисы</h3></div>
     <div class="mc-home-big">${MC_HOME_ITEMS.services.map((x, n) => `<button type="button" class="mc-home-card" data-go="${x.k}" style="--i:${n};--c:${x.c}"><span class="mc-home-ic">${x.i}</span><b>${esc(x.t)}</b><small>${esc(x.s)}</small><span class="mc-home-arr">→</span></button>`).join('')}</div>
@@ -12811,7 +12828,7 @@ renderOtherHome = function () {
     <div class="mc-home-grid">${MC_HOME_ITEMS.games.map(tile).join('')}</div>
   </div>`;
   wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { try { mcEarnSfx('tap'); } catch (_) {} mcHomeGo(b.dataset.go); }));
-  $('mcHomeWheel')?.remove();
+
   (async () => {
     try {
       const [bal] = await Promise.all([readGiftBalance(), mcEarnLoad(true).catch(() => {})]);
@@ -13424,24 +13441,25 @@ function mcAIIntent(t) {
   return null;
 }
 async function mcAICall(userText) {
-  const chats = getAllChatsList();
-  const sys = `Ты — Metro AI, встроенный ассистент мессенджера MetroChat. Отвечай кратко и по делу (до 4 предложений), дружелюбно, на языке пользователя (обычно русский). Ты знаешь MetroChat: чаты, группы, каналы, истории (2 дня), подарки и умы, боты, звонки, встроенный браузер, вход по паролю и лицу, тёмная тема. Управление мессенджером выполняется командами: «создай группу X», «покажи мои чаты», «открой чат X», «заглуши чат X», «погода в Y». Если пользователь просит опасное (удалить аккаунт, сменить пароль) — вежливо откажись и подскажи путь в настройках. У пользователя сейчас ${chats.length} чатов.`;
-  const ctrl = new AbortController();
-  const to = setTimeout(() => ctrl.abort(), 30000);
+  const chats=getAllChatsList();
+  const sys=`Ты — Metro AI, встроенный ассистент мессенджера MetroChat. Отвечай точно и полезно, на языке пользователя. Не утверждай, что действие выполнено, если приложение его не выполнило. У пользователя сейчас ${chats.length} чатов.`;
+  const history=mcAIHist().slice(-12).map(x=>({role:x.r==='u'?'user':'assistant',content:String(x.t||'').slice(0,3500)}));
   try {
-    const history = mcAIHist().slice(-12).map(x => ({ role: x.r === 'u' ? 'user' : 'assistant', content: String(x.t || '').slice(0, 4000) }));
-    const r = await fetch(MC_AI_ENDPOINT, {
-      method: 'POST', signal: ctrl.signal,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'openai', messages: [{ role: 'system', content: sys }, ...history, { role: 'user', content: userText }] })
-    });
-    clearTimeout(to);
-    if (!r.ok) throw new Error('http ' + r.status);
-    const j = await r.json();
-    const txt = j?.choices?.[0]?.message?.content;
-    if (!txt) throw new Error('empty');
-    return txt.trim();
-  } finally { clearTimeout(to); }
+    const result=await mcMetroAiCallable({instructions:sys,messages:[...history,{role:'user',content:String(userText).slice(0,5000)}]});
+    const answer=String(result?.data?.text||'').trim(); if(answer)return answer;
+    throw new Error('Metro AI returned an empty response');
+  } catch (cloudError) {
+    console.warn('Metro AI Cloud Function unavailable; using temporary fallback:',cloudError);
+    // Temporary fallback keeps the current app usable until OPENAI_API_KEY is configured and
+    // the metroAi Cloud Function is deployed. Never put a private API key in this client file.
+    const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),10000);
+    try {
+      const response=await fetch(MC_AI_ENDPOINT,{method:'POST',signal:ctrl.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai',messages:[{role:'system',content:sys},...history,{role:'user',content:String(userText).slice(0,5000)}],max_tokens:550,temperature:.6})});
+      if(!response.ok)throw new Error('Fallback AI HTTP '+response.status);
+      const j=await response.json();const answer=String(j?.choices?.[0]?.message?.content||'').trim();
+      if(!answer)throw new Error('AI response is empty');return answer;
+    } finally {clearTimeout(timeout);}
+  }
 }
 let mcAIBusy = false;
 async function mcAISend() {
@@ -13795,7 +13813,7 @@ loadStories = async function () {
     const need = [...new Set(storiesCache.map(x => x.uid).filter(uid => uid && !getUser(uid)))];
     await Promise.all(need.map(uid => fetchUserIfMissing(uid).catch(() => null)));
     mcBuildStoryGroups(); mcRenderStoryBar();
-  } catch (e) { console.warn('Stories load:', e); el.innerHTML = '<div class="stories-loading">Не удалось загрузить истории. Проверьте подключение.</div>'; }
+  } catch (e) { console.warn('Stories load:', e); el.innerHTML = '<div class="stories-loading">Не удалось прочитать stories из Firebase. Проверьте Rules для stories и story_media. Истории не удалены.</div>'; }
 };
 // «Что нового» — только для обновившихся, 2 дня
 mcWhatsNewActive = function () {
@@ -14197,13 +14215,25 @@ async function mcBoostOpen(id){
 W('mcBoostOpen',mcBoostOpen);
 new MutationObserver(()=>{ const a=$('chatActions'),c=state.chat; if(!a||!c||c.type!=='channel'||a.querySelector('#mcChBoost'))return; const b=document.createElement('button'); b.id='mcChBoost'; b.className='chat-icon-btn'; b.textContent='🚀'; b.title='Буст канала'; b.onclick=()=>mcBoostOpen(c.id); a.prepend(b); }).observe($('chatActions')||document.body,{childList:true,subtree:true});
 { const o=mcChCard; mcChCard=W('mcChCard',function(c){ let h=o.apply(this,arguments); const lv=mcBoostLv(c?.boostTotal); return h.replace('</b>',`${c?.emoji?' '+esc(c.emoji):''}${lv?`<span class="mc13-lv">⚡${lv}</span>`:''}</b>`); }); }
-// --- Business: verified only, shown in profile, services for UM, orders ---
-const isVer=()=>!!state.profile?.verified;
-{ const o=mcBizOpen; mcBizOpen=W('mcBizOpen',function(){ const w=$('settingsPanel'); if(!isVer()){ window.__mcOtherView='biz'; w.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div><div class="settings-wrap"><div class="mc11-card"><div class="mc11-av" style="background:#64748b">🔒</div><div class="mc11-grow"><b>Доступно после верификации</b><small>Подтвердите аккаунт — и откроются профиль компании, быстрые ответы и услуги за умы.</small></div></div></div>`; return; }
-  o.apply(this,arguments); const b=bzGet(), host=w.querySelector('.mc11-sheet'); host.insertAdjacentHTML('beforeend',`<label>Услуги: «название | цена в УМ», по строке</label><textarea id="bzSv" rows="3" autocomplete="off">${esc(b.sv||'')}</textarea><div id="bzOrd"></div>`);
-  $('bzS').onclick=()=>{ const v={n:bzN.value,c:bzC.value,a:bzA.value,w:bzW.value,h:bzH.value,d:bzD.value,g:bzG.value,o:bzO.value,q:bzQ.value,sv:bzSv.value}; localStorage.setItem(BZ,JSON.stringify(v)); set(ref(db,`user_settings/${mcMe()}/business`),v).then(()=>toast('Сохранено','✅')).catch(()=>toast('Не удалось сохранить','⚠')); };
-  get(query(ref(db,`service_orders/${mcMe()}`),orderByChild('at'),limitToLast(20))).then(x=>{ const r=Object.values(x.val()||{}).sort((a,b)=>b.at-a.at); $('bzOrd').innerHTML=r.length?'<label>Заказы</label>'+r.map(z=>`<div class="mc13-svc"><span class="mc11-grow"><b>${esc(z.name)}</b><br><small>${esc(z.buyerName||'Клиент')} · ${new Date(z.at).toLocaleDateString('ru-RU')}</small></span>${z.price} УМ</div>`).join(''):''; }).catch(()=>{}); }); }
-document.addEventListener('input',e=>{ if(e.target.id==='chatInput'&&!isVer()&&/^\/\S+ $/.test(e.target.value)){} },true);
+// --- Business access: use the authoritative galochka/{uid}/confirmed flag ---
+const isVer=()=>state.galochka?.[mcMe()]?.confirmed===true || state.profile?.verified===true;
+{
+ const originalBizOpen=mcBizOpen;
+ mcBizOpen=W('mcBizOpen',async function(){
+   const w=$('settingsPanel'); let verified=isVer();
+   if(!verified){
+     try{const snap=await get(ref(db,`galochka/${mcMe()}`));const flags=snap.val()||{};state.galochka={...(state.galochka||{}),[mcMe()]:flags};verified=flags.confirmed===true;}
+     catch(e){console.warn('Business verification check:',e);}
+   }
+   if(!verified){window.__mcOtherView='biz';w.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div><div class="settings-wrap"><div class="mc11-card"><div class="mc11-av" style="background:#64748b">🔒</div><div class="mc11-grow"><b>Доступно после подтверждения</b><small>Статус проверяется по Firebase → galochka/${esc(mcMe())}/confirmed. Если галочка уже есть, обновите страницу и проверьте Rules для чтения этого узла.</small></div></div></div>`;return;}
+   await originalBizOpen.apply(this,arguments);
+   const b=bzGet(),host=w.querySelector('.mc11-sheet');
+   if(!host)return;
+   if(!$('bzSv'))host.insertAdjacentHTML('beforeend',`<label>Услуги: «название | цена в УМ», по строке</label><textarea id="bzSv" rows="3" autocomplete="off">${esc(b.sv||'')}</textarea><div id="bzOrd"></div>`);
+   const save=$('bzS'); if(save)save.onclick=async()=>{const v={n:bzN.value.trim(),c:bzC.value.trim(),a:bzA.value.trim(),w:bzW.value.trim(),h:bzH.value.trim(),d:bzD.value.trim(),g:bzG.value.trim(),o:bzO.value.trim(),q:bzQ.value,sv:$('bzSv')?.value||''};if(v.w&&!/^https?:\/\//i.test(v.w))return toast('Сайт должен начинаться с https://','⚠');try{await set(ref(db,`user_settings/${mcMe()}/business`),v);mcBizCache=v;localStorage.setItem(BZ+'_'+mcMe(),JSON.stringify(v));toast('Бизнес-профиль сохранён','✓');}catch(e){console.error(e);toast('Не удалось сохранить. Проверьте права user_settings/{uid}/business.','⚠');}};
+   get(query(ref(db,`service_orders/${mcMe()}`),orderByChild('at'),limitToLast(20))).then(x=>{const r=Object.values(x.val()||{}).sort((a,b)=>b.at-a.at);const target=$('bzOrd');if(target)target.innerHTML=r.length?'<label>Заказы</label>'+r.map(z=>`<div class="mc13-svc"><span class="mc11-grow"><b>${esc(z.name)}</b><br><small>${esc(z.buyerName||'Клиент')} · ${new Date(z.at).toLocaleDateString('ru-RU')}</small></span>${z.price} УМ</div>`).join(''):'';}).catch(()=>{});
+ });
+}
 async function mcBizProfile(uid){ try{ const box=$('publicProfileContent'); if(!box||box.querySelector('#mcBizCard'))return; const bz=await get(ref(db,`user_settings/${uid}/business`)); const b=bz.val(); if(!b||!(b.n||b.d||b.sv))return;
   const sv=String(b.sv||'').split('\n').map(l=>l.split('|')).filter(a=>a[0].trim()&&+a[1]>0).map(a=>({name:a[0].trim(),price:Math.round(+a[1])})); const me=uid===mcMe();
   const d=document.createElement('div'); d.id='mcBizCard'; d.className='mc13-biz'; d.innerHTML=`<h3>💼 ${esc(b.n||'Бизнес')} <span class="mc-ch-verif">✓</span></h3>${b.c?`<p>${esc(b.c)}</p>`:''}${b.d?`<p>${esc(b.d)}</p>`:''}${b.h?`<p>🕒 ${esc(b.h)}</p>`:''}${b.a?`<p>📍 ${esc(b.a)}</p>`:''}${b.w?`<p>🔗 ${esc(b.w)}</p>`:''}${sv.map((x,i)=>`<div class="mc13-svc"><span class="mc11-grow">${esc(x.name)}</span><b>${x.price} УМ</b>${me?'':`<button class="mc11-btn" data-i="${i}">Заказать</button>`}</div>`).join('')}`;
@@ -14273,8 +14303,8 @@ onbNext=W('onbNext',function(){ const adv=()=>{ const i=ORDER.indexOf(onbStep); 
   if(onbStep===3&&!onbBdValid()) return; adv(); });
 onbPrev=W('onbPrev',function(){ const i=ORDER.indexOf(onbStep); if(i>0){ onbStep=ORDER[i-1]; renderOnb(); } });
 // --- chat folders (up to 25 chats each; invisible when disabled) ---
-const FK='mc_folders',fGet=()=>{ try{ return JSON.parse(localStorage.getItem(FK)||'{"on":false,"list":[]}'); }catch(_){ return {on:false,list:[]}; } };
-const fSave=d=>{ localStorage.setItem(FK,JSON.stringify(d)); try{ set(ref(db,`user_settings/${mcMe()}/folders`),d); }catch(_){} mcFolderBar(); };
+const FK='mc_folders',fKey=()=>FK+'_'+(mcMe()||'guest'),fGet=()=>{ try{ const uid=mcMe(); let raw=localStorage.getItem(fKey()); if(!raw&&uid){const legacy=localStorage.getItem(FK);if(legacy){localStorage.setItem(fKey(),legacy);localStorage.removeItem(FK);raw=legacy;}} return JSON.parse(raw||'{"on":false,"list":[]}'); }catch(_){ return {on:false,list:[]}; } };
+const fSave=d=>{ localStorage.setItem(fKey(),JSON.stringify(d)); if(mcMe())set(ref(db,`user_settings/${mcMe()}/folders`),d).catch(e=>console.warn('Folder sync needs user_settings/{uid}/folders Rules:',e)); mcFolderBar(); };
 window.__mcFolder=null;
 function mcFolderApply(){ const d=fGet(),f=window.__mcFolder&&d.on?d.list.find(x=>x.id===window.__mcFolder):null; document.querySelectorAll('#sbList [data-chat-id]').forEach(r=>{ r.style.display=f&&!f.chats.includes(r.dataset.chatId)?'none':''; }); }
 function mcFolderBar(){ const d=fGet(),list=$('sbList'); let bar=$('mcFolderBar'); if(!d.on||!d.list.length||!list){ bar?.remove(); window.__mcFolder=null; mcFolderApply(); return; } if(!bar){ bar=document.createElement('div'); bar.id='mcFolderBar'; list.parentNode.insertBefore(bar,list); }
@@ -14290,7 +14320,7 @@ function mcFolderEdit(id){ const d=fGet(),f=d.list.find(x=>x.id===id)||{id:'f'+D
   o.querySelector('#fX').onclick=()=>o.remove(); o.querySelector('#fD')?.addEventListener('click',()=>{ d.list=d.list.filter(x=>x.id!==f.id); fSave(d); o.remove(); mcFoldersOpen(); });
   o.querySelector('#fS').onclick=()=>{ const n=o.querySelector('#fN').value.trim(); if(!n) return toast('Введите название','⚠'); Object.assign(f,{name:n,emoji:em,chats:[...sel]}); const i=d.list.findIndex(x=>x.id===f.id); if(i<0)d.list.push(f); else d.list[i]=f; fSave(d); o.remove(); mcFoldersOpen(); }; }
 W('mcFolderEdit',mcFolderEdit);
-setTimeout(()=>{ if(!fGet().list.length&&mcMe()) get(ref(db,`user_settings/${mcMe()}/folders`)).then(x=>{ const v=x.val(); if(v&&v.list){ localStorage.setItem(FK,JSON.stringify(v)); mcFolderBar(); } }).catch(()=>{}); },3000);
+setTimeout(()=>{ if(!fGet().list.length&&mcMe()) get(ref(db,`user_settings/${mcMe()}/folders`)).then(x=>{ const v=x.val(); if(v&&v.list){ localStorage.setItem(fKey(),JSON.stringify(v)); mcFolderBar(); } }).catch(()=>{}); },3000);
 { const o=mcSetMain; mcSetMain=W('mcSetMain',function(){ return o.apply(this,arguments)+`<div class="mc11-card" style="cursor:pointer" onclick="mcFoldersOpen()"><div class="mc11-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:14px">📁</div><div class="mc11-grow"><b>Папки с чатами</b><small>Группируйте чаты, до 25 в папке</small></div>›</div>`; }); }
 // --- swipe left on a chat: configurable action ---
 const SW={mute:['🔕 Без звука',id=>toggleMuteChat(id)],pin:['📌 Закрепить',id=>togglePinChat(id)],read:['✔️ Прочитано',id=>markRead(id)],del:['🗑 Удалить',id=>deleteChat(id)]};
@@ -14323,6 +14353,161 @@ function mcPaidPhoto(){ const c=state.chat,me=mcMe(); const to=c.type==='dm'?(c.
     mcPaidAsk(async price=>{ const tok=Math.random().toString(36).slice(2,10); try{ await set(ref(db,'paid_content/'+tok),{meta:{from:me,to,price},text:data,at:Date.now()}); $('chatInput').value=`🔒 Платное фото · ${price} УМ · #${tok}`; await sendMessage(); }catch(e){ toast('Не удалось отправить','⚠'); } }); }; f.click(); }
 W('mcPaidPhoto',mcPaidPhoto);
 { const o=mcOpenSendMenu; mcOpenSendMenu=W('mcOpenSendMenu',function(){ o.apply(this,arguments); const m=$('mcSendMenu'); if(!m||m.querySelector('[data-a=paidphoto]'))return; const b=document.createElement('button'); b.type='button'; b.dataset.a='paidphoto'; b.innerHTML='<span class="mc-sm-ico" style="--c:#a855f7">🖼️</span><span><b>Фото за умы</b><small>Закрытое фото с ценой</small></span>'; m.prepend(b); b.addEventListener('click',()=>mcPaidPhoto()); }); }
+
+
+// ================= MetroChat 4.2 consolidated repair patch =================
+// Preserve local preferences before removing the confusing legacy gradient editor settings.
+try {
+  const __prefs=upGet();
+  if(['wa','wb','cw1','cw2','cang','cdim'].some(k=>Object.prototype.hasOwnProperty.call(__prefs,k))) {
+    localStorage.setItem('mc_ui_prefs_backup_4_2',JSON.stringify(__prefs));
+    ['wa','wb','cw1','cw2','cang','cdim'].forEach(k=>delete __prefs[k]);
+    localStorage.setItem(UP,JSON.stringify(__prefs));
+  }
+} catch(e) { console.warn('MetroChat preferences migration:',e); }
+
+// Scroll restoration for any re-render within the Appearance page.
+const __mcRenderSettings42=renderSettings;
+renderSettings=function(...args){
+  const panel=$('settingsPanel'),inner=panel?.querySelector('.settings-wrap');
+  const page=mcSetPage,top=inner?.scrollTop??panel?.scrollTop??0;
+  const result=__mcRenderSettings42.apply(this,args);
+  if(mcSetPage===page)requestAnimationFrame(()=>{const p=$('settingsPanel'),i=p?.querySelector('.settings-wrap');if(i)i.scrollTop=top;else if(p)p.scrollTop=top;});
+  return result;
+};
+const __mcSetGo42=mcSetGo;
+mcSetGo=function(page){
+  const p=$('settingsPanel'),inner=p?.querySelector('.settings-wrap');
+  const keep=(mcSetPage===(page||'main'));
+  const top=inner?.scrollTop??p?.scrollTop??0;
+  mcSetPage=page||'main';renderSettings();
+  requestAnimationFrame(()=>{const np=$('settingsPanel'),ni=np?.querySelector('.settings-wrap');if(ni)ni.scrollTop=keep?top:0;else if(np)np.scrollTop=keep?top:0;});
+};
+window.mcSetGo=mcSetGo;
+
+
+
+// A simpler appearance editor: solid colors, clear choices, no gradient controls.
+window.mcPatchAccent=function(color){
+  if(!/^#[0-9a-f]{6}$/i.test(color))return;
+  mcUiSet('accent',color);
+  document.querySelectorAll('[data-mc-accent]').forEach(b=>b.classList.toggle('active',b.dataset.mcAccent===color));
+};
+window.mcPatchSolidWall=function(color){
+  if(!/^#[0-9a-f]{6}$/i.test(color))return;
+  mcUiSet('chatSolid',color);
+  const d=document.documentElement;d.style.setProperty('--mc-chat-bg',color);d.dataset.cw='1';
+  document.querySelectorAll('[data-mc-wall]').forEach(b=>b.classList.toggle('active',b.dataset.mcWall===color));
+};
+const __mcUpApply42=upApply;
+upApply=function(...args){
+  const result=__mcUpApply42.apply(this,args),u=upGet(),d=document.documentElement;
+  if(u.chatSolid&&/^#[0-9a-f]{6}$/i.test(u.chatSolid)){d.style.setProperty('--mc-chat-bg',u.chatSolid);d.dataset.cw='1';}
+  return result;
+};
+upApply();
+mcSetAppearance=function(){
+  const s=state.settings,u=upGet(),fs=s.fontSize||'14px',icon=Math.max(0,Math.min(5,+(localStorage.getItem('mc_icon')||0)));
+  const palette=['#4f8cff','#8b5cf6','#ec4899','#ef4444','#f97316','#22c55e','#14b8a6','#0ea5e9'];
+  const walls=['#f1f5f9','#e0f2fe','#dcfce7','#fef3c7','#fce7f3','#ede9fe','#172554','#172033'];
+  return `${sHead('Оформление')}
+  <div class="settings-wrap ms-wrap mc42-appearance">
+    <div class="ms-preview" data-wall="${typeof mcEffectiveWall==='function'?mcEffectiveWall():'classic'}"><div class="ms-pv-msg in">Привет! Как тебе новая тема? 🎨</div><div class="ms-pv-msg out">Выглядит отлично 👍<span>12:30 ✓✓</span></div></div>
+    ${sGroup('',[sRow({ico:s.darkMode?'🌙':'☀️',c:'#6366f1',label:'Ночной режим',on:!!s.darkMode,act:'toggleDarkMode()'})])}
+    <section class="ms-group"><h3>Цветовая тема</h3><div class="ms-card ms-pad"><div class="theme-grid">${THEMES.map(t=>`<button type="button" class="theme-item ${s.themeId===t.id?'active':''}" onclick="setTheme('${t.id}')"><span class="theme-preview" style="background:${t.grad[0]};color:white">M</span><span class="theme-name">${esc(t.name)}</span></button>`).join('')}</div></div></section>
+    <section class="ms-group"><h3>Обои чата</h3><div class="ms-card ms-pad">${typeof mcWallSectionHtml==='function'?mcWallSectionHtml():''}<div class="mc42-color-grid">${walls.map(c=>`<button type="button" data-mc-wall="${c}" class="mc42-color ${u.chatSolid===c?'active':''}" style="--swatch:${c}" aria-label="Цвет обоев ${c}" onclick="mcPatchSolidWall('${c}')"></button>`).join('')}</div><label class="mc42-label">Свой однотонный цвет</label><input type="color" value="${u.chatSolid||'#f1f5f9'}" onchange="mcPatchSolidWall(this.value)" class="mc42-color-input"></div></section>
+    <section class="ms-group"><h3>Акцентный цвет</h3><div class="ms-card ms-pad"><div class="mc42-color-grid">${palette.map(c=>`<button type="button" data-mc-accent="${c}" class="mc42-color ${u.accent===c?'active':''}" style="--swatch:${c}" aria-label="Акцент ${c}" onclick="mcPatchAccent('${c}')"></button>`).join('')}</div></div></section>
+    <section class="ms-group"><h3>Размер текста</h3><div class="ms-card ms-pad"><div class="mc-seg ms-fs">${[['13px','Мелкий'],['14px','Обычный'],['15px','Средний'],['16px','Крупный'],['18px','Огромный']].map(([v,l])=>`<button type="button" class="${fs===v?'active':''}" onclick="mcSetVal('fontSize','${v}')" style="font-size:${v}">${l}</button>`).join('')}</div></div></section>
+    <section class="ms-group"><h3>Дополнительно</h3><div class="ms-card ms-pad">
+      <div class="mc42-option"><div><b>Жидкое стекло</b><small>Эффект выключен по умолчанию</small></div><button type="button" class="mc42-switch ${u.glass==='on'?'on':''}" aria-pressed="${u.glass==='on'}" onclick="mcUiSet('glass',upGet().glass==='on'?'off':'on');upApply();this.classList.toggle('on',upGet().glass==='on');this.setAttribute('aria-pressed',String(upGet().glass==='on'))"><i></i></button></div>
+      <label class="mc42-label">Шрифт приложения</label><select class="mc42-select" onchange="mcUiSet('font',this.value)"><option value="" ${!u.font?'selected':''}>Системный</option><option value="Georgia,serif" ${u.font==='Georgia,serif'?'selected':''}>С засечками</option><option value="ui-rounded,sans-serif" ${u.font&&u.font.includes('rounded')?'selected':''}>Округлый</option><option value="ui-monospace,monospace" ${u.font&&u.font.includes('mono')?'selected':''}>Моноширинный</option></select>
+      <label class="mc42-label">Иконка приложения</label><div class="mc42-icons">${[0,1,2,3,4,5].map(i=>`<button type="button" class="${i===icon?'active':''}" aria-label="Иконка ${i+1}" onclick="mcIconSet(${i});document.querySelectorAll('.mc42-icons button').forEach((b,j)=>b.classList.toggle('active',j===${i}))"><img src="${mcIconPng(i,88)}" alt=""></button>`).join('')}</div>
+      <label class="mc42-label">Свайп влево по чату</label><select class="mc42-select" onchange="mcSwipeSet(this.value)">${[['mute','Без звука'],['pin','Закрепить'],['read','Отметить прочитанным'],['del','Удалить'],['off','Отключить']].map(([v,n])=>`<option value="${v}" ${(localStorage.getItem('mc_swipe')||'mute')===v?'selected':''}>${n}</option>`).join('')}</select>
+      <button type="button" class="mc42-reset" onclick="mcUiReset()">Сбросить оформление</button>
+    </div></section>
+  </div>`;
+};
+
+// Profile/gift cards use the same clean visual system in both own and public profiles.
+const __mcProfileGiftStyle42=document.createElement('style');
+__mcProfileGiftStyle42.id='mc42-repair-styles';
+__mcProfileGiftStyle42.textContent=`
+.mc42-appearance .ms-group{margin:14px 0}.mc42-appearance .ms-card{border-radius:20px}
+.mc42-color-grid{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0 4px}
+.mc42-color{width:34px;height:34px;border-radius:50%;background:var(--swatch);border:2px solid var(--border);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);cursor:pointer}
+.mc42-color.active{outline:3px solid var(--accent);outline-offset:3px}
+.mc42-label{display:block;margin:14px 0 7px;font-size:12px;font-weight:800;color:var(--text-2)}
+.mc42-color-input{width:100%;height:42px;border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:4px}
+.mc42-option{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 14px}
+.mc42-option b,.mc42-option small{display:block}.mc42-option small{margin-top:3px;color:var(--text-2);font-size:12px}
+.mc42-switch{width:48px;height:28px;padding:3px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);transition:background .18s}
+.mc42-switch i{display:block;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transition:transform .18s}
+.mc42-switch.on{background:var(--accent)}.mc42-switch.on i{transform:translateX(19px)}
+.mc42-select{width:100%;min-height:42px;border:1px solid var(--border);border-radius:12px;padding:8px 12px;color:var(--text);background:var(--surface)}
+.mc42-icons{display:flex;flex-wrap:wrap;gap:10px}.mc42-icons button{width:58px;height:58px;padding:3px;border:2px solid transparent;border-radius:16px;background:var(--surface-2)}.mc42-icons button.active{border-color:var(--accent)}.mc42-icons img{width:100%;height:100%;border-radius:12px}
+.mc42-reset{width:100%;margin-top:16px;padding:12px;border:1px solid var(--border);border-radius:13px;background:var(--surface-2);color:var(--text);font-weight:800}
+.mc-wallet-error{display:block;margin-top:8px;padding:10px 12px;border-radius:12px;border:1px solid #d97706;background:rgba(217,119,6,.1);color:var(--text);font-size:12px;line-height:1.45}
+.gift-wallet-card{background:var(--surface)!important;box-shadow:0 8px 26px rgba(0,0,0,.06)}
+.gift-wallet-coin{background:var(--accent)!important;box-shadow:none!important}
+.profile-gifts-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px!important;padding:10px 16px 16px!important}
+.mc13-gift{min-width:0;aspect-ratio:auto!important;min-height:132px;padding:13px 8px!important;border-radius:17px!important;background:var(--surface-2)!important;border:1px solid var(--border)!important;box-shadow:none!important}
+.mc13-gift .e{font-size:34px!important}.mc13-gift b{max-width:100%;overflow-wrap:anywhere}.mc13-gift em{font-size:10px;color:var(--text-2)!important}
+.mc13-biz{background:var(--surface)!important;border:1px solid var(--border)!important}
+.mc-pcard{padding:22px 16px 18px!important;margin:8px 0 14px!important;border-radius:24px!important;background:var(--surface)!important;border:1px solid var(--border)!important;box-shadow:0 10px 30px rgba(0,0,0,.055)!important}
+.mc-pcard-name{font-size:22px!important;font-weight:850!important;letter-spacing:-.3px}
+.mc-pcard-user{padding:5px 10px!important;border-radius:999px!important;background:var(--surface-2)!important}
+#publicProfileContent .settings-group,#chatInfoContent .settings-group{margin:12px 0!important;padding:0 0 8px!important;border:1px solid var(--border)!important;border-radius:18px!important;background:var(--surface)!important;overflow:hidden}
+#publicProfileContent .settings-group h3,#chatInfoContent .settings-group h3{padding:14px 16px 8px!important;font-size:13px!important;font-weight:850!important}
+.profile-gift-chip{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-height:112px!important;padding:12px 8px!important;border:1px solid var(--border)!important;border-radius:17px!important;background:var(--surface-2)!important;text-align:center!important}
+.profile-gift-chip span{font-size:32px!important}.profile-gift-chip b{font-size:11px!important;overflow-wrap:anywhere}
+.mc-pq-row{gap:9px!important;margin:12px 0 16px!important}.mc-pq{border:1px solid var(--border)!important;border-radius:16px!important;background:var(--surface)!important}
+[data-theme="light"] .mc42-appearance .ms-card,[data-theme="light"] .mc42-select{color:#17233d}
+`;
+document.head.appendChild(__mcProfileGiftStyle42);
+
+// Make the app clearly state when story reads fail; keep the cache/data untouched.
+const __mcLoadStories42=loadStories;
+loadStories=async function(...args){
+  try{return await __mcLoadStories42.apply(this,args);}
+  catch(e){console.warn('MetroChat 4.2 stories:',e);const el=$('storiesList');if(el)el.innerHTML='<div class="stories-loading">Истории не загрузились: проверьте доступ к stories и story_media в Firebase Rules. Сами истории не удалены.</div>';}
+};
+
+// Clear old global folder preference key only after migrating it to the currently signed-in account.
+try{
+  const legacy=localStorage.getItem('mc_folders');
+  if(legacy&&mcMe()&&!localStorage.getItem('mc_folders_'+mcMe())){localStorage.setItem('mc_folders_'+mcMe(),legacy);localStorage.removeItem('mc_folders');}
+}catch(_){}
+
+// Final AI override: some legacy v15 wrappers replaced mcAICall after the first patch.
+// Make the secure Firebase callable the primary route for every natural-language response.
+mcAICall=async function(userText){
+  const local=typeof mcAILocal==='function'?mcAILocal(userText):null;
+  if(local)return local;
+  const chats=getAllChatsList();
+  const instructions=`Ты — Metro AI, встроенный помощник MetroChat. Отвечай точно, дружелюбно и на языке пользователя. Не заявляй о выполнении действий, если приложение их не выполнило. У пользователя ${chats.length} чатов.`;
+  const history=mcAIHist().slice(-12).map(x=>({role:x.r==='u'?'user':'assistant',content:String(x.t||'').slice(0,3500)}));
+  const messages=[...history,{role:'user',content:String(userText).slice(0,5000)}];
+  try{
+    const result=await mcMetroAiCallable({instructions,messages});
+    const answer=String(result?.data?.text||'').trim();
+    if(answer)return answer;
+    throw new Error('Metro AI callable returned empty text');
+  }catch(cloudError){
+    console.warn('Metro AI callable unavailable; using temporary fallback:',cloudError);
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+    try{
+      const response=await fetch(MC_AI_ENDPOINT,{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'openai-fast',messages:[{role:'system',content:instructions},...messages],max_tokens:500,temperature:.6})});
+      if(!response.ok)throw new Error('Fallback AI HTTP '+response.status);
+      const payload=await response.json();
+      const answer=String(payload?.choices?.[0]?.message?.content||'').trim();
+      if(!answer)throw new Error('Fallback AI returned empty text');
+      return answer;
+    }finally{clearTimeout(timer);}
+  }
+};
+
+console.info('MetroChat 4.2 repair patch loaded');
+
 </script>
 
 <script>
