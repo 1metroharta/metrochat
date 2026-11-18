@@ -13097,6 +13097,9 @@ html:not([data-theme]) .sidebar,html:not([data-theme]) .chat-header,html:not([da
 mcAgeOpen = function () { toast('Проверка возраста отключена', 'ℹ️'); };
 mcAgeOk = function () { return true; };
 
+// FIX: фильтр витрины должен быть инициализирован до первого открытия раздела.
+let mcShopFilter = 'all';
+
 renderGiftShop = async function () {
   const wrap = $('settingsPanel'); if (!wrap) return;
   window.__mcOtherView = 'gifts';
