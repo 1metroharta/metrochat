@@ -1,5 +1,5 @@
-// MetroChat 4.2 service worker
-const MC_SW_VERSION = 'metrochat-shell-v4.2';
+// MetroChat 4.3 service worker
+const MC_SW_VERSION = 'metrochat-shell-v4.3';
 self.addEventListener('install', event => self.skipWaiting());
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
