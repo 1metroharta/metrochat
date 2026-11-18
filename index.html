@@ -2772,7 +2772,7 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getDatabase(fbApp);
 const mcFunctions = getFunctions(fbApp, "europe-west1");
-const mcMetroAiCallable = httpsCallable(mcFunctions, "metroAi", { timeout: 60000 });
+const mcMetroAiCallable = httpsCallable(mcFunctions, "metroAi", { timeout: 10000 });
 let currentDeviceSessionId = null;
 let deviceHeartbeatTimer = null;
 let deviceRevocationUnsub = null;
@@ -4332,14 +4332,13 @@ const voiceAudios = {};
 function toggleVoice(msgId, btn) {
   const m = state.messages.find(x => x.id === msgId);
   if (!m?.voiceData) return;
-  if (voiceAudios[msgId]) { voiceAudios[msgId].pause(); delete voiceAudios[msgId]; if(window.__mc44AudioRefs) delete window.__mc44AudioRefs[msgId]; btn.textContent = '▶'; return; }
+  if (voiceAudios[msgId]) { voiceAudios[msgId].pause(); delete voiceAudios[msgId]; btn.textContent = '▶'; return; }
   const audio = new Audio(m.voiceData);
   voiceAudios[msgId] = audio;
-  window.__mc44AudioRefs = window.__mc44AudioRefs || {}; window.__mc44AudioRefs[msgId] = audio;
   btn.textContent = '⏸';
   const progress = $('vp-' + msgId);
   audio.ontimeupdate = () => { if (progress && audio.duration) progress.style.width = (audio.currentTime / audio.duration * 100) + '%'; };
-  audio.onended = () => { btn.textContent = '▶'; if (progress) progress.style.width = '0%'; delete voiceAudios[msgId]; if(window.__mc44AudioRefs) delete window.__mc44AudioRefs[msgId]; };
+  audio.onended = () => { btn.textContent = '▶'; if (progress) progress.style.width = '0%'; delete voiceAudios[msgId]; };
   audio.play().catch(() => {});
 }
 const vcState = { stream: null, recorder: null, chunks: [], startTime: 0, timer: null };
@@ -14432,7 +14431,7 @@ upApply=function(...args){
 upApply();
 mcSetAppearance=function(){
   const s=state.settings,u=upGet(),fs=s.fontSize||'14px',icon=Math.max(0,Math.min(5,+(localStorage.getItem('mc_icon')||0)));
-  const palette=['#2563eb','#7c3aed','#db2777','#dc2626','#ea580c','#ca8a04','#16a34a','#0d9488','#0891b2','#475569'];
+  const palette=['#4f8cff','#8b5cf6','#ec4899','#ef4444','#f97316','#22c55e','#14b8a6','#0ea5e9'];
   const walls=['#f1f5f9','#e0f2fe','#dcfce7','#fef3c7','#fce7f3','#ede9fe','#172554','#172033'];
   return `${sHead('Оформление')}
   <div class="settings-wrap ms-wrap mc42-appearance">
@@ -14536,181 +14535,7 @@ Object.assign(window, {
   mcOpenGiftSendPage, mcBizOpen, mc9Go
 });
 
-
-// ================= MetroChat 4.3 · onboarding, profile, desktop and bots =================
-(function(){
-  const addStyle = document.createElement('style');
-  addStyle.id = 'mc43-final-styles';
-  addStyle.textContent = `
-  .auth-screen[data-mode] .auth-bottom-actions{display:none!important}.auth-screen[data-mode="register"] .auth-card{border-color:rgba(57,124,244,.35)}.auth-screen[data-mode="login"] .auth-card{border-color:rgba(255,255,255,.14)}
-  .mc43-welcome{position:fixed;inset:0;z-index:30000;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(circle at 18% 18%,rgba(66,132,255,.24),transparent 34%),radial-gradient(circle at 85% 82%,rgba(117,85,240,.20),transparent 34%),linear-gradient(145deg,#0b1222,#101d36 55%,#111827);color:#fff;overflow:hidden;animation:mc43Fade .45s ease both}
-  .mc43-welcome:before,.mc43-welcome:after{content:'';position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(2px);border:1px solid rgba(255,255,255,.09);animation:mc43Float 9s ease-in-out infinite}.mc43-welcome:before{top:-180px;left:-90px}.mc43-welcome:after{bottom:-220px;right:-80px;animation-delay:-4s}
-  .mc43-w-card{position:relative;z-index:1;width:min(440px,100%);padding:34px 26px;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:rgba(255,255,255,.075);backdrop-filter:blur(24px);box-shadow:0 28px 90px rgba(0,0,0,.28);text-align:center;animation:mc43Rise .6s cubic-bezier(.2,.8,.2,1) both}
-  .mc43-mark{width:64px;height:64px;margin:0 auto 20px;border-radius:21px;display:grid;place-items:center;background:#367cf5;color:white;font-size:32px;font-weight:900;box-shadow:0 12px 32px #367cf555}.mc43-w-card h2{font-size:clamp(25px,6vw,34px);margin:0 0 9px}.mc43-w-card p{color:#c5d1e5;font-size:14px;line-height:1.55;margin:0 0 24px}.mc43-w-actions{display:grid;gap:10px}.mc43-w-actions button{min-height:50px;border:1px solid rgba(255,255,255,.16);border-radius:15px;font-weight:800;font-size:15px}.mc43-create{background:#397cf4;color:#fff}.mc43-login{background:rgba(255,255,255,.10);color:#fff}.mc43-support{display:inline-block;margin-top:22px;color:#c7d4e8;font-size:13px;text-decoration:none}
-  @keyframes mc43Fade{from{opacity:0}to{opacity:1}}@keyframes mc43Rise{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}@keyframes mc43Float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(22px,18px) scale(1.08)}}
-  .mc43-progress-label{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;color:var(--text-2);font-size:12px;font-weight:800}.onb-progress{margin-bottom:24px!important}.onb-progress-bar{transition:width .35s cubic-bezier(.2,.8,.2,1)!important}
-  .mc43-celebrate{position:fixed;inset:0;z-index:31000;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at center,#1e3763,#0b1222 70%);color:white;overflow:hidden;text-align:center;animation:mc43Fade .35s ease both}.mc43-celebrate h2{font-size:clamp(30px,7vw,46px);margin:12px 0 10px;animation:mc43Rise .65s .15s both}.mc43-celebrate p{color:#d5e0f3;margin-bottom:25px}.mc43-fire{font-size:58px;animation:mc43Pop .8s cubic-bezier(.2,.8,.2,1) both}.mc43-celebrate button{opacity:0;animation:mc43Fade .55s 1.1s forwards;min-width:190px;padding:15px 24px;border:0;border-radius:16px;background:#397cf4;color:white;font-size:16px;font-weight:850}@keyframes mc43Pop{0%{transform:scale(.2) rotate(-20deg);opacity:0}65%{transform:scale(1.2) rotate(8deg);opacity:1}100%{transform:scale(1)}}
-  .mc43-setup{position:fixed;inset:0;z-index:31001;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--bg);color:var(--text);overflow:auto}.mc43-setup-card{width:min(520px,100%);padding:24px;border-radius:24px;background:var(--surface);border:1px solid var(--border);box-shadow:0 18px 60px #0002}.mc43-setup-card h2{margin:0 0 7px}.mc43-setup-card>p{color:var(--text-2);font-size:13px;margin-bottom:16px}.mc43-setup-row{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--border)}.mc43-setup-row>span{font-size:26px}.mc43-setup-row div{flex:1}.mc43-setup-row b,.mc43-setup-row small{display:block}.mc43-setup-row small{color:var(--text-2);font-size:12px;margin-top:3px}.mc43-setup-row button{border:0;border-radius:12px;padding:10px 13px;background:var(--accent);color:white;font-weight:800}.mc43-skip{width:100%;margin-top:16px;padding:13px;border:1px solid var(--border);border-radius:13px;background:var(--surface-2);color:var(--text);font-weight:800}
-  .mc43-profile-enabled .public-profile-avatar{position:relative;isolation:isolate;margin:18px 0 24px!important;min-height:112px}.mc43-profile-ring{position:absolute;inset:-22px auto auto 50%;width:190px;height:160px;transform:translateX(-50%);pointer-events:none;z-index:4}.mc43-profile-ring span{position:absolute;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 14px #0002;font-size:20px;opacity:1!important;filter:none!important}.mc43-profile-ring span:nth-child(1){left:50%;top:0;transform:translateX(-50%)}.mc43-profile-ring span:nth-child(2){right:12px;top:20px}.mc43-profile-ring span:nth-child(3){right:0;top:62px}.mc43-profile-ring span:nth-child(4){right:18px;bottom:0}.mc43-profile-ring span:nth-child(5){left:50%;bottom:-10px;transform:translateX(-50%)}.mc43-profile-ring span:nth-child(6){left:18px;bottom:0}.mc43-profile-ring span:nth-child(7){left:0;top:62px}.mc43-profile-ring span:nth-child(8){left:12px;top:20px}.mc43-profile-ring span:nth-child(9){left:32px;top:-8px}.mc43-profile-ring span:nth-child(10){right:32px;top:-8px}
-  .mc43-pstyle{padding:14px;border:1px solid var(--border);border-radius:18px;background:var(--surface);margin:12px 0}.mc43-pstyle h4{font-size:14px;margin-bottom:10px}.mc43-pstyle .mc43-pcolors{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:10px 0 14px}.mc43-pstyle .mc43-pcolors button{height:38px;border-radius:12px;border:2px solid transparent;background:var(--c)}.mc43-pstyle .mc43-pcolors button.active{outline:3px solid var(--accent);outline-offset:2px}.mc43-pstyle .mc43-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}.mc43-pstyle .mc43-toggle button{border:0;border-radius:99px;padding:8px 13px;background:var(--surface-2);color:var(--text);font-weight:800}.mc43-pstyle .mc43-toggle button.on{background:var(--accent);color:#fff}
-  @media(min-width:761px){.app{display:flex!important}#sidebar{display:flex!important;flex:0 0 320px!important;min-width:280px!important}#settingsPanel:not(.hidden){display:block!important;flex:1 1 auto!important;min-width:0!important;position:relative!important;inset:auto!important;width:auto!important;z-index:3!important}#settingsPanel:not(.hidden)~#mobileNav{display:none!important}}
-  #chatPanel{min-height:0;min-width:0}#chatPanel .messages{min-height:0;flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}#messages .msg{min-width:0;max-width:min(82%,720px);overflow-wrap:anywhere;flex:0 0 auto}#messages .msg img{max-width:100%;height:auto;object-fit:contain}#chatPanel:has(#chatEmpty:not(.hidden)){background:var(--mc-chat-bg,var(--bg))!important;background-size:cover!important;background-position:center!important}#chatEmpty{background:var(--mc-chat-bg,var(--bg));background-size:cover;background-position:center;min-height:100%}
-  .mc-bot-msg{position:relative}.mc43-bot-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.mc43-bot-actions button{font-size:11px;padding:5px 8px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)}.mc43-bot-builder{margin:12px 0;padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}.mc43-bot-builder input,.mc43-bot-builder textarea{width:100%;padding:11px;border-radius:11px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);margin:6px 0 12px}.mc43-bot-builder button{padding:11px 15px;border:0;border-radius:12px;background:var(--accent);color:#fff;font-weight:800}
-  `;
-  document.head.appendChild(addStyle);
-
-  // Intro choice screen: separate entry points for sign-in and account creation.
-  const oldWelcome = mcWelcome;
-  mcWelcome = function(){
-    if(document.getElementById('mc43Welcome') || localStorage.getItem('mc_welcomed')) return;
-    const d=document.createElement('div'); d.className='mc43-welcome'; d.id='mc43Welcome';
-    d.innerHTML=`<div class="mc43-w-card"><div class="mc43-mark">M</div><h2>Давайте начнём?</h2><p>Создайте аккаунт MetroChat или войдите, если уже зарегистрированы.</p><div class="mc43-w-actions"><button type="button" class="mc43-create" data-mode="register">Создать аккаунт</button><button type="button" class="mc43-login" data-mode="login">Войти</button></div><a class="mc43-support" href="mailto:metrochatsupport@gmail.com?subject=MetroChat%20-%20Поддержка">Поддержка</a></div>`;
-    document.body.appendChild(d);
-    d.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
-      const mode=b.dataset.mode; const choice=document.querySelector(`.auth-choice[data-tab="${mode}"]`);
-      if(choice) choice.click();
-      const screen=$('authScreen'); if(screen){screen.dataset.mode=mode; const h=screen.querySelector('.auth-logo-text h1'); if(h)h.textContent=mode==='register'?'Создание аккаунта':'Вход в MetroChat';}
-      localStorage.setItem('mc_welcomed','1'); d.classList.add('out'); setTimeout(()=>d.remove(),260);
-    });
-  };
-
-  // Fix the final onboarding button after v15 merged the bio and username fields into step 2.
-  const photoStep=document.querySelector('.onb-step[data-step="6"]');
-  const photoNext=photoStep?.querySelector('.onb-actions .btn-primary');
-  if(photoNext){photoNext.id='onbFinish';photoNext.textContent='Далее →';photoNext.onclick=()=>onbFinish();}
-  const progress=document.querySelector('.onb-progress');
-  if(progress&&!progress.querySelector('.mc43-progress-label')){
-    const label=document.createElement('div');label.className='mc43-progress-label';label.innerHTML='<span>Настройка профиля</span><b id="mc43ProgressPct">20%</b>';progress.parentNode.insertBefore(label,progress);
-  }
-  const oldRenderOnb=renderOnb;
-  renderOnb=function(...a){const r=oldRenderOnb.apply(this,a);const i=Math.max(0,ORDER.indexOf(onbStep));const pct=Math.round((i+1)/ORDER.length*100);const el=$('mc43ProgressPct');if(el)el.textContent=pct+'%';return r;};
-  const oldFinish=onbFinish;
-  onbFinish=async function(...a){const b=$('onbFinish');if(!b){const x=document.querySelector('.onb-step[data-step="6"] .onb-actions .btn-primary');if(x){x.id='onbFinish';x.textContent='Далее →';}}return oldFinish.apply(this,a);};
-
-  // Registration success: celebration first, then optional setup actions.
-  function mc43Setup(){
-    const d=document.createElement('div');d.className='mc43-setup';d.id='mc43Setup';
-    d.innerHTML=`<div class="mc43-setup-card"><h2>Настроим MetroChat?</h2><p>Можно сделать это сейчас или пропустить и вернуться позже в настройках.</p><div class="mc43-setup-row"><span>🔔</span><div><b>Уведомления</b><small>Не пропускайте новые сообщения</small></div><button type="button" data-do="notif">Включить</button></div><div class="mc43-setup-row"><span>📲</span><div><b>Установить приложение</b><small>Быстрый запуск с рабочего стола</small></div><button type="button" data-do="install">Установить</button></div><div class="mc43-setup-row"><span>🛡️</span><div><b>Защитить аккаунт (2FA)</b><small>Дополнительная проверка при входе</small></div><button type="button" data-do="2fa">Настроить</button></div><button class="mc43-skip" type="button" data-do="skip">Пропустить</button></div>`;
-    document.body.appendChild(d);
-    const done=()=>{d.remove();startApp();};
-    d.querySelector('[data-do="notif"]').onclick=async()=>{try{if('Notification'in window){const p=await Notification.requestPermission();toast(p==='granted'?'Уведомления включены':'Разрешение не выдано',p==='granted'?'🔔':'ℹ');}else toast('Этот браузер не поддерживает уведомления','ℹ');}catch(_){toast('Не удалось включить уведомления','⚠');}};
-    d.querySelector('[data-do="install"]').onclick=()=>{try{if(typeof maybeShowInstallPrompt==='function')maybeShowInstallPrompt();else toast('Откройте меню браузера и выберите «Установить приложение»','ℹ');}catch(_){toast('Откройте меню браузера и выберите «Установить приложение»','ℹ');}};
-    d.querySelector('[data-do="2fa"]').onclick=()=>{d.remove();startApp();setTimeout(()=>{switchTab('settings');mcSetGo('security');},250);};
-    d.querySelector('[data-do="skip"]').onclick=done;
-  }
-  showNotifPrompt=function(){
-    const d=document.createElement('div');d.className='mc43-celebrate';d.id='mc43Celebrate';
-    d.innerHTML='<div><div class="mc43-fire">🎆✨🎉</div><h2>Всё готово!</h2><p>Ваш аккаунт MetroChat создан. Добро пожаловать!</p><button type="button">Начнём</button></div>';
-    document.body.appendChild(d);d.querySelector('button').onclick=()=>{d.remove();mc43Setup();};
-  };
-
-  // Profile decoration: one solid color, optional feature, up to ten opaque gifts around avatar.
-  const MC43_COLORS=['#2563eb','#7c3aed','#db2777','#dc2626','#ea580c','#ca8a04','#16a34a','#0d9488','#0891b2','#475569'];
-  mcProfileStyle=async function(uid){
-    try{
-      const box=$('publicProfileContent');if(!box)return;
-      box.classList.remove('mc43-profile-enabled');box.style.background='';box.style.color='';box.querySelector('.mc43-profile-ring')?.remove();box.querySelector('.mc15-gbg')?.remove();const priorCard=box.querySelector('.mc-pcard');if(priorCard){priorCard.style.background='';priorCard.style.color='';priorCard.style.borderColor='';}
-      const v=(await get(ref(db,`users/${uid}/pstyle`))).val();if(!v||v.enabled===false)return;
-      const color=v.color||v.c1;if(!color)return;
-      box.classList.add('mc43-profile-enabled');
-      const card=box.querySelector('.mc-pcard');if(card){card.style.background=color;card.style.color='#fff';card.style.borderColor=color;}
-      const av=box.querySelector('.public-profile-avatar');if(!av)return;
-      av.style.background='';
-      if(v.gifts){const inv=(await get(ref(db,'gift_inventory/'+uid))).val()||{};const gifts=Object.values(inv).filter(x=>x&&!x.hidden).slice(0,10);if(gifts.length){const ring=document.createElement('div');ring.className='mc43-profile-ring';ring.innerHTML=gifts.map((g,i)=>`<span style="--n:${i}">${esc(g.emoji||'🎁')}</span>`).join('');av.appendChild(ring);}}
-      av.style.setProperty('--mc43-profile-color',color);
-    }catch(e){console.warn('profile decoration',e);}
-  };
-  mcPStyleEditor=async function(){
-    const bio=$('profileBio');if(!bio||$('mcPStyle'))return;
-    const uid=mcMe();const v=(await get(ref(db,`users/${uid}/pstyle`)).catch(()=>null))?.val?.()||{};
-    const current=v.color||v.c1||MC43_COLORS[0];
-    const d=document.createElement('div');d.id='mcPStyle';d.className='mc43-pstyle';
-    d.innerHTML=`<h4>🎨 Оформление профиля</h4><div class="mc43-toggle"><span>Включить оформление профиля</span><button type="button" id="mc43PEnabled" class="${v.enabled===false?'':'on'}">${v.enabled===false?'Выключено':'Включено'}</button></div><div id="mc43POptions" style="${v.enabled===false?'display:none':''}"><h4 style="margin-top:14px">Цвет профиля</h4><div class="mc43-pcolors">${MC43_COLORS.map(c=>`<button type="button" data-color="${c}" class="${current===c?'active':''}" style="--c:${c}" aria-label="${c}"></button>`).join('')}</div><label class="mc43-toggle"><span>Показывать до 10 подарков вокруг аватара</span><input type="checkbox" id="mc43PGifts" ${v.gifts?'checked':''} style="width:auto"></label></div><button type="button" class="mc11-btn" id="mc43PSave" style="width:100%;margin-top:14px">Сохранить оформление</button>`;
-    (bio.closest('.form-group,.field')||bio.parentElement).insertAdjacentElement('afterend',d);
-    let selected=current,enabled=v.enabled!==false;
-    const en=d.querySelector('#mc43PEnabled'),opts=d.querySelector('#mc43POptions');
-    en.onclick=()=>{enabled=!enabled;en.classList.toggle('on',enabled);en.textContent=enabled?'Включено':'Выключено';opts.style.display=enabled?'':'none';};
-    d.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{selected=b.dataset.color;d.querySelectorAll('[data-color]').forEach(x=>x.classList.toggle('active',x===b));});
-    d.querySelector('#mc43PSave').onclick=async()=>{try{await set(ref(db,`users/${uid}/pstyle`),{enabled,color:selected,gifts:!!d.querySelector('#mc43PGifts').checked});toast('Оформление сохранено','✓');if($('publicProfileModal')&&!$('publicProfileModal').classList.contains('hidden'))mcProfileStyle(uid);}catch(e){toast('Не удалось сохранить оформление','⚠');}};
-  };
-
-  // Solid palette has ten colors; remove confusing secondary gradient/font/icon extras.
-  const oldAppearance=mcSetAppearance;
-  mcSetAppearance=function(){let html=oldAppearance.apply(this,arguments);return html;};
-  // Remove the extra controls from the Additional section, leaving only the working glass toggle.
-  const oldAppearance43=mcSetAppearance;
-  mcSetAppearance=function(){let html=oldAppearance43.apply(this,arguments);html=html.replace(/<label class="mc42-label">Шрифт приложения<\/label>[\s\S]*?<button type="button" class="mc42-reset"[\s\S]*?<\/button>/,'');return html;};
-  const oldUpApply=upApply;
-  upApply=function(...a){const r=oldUpApply.apply(this,a);const u=upGet();document.documentElement.dataset.glass=u.glass==='on'?'on':'off';return r;};upApply();
-
-  // Move business into «Другое» and chat folders into the common settings group.
-  const oldRenderSettings=renderSettings;
-  renderSettings=function(...a){const r=oldRenderSettings.apply(this,a);requestAnimationFrame(()=>{
-    const wrap=$('settingsPanel')?.querySelector('.settings-wrap');if(!wrap)return;
-    const biz=wrap.querySelector('#mcBizRow');if(biz){const groups=[...wrap.querySelectorAll('.settings-group')];const other=groups.find(g=>(g.querySelector('h3')?.textContent||'').trim()==='Другое')||groups[groups.length-1];if(other)other.appendChild(biz);}
-    const folder=[...wrap.querySelectorAll('.mc11-card')].find(x=>x.textContent.includes('Папки с чатами'));
-    if(folder){folder.id='mc43FoldersRow';const first=wrap.querySelector('.settings-group');if(first)first.appendChild(folder);}
-  });return r;};
-
-  // Desktop: settings occupy the right pane while the chat list stays visible on the left.
-  const oldSwitchTab=switchTab;
-  switchTab=function(tab,...a){const r=oldSwitchTab.call(this,tab,...a);if(window.innerWidth>760&&tab==='settings'){
-    $('sbNav').style.display='flex';$('sbList').style.display='block';$('sbSearchWrap').style.display='block';
-    try{renderAllChats(($('sbSearch')?.value||'').trim().toLowerCase());}catch(e){console.warn('desktop chat list',e);}
-  }return r;};
-
-  // Paid-message layout: prevent long locked-content blocks from stretching the message column.
-  document.addEventListener('DOMContentLoaded',()=>{const m=$('messages');if(m){m.style.minHeight='0';m.style.flex='1 1 auto';}});
-
-  // Bot AI via the same authenticated Firebase callable used by Metro AI.
-  async function mc43BotAIReply(id,userText){
-    const custom=MCB.custom?.[id]||{};
-    const normalized=String(userText||'').toLocaleLowerCase('ru');
-    for(const rule of (Array.isArray(custom.rules)?custom.rules:[])){const trigger=String(rule.when||rule.q||'').trim().toLocaleLowerCase('ru');if(trigger&&normalized.includes(trigger)){const buttons=Array.isArray(rule.buttons)?rule.buttons:[];return {text:String(rule.reply||rule.a||'Условие сработало.'),kb:buttons};}}
-    if(!mcMetroAiCallable)throw new Error('AI callable is not configured');
-    const b=MC_BOT_MAP[id]||{};const history=(MCB.msgs||[]).slice(-10).map(m=>({role:m.from==='u'?'user':'assistant',content:String(m.text||'').slice(0,1800)}));
-    const instructions=`Ты — бот «${custom.name||b.name||'Помощник'}» в MetroChat. ${custom.prompt||b.desc||'Ты полезный дружелюбный помощник.'} Отвечай по-русски, если пользователь пишет по-русски. Не утверждай, что выполнил действия в приложении, если это не было сделано. Пиши понятно, обычно до 8 предложений.`;
-    const result=await mcMetroAiCallable({instructions,messages:[...history,{role:'user',content:String(userText).slice(0,3000)}]});
-    const text=String(result?.data?.text||'').trim();if(!text)throw new Error('AI вернул пустой ответ');return {text};
-  }
-  const oldBotSend=mcBotSendText;
-  mcBotSendText=async function(payload,label){
-    const id=MCB.open,b=MC_BOT_MAP[id];if(!b)return;
-    const raw=payload!=null?String(payload):($('mcBotInput')?.value||'').trim();
-    if(!raw)return;
-    // Preserve button-driven mini-games, commands and service actions; natural language goes to AI.
-    const special=/^(open:|rps:|qa:|del:|snooze\d+:|\/(start|help|balance|tips|now|clear|qr|count)\b)/i.test(raw);
-    if(special)return oldBotSend.call(this,payload,label);
-    const inp=$('mcBotInput');if(payload==null&&inp){inp.value='';inp.style.height='auto';}
-    $('mcBotCmds')?.classList.add('hidden');
-    try{await mcBotPush(id,{from:'u',text:label||raw});}catch(e){return toast('Сообщение не отправлено: проверьте bot_msgs в Firebase Rules','⚠');}
-    MCB.typing=true;mcBotRender();const st=$('mcBotStatus');if(st)st.textContent='думает…';
-    let ans;try{ans=await mc43BotAIReply(id,raw);}catch(e){console.warn('MetroChat bot AI unavailable',e);try{ans=await b.reply(raw);}catch(_){ans={text:'ИИ сейчас недоступен. Проверьте, что Firebase Function metroAi развёрнута и секрет OPENAI_API_KEY задан.'};}}
-    MCB.typing=false;if(st)st.textContent='@'+id+' · бот';if(MCB.open!==id){await mcBotPush(id,{from:'b',...ans}).catch(()=>{});return;}
-    await mcBotPush(id,{from:'b',...ans}).catch(()=>mcBotRender());
-  };
-
-  // Bot constructor and persistent per-user bot personas.
-  MCB.custom=MCB.custom||{};
-  async function mc43LoadCustomBots(uid){try{const snap=await get(ref(db,`user_settings/${uid}/custom_bots`));MCB.custom=snap.val()||{};for(const [id,c] of Object.entries(MCB.custom)){if(!MC_BOT_MAP[id]){const b={id,name:c.name||'Мой бот',e:c.emoji||'🤖',c1:'#367cf4',c2:'#7555e8',cat:'Мои боты',desc:c.description||'Персональный AI-помощник',cmds:[['/start','Начало']],hello:c.welcome||'Привет! Чем могу помочь?',kb:[] ,reply:async t=>mc43BotAIReply(id,t)};MC_BOTS.push(b);MC_BOT_MAP[id]=b;}}}catch(e){console.warn('custom bots load',e);}}
-  const oldBotInit=mcBotInit;
-  mcBotInit=function(...a){const r=oldBotInit.apply(this,a);if(state.user?.uid&&MCB.customUid!==state.user.uid){MCB.customUid=state.user.uid;mc43LoadCustomBots(state.user.uid).then(()=>{if(window.__mcOtherView==='bots')mcBotsCatalog();if(state.tab==='chats')renderList();});}return r;};
-  window.mc43BotBuilder=function(){const o=ovSheet(`<h3>🤖 Конструктор бота</h3><div class="mc43-bot-builder"><label>Название бота</label><input id="mc43BN" maxlength="28" placeholder="Например, Учебный помощник"><label>Описание</label><input id="mc43BD" maxlength="100" placeholder="Чем помогает бот"><label>Инструкция для ИИ</label><textarea id="mc43BP" rows="4" maxlength="1200" placeholder="Ты — помощник по математике. Объясняй пошагово..."></textarea><label>Приветствие</label><input id="mc43BW" maxlength="180" placeholder="Привет! Я помогу тебе..."><button type="button" id="mc43BSave">Создать бота</button></div>`);o.querySelector('#mc43BSave').onclick=async()=>{const name=o.querySelector('#mc43BN').value.trim(),description=o.querySelector('#mc43BD').value.trim(),prompt=o.querySelector('#mc43BP').value.trim(),welcome=o.querySelector('#mc43BW').value.trim();if(!name||!prompt)return toast('Укажите название и инструкцию для ИИ','⚠');const uid=state.user?.uid;if(!uid)return toast('Войдите в аккаунт','⚠');const id='custom_'+Math.random().toString(36).slice(2,9);const data={name,description,prompt,welcome,emoji:'🤖',createdAt:Date.now()};try{await set(ref(db,`user_settings/${uid}/custom_bots/${id}`),data);MCB.custom[id]=data;const b={id,name,e:'🤖',c1:'#367cf4',c2:'#7555e8',cat:'Мои боты',desc:description||'Персональный AI-помощник',cmds:[['/start','Начало']],hello:welcome||'Привет! Чем могу помочь?',kb:[],reply:async t=>mc43BotAIReply(id,t)};MC_BOTS.push(b);MC_BOT_MAP[id]=b;o.remove();await mcBotAdd(id,true);toast('Бот создан','🤖');}catch(e){console.error(e);toast('Не удалось создать бота. Проверьте права user_settings/{uid}.','⚠');}};};
-  const oldCatalog=mcBotsCatalog;
-  mcBotsCatalog=function(...a){const r=oldCatalog.apply(this,a);const w=$('settingsPanel')?.querySelector('.mc-bots');if(w&&!w.querySelector('#mc43BotCreate')){const b=document.createElement('button');b.type='button';b.id='mc43BotCreate';b.className='btn btn-primary';b.style.cssText='width:100%;margin:0 0 16px';b.textContent='＋ Создать своего AI-бота';b.onclick=mc43BotBuilder;w.insertBefore(b,w.children[1]||null);}return r;};
-
-  // Add per-message actions to bot messages (copy / quote / retry).
-  const oldBotRender=mcBotRender;
-  mcBotRender=function(...a){const r=oldBotRender.apply(this,a);const box=$('mcBotMsgs');if(!box)return r;box.querySelectorAll('.mc-bot-msg').forEach((el,i)=>{if(el.querySelector('.mc43-bot-actions'))return;const m=MCB.msgs[i];if(!m)return;const bar=document.createElement('div');bar.className='mc43-bot-actions';bar.innerHTML=`<button type="button" data-act="copy">Копировать</button><button type="button" data-act="quote">Ответить</button>${m.from==='u'?'':'<button type="button" data-act="retry">Повторить запрос</button>'}`;bar.querySelector('[data-act="copy"]').onclick=()=>navigator.clipboard?.writeText(m.text||'').then(()=>toast('Скопировано','✓')).catch(()=>toast('Не удалось скопировать','⚠'));bar.querySelector('[data-act="quote"]').onclick=()=>{const i=$('mcBotInput');if(i){i.value=(i.value?i.value+'\n':'')+'> '+String(m.text||'').slice(0,300);i.focus();}};bar.querySelector('[data-act="retry"]')?.addEventListener('click',()=>{const prev=[...MCB.msgs].slice(0,i).reverse().find(x=>x.from==='u');if(prev)mcBotSendText(prev.text);});el.appendChild(bar);});return r;};
-
-  // expose latest callbacks
-  Object.assign(window,{mc43BotBuilder,mc43BotAIReply,mcBotSendText,mcBotRender,mcBotsCatalog,mcProfileStyle,mcPStyleEditor,onbFinish,showNotifPrompt});
-  console.info('MetroChat 4.3 patch loaded');
-})();
-
 console.info('MetroChat 4.2 repair patch loaded');
-// Public bridge for the final non-module compatibility patch.
-Object.assign(window,{state,db,ref,set,ovSheet,toast,esc,MCB,MC_BOT_MAP,MC_BOTS,toggleVideoCircle,mcBotInit,mcBotsCatalog});
 
 </script>
 
@@ -14790,111 +14615,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 
-</script>
-
-<script>
-/* MetroChat 4.4 compatibility fixes: media speed + mobile chat long-press */
-(function(){
-  'use strict';
-  const SPEEDS=[1,1.5,2];
-  function speedLabel(v){return (v===1?'1×':String(v).replace('.',',')+'×');}
-  function addSpeedControls(root){
-    if(!root||!root.querySelectorAll)return;
-    root.querySelectorAll('.voice-msg,.video-circle-msg').forEach(box=>{
-      if(box.querySelector('.mc-playback-speed'))return;
-      const b=document.createElement('button');b.type='button';b.className='mc-playback-speed';b.textContent='1×';b.setAttribute('aria-label','Скорость воспроизведения');b.title='Скорость: 1×';
-      b.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();const media=box.querySelector('video');const id=box.closest('[id^="msg-"]')?.id?.slice(4);const audio=id&&window.__mc44AudioRefs?.[id];const current=media||audio;let idx=SPEEDS.indexOf(current?.playbackRate||1);idx=(idx+1)%SPEEDS.length;const next=SPEEDS[idx];if(media)media.playbackRate=next;if(audio)audio.playbackRate=next;b.textContent=speedLabel(next);b.title='Скорость: '+speedLabel(next);});
-      box.appendChild(b);
-    });
-  }
-  const css=document.createElement('style');css.textContent='.mc-playback-speed{position:absolute;z-index:5;right:7px;bottom:7px;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 8px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:800;line-height:1.2;cursor:pointer}.voice-msg,.video-circle-msg{position:relative}.voice-msg .mc-playback-speed{right:2px;bottom:-8px}.voice-msg{padding-right:34px!important}';document.head.appendChild(css);
-  const scan=()=>addSpeedControls(document.getElementById('messages'));
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan);else scan();
-  const msgHost=document.getElementById('messages');if(msgHost)new MutationObserver(scan).observe(msgHost,{childList:true,subtree:true});
-  // Apply the currently selected rate to newly started media and expose the audio map.
-  if(typeof window.toggleVoice==='function'&&!window.__mc44VoiceWrapped){window.__mc44VoiceWrapped=true;const old=window.toggleVoice;window.toggleVoice=function(id,btn){old(id,btn);const a=window.__mc44AudioRefs?.[id];if(a&&btn?.parentElement){const rate=Number(btn.parentElement.dataset.mcRate||1);a.playbackRate=rate;}};}
-
-  // Mobile long-press on a chat row opens the same quick-action menu as desktop.
-  let timer=null,startX=0,startY=0,activeId=null,fired=false,suppressClick=false;
-  function clear(){if(timer)clearTimeout(timer);timer=null;activeId=null;}
-  document.addEventListener('pointerdown',e=>{
-    if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;
-    const row=e.target.closest('.list-item[data-chat-id]');if(!row)return;
-    clear();activeId=row.dataset.chatId;startX=e.clientX;startY=e.clientY;fired=false;
-    const id=activeId,x=startX,y=startY;
-    timer=setTimeout(()=>{const current=document.querySelector('.list-item[data-chat-id="'+CSS.escape(id)+'"]');if(!current)return;fired=true;suppressClick=true;try{navigator.vibrate?.(25)}catch(_){};if(typeof window.showChatCtx==='function')window.showChatCtx({clientX:x,clientY:y,preventDefault(){},stopPropagation(){}},id);else if(typeof window.chatCtxFromEvent==='function')window.chatCtxFromEvent({clientX:x,clientY:y,preventDefault(){},pointerType:'touch'},id);},520);
-  },{passive:true});
-  document.addEventListener('pointermove',e=>{if(!timer)return;if(Math.abs(e.clientX-startX)>12||Math.abs(e.clientY-startY)>12)clear();},{passive:true});
-  ['pointerup','pointercancel','touchcancel'].forEach(type=>document.addEventListener(type,clear,{passive:true}));
-  document.addEventListener('click',e=>{if(!suppressClick)return;const row=e.target.closest('.list-item[data-chat-id]');if(!row)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();suppressClick=false;},true);
-  document.addEventListener('contextmenu',e=>{if(e.target.closest('.list-item[data-chat-id]'))e.preventDefault();});
-})();
-
-</script>
-
-<script>
-/* MetroChat 4.4 completion pass: conditional bot workflows, media-rate persistence, settings cleanup. */
-(function(){
-  'use strict';
-  const $ = id => document.getElementById(id);
-  // Media speed: persist the selected rate on the message, including before first playback.
-  const rates=[1,1.5,2];
-  const label=r=>r===1?'1×':String(r).replace('.',',')+'×';
-  function bindRateButtons(root=document){
-    root.querySelectorAll('.voice-msg,.video-circle-msg').forEach(box=>{
-      const b=box.querySelector('.mc-playback-speed'); if(!b||b.dataset.mcBound==='1')return;
-      b.dataset.mcBound='1';
-      b.addEventListener('click',ev=>{
-        ev.preventDefault();ev.stopPropagation();
-        let i=rates.indexOf(Number(box.dataset.mcRate||1));const r=rates[(i+1)%rates.length];
-        box.dataset.mcRate=String(r);
-        const v=box.querySelector('video');if(v)v.playbackRate=r;
-        const id=box.closest('[id^="msg-"]')?.id.slice(4),a=id&&window.__mc44AudioRefs?.[id];if(a)a.playbackRate=r;
-        b.textContent=label(r);b.title='Скорость: '+label(r);
-      });
-    });
-  }
-  bindRateButtons();
-  const msgRoot=$('messages');if(msgRoot)new MutationObserver(()=>bindRateButtons(msgRoot)).observe(msgRoot,{childList:true,subtree:true});
-  if(typeof window.toggleVoice==='function'&&!window.__mc44RateRestore){window.__mc44RateRestore=true;const prev=window.toggleVoice;window.toggleVoice=function(id,btn){prev(id,btn);const box=btn?.closest('.voice-msg'),a=window.__mc44AudioRefs?.[id];if(a&&box)a.playbackRate=Number(box.dataset.mcRate||1);};}
-  if(typeof window.toggleVideoCircle==='function'&&!window.__mc44VideoRateRestore){window.__mc44VideoRateRestore=true;const prev=window.toggleVideoCircle;window.toggleVideoCircle=function(id){const r=prev.apply(this,arguments);const box=$('vc-'+id),v=box?.querySelector('video');if(v)v.playbackRate=Number(box.dataset.mcRate||1);return r;};}
-
-  // Keep the profile editor's ten solid colors; hide the old gradient wallpaper editor from Additional.
-  const style=document.createElement('style');style.textContent=`#mcUiExtra3{display:none!important}.mc43-profile-ring span{opacity:1!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.mc43-profile-ring{opacity:1!important;filter:none!important}.mc43-profile-enabled .mc-pcard{background-image:none!important}.mc43-profile-enabled .mc-pcard *{opacity:1}.mc43-profile-ring span{background:#202b3d;color:#fff;border-color:rgba(255,255,255,.4)}@media(min-width:761px){#settingsPanel:not(.hidden){overflow:auto}#settingsPanel:not(.hidden) .settings-wrap{width:min(100%,980px);margin-inline:auto}}#mcFolderBar{display:flex;width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;gap:7px;padding:8px 10px;box-sizing:border-box}#mcFolderBar button{flex:0 0 auto;min-width:76px;max-width:180px;white-space:nowrap}`;document.head.appendChild(style);
-
-  // Custom bot workflows: phrase match -> response + optional quick-reply buttons.
-  function parseButtons(v){return String(v||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,6).map(x=>{const p=x.split('|');const title=(p[0]||'').trim().slice(0,36);const payload=(p[1]||p[0]||'').trim().slice(0,120);return title&&payload?[title,payload]:null;}).filter(Boolean);}
-  function workflowFor(id,text){const cfg=window.MCB?.custom?.[id]||{};const rules=Array.isArray(cfg.rules)?cfg.rules:[];const t=String(text||'').toLocaleLowerCase('ru');
-    for(const r of rules){const trigger=String(r.when||r.q||'').trim().toLocaleLowerCase('ru');if(trigger&&t.includes(trigger))return {text:String(r.reply||r.a||'').trim()||'Условие сработало.',kb:Array.isArray(r.buttons)?r.buttons:[]};}
-    return null;
-  }
-  if(typeof window.mc43BotAIReply==='function'&&!window.__mc44WorkflowReply){window.__mc44WorkflowReply=true;const prev=window.mc43BotAIReply;window.mc43BotAIReply=async function(id,userText){const match=workflowFor(id,userText);if(match)return match;return prev.apply(this,arguments);};}
-
-  // Replace the bot builder with a compact editor that supports one or more conditional scenarios.
-  window.mc43BotBuilder=function(editId){
-    const uid=window.state?.user?.uid;if(!uid){window.toast?.('Войдите в аккаунт','⚠');return;}
-    const old=window.MCB?.custom?.[editId]||{};
-    const existing=Array.isArray(old.rules)?old.rules:[];
-    const ruleText=existing.map(r=>`${r.when||r.q||''} => ${r.reply||r.a||''}`).join('\n');
-    const buttonText=existing[0]?.buttons?.map(x=>Array.isArray(x)?x.join('|'):String(x)).join('\n')||'';
-    const overlay=window.ovSheet(`<h3>🤖 Конструктор AI-бота</h3><div class="mc43-bot-builder"><label>Название</label><input id="mc44BN" maxlength="28" placeholder="Например, Помощник" value="${window.esc?.(old.name||'')||''}"><label>Описание</label><input id="mc44BD" maxlength="100" placeholder="Чем помогает бот" value="${window.esc?.(old.description||'')||''}"><label>Инструкция для ИИ</label><textarea id="mc44BP" rows="4" maxlength="1200" placeholder="Ты — дружелюбный помощник...">${window.esc?.(old.prompt||'')||''}</textarea><label>Приветствие</label><input id="mc44BW" maxlength="180" placeholder="Привет! Чем помочь?" value="${window.esc?.(old.welcome||'')||''}"><label>Условия (каждая строка: фраза => ответ)</label><textarea id="mc44Rules" rows="4" placeholder="цена => Стоимость зависит от тарифа&#10;помощь => Чем могу помочь?">${window.esc?.(ruleText)||''}</textarea><small>Если сообщение содержит фразу слева от =&gt;, бот отправит ответ справа, не вызывая ИИ.</small><label>Кнопки к ответу (каждая строка: название | текст для отправки)</label><textarea id="mc44Buttons" rows="3" placeholder="Узнать цену | цена&#10;Поддержка | помощь">${window.esc?.(buttonText)||''}</textarea><button type="button" id="mc44Save">${editId?'Сохранить изменения':'Создать бота'}</button></div>`);
-    if(!overlay)return;
-    overlay.querySelector('#mc44Save').onclick=async()=>{
-      const val=id=>overlay.querySelector('#'+id)?.value?.trim()||'';
-      const name=val('mc44BN'),description=val('mc44BD'),prompt=val('mc44BP'),welcome=val('mc44BW');
-      if(!name||!prompt){window.toast?.('Укажите название и инструкцию для ИИ','⚠');return;}
-      const rules=val('mc44Rules').split('\n').map(line=>{const i=line.indexOf('=>');if(i<0)return null;const when=line.slice(0,i).trim(),reply=line.slice(i+2).trim();return when&&reply?{when,reply,buttons:parseButtons(val('mc44Buttons'))}:null;}).filter(Boolean).slice(0,20);
-      const id=editId||('custom_'+Math.random().toString(36).slice(2,9));const data={name,description,prompt,welcome,emoji:old.emoji||'🤖',rules,updatedAt:Date.now(),createdAt:old.createdAt||Date.now()};
-      try{await window.set(window.ref(window.db,`user_settings/${uid}/custom_bots/${id}`),data);window.MCB=window.MCB||{};window.MCB.custom=window.MCB.custom||{};window.MCB.custom[id]=data;
-        let bot=window.MC_BOT_MAP?.[id];if(bot){bot.name=name;bot.desc=description;bot.hello=welcome;bot.reply=async t=>window.mc43BotAIReply(id,t);}else{bot={id,name,e:'🤖',c1:'#367cf4',c2:'#7555e8',cat:'Мои боты',desc:description||'Персональный AI-помощник',cmds:[['/start','Начало']],hello:welcome||'Привет! Чем могу помочь?',kb:[],reply:async t=>window.mc43BotAIReply(id,t)};window.MC_BOTS?.push(bot);if(window.MC_BOT_MAP)window.MC_BOT_MAP[id]=bot;try{await window.mcBotAdd?.(id,true);}catch(_){}}
-        overlay.remove();window.toast?.(editId?'Бот обновлён':'Бот создан','✓');if(typeof window.mcBotsCatalog==='function')window.mcBotsCatalog();
-      }catch(e){console.error('bot builder save',e);window.toast?.('Не удалось сохранить бота. Проверьте доступ к user_settings/{uid}.','⚠');}
-    };
-  };
-  // Inline controls in the bot list use this global alias for create/edit.
-  window.mcBotCreateOpen=window.mc43BotBuilder;
-  console.info('MetroChat 4.4 completion pass loaded');
-})();
 </script>
 
 </body>
