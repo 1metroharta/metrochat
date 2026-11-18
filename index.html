@@ -10752,8 +10752,17 @@ Object.assign(window, { startVoiceCall, startVideoCall, mcStartCall, acceptIncom
 // ===== Round 6 · Новые настройки: короткий главный экран + подстраницы =====
 let mcSetPage = 'main';
 function mcSetGo(p) {
-  mcSetPage = p || 'main'; renderSettings();
-  const w = $('settingsPanel'); if (w) { w.scrollTop = 0; w.querySelector('.settings-wrap')?.scrollTo?.(0, 0); }
+  const panel = $('settingsPanel');
+  const oldWrap = panel?.querySelector('.settings-wrap');
+  const scrollTop = oldWrap?.scrollTop ?? panel?.scrollTop ?? 0;
+  mcSetPage = p || 'main';
+  renderSettings();
+  requestAnimationFrame(() => {
+    const nextPanel = $('settingsPanel');
+    const nextWrap = nextPanel?.querySelector('.settings-wrap');
+    if (nextWrap) nextWrap.scrollTop = scrollTop;
+    else if (nextPanel) nextPanel.scrollTop = scrollTop;
+  });
 }
 function mcSetToggle(key, def = true) {
   const cur = state.settings[key] ?? def; state.settings[key] = !cur;
@@ -13091,6 +13100,10 @@ mcAgeOk = function () { return true; };
 renderGiftShop = async function () {
   const wrap = $('settingsPanel'); if (!wrap) return;
   window.__mcOtherView = 'gifts';
+  if (!state.user?.uid) {
+    wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="empty"><div class="empty-icon">🎁</div><h3>Войдите в аккаунт</h3><p>Для загрузки подарков необходимо войти в MetroChat.</p></div></div>`;
+    return;
+  }
   const chips = [['all', 'Все'], ['common', 'Обычные'], ['rare', 'Редкие'], ['epic', 'Эпические'], ['leg', 'Легендарные']];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div>
   <div class="settings-wrap mc-gs7">
@@ -13110,9 +13123,22 @@ renderGiftShop = async function () {
     wrap.querySelectorAll('.mc-gs7-chips button').forEach(x => x.classList.toggle('on', x === b));
     wrap.querySelectorAll('.mc-gs7-grid .mc-gi7[data-r]').forEach(x => { x.hidden = mcShopFilter !== 'all' && x.dataset.r !== mcShopFilter; });
   });
-  const bal = await readGiftBalance(); mcSetBalanceUI(bal);
+  try {
+    const bal = await readGiftBalance();
+    mcSetBalanceUI(bal);
+  } catch (e) {
+    console.warn('Gift balance unavailable:', e);
+    const balance = $('giftBalanceValue');
+    if (balance) balance.innerHTML = '— <span>баланс временно недоступен</span>';
+    const card = balance?.closest('.gift-wallet-card');
+    if (card && !card.querySelector('.mc-wallet-error')) card.insertAdjacentHTML('beforeend', '<p class="mc-wallet-error">Не удалось проверить баланс. Покупки временно отключены; ваши умы не обнулены.</p>');
+  }
   await renderOwnedGifts();
 };
+
+// Экспортируем именно новые реализации, а не старые ссылки, экспортированные выше.
+window.renderGiftShop = renderGiftShop;
+window.renderOwnedGifts = renderOwnedGifts;
 
 renderOwnedGifts = async function () {
   const el = $('giftOwnedSection'); if (!el || !state.user?.uid) return;
@@ -13124,8 +13150,10 @@ renderOwnedGifts = async function () {
     const worth = all.reduce((s, g) => s + (Number(g.cost) || Number(mcGiftById(g.giftId)?.cost) || 0), 0);
     el.innerHTML = `<div class="discovery-section-head"><div><h3>Мои подарки · ${all.length}</h3><p>Ценность коллекции: ${mcFmtUm(worth)} УМ${hiddenN ? ` · скрыто: ${hiddenN}` : ''}</p></div>${hiddenN ? `<button type="button" class="mc-chip7" onclick="mcToggleOwnedHidden()">${mcOwnedShowHidden ? 'Скрыть скрытые' : 'Показать скрытые'}</button>` : ''}</div>
     ${items.length ? `<div class="gift-owned-list">${items.map(g => { const r = mcGiftRarity({ ...g, cost: g.cost || mcGiftById(g.giftId)?.cost }); return `<div class="gift-owned-item r-${r}${g.hidden ? ' is-hidden' : ''}"><span>${esc(g.emoji || '🎁')}</span><div><b>${esc(g.name || 'Подарок')}</b><small>${g.fromName ? 'От ' + esc(g.fromName) : 'Ваш подарок'}${g.hidden ? ' · скрыт' : ''}</small></div><button class="mini-btn" title="${g.hidden ? 'Показать в профиле' : 'Скрыть в профиле'}" onclick="hideOwnedGift('${g.id}')">${g.hidden ? '👁' : '◉'}</button><button class="mini-btn" title="Подарить" onclick="giftOwnedItem('${g.id}')">↗</button></div>`; }).join('')}</div>` : '<p class="gift-empty-note">Пока нет подарков. Купите в витрине или получите от друзей.</p>'}`;
-  } catch (e) { el.innerHTML = '<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте подключение.</p>'; }
+  } catch (e) { el.innerHTML = '<p class="gift-empty-note">Не удалось загрузить подарки. Проверьте подключение и права gift_inventory.</p>'; }
 };
+window.renderGiftShop = renderGiftShop;
+window.renderOwnedGifts = renderOwnedGifts;
 
 // ===================== 2. Новый «Прочее» =====================
 const MC9_OTHER = {
@@ -13701,7 +13729,7 @@ async function mcClearMediaCache() {
 // вписываем страницу «security» в существующие настройки
 const _mcRenderSettingsR9 = renderSettings;
 renderSettings = function (...a) {
-  if (mcSetPage === 'security') { mcSetSecurityPage(); const w = $('settingsPanel'); if (w) { w.scrollTop = 0; w.querySelector('.settings-wrap')?.scrollTo?.(0, 0); } return; }
+  if (mcSetPage === 'security') { mcSetSecurityPage(); return; }
   return _mcRenderSettingsR9(...a);
 };
 
@@ -14215,22 +14243,17 @@ async function mcBoostOpen(id){
 W('mcBoostOpen',mcBoostOpen);
 new MutationObserver(()=>{ const a=$('chatActions'),c=state.chat; if(!a||!c||c.type!=='channel'||a.querySelector('#mcChBoost'))return; const b=document.createElement('button'); b.id='mcChBoost'; b.className='chat-icon-btn'; b.textContent='🚀'; b.title='Буст канала'; b.onclick=()=>mcBoostOpen(c.id); a.prepend(b); }).observe($('chatActions')||document.body,{childList:true,subtree:true});
 { const o=mcChCard; mcChCard=W('mcChCard',function(c){ let h=o.apply(this,arguments); const lv=mcBoostLv(c?.boostTotal); return h.replace('</b>',`${c?.emoji?' '+esc(c.emoji):''}${lv?`<span class="mc13-lv">⚡${lv}</span>`:''}</b>`); }); }
-// --- Business access: use the authoritative galochka/{uid}/confirmed flag ---
-const isVer=()=>state.galochka?.[mcMe()]?.confirmed===true || state.profile?.verified===true;
+// --- Business access: verification is a profile badge, not a lock on business tools ---
 {
  const originalBizOpen=mcBizOpen;
  mcBizOpen=W('mcBizOpen',async function(){
-   const w=$('settingsPanel'); let verified=isVer();
-   if(!verified){
-     try{const snap=await get(ref(db,`galochka/${mcMe()}`));const flags=snap.val()||{};state.galochka={...(state.galochka||{}),[mcMe()]:flags};verified=flags.confirmed===true;}
-     catch(e){console.warn('Business verification check:',e);}
-   }
-   if(!verified){window.__mcOtherView='biz';w.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div><div class="settings-wrap"><div class="mc11-card"><div class="mc11-av" style="background:#64748b">🔒</div><div class="mc11-grow"><b>Доступно после подтверждения</b><small>Статус проверяется по Firebase → galochka/${esc(mcMe())}/confirmed. Если галочка уже есть, обновите страницу и проверьте Rules для чтения этого узла.</small></div></div></div>`;return;}
    await originalBizOpen.apply(this,arguments);
-   const b=bzGet(),host=w.querySelector('.mc11-sheet');
+   const w=$('settingsPanel');
+   const b=bzGet(),host=w?.querySelector('.mc11-sheet');
    if(!host)return;
    if(!$('bzSv'))host.insertAdjacentHTML('beforeend',`<label>Услуги: «название | цена в УМ», по строке</label><textarea id="bzSv" rows="3" autocomplete="off">${esc(b.sv||'')}</textarea><div id="bzOrd"></div>`);
-   const save=$('bzS'); if(save)save.onclick=async()=>{const v={n:bzN.value.trim(),c:bzC.value.trim(),a:bzA.value.trim(),w:bzW.value.trim(),h:bzH.value.trim(),d:bzD.value.trim(),g:bzG.value.trim(),o:bzO.value.trim(),q:bzQ.value,sv:$('bzSv')?.value||''};if(v.w&&!/^https?:\/\//i.test(v.w))return toast('Сайт должен начинаться с https://','⚠');try{await set(ref(db,`user_settings/${mcMe()}/business`),v);mcBizCache=v;localStorage.setItem(BZ+'_'+mcMe(),JSON.stringify(v));toast('Бизнес-профиль сохранён','✓');}catch(e){console.error(e);toast('Не удалось сохранить. Проверьте права user_settings/{uid}/business.','⚠');}};
+   const save=$('bzS');
+   if(save)save.onclick=async()=>{const v={n:bzN.value.trim(),c:bzC.value.trim(),a:bzA.value.trim(),w:bzW.value.trim(),h:bzH.value.trim(),d:bzD.value.trim(),g:bzG.value.trim(),o:bzO.value.trim(),q:bzQ.value,sv:$('bzSv')?.value||''};if(v.w&&!/^https?:\/\//i.test(v.w))return toast('Сайт должен начинаться с https://','⚠');try{await set(ref(db,`user_settings/${mcMe()}/business`),v);mcBizCache=v;localStorage.setItem(BZ+'_'+mcMe(),JSON.stringify(v));toast('Бизнес-профиль сохранён','✓');}catch(e){console.error(e);toast('Не удалось сохранить. Проверьте права user_settings/{uid}/business.','⚠');}};
    get(query(ref(db,`service_orders/${mcMe()}`),orderByChild('at'),limitToLast(20))).then(x=>{const r=Object.values(x.val()||{}).sort((a,b)=>b.at-a.at);const target=$('bzOrd');if(target)target.innerHTML=r.length?'<label>Заказы</label>'+r.map(z=>`<div class="mc13-svc"><span class="mc11-grow"><b>${esc(z.name)}</b><br><small>${esc(z.buyerName||'Клиент')} · ${new Date(z.at).toLocaleDateString('ru-RU')}</small></span>${z.price} УМ</div>`).join(''):'';}).catch(()=>{});
  });
 }
@@ -14505,6 +14528,12 @@ mcAICall=async function(userText){
     }finally{clearTimeout(timer);}
   }
 };
+
+// Final public handlers: ensure dynamic HTML always calls the latest implementations.
+Object.assign(window, {
+  renderGiftShop, renderOwnedGifts, renderGiftCraft, openGiftSendPicker,
+  mcOpenGiftSendPage, mcBizOpen, mc9Go
+});
 
 console.info('MetroChat 4.2 repair patch loaded');
 
