@@ -125,7 +125,7 @@
       "$uid": {
         ".read": "auth != null",
         "balance": {
-          ".write": "auth.uid === $uid || (auth != null && newData.isNumber() && newData.val() >= data.val())"
+          ".write": "auth.uid === $uid || (auth != null && newData.isNumber() && ((!data.exists() && newData.val() === 0) || (data.exists() && newData.val() >= data.val())))"
         }
       }
     },

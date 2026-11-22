@@ -5849,6 +5849,7 @@ async function readGiftBalance(uid=state.user?.uid){
  if(!Number.isFinite(value)||value<0) throw new Error('Некорректное значение баланса');
  return value;
 }
+let mcShopFilter = 'all';
 async function renderGiftShop(){
  const wrap=$('settingsPanel');if(!wrap)return;wrap.innerHTML=`<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div><div class="settings-wrap"><div class="gift-wallet-card"><div><small>ВАШ БАЛАНС</small><h2 id="giftBalanceValue">… <span>умов</span></h2><p>Проходите короткие тесты и отправляйте подарки.</p></div><div class="gift-wallet-coin">УМ</div></div><button class="btn btn-primary gift-earn-wide" onclick="startGiftEarning()">✦ Заработать подарки</button><button class="btn btn-secondary gift-send-wide" onclick="openGiftSendPicker()">↗ Подарить подарок</button><button class="btn btn-secondary gift-send-wide" onclick="renderGiftCraft()">🛠️ Крафт подарков</button><div class="discovery-section-head"><div><h3>Витрина подарков</h3><p>Выберите подарок для себя или друга</p></div></div><div class="gift-shop-grid">${METRO_GIFTS.map(g=>`<button class="gift-shop-item" onclick="selectGiftToBuy('${g.id}')"><span class="gift-emoji">${g.emoji}</span><b>${g.name}</b><small>${g.desc}</small><span class="gift-price">${g.cost} УМ</span></button>`).join('')}</div><div id="giftOwnedSection"></div></div>`;
  try{const bal=await readGiftBalance();if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`${bal} <span>умов</span>`;}catch(e){console.warn('Gift balance unavailable:',e);if($('giftBalanceValue'))$('giftBalanceValue').innerHTML=`— <span>баланс не загружен</span>`;const card=$('giftBalanceValue')?.closest('.gift-wallet-card');if(card&&!card.querySelector('.mc-wallet-error'))card.insertAdjacentHTML('beforeend','<p class="mc-wallet-error">Не удалось получить баланс из Firebase. Сумма не сброшена.</p>');} await renderOwnedGifts();
@@ -6819,7 +6820,7 @@ function mcRenderBdayBanner() {
   const more = mcBdayList.length > 1 ? `<button type="button" class="mc-bday-next" onclick="mcBdayNext()" title="Следующий">${mcBdayIndex + 1}/${mcBdayList.length} ›</button>` : '';
   el.innerHTML = me
     ? `<div class="mc-bday-card is-me"><div class="mc-bday-icon">🎉</div><div class="mc-bday-text"><b>С днём рождения, ${esc(name)}!</b><small>Команда MetroChat поздравляет вас</small></div>${more}<button type="button" class="mc-bday-close" onclick="mcBdayDismiss('${uid}')" aria-label="Закрыть">✕</button></div>`
-    : `<div class="mc-bday-card"><div class="mc-bday-icon">🎂</div><div class="mc-bday-text"><b>У ${esc(name)} сегодня день рождения!</b><small>Отправить подарок?</small></div>${more}<button type="button" class="mc-bday-send" onclick="mcOpenGiftSendPage({toUid:'${uid}', birthday:true})">🎁 Отправить</button><button type="button" class="mc-bday-close" onclick="mcBdayDismiss('${uid}')" aria-label="Закрыть">✕</button></div>`;
+    : `<div class="mc-bday-card mc41-bday"><div class="mc-bday-icon">🎂</div><div class="mc-bday-text"><b>${esc(name)} празднует день рождения!</b><small>Отправить подарок?</small></div>${more}<button type="button" class="mc41-bday-act" onclick="mcOpenGiftSendPage({toUid:'${uid}', birthday:true})">🎁 Поздравить</button><button type="button" class="mc-bday-close" onclick="mcBdayDismiss('${uid}')" aria-label="Закрыть">✕</button></div>`;
   mcBdayVisibility();
 }
 function mcBdayVisibility() { const el = $('mcBdayBanner'); if (!el) return; el.hidden = !mcBdayList.length || !['chats', 'groups', 'channels'].includes(state.tab); }
@@ -15512,57 +15513,11 @@ async function mc41StyleEditor(){
 { const prev = openChatInfo; if (typeof prev === 'function') openChatInfo = W('openChatInfo', function(){ const r = prev.apply(this, arguments); Promise.resolve(r).then(() => setTimeout(() => { const uid = (state.chat && (state.chat.peerId || state.chat.otherUid)) || null; if (uid) { mc41Paint(uid); } mc41BizChatBar(); }, 140)); return r; }); }
 
 /* ---------------- 4. Birthdays ---------------- */
-function mc41BirthdayList(){
-  const me = state.user?.uid; if (!me) return [];
-  const today = new Date(); const mo = today.getMonth() + 1, d = today.getDate();
-  const seen = new Set(); const out = [];
-  const push = uid => {
-    if (!uid || seen.has(uid) || uid === me) return;
-    seen.add(uid);
-    const u = getUser(uid); if (!u) return;
-    if (state.blocked && state.blocked[uid]) return;
-    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(u.birthday || ''));
-    if (!m) return;
-    if (+m[2] === mo && +m[3] === d) out.push(uid);
-  };
-  Object.values(state.chats || {}).forEach(c => { if (c && c.type === 'dm' && c.peerId) push(c.peerId); });
-  Object.keys(state.cacheUsers || {}).forEach(push);
-  Object.keys(state.users || {}).forEach(push);
-  return out;
-}
-function mc41RenderBday(force){
-  const el = $id('mcBdayBanner'); if (!el) return;
-  if (!state.user) { el.hidden = true; return; }
-  if (force || !el.dataset.mc41) {
-    const list = mc41BirthdayList();
-    el.dataset.mc41 = '1';
-    if (!list.length) { el.hidden = true; el.innerHTML = ''; return; }
-    const uid = list[0];
-    const u = getUser(uid) || {};
-    const name = u.displayName || u.firstName || u.username || 'друг';
-    el.innerHTML = `<div class="mc-bday-card mc41-bday"><div class="mc-bday-icon">🎂</div>
-      <div class="mc-bday-text"><b>${esc(name)} празднует день рождения!</b><small>Отправить подарок?</small></div>
-      <button type="button" class="mc41-bday-act" data-bd="${esc(uid)}">🎁 Поздравить</button>
-      <button type="button" class="mc-bday-close" data-bdclose="1" aria-label="Закрыть">✕</button></div>`;
-    el.hidden = false;
-    el.querySelector('[data-bd]').onclick = e => { e.stopPropagation(); try { mcOpenGiftSendPage({ toUid: uid, birthday: true }); } catch (err) { toast('Не удалось открыть подарки', '⚠'); } };
-    el.querySelector('[data-bdclose]').onclick = e => { e.stopPropagation(); el.hidden = true; try { localStorage.setItem('mc41_bday_hide_' + uid + '_' + new Date().toISOString().slice(0,10), '1'); } catch (_) {} };
-  }
-  el.hidden = !!(el.dataset.mc41 === '1' && !el.querySelector('.mc-bday-card'));
-}
+/* Единственная реализация — старый mcCheckBirthdays/mcRenderBdayBanner.
+   Он уже умеет дни рождения контактов и своё, скрытие на день и листание. */
 window.mc41BirthdayRefresh = function(){
-  const el = $id('mcBdayBanner'); if (!el) return;
-  el.dataset.mc41 = '';
   try { mcCheckBirthdays(); } catch (_) {}
-  setTimeout(() => mc41RenderBday(true), 60);
 };
-{ const prev = switchTab; switchTab = W('switchTab', function(){ const r = prev.apply(this, arguments); setTimeout(() => mc41RenderBday(true), 120); return r; }); }
-document.addEventListener('click', e => { const b = e.target.closest('[data-bd]'); if (!b) return;
-  e.preventDefault(); e.stopPropagation();
-  try { mcOpenGiftSendPage({ toUid: b.dataset.bd, birthday: true }); } catch (_) { toast('Не удалось открыть подарки', '⚠'); }
-}, true);
-setInterval(() => { try { if (state.user) mc41RenderBday(true); } catch (_) {} }, 4 * 60 * 1000);
-setTimeout(() => { try { mc41RenderBday(true); } catch (_) {} }, 4000);
 
 /* ---------------- 5. Business ---------------- */
 const MC41_BIZ_KEY = 'mc41_biz_';
@@ -15585,17 +15540,33 @@ function mc41BizNormalize(raw){
   b.hello = b.hello || b.g || '';
   b.qr = Array.isArray(b.qr) ? b.qr : [];
   b.qm = Array.isArray(b.qm) ? b.qm : [];
+  /* один ключ быстрого ответа — одна запись (побеждает последняя) */
+  const seenQr = new Set();
+  b.qr = b.qr.filter(q => {
+    const k = String(q?.key || '').trim().toLowerCase();
+    if (!k || seenQr.has(k)) return false;
+    seenQr.add(k); return true;
+  });
   return b;
 }
-async function mc41BizSave(patch){
-  const uid = state.user?.uid; if (!uid) return toast('Войдите в аккаунт', '⚠');
-  const cur = await mc41BizLoad(uid);
-  const next = mc41BizNormalize(Object.assign({}, cur, patch, { on: patch.on !== undefined ? patch.on : cur.on }));
-  try {
+let mc41BizQueue = Promise.resolve();
+function mc41BizSave(patch){
+  const run = async () => {
+    const uid = state.user?.uid; if (!uid) { toast('Войдите в аккаунт', '⚠'); return null; }
+    const cur = await mc41BizLoad(uid);
+    const next = mc41BizNormalize(Object.assign({}, cur, patch, { on: patch.on !== undefined ? patch.on : cur.on }));
     await set(ref(db, `user_settings/${uid}/business`), next);
     mc41BizSetCache(next);
+    /* Кошелёк продавца должен существовать, иначе покупатель не сможет перевести оплату. */
+    try {
+      const w = ref(db, `gift_wallet/${uid}/balance`);
+      if (!(await get(w)).exists()) await set(w, 0);
+    } catch (e) { console.warn('wallet init', e); }
     return next;
-  } catch (e) { console.warn('biz save', e); toast('Не удалось сохранить бизнес-профиль', '⚠'); throw e; }
+  };
+  const task = mc41BizQueue.then(run, run).catch(e => { console.warn('biz save', e); toast('Не удалось сохранить бизнес-профиль', '⚠'); throw e; });
+  mc41BizQueue = task.catch(() => {});
+  return task;
 }
 window.mc41BizToggle = async function(){
   const b = await mc41BizLoad();
@@ -15670,7 +15641,7 @@ function mc41BizBody(b, tab){
     $id('mc41QRAdd').onclick = async () => {
       const key = $id('mc41QRK').value.trim().replace(/^\//, ''), text = $id('mc41QRT').value.trim();
       if (!key || !text) return toast('Заполните ключ и ответ', '⚠');
-      const qr = (b.qr || []).concat([{ key, text }]).slice(0, 50);
+      const qr = (b.qr || []).filter(q => String(q.key || '').toLowerCase() !== key.toLowerCase()).concat([{ key, text }]).slice(0, 50);
       await mc41BizSave({ qr }); mc41BizOpen('msg');
     };
     $id('mc41HelloSave').onclick = async () => { await mc41BizSave({ hello: $id('mc41Hello').value.trim() }); toast('Сохранено', '✓'); };
@@ -15702,12 +15673,6 @@ function mc41BizBody(b, tab){
       : '<p class="mc9-note" style="text-align:center;margin:26px 0">Заказов пока нет.</p>';
   }).catch(() => { const host = $id('mc41Orders'); if (host) host.innerHTML = '<p class="mc9-note" style="text-align:center;margin:26px 0">Не удалось загрузить заказы.</p>'; });
 }
-/* settings row with master switch */
-{ const base = mcSetMain; mcSetMain = W('mcSetMain', function(){
-  return base.apply(this, arguments) + `<div class="mc11-card" style="cursor:pointer" onclick="mc41BizOpen()" id="mc41BizRow">
-    <div class="mc11-av" style="background:linear-gradient(135deg,#16a34a,#0d9488);border-radius:14px">💼</div>
-    <div class="mc11-grow"><b>Для бизнеса</b><small>${mc41BizGet().on ? 'Включено · компания, услуги и оплата' : 'Профиль компании, услуги и оплата в умах'}</small></div>›</div>`;
-}); }
 /* public profile: company line, hours, contact block, service cart */
 let mc41Cart = { uid: null, items: [] };
 async function mc41BizProfile(uid){
@@ -15742,7 +15707,7 @@ async function mc41BizProfile(uid){
       const s = b.sv.find(x => x.id === btn.dataset.add); if (!s) return;
       if (mc41Cart.uid !== uid) mc41Cart = { uid, items: [] };
       mc41Cart.items.push({ id: s.id, name: s.name, price: s.price });
-      mc41CartRender();
+      mc41CartRender(uid);
       toast('«' + s.name + '» в корзине', '🛒');
     });
     if (mc41Cart.uid === uid) mc41CartRender(uid);
@@ -15764,7 +15729,13 @@ async function mc41CartPay(uid, total){
     if (bal < total) return toast(`Нужно ${total} УМ, у вас ${bal}`, '💎');
     const ok = await mcConfirm('Оплатить услуги?', `${total} УМ спишется с баланса и перейдёт продавцу.`, { okText: 'Оплатить' });
     if (!ok) return;
-    const tb = await readGiftBalance(uid);
+    let tb = await readGiftBalance(uid);
+    try {
+      const wref = ref(db, `gift_wallet/${uid}/balance`);
+      if (!(await get(wref)).exists()) { await set(wref, 0); tb = 0; }
+    } catch (_) {
+      return toast('У продавца ещё не активирован кошелёк. Попросите его открыть раздел «Подарки».', '⚠');
+    }
     const upd = {};
     upd[`gift_wallet/${mcMe()}/balance`] = bal - total;
     upd[`gift_wallet/${uid}/balance`] = tb + total;
