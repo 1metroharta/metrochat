@@ -3600,7 +3600,7 @@ function subscribeAll() {
   // Не подписываемся на весь /users и /presence: загружаем только нужные профили и статусы.
   state.subs.push(onValue(ref(db, 'galochka'), snap => { state.galochka = snap.val() || {}; mcRafOnce('galochka', () => { renderList(); updateUserStrip(); if (state.chat) { renderChatHeader(); renderMessages(); } if (state.tab === 'settings') renderSettings(); }); }, err => console.warn('Verification subscription:', err)));
   // «Печатает…» теперь слушается только для открытого чата (typing_v2/<chatId>), см. mcTypingSubscribe.
-  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; syncPresenceSubscriptions(); renderList(); updateBadges(); }, err => { console.error('user_chats permission/read error:',err); const l=$('sbList'); if(l&&!Object.keys(state.chats||{}).length) l.innerHTML='<div class="empty"><div class="empty-icon">🔒</div><h3>Не удалось загрузить чаты</h3><p>Firebase отклонил чтение user_chats. Данные не удалены. Проверьте правила Realtime Database.</p></div>'; }));
+  state.subs.push(onValue(ref(db, 'user_chats/' + uid), snap => { state.chats = snap.val() || {}; try { mc41BizWatchChats(state.chats); } catch (_) {} syncPresenceSubscriptions(); renderList(); updateBadges(); }, err => { console.error('user_chats permission/read error:',err); const l=$('sbList'); if(l&&!Object.keys(state.chats||{}).length) l.innerHTML='<div class="empty"><div class="empty-icon">🔒</div><h3>Не удалось загрузить чаты</h3><p>Firebase отклонил чтение user_chats. Данные не удалены. Проверьте правила Realtime Database.</p></div>'; }));
   // Ограничиваем стартовую подписку: не скачиваем всю историю всех каналов на каждом входе.
   state.subs.push(onValue(query(ref(db, 'channels'), orderByChild('createdAt'), limitToLast(30)), snap => {
     state.channels = snap.val() || {};
@@ -4207,6 +4207,8 @@ function subscribeMessages(chatId) {
         const nv = newMsgs.find(m => m.type === 'voice' && m.senderId !== state.user.uid);
         if (nv) setTimeout(() => { const btn = document.querySelector(`[data-msgid="${nv.id}"]`); if (btn) toggleVoice(nv.id, btn); }, 500);
       }
+      /* бизнес-приветствие: владелец компании отвечает автосообщением на первое письмо клиента за день */
+      try { const lastNew = newMsgs[newMsgs.length - 1]; if (lastNew) mc41AutoGreet(state.chat?.type === 'dm' ? (state.chat.peerId || state.chat.otherUid) : null, lastNew); } catch (_) {}
     }
   }, err => { console.error('Messages:', err); $('messages').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><h3>Нет доступа</h3><p>${esc(humanErr(err))}</p></div>`; });
 }
@@ -4278,6 +4280,14 @@ function renderMessages() {
   if (state.settings.typingIndicator) {
     const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== state.user.uid);
     if (tu.length) { const names = tu.map(t => getUser(t.uid)?.firstName || 'Кто-то').join(', '); html += `<div class="typing">${esc(names)} печатает...</div>`; }
+  }
+  /* Приветствие компании: показываем клиенту сразу после его первого сообщения, пока компания не ответила. */
+  if (state.chat.type === 'dm' && window.__mc41PeerBiz) {
+    const pb = window.__mc41PeerBiz;
+    const peer = state.chat.peerId || state.chat.otherUid;
+    if (pb.uid === peer && pb.hello && !state.messages.some(m => m.senderId === peer && !m.deleted) && state.messages.some(m => m.senderId === state.user.uid && !m.deleted)) {
+      html += `<div class="msg in mc41-hello"><span class="mc41-hello-tag">${esc(pb.name || 'Компания')} · автоответ</span>${esc(pb.hello).replace(/\n/g, '<br>')}<span class="time">${timeShort(now())}</span></div>`;
+    }
   }
   if (html && box.__mcHtml === html && box.__mcChat === state.chat.id && box.__mcFirst && box.__mcFirst === box.firstChild) { box.__mcSkip = true; if (atBottom) box.scrollTop = box.scrollHeight; return; }
   box.__mcSkip = false;
@@ -8359,6 +8369,8 @@ function mcBgNotifyInit() {
     if (!prev) return;
     const fresh = Object.entries(d).filter(([id, c]) => c && Number(c.lastTs || 0) > (prev[id] || 0) && c.lastMessage && c.lastMessage.senderId && c.lastMessage.senderId !== uid && id !== state.chat?.id && !c.muted && Number(c.unread || 0) > 0);
     if (!fresh.length) return;
+    /* авто-приветствие компании на новое сообщение клиента, даже если чат не открыт */
+    try { for (const [, fc] of fresh) if (fc.type === 'dm' && fc.peerId && fc.lastMessage) mc41AutoGreet(fc.peerId, { senderId: fc.lastMessage.senderId, createdAt: fc.lastTs }); } catch (_) {}
     const [id, c] = fresh[fresh.length - 1];
     if (c.type === 'dm' && c.peerId && !getUser(c.peerId)) fetchUserIfMissing(c.peerId).catch(() => {});
     mcNotifyIncoming({ chatId: id, chatType: c.type || 'dm', senderId: c.lastMessage.senderId, text: mcStripFmt(c.lastMessage.text || '') || MC_PREVIEW_MAP[c.lastMessage.type] || '📎 Вложение', silentMsg: !!c.lastMessage.silent });
@@ -15296,6 +15308,8 @@ const V = 'b4.1';
 #mc41BizBar .t{font-size:12px;text-transform:uppercase;letter-spacing:.4px;opacity:.6}
 #mc41BizBar .l{font-size:13.5px;display:flex;gap:8px;align-items:center;overflow-wrap:anywhere}
 #mc41BizBar .h{font-size:12.5px;opacity:.8;display:flex;gap:8px;align-items:center;margin-top:2px}
+.msg.mc41-hello{background:linear-gradient(135deg,rgba(59,130,246,.16),rgba(168,85,247,.16));border:1px solid color-mix(in srgb,var(--accent) 38%,var(--border))}
+.mc41-hello-tag{display:block;font-size:10.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;opacity:.6;margin-bottom:4px}
 @keyframes mc41In{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 /* business editor */
 .mc41-tabs{display:flex;gap:6px;padding:4px;background:var(--surface-2);border-radius:16px;margin:10px 0 14px;overflow:auto}
@@ -15752,26 +15766,56 @@ async function mc41CartPay(uid, total){
 /* "Связь" block above the chat + welcome message */
 async function mc41BizChatBar(){
   const old = $id('mc41BizBar'); if (old) old.remove();
-  const c = state.chat; if (!c || c.type !== 'dm') return;
+  window.__mc41PeerBiz = null;
+  const c = state.chat; if (!c || c.type !== 'dm') { try { renderMessages(); } catch (_) {} return; }
   const uid = c.peerId || c.otherUid; if (!uid || uid === mcMe()) return;
   const b = await mc41BizLoad(uid);
-  if (!b.on || (!b.a && !b.w && !b.h)) return;
-  const bar = document.createElement('div');
-  bar.id = 'mc41BizBar';
-  bar.innerHTML = `<div class="t">Связь</div>` +
-    (b.a ? `<div class="l">📍 ${esc(b.a)}</div>` : '') +
-    (b.w ? `<a class="l" href="${esc(b.w)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">🔗 ${esc(b.w.replace(/^https?:\/\//, ''))}</a>` : '') +
-    (b.h ? `<div class="h">🕒 ${esc(b.h)}</div>` : '');
-  const msgs = $id('messages');
-  if (msgs && msgs.parentElement) msgs.parentElement.insertBefore(bar, msgs);
-  if (b.hello) {
-    try {
-      const key = `mc41_welcome_${state.user.uid}_${uid}_${new Date().toISOString().slice(0,10)}`;
-      if (!localStorage.getItem(key) && !(state.messages || []).some(m => m.senderId === uid)) {
-        localStorage.setItem(key, '1');
-      }
-    } catch (_) {}
+  if (b.on && b.hello) window.__mc41PeerBiz = { uid, hello: b.hello, name: b.n || b.c || '' };
+  if (b.on && (b.a || b.w || b.h)) {
+    const bar = document.createElement('div');
+    bar.id = 'mc41BizBar';
+    bar.innerHTML = `<div class="t">Связь</div>` +
+      (b.a ? `<div class="l">📍 ${esc(b.a)}</div>` : '') +
+      (b.w ? `<a class="l" href="${esc(b.w)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">🔗 ${esc(b.w.replace(/^https?:\/\//, ''))}</a>` : '') +
+      (b.h ? `<div class="h">🕒 ${esc(b.h)}</div>` : '');
+    const msgs = $id('messages');
+    if (msgs && msgs.parentElement) msgs.parentElement.insertBefore(bar, msgs);
   }
+  try { renderMessages(); } catch (_) {}
+  /* если клиент уже написал раньше — владелец компании при открытом приложении поздоровается при входе в чат */
+  const last = (state.messages || []).filter(m => !m.deleted && !m.system).slice(-1)[0];
+  if (last) mc41AutoGreet(uid, last);
+}
+/* авто-приветствие компании: один раз в день на клиента */
+async function mc41AutoGreet(peerId, last){
+  try {
+    if (!peerId || !state.user?.uid || peerId === state.user.uid) return;
+    if (!last || last.senderId !== peerId) return;
+    const b = await mc41BizLoad(state.user.uid);
+    if (!b.on || !b.hello) return;
+    const key = `mc41_greet_${state.user.uid}_${peerId}_${new Date().toISOString().slice(0, 10)}`;
+    if (localStorage.getItem(key)) return;
+    if ((state.messages || []).some(m => m.senderId === state.user.uid && !m.deleted && Number(m.createdAt || 0) > Number(last.createdAt || 0))) return;
+    localStorage.setItem(key, '1');
+    await mcSendDirectText(peerId, b.hello);
+  } catch (e) { console.warn('auto greet', e); }
+}
+window.mc41AutoGreet = mc41AutoGreet;
+/* отслеживаем входящие по всем чатам: владелец компании здоровается, даже если чат не открыт */
+const mc41SeenTs = {};
+function mc41BizWatchChats(chats){
+  const me = state.user?.uid; if (!me) return;
+  Object.entries(chats || {}).forEach(([chatId, c]) => {
+    if (!c || c.type !== 'dm' || !c.peerId || c.peerId === me) return;
+    const ts = Number(c.lastTs || 0);
+    const prev = mc41SeenTs[chatId] || 0;
+    mc41SeenTs[chatId] = Math.max(prev, ts);
+    if (!ts || ts <= prev) return;
+    if ((c.lastMessage || {}).senderId !== c.peerId) return;
+    if (!(Number(c.unread) > 0)) return;
+    if (Date.now() - ts > 30 * 60 * 1000) return;
+    mc41AutoGreet(c.peerId, { senderId: c.peerId, createdAt: ts });
+  });
 }
 { const prev = openChat; openChat = W('openChat', function(){ const r = prev.apply(this, arguments); setTimeout(mc41BizChatBar, 500); return r; }); }
 document.addEventListener('input', e => {
