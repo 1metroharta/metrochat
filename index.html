@@ -2813,7 +2813,7 @@ const state = {
   messages: [], replyTo: null, pendingAttachment: null,
   blocked: {},
   settings: {
-    themeId: 'midnight', darkMode: true, fontSize: '14px',
+    themeId: 'crimson', darkMode: true, fontSize: '14px',
     notifications: true, sound: true, vibration: true, messagePreview: true,
     readReceipts: true, onlineStatus: true, showLastSeen: true,
     typingIndicator: true, showTimestamps: true, showAvatarsInGroups: true,
@@ -8718,7 +8718,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = '4.1';
+const MC_VERSION = 'b4.1';
 const MC_SUPPORT_EMAIL = 'metrochatsupport@gmail.com';
 
 // ---------- Поддержка на экранах входа/регистрации ----------
@@ -14573,7 +14573,7 @@ console.info('MetroChat 4.2 repair patch loaded');
 #mcLanding p{margin:0 0 26px;color:rgba(255,255,255,.72);font-size:14.5px;line-height:1.55}
 #mcLanding .mcl-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;margin-bottom:12px;border-radius:18px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#fff;font-size:16px;font-weight:750;cursor:pointer;backdrop-filter:blur(18px);transition:transform .16s,background .2s,box-shadow .2s}
 #mcLanding .mcl-btn:active{transform:scale(.975)}
-#mcLanding .mcl-btn.primary{background:#e63946;border-color:transparent;box-shadow:0 14px 34px rgba(230,57,70,.35)}
+#mcLanding .mcl-btn.primary{background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6);border-color:transparent;box-shadow:0 14px 34px rgba(57,124,255,.4)}
 #mcLanding .mcl-btn.ghost{background:rgba(255,255,255,.08)}
 #mcLanding .mcl-foot{margin-top:auto;padding-top:22px;display:flex;justify-content:center}
 #mcLanding .mcl-foot button{border:0;background:none;color:rgba(255,255,255,.65);font:inherit;font-size:13px;font-weight:600;padding:10px 14px;cursor:pointer;border-radius:12px}
@@ -15238,6 +15238,872 @@ html[data-glass="on"] .msg.in{background:color-mix(in srgb,var(--surface) 76%,tr
   Object.assign(window, { mcWelcome, showNotifPrompt, allowNotifFromOnb, skipNotifPrompt, finishNotifPrompt, mcProfileStyle, mcPStyleEditor, mcPaidDecorate, mcSetupMark, mcCelebrateDone });
 })();
 
+/* =========================================================================
+   MetroChat b4.1 — business, AI, birthdays, profile style, perf, mini-apps
+   ========================================================================= */
+(function(){
+'use strict';
+const $id = id => document.getElementById(id);
+const V = 'b4.1';
+
+/* ---------------- styles ---------------- */
+(function(){
+  if ($id('mc41-styles')) return;
+  const css = document.createElement('style');
+  css.id = 'mc41-styles';
+  css.textContent = `
+/* profile decoration must win over the !important surface rule */
+#publicProfileContent .mc-pcard.mc41-tinted,
+#chatInfoContent .mc-pcard.mc41-tinted{
+  background:linear-gradient(160deg,var(--mc41-c1,#4f8cff),var(--mc41-c2,#8b5cf6))!important;
+  color:var(--mc41-fg,#fff)!important;border-color:rgba(255,255,255,.24)!important;
+  box-shadow:0 16px 40px color-mix(in srgb,var(--mc41-c1,#4f8cff) 38%,transparent)!important;
+  transition:background .45s ease,box-shadow .45s ease,color .3s ease}
+#publicProfileContent .mc-pcard.mc41-tinted .mc-pcard-name,
+#publicProfileContent .mc-pcard.mc41-tinted .modal-desc,
+#chatInfoContent .mc-pcard.mc41-tinted .mc-pcard-name,
+#chatInfoContent .mc-pcard.mc41-tinted .modal-desc{color:inherit!important}
+#publicProfileContent .mc-pcard.mc41-tinted .mc-pcard-user{background:rgba(255,255,255,.2)!important;color:inherit!important}
+.mc41-gifts-ring{position:absolute;inset:0;pointer-events:none}
+.public-profile-avatar{position:relative}
+.mc41-gifts-ring span{position:absolute;font-size:19px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));animation:mc41Fly .5s cubic-bezier(.2,.9,.2,1) both}
+@keyframes mc41Fly{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+/* gifted buttons */
+.mc41-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:16px;padding:13px 18px;
+  font:inherit;font-weight:700;font-size:14px;cursor:pointer;color:#fff;
+  background:linear-gradient(135deg,#3b82f6,#7c3aed);box-shadow:0 10px 24px rgba(59,130,246,.32);
+  transition:transform .18s cubic-bezier(.2,.9,.2,1),box-shadow .25s,filter .2s;position:relative;overflow:hidden}
+.mc41-btn:active{transform:scale(.96)}
+.mc41-btn:hover{filter:brightness(1.06);box-shadow:0 14px 30px rgba(59,130,246,.42)}
+.mc41-btn.g{background:var(--surface-2);color:var(--text);box-shadow:none;border:1px solid var(--border)}
+.mc41-btn.money{background:linear-gradient(135deg,#f59e0b,#ec4899);box-shadow:0 10px 26px rgba(236,72,153,.34)}
+.mc41-btn.pay{background:linear-gradient(135deg,#10b981,#0ea5e9);box-shadow:0 12px 30px rgba(16,185,129,.36);width:100%;font-size:15px;padding:15px}
+.mc41-btn:after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.35),transparent 65%);
+  transform:translateX(-120%);animation:mc41Shine 3.6s ease-in-out infinite}
+@keyframes mc41Shine{0%,72%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+/* business profile bits */
+.mc41-biz-line{margin:6px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.2px;opacity:.92;text-align:center}
+.mc41-biz-hours{margin:4px 0 0;font-size:11.5px;opacity:.8;text-align:center;display:flex;gap:6px;justify-content:center;align-items:center}
+.mc41-contact{display:flex;flex-direction:column;gap:2px;margin:8px 0 10px;padding:12px 14px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(124,58,237,.14));border:1px solid var(--border)}
+.mc41-contact b{font-size:12.5px;letter-spacing:.3px;text-transform:uppercase;opacity:.7}
+.mc41-contact a,.mc41-contact span{font-size:13px;color:var(--text);text-decoration:none;display:flex;gap:7px;align-items:center;overflow-wrap:anywhere}
+.mc41-contact a:hover{color:var(--accent)}
+/* business chat bar above messages */
+#mc41BizBar{margin:10px 14px 0;padding:12px 14px;border-radius:18px;background:var(--surface-2);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:6px;animation:mc41In .35s cubic-bezier(.2,.9,.2,1) both;flex:0 0 auto}
+#mc41BizBar .t{font-size:12px;text-transform:uppercase;letter-spacing:.4px;opacity:.6}
+#mc41BizBar .l{font-size:13.5px;display:flex;gap:8px;align-items:center;overflow-wrap:anywhere}
+#mc41BizBar .h{font-size:12.5px;opacity:.8;display:flex;gap:8px;align-items:center;margin-top:2px}
+@keyframes mc41In{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+/* business editor */
+.mc41-tabs{display:flex;gap:6px;padding:4px;background:var(--surface-2);border-radius:16px;margin:10px 0 14px;overflow:auto}
+.mc41-tabs button{flex:1 0 auto;border:0;background:transparent;color:var(--text-2);font:inherit;font-size:13px;font-weight:700;
+  padding:10px 12px;border-radius:12px;cursor:pointer;transition:background .2s,color .2s,transform .15s;white-space:nowrap}
+.mc41-tabs button.on{background:var(--surface);color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.mc41-tabs button:active{transform:scale(.96)}
+.mc41-svc{display:flex;gap:12px;align-items:center;padding:13px 14px;border-radius:16px;margin:8px 0;
+  background:var(--surface-2);border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
+.mc41-svc:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
+.mc41-svc .n{flex:1;min-width:0}
+.mc41-svc .n b{display:block;font-size:14px}
+.mc41-svc .n small{opacity:.7;font-size:12px}
+.mc41-price{font-weight:800;font-size:13px;color:var(--accent)}
+.mc41-cart{position:sticky;bottom:8px;margin-top:12px;padding:12px 14px;border-radius:18px;display:flex;gap:10px;align-items:center;
+  background:var(--surface);border:1px solid var(--border);box-shadow:0 12px 32px rgba(0,0,0,.22);animation:mc41In .3s both;z-index:5}
+.mc41-cart .sum{flex:1;font-size:13px}
+.mc41-cart .sum b{display:block;font-size:16px}
+/* AI header overlap */
+.mc9-ai-head{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 6px;min-height:56px;border-radius:18px;
+  background:var(--surface-2);position:relative;z-index:3;overflow:hidden}
+.mc9-ai-head img{width:38px;height:38px;border-radius:12px;flex:0 0 auto}
+.mc9-ai-head span{min-width:0;flex:1;display:flex;flex-direction:column}
+.mc9-ai-head b{font-size:15px;line-height:1.15}
+.mc9-ai-head small{font-size:11.5px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc9-ai-panel{display:flex;flex-direction:column;min-height:0}
+/* mini apps */
+.mc41-mini label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.3px;opacity:.65;margin:12px 0 6px}
+.mc41-mini input,.mc41-mini select,.mc41-mini textarea{width:100%;box-sizing:border-box;padding:12px 14px;border-radius:14px;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:15px;outline:none}
+.mc41-big{font-size:40px;font-weight:800;text-align:center;letter-spacing:1px;font-variant-numeric:tabular-nums;margin:8px 0}
+.mc41-row{display:flex;gap:8px;flex-wrap:wrap}
+.mc41-row>*{flex:1;min-width:0}
+.mc41-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:var(--surface-2);
+  border:1px solid var(--border);font-size:12.5px;font-weight:600}
+/* birthday banner */
+.mc41-bday .mc-bday-text b{font-size:14px}
+.mc41-bday-act{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:12px;padding:9px 13px;font:inherit;font-size:12.5px;
+  font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f43f5e,#ec4899);
+  box-shadow:0 8px 20px rgba(244,63,94,.36);transition:transform .18s;white-space:nowrap}
+.mc41-bday-act:active{transform:scale(.94)}
+/* smoother scrolling and less paint work */
+.list-item,.msg,.bubble,.mc11-card,.mc9-tile,.mc41-svc{transform:translateZ(0)}
+#messages,#sbList,.settings-wrap,.mc9-ai-msgs{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-behavior:auto}
+#sbList{contain:content}
+@media (max-width:760px){
+  .sidebar,.chat-header,.settings-header,.chat-input-bar,.sb-nav,.toast{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .mc11-sheet,.modal{animation-duration:.18s!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+html[data-glass="on"] .mc41-btn{backdrop-filter:blur(14px) saturate(160%)}
+`;
+  document.head.appendChild(css);
+})();
+
+/* ---------------- expose module helpers used by inline handlers ---------------- */
+try { window.upGet = upGet; } catch (e) { console.warn('upGet alias', e); }
+try { window.mc41 = window.mc41 || {}; } catch (e) {}
+
+/* ---------------- 1. Gifts button ---------------- */
+function mc41GiftShop(){
+  try {
+    if (typeof renderGiftShop !== 'function') { toast('Раздел подарков загружается…', '🎁'); return setTimeout(mc41GiftShop, 300); }
+    const r = renderGiftShop();
+    if (r && typeof r.catch === 'function') r.catch(err => {
+      console.warn('renderGiftShop failed', err);
+      const w = $id('settingsPanel');
+      if (w) w.innerHTML = '<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">Подарки</div></div>' +
+        '<div class="settings-wrap"><div class="empty"><div class="empty-icon">🎁</div><h3>Подарки</h3><p>Не удалось загрузить витрину. Проверьте соединение и откройте ещё раз.</p>' +
+        '<button class="mc41-btn" onclick="mc41GiftShop()">Повторить</button></div></div>';
+    });
+    return r;
+  } catch (e) { console.warn('gifts', e); toast('Не удалось открыть подарки', '⚠'); }
+}
+window.mc41GiftShop = mc41GiftShop;
+{ const base = mc9Go; mc9Go = W('mc9Go', function(k){ if (k === 'gifts') return mc41GiftShop(); return base.apply(this, arguments); }); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-go="gifts"],[data-open-other="gifts"],.mc10-gift');
+  if (!b) return;
+  if (b.__mc41handled) return;
+  b.__mc41handled = true; setTimeout(() => { b.__mc41handled = false; }, 900);
+  e.preventDefault(); e.stopPropagation();
+  if (typeof switchTab === 'function') switchTab('other');
+  mc41GiftShop();
+}, true);
+
+/* ---------------- 2. Liquid glass toggle ---------------- */
+function mc41GlassState(){ const u = (typeof upGet === 'function') ? upGet() : {}; return u.glass === 'on'; }
+function mc41GlassApply(){
+  const on = mc41GlassState();
+  document.documentElement.dataset.glass = on ? 'on' : 'off';
+  document.documentElement.classList.toggle('mc41-glass', on);
+}
+window.mc41GlassToggle = function(){
+  const on = mc41GlassState();
+  if (typeof mcUiSet === 'function') mcUiSet('glass', on ? 'off' : 'on');
+  else { try { const k = 'mc_ui_prefs', u = JSON.parse(localStorage.getItem(k) || '{}'); u.glass = on ? 'off' : 'on'; localStorage.setItem(k, JSON.stringify(u)); } catch (_) {} }
+  try { upApply(); } catch (_) {}
+  mc41GlassApply();
+  try { toast(mc41GlassState() ? 'Жидкое стекло включено' : 'Жидкое стекло выключено', '🫧'); } catch (_) {}
+  if (typeof mcSetGo === 'function' && state.tab === 'settings' && mcSetPage === 'appearance') mcSetGo('appearance');
+};
+{ const base = upApply; upApply = W('upApply', function(){ const r = base.apply(this, arguments); mc41GlassApply(); return r; }); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('#mc41GlassCard');
+  if (!b) return; e.preventDefault(); e.stopPropagation(); window.mc41GlassToggle();
+}, true);
+mc41GlassApply();
+
+/* ---------------- 3. Profile decoration ---------------- */
+function mc41Light(hex){ const h = String(hex || '').replace('#', ''); if (h.length !== 6) return false;
+  const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+  return (0.299*r + 0.587*g + 0.114*b) > 165; }
+async function mc41ReadStyle(uid){
+  const paths = [`user_settings/${uid}/pstyle`, `users/${uid}/pstyle`];
+  for (const p of paths) { try { const v = (await get(ref(db, p))).val(); if (v && (v.c1 || v.on === false)) return v; } catch (_) {} }
+  return null;
+}
+async function mc41Paint(uid){
+  const cards = [];
+  document.querySelectorAll('#publicProfileContent .mc-pcard, #chatInfoContent .mc-pcard').forEach(c => { c.dataset.mc41owner = uid; cards.push(c); });
+  if (!cards.length) return;
+  const v = await mc41ReadStyle(uid);
+  for (const card of cards) {
+    card.querySelectorAll('.mc41-gifts-ring').forEach(x => x.remove());
+    if (!v || v.on === false || !v.c1) {
+      card.classList.remove('mc41-tinted');
+      ['--mc41-c1','--mc41-c2','--mc41-fg'].forEach(k => card.style.removeProperty(k));
+      const wrap = card.parentElement; if (wrap) ['--mc41-c1','--mc41-c2','--mc41-fg'].forEach(k => wrap.style.removeProperty(k));
+      continue;
+    }
+    const c2 = v.c2 || v.c1;
+    card.style.setProperty('--mc41-c1', v.c1);
+    card.style.setProperty('--mc41-c2', c2);
+    card.style.setProperty('--mc41-fg', mc41Light(v.c1) ? '#0b1220' : '#ffffff');
+    card.classList.add('mc41-tinted');
+    if (v.gifts) {
+      try {
+        const snap = await get(ref(db, 'gift_inventory/' + uid));
+        const gifts = Object.values(snap.val() || {}).filter(g => g && !g.hidden).slice(0, 10);
+        const av = card.querySelector('.public-profile-avatar');
+        if (gifts.length && av) {
+          const ring = document.createElement('div'); ring.className = 'mc41-gifts-ring';
+          const n = gifts.length;
+          ring.innerHTML = gifts.map((g, i) => {
+            const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+            const x = 50 + 48 * Math.cos(a), y = 50 + 48 * Math.sin(a);
+            return `<span style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;transform:translate(-50%,-50%);animation-delay:${i * 45}ms" title="${esc(g.name || 'Подарок')}">${esc(g.emoji || '🎁')}</span>`;
+          }).join('');
+          av.appendChild(ring);
+        }
+      } catch (_) {}
+    }
+  }
+}
+const MC41_COLORS = ['#4f8cff','#8b5cf6','#ec4899','#f43f5e','#f97316','#eab308','#22c55e','#14b8a6','#0ea5e9','#64748b'];
+async function mc41StyleEditor(){
+  const bio = $id('profileBio'); if (!bio) return;
+  $id('mc41PStyle')?.remove();
+  let v = await mc41ReadStyle(mcMe()); v = v || {};
+  const d = document.createElement('div');
+  d.id = 'mc41PStyle';
+  d.className = 'settings-group';
+  d.innerHTML = `<h3>🎨 Оформление профиля</h3><div style="padding:0 16px 14px">
+    <div class="mc11-card" style="cursor:pointer" id="mc41PSOn"><div class="mc11-grow"><b>Включить оформление</b><small>Цвет фона и подарки в профиле</small></div><span class="mc-toggle ${v.on !== false && v.c1 ? 'on' : ''}"></span></div>
+    <label style="display:block;font-size:12px;opacity:.7;margin:12px 0 8px">Цвет профиля</label>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">${MC41_COLORS.map(c => `<button type="button" data-c="${c}" style="height:38px;border-radius:12px;border:3px solid ${v.c1 === c ? 'var(--text)' : 'transparent'};background:${c};cursor:pointer;transition:transform .15s" aria-label="${c}"></button>`).join('')}</div>
+    <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+      <input type="color" id="mc41PSa" value="${v.c1 || '#4f8cff'}" style="width:52px;height:40px;border-radius:10px;border:1px solid var(--border);background:none">
+      <span style="font-size:12.5px;opacity:.7">или свой цвет</span>
+    </div>
+    <div class="mc11-card" style="cursor:pointer;margin-top:10px" id="mc41PSGifts"><div class="mc11-grow"><b>Подарки вокруг аватара</b><small>До 10 подарков</small></div><span class="mc-toggle ${v.gifts ? 'on' : ''}"></span></div>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button type="button" class="mc41-btn g" id="mc41PSx" style="flex:1">Выключить</button>
+      <button type="button" class="mc41-btn" id="mc41PSs" style="flex:2">Применить</button>
+    </div></div>`;
+  const anchor = $id('profileGiftPreview');
+  if (anchor) anchor.insertAdjacentElement('beforebegin', d);
+  else ($id('profileModal')?.querySelector('.modal') || $id('profileModal'))?.appendChild(d);
+  let color = v.c1 || '#4f8cff';
+  const onBtn = d.querySelector('#mc41PSOn'), gBtn = d.querySelector('#mc41PSGifts');
+  d.querySelectorAll('[data-c]').forEach(b => b.onclick = () => {
+    color = b.dataset.c;
+    d.querySelectorAll('[data-c]').forEach(x => x.style.borderColor = x === b ? 'var(--text)' : 'transparent');
+    d.querySelector('#mc41PSa').value = color;
+    onBtn.querySelector('.mc-toggle').classList.add('on');
+  });
+  d.querySelector('#mc41PSa').oninput = e => { color = e.target.value; d.querySelectorAll('[data-c]').forEach(x => x.style.borderColor = 'transparent'); };
+  onBtn.onclick = () => { const t = onBtn.querySelector('.mc-toggle'); t.classList.toggle('on'); };
+  gBtn.onclick = () => { const t = gBtn.querySelector('.mc-toggle'); t.classList.toggle('on'); };
+  d.querySelector('#mc41PSs').onclick = async () => {
+    const on = onBtn.querySelector('.mc-toggle').classList.contains('on');
+    const gifts = gBtn.querySelector('.mc-toggle').classList.contains('on');
+    try {
+      if (!on) { await remove(ref(db, `users/${mcMe()}/pstyle`)).catch(()=>{}); await remove(ref(db, `user_settings/${mcMe()}/pstyle`)).catch(()=>{}); toast('Оформление профиля выключено', '🎨'); return; }
+      const data = { on: true, c1: color, c2: color, gifts, updatedAt: Date.now() };
+      await set(ref(db, `user_settings/${mcMe()}/pstyle`), data);
+      try { await set(ref(db, `users/${mcMe()}/pstyle`), data); } catch (_) {}
+      toast('Оформление профиля сохранено', '🎨');
+      mc41Paint(mcMe());
+    } catch (e) { console.warn('pstyle save', e); toast('Не удалось сохранить оформление', '⚠'); }
+  };
+  d.querySelector('#mc41PSx').onclick = async () => {
+    try {
+      await remove(ref(db, `users/${mcMe()}/pstyle`)).catch(()=>{});
+      await remove(ref(db, `user_settings/${mcMe()}/pstyle`)).catch(()=>{});
+      onBtn.querySelector('.mc-toggle').classList.remove('on');
+      gBtn.querySelector('.mc-toggle').classList.remove('on');
+      toast('Оформление сброшено', '✅');
+    } catch (_) {}
+  };
+}
+{ const prev = openProfileModal; openProfileModal = W('openProfileModal', function(){ const r = prev.apply(this, arguments); setTimeout(mc41StyleEditor, 90); return r; }); }
+{ const prev = openPublicProfile; openPublicProfile = W('openPublicProfile', function(u){ const r = prev.apply(this, arguments); Promise.resolve(r).then(() => setTimeout(() => { mc41Paint(u); mc41BizProfile(u); }, 120)); return r; }); }
+{ const prev = openChatInfo; if (typeof prev === 'function') openChatInfo = W('openChatInfo', function(){ const r = prev.apply(this, arguments); Promise.resolve(r).then(() => setTimeout(() => { const uid = (state.chat && (state.chat.peerId || state.chat.otherUid)) || null; if (uid) { mc41Paint(uid); } mc41BizChatBar(); }, 140)); return r; }); }
+
+/* ---------------- 4. Birthdays ---------------- */
+function mc41BirthdayList(){
+  const me = state.user?.uid; if (!me) return [];
+  const today = new Date(); const mo = today.getMonth() + 1, d = today.getDate();
+  const seen = new Set(); const out = [];
+  const push = uid => {
+    if (!uid || seen.has(uid) || uid === me) return;
+    seen.add(uid);
+    const u = getUser(uid); if (!u) return;
+    if (state.blocked && state.blocked[uid]) return;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(u.birthday || ''));
+    if (!m) return;
+    if (+m[2] === mo && +m[3] === d) out.push(uid);
+  };
+  Object.values(state.chats || {}).forEach(c => { if (c && c.type === 'dm' && c.peerId) push(c.peerId); });
+  Object.keys(state.cacheUsers || {}).forEach(push);
+  Object.keys(state.users || {}).forEach(push);
+  return out;
+}
+function mc41RenderBday(force){
+  const el = $id('mcBdayBanner'); if (!el) return;
+  if (!state.user) { el.hidden = true; return; }
+  if (force || !el.dataset.mc41) {
+    const list = mc41BirthdayList();
+    el.dataset.mc41 = '1';
+    if (!list.length) { el.hidden = true; el.innerHTML = ''; return; }
+    const uid = list[0];
+    const u = getUser(uid) || {};
+    const name = u.displayName || u.firstName || u.username || 'друг';
+    el.innerHTML = `<div class="mc-bday-card mc41-bday"><div class="mc-bday-icon">🎂</div>
+      <div class="mc-bday-text"><b>${esc(name)} празднует день рождения!</b><small>Отправить подарок?</small></div>
+      <button type="button" class="mc41-bday-act" data-bd="${esc(uid)}">🎁 Поздравить</button>
+      <button type="button" class="mc-bday-close" data-bdclose="1" aria-label="Закрыть">✕</button></div>`;
+    el.hidden = false;
+    el.querySelector('[data-bd]').onclick = e => { e.stopPropagation(); try { mcOpenGiftSendPage({ toUid: uid, birthday: true }); } catch (err) { toast('Не удалось открыть подарки', '⚠'); } };
+    el.querySelector('[data-bdclose]').onclick = e => { e.stopPropagation(); el.hidden = true; try { localStorage.setItem('mc41_bday_hide_' + uid + '_' + new Date().toISOString().slice(0,10), '1'); } catch (_) {} };
+  }
+  el.hidden = !!(el.dataset.mc41 === '1' && !el.querySelector('.mc-bday-card'));
+}
+window.mc41BirthdayRefresh = function(){
+  const el = $id('mcBdayBanner'); if (!el) return;
+  el.dataset.mc41 = '';
+  try { mcCheckBirthdays(); } catch (_) {}
+  setTimeout(() => mc41RenderBday(true), 60);
+};
+{ const prev = switchTab; switchTab = W('switchTab', function(){ const r = prev.apply(this, arguments); setTimeout(() => mc41RenderBday(true), 120); return r; }); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-bd]'); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  try { mcOpenGiftSendPage({ toUid: b.dataset.bd, birthday: true }); } catch (_) { toast('Не удалось открыть подарки', '⚠'); }
+}, true);
+setInterval(() => { try { if (state.user) mc41RenderBday(true); } catch (_) {} }, 4 * 60 * 1000);
+setTimeout(() => { try { mc41RenderBday(true); } catch (_) {} }, 4000);
+
+/* ---------------- 5. Business ---------------- */
+const MC41_BIZ_KEY = 'mc41_biz_';
+const mc41BizGet = () => { try { return JSON.parse(localStorage.getItem(MC41_BIZ_KEY + (state.user?.uid || 'guest')) || '{}'); } catch (_) { return {}; } };
+const mc41BizSetCache = v => { try { localStorage.setItem(MC41_BIZ_KEY + (state.user?.uid || 'guest'), JSON.stringify(v)); } catch (_) {} };
+async function mc41BizLoad(uid){
+  uid = uid || state.user?.uid || '';
+  let b = {};
+  try { b = (await get(ref(db, `user_settings/${uid}/business`))).val() || {}; } catch (_) { b = {}; }
+  b = mc41BizNormalize(b);
+  if (uid === state.user?.uid) mc41BizSetCache(b);
+  return b;
+}
+function mc41BizNormalize(raw){
+  const b = Object.assign({}, raw || {});
+  b.on = b.on !== false && (b.on === true || !!b.n || !!b.c || !!b.h || !!b.a || !!b.w || !!b.sv);
+  if (b.on === undefined) b.on = false;
+  b.sv = (Array.isArray(b.sv) ? b.sv : String(b.sv || '').split('\n').map(l => { const p = l.split('|'); return p[1] ? { name: p[0].trim(), price: Math.round(+p[1] || 0) } : null; }))
+    .filter(x => x && x.name && x.price > 0).map((x, i) => ({ id: x.id || 's' + i, name: x.name, price: Math.round(x.price), desc: x.desc || '' }));
+  b.hello = b.hello || b.g || '';
+  b.qr = Array.isArray(b.qr) ? b.qr : [];
+  b.qm = Array.isArray(b.qm) ? b.qm : [];
+  return b;
+}
+async function mc41BizSave(patch){
+  const uid = state.user?.uid; if (!uid) return toast('Войдите в аккаунт', '⚠');
+  const cur = await mc41BizLoad(uid);
+  const next = mc41BizNormalize(Object.assign({}, cur, patch, { on: patch.on !== undefined ? patch.on : cur.on }));
+  try {
+    await set(ref(db, `user_settings/${uid}/business`), next);
+    mc41BizSetCache(next);
+    return next;
+  } catch (e) { console.warn('biz save', e); toast('Не удалось сохранить бизнес-профиль', '⚠'); throw e; }
+}
+window.mc41BizToggle = async function(){
+  const b = await mc41BizLoad();
+  const next = !b.on;
+  await mc41BizSave({ on: next });
+  toast(next ? 'Бизнес-функции включены' : 'Бизнес-функции выключены', '💼');
+  if (window.__mcOtherView === 'biz') mc41BizOpen('profile');
+  else { try { mcSetGo('main'); } catch (_) {} }
+};
+async function mc41BizOpen(tab){
+  const wrap = $id('settingsPanel'); if (!wrap) return;
+  window.__mcOtherView = 'biz';
+  const b = await mc41BizLoad();
+  if (!b.on) { window.__mc41BizOn = false; }
+  tab = tab || window.__mc41BizTab || 'profile';
+  window.__mc41BizTab = tab;
+  const tabs = [['profile','Профиль'],['msg','Сообщения'],['svc','Услуги'],['ord','Заказы']];
+  wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div>
+  <div class="settings-wrap mc9-wrap">
+    <div class="mc11-card" style="cursor:pointer;margin-bottom:6px" id="mc41BizMaster">
+      <div class="mc11-av" style="background:linear-gradient(135deg,#16a34a,#0d9488);border-radius:14px">💼</div>
+      <div class="mc11-grow"><b>Бизнес-функции</b><small>${b.on ? 'Включены · профиль компании, услуги и оплата в умах' : 'Выключены · включите, чтобы настроить компанию'}</small></div>
+      <span class="mc-toggle ${b.on ? 'on' : ''}"></span>
+    </div>
+    ${b.on ? `<div class="mc41-tabs">${tabs.map(([k,l]) => `<button type="button" data-tab="${k}" class="${tab === k ? 'on' : ''}">${l}</button>`).join('')}</div><div id="mc41BizBody"></div>` : '<p class="mc9-note" style="text-align:center;margin:26px 0">Переключите бизнес-функции, чтобы настроить компанию, услуги и приём оплаты в умах.</p>'}
+  </div>`;
+  $id('mc41BizMaster').onclick = () => window.mc41BizToggle();
+  wrap.querySelectorAll('[data-tab]').forEach(btn => btn.onclick = () => mc41BizOpen(btn.dataset.tab));
+  if (b.on) mc41BizBody(b, tab);
+}
+window.mc41BizOpen = mc41BizOpen;
+function mc41BizBody(b, tab){
+  const box = $id('mc41BizBody'); if (!box) return;
+  if (tab === 'profile') {
+    box.innerHTML = `<div class="mc11-sheet" style="border-radius:20px;max-height:none">
+      <label>Название компании</label><input id="mc41N" value="${esc(b.n || '')}" maxlength="60" autocomplete="off" placeholder="ООО «Ромашка»">
+      <label>Категория</label><input id="mc41C" value="${esc(b.c || '')}" maxlength="40" autocomplete="off" placeholder="Кофейня">
+      <label>Часы работы</label><input id="mc41H" value="${esc(b.h || '')}" maxlength="60" autocomplete="off" placeholder="Пн–Пт 9:00–18:00">
+      <label>Адрес</label><input id="mc41A" value="${esc(b.a || '')}" maxlength="90" autocomplete="off" placeholder="Москва, ул. Ленина, 1">
+      <label>Сайт</label><input id="mc41W" value="${esc(b.w || '')}" maxlength="120" autocomplete="off" placeholder="https://example.ru">
+      <button class="mc41-btn" style="width:100%;margin-top:16px" id="mc41ProfileSave">Сохранить профиль</button></div>`;
+    $id('mc41ProfileSave').onclick = async () => {
+      const w = $id('mc41W').value.trim();
+      if (w && !/^https?:\/\//i.test(w)) return toast('Сайт должен начинаться с https://', '⚠');
+      await mc41BizSave({ n: $id('mc41N').value.trim(), c: $id('mc41C').value.trim(), h: $id('mc41H').value.trim(), a: $id('mc41A').value.trim(), w });
+      toast('Профиль компании сохранён', '✓');
+      mc41BizOpen('profile');
+    };
+    return;
+  }
+  if (tab === 'msg') {
+    box.innerHTML = `<div class="mc11-sheet" style="border-radius:20px;max-height:none">
+      <label>Приветственное сообщение</label><textarea id="mc41Hello" rows="3" maxlength="400" placeholder="Здравствуйте! Спасибо, что написали. Ответим в течение дня.">${esc(b.hello || '')}</textarea>
+      <p class="set-sub" style="margin:6px 0 14px">Отправляется автоматически при первом сообщении клиента раз в день.</p>
+      <label>Быстрые сообщения (для раздела компании)</label>
+      <div id="mc41QMList">${(b.qm || []).map((m, i) => `<div class="mc41-svc"><div class="n"><b>${esc(m.title || 'Сообщение')}</b><small>${esc((m.text || '').slice(0, 70))}</small></div><button class="mini-btn" data-qmdel="${i}">✕</button></div>`).join('') || '<p class="set-sub">Пока нет быстрых сообщений.</p>'}</div>
+      <div class="mc41-row" style="margin-top:8px"><input id="mc41QMT" placeholder="Заголовок" maxlength="40" autocomplete="off"><input id="mc41QMX" placeholder="Текст" maxlength="200" autocomplete="off"></div>
+      <button class="mc41-btn g" style="width:100%;margin-top:10px" id="mc41QMAdd">＋ Добавить сообщение</button>
+      <label style="margin-top:18px">Быстрые ответы «/ключ — текст»</label>
+      <div id="mc41QRList">${(b.qr || []).map((q, i) => `<div class="mc41-svc"><div class="n"><b>/${esc(q.key || '')}</b><small>${esc((q.text || '').slice(0, 70))}</small></div><button class="mini-btn" data-qrdel="${i}">✕</button></div>`).join('') || '<p class="set-sub">Пока нет быстрых ответов.</p>'}</div>
+      <div class="mc41-row" style="margin-top:8px"><input id="mc41QRK" placeholder="ключ" maxlength="20" autocomplete="off"><input id="mc41QRT" placeholder="Текст ответа" maxlength="200" autocomplete="off"></div>
+      <button class="mc41-btn g" style="width:100%;margin-top:10px" id="mc41QRAdd">＋ Добавить ответ</button>
+      <button class="mc41-btn" style="width:100%;margin-top:16px" id="mc41HelloSave">Сохранить</button></div>`;
+    box.querySelectorAll('[data-qmdel]').forEach(btn => btn.onclick = async () => { const qm = (b.qm || []).slice(); qm.splice(+btn.dataset.qmdel, 1); await mc41BizSave({ qm }); mc41BizOpen('msg'); });
+    box.querySelectorAll('[data-qrdel]').forEach(btn => btn.onclick = async () => { const qr = (b.qr || []).slice(); qr.splice(+btn.dataset.qrdel, 1); await mc41BizSave({ qr }); mc41BizOpen('msg'); });
+    $id('mc41QMAdd').onclick = async () => {
+      const title = $id('mc41QMT').value.trim(), text = $id('mc41QMX').value.trim();
+      if (!title || !text) return toast('Заполните заголовок и текст', '⚠');
+      const qm = (b.qm || []).concat([{ title, text }]);
+      await mc41BizSave({ qm }); mc41BizOpen('msg');
+    };
+    $id('mc41QRAdd').onclick = async () => {
+      const key = $id('mc41QRK').value.trim().replace(/^\//, ''), text = $id('mc41QRT').value.trim();
+      if (!key || !text) return toast('Заполните ключ и ответ', '⚠');
+      const qr = (b.qr || []).concat([{ key, text }]).slice(0, 50);
+      await mc41BizSave({ qr }); mc41BizOpen('msg');
+    };
+    $id('mc41HelloSave').onclick = async () => { await mc41BizSave({ hello: $id('mc41Hello').value.trim() }); toast('Сохранено', '✓'); };
+    return;
+  }
+  if (tab === 'svc') {
+    box.innerHTML = `<div id="mc41SvcList">${(b.sv || []).map((s, i) => `<div class="mc41-svc"><div class="n"><b>${esc(s.name)}</b><small>${esc(s.desc || 'Услуга')}</small></div><span class="mc41-price">${s.price} УМ</span><button class="mini-btn" data-svdel="${i}">✕</button></div>`).join('') || '<p class="mc9-note" style="text-align:center;margin:18px 0">Пока нет услуг.</p>'}</div>
+      <div class="mc11-sheet" style="border-radius:20px;max-height:none;margin-top:10px">
+        <label>Название услуги</label><input id="mc41SvN" placeholder="Консультация 30 минут" maxlength="50" autocomplete="off">
+        <label>Описание</label><input id="mc41SvD" placeholder="Онлайн-встреча" maxlength="80" autocomplete="off">
+        <label>Цена в умах</label><input id="mc41SvP" type="number" inputmode="numeric" min="1" max="100000" placeholder="50">
+        <button class="mc41-btn" style="width:100%;margin-top:14px" id="mc41SvAdd">＋ Добавить услугу</button>
+      </div>`;
+    box.querySelectorAll('[data-svdel]').forEach(btn => btn.onclick = async () => { const sv = (b.sv || []).slice(); sv.splice(+btn.dataset.svdel, 1); await mc41BizSave({ sv }); mc41BizOpen('svc'); });
+    $id('mc41SvAdd').onclick = async () => {
+      const name = $id('mc41SvN').value.trim(), price = Math.round(+$id('mc41SvP').value || 0);
+      if (!name) return toast('Введите название', '⚠');
+      if (!(price > 0)) return toast('Цена должна быть больше 0 УМ', '⚠');
+      const sv = (b.sv || []).concat([{ id: 's' + Date.now().toString(36), name, desc: $id('mc41SvD').value.trim(), price }]);
+      await mc41BizSave({ sv }); mc41BizOpen('svc');
+    };
+    return;
+  }
+  box.innerHTML = '<div id="mc41Orders"><p class="set-sub">Загрузка заказов…</p></div>';
+  get(ref(db, `service_orders/${state.user.uid}`)).then(snap => {
+    const rows = Object.values(snap.val() || {}).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const host = $id('mc41Orders'); if (!host) return;
+    host.innerHTML = rows.length ? rows.map(o => `<div class="mc41-svc"><div class="n"><b>${esc(o.name || 'Услуга')}</b><small>${esc(o.buyerName || 'Клиент')} · ${new Date(o.at || Date.now()).toLocaleDateString('ru-RU')}</small></div><span class="mc41-price">+${o.price || 0} УМ</span></div>`).join('')
+      : '<p class="mc9-note" style="text-align:center;margin:26px 0">Заказов пока нет.</p>';
+  }).catch(() => { const host = $id('mc41Orders'); if (host) host.innerHTML = '<p class="mc9-note" style="text-align:center;margin:26px 0">Не удалось загрузить заказы.</p>'; });
+}
+/* settings row with master switch */
+{ const base = mcSetMain; mcSetMain = W('mcSetMain', function(){
+  return base.apply(this, arguments) + `<div class="mc11-card" style="cursor:pointer" onclick="mc41BizOpen()" id="mc41BizRow">
+    <div class="mc11-av" style="background:linear-gradient(135deg,#16a34a,#0d9488);border-radius:14px">💼</div>
+    <div class="mc11-grow"><b>Для бизнеса</b><small>${mc41BizGet().on ? 'Включено · компания, услуги и оплата' : 'Профиль компании, услуги и оплата в умах'}</small></div>›</div>`;
+}); }
+/* public profile: company line, hours, contact block, service cart */
+let mc41Cart = { uid: null, items: [] };
+async function mc41BizProfile(uid){
+  const box = $id('publicProfileContent'); if (!box) return;
+  box.querySelectorAll('.mc41-bizline,.mc41-contact,.mc41-svcs').forEach(x => x.remove());
+  const b = await mc41BizLoad(uid);
+  if (!b.on || (!b.n && !b.c && !b.sv.length)) return;
+  const card = box.querySelector('.mc-pcard');
+  if (card && (b.n || b.c || b.h)) {
+    const line = document.createElement('div');
+    line.className = 'mc41-bizline';
+    line.innerHTML = `<div class="mc41-biz-line">${[b.n, b.c].filter(Boolean).map(esc).join(' · ')}</div>` +
+      (b.h ? `<div class="mc41-biz-hours">🕒 ${esc(b.h)}</div>` : '');
+    const userBtn = card.querySelector('.mc-pcard-user');
+    (userBtn || card.querySelector('.mc-pcard-name'))?.insertAdjacentElement('afterend', line);
+  }
+  if (b.a || b.w) {
+    const contact = document.createElement('div');
+    contact.className = 'mc41-contact';
+    contact.innerHTML = `<b>Связь</b>` + (b.a ? `<span>📍 ${esc(b.a)}</span>` : '') +
+      (b.w ? `<a href="${esc(b.w)}" target="_blank" rel="noopener noreferrer">🔗 ${esc(b.w.replace(/^https?:\/\//, ''))}</a>` : '') +
+      (b.h ? `<span class="h">🕒 ${esc(b.h)}</span>` : '');
+    card?.insertAdjacentElement('afterend', contact);
+  }
+  if (b.sv.length && uid !== mcMe()) {
+    const wrap = document.createElement('div');
+    wrap.className = 'settings-group mc41-svcs';
+    wrap.innerHTML = `<h3>Услуги</h3><div style="padding:0 14px 12px">${b.sv.map(s => `<div class="mc41-svc"><div class="n"><b>${esc(s.name)}</b><small>${esc(s.desc || 'Услуга компании')}</small></div><span class="mc41-price">${s.price} УМ</span><button class="mc41-btn money" data-add="${esc(s.id)}" style="padding:9px 12px;font-size:12.5px">В корзину</button></div>`).join('')}</div><div id="mc41CartBox"></div>`;
+    const anchor = box.querySelector('.modal-actions');
+    if (anchor) box.insertBefore(wrap, anchor); else box.appendChild(wrap);
+    wrap.querySelectorAll('[data-add]').forEach(btn => btn.onclick = () => {
+      const s = b.sv.find(x => x.id === btn.dataset.add); if (!s) return;
+      if (mc41Cart.uid !== uid) mc41Cart = { uid, items: [] };
+      mc41Cart.items.push({ id: s.id, name: s.name, price: s.price });
+      mc41CartRender();
+      toast('«' + s.name + '» в корзине', '🛒');
+    });
+    if (mc41Cart.uid === uid) mc41CartRender(uid);
+  }
+}
+function mc41CartRender(uid){
+  const host = $id('mc41CartBox'); if (!host) return;
+  if (!mc41Cart.items.length || mc41Cart.uid !== uid) { host.innerHTML = ''; return; }
+  const total = mc41Cart.items.reduce((n, x) => n + x.price, 0);
+  host.innerHTML = `<div class="mc41-cart"><div class="sum"><b>${total} УМ</b><small style="opacity:.7">${mc41Cart.items.length} услуг(и)</small></div>
+    <button class="mc41-btn g" id="mc41CartClear" style="padding:10px 12px">Очистить</button>
+    <button class="mc41-btn pay" id="mc41CartPay" style="width:auto;padding:11px 16px">Оплатить</button></div>`;
+  $id('mc41CartClear').onclick = () => { mc41Cart.items = []; mc41CartRender(uid); };
+  $id('mc41CartPay').onclick = () => mc41CartPay(uid, total);
+}
+async function mc41CartPay(uid, total){
+  try {
+    const bal = await readGiftBalance(mcMe());
+    if (bal < total) return toast(`Нужно ${total} УМ, у вас ${bal}`, '💎');
+    const ok = await mcConfirm('Оплатить услуги?', `${total} УМ спишется с баланса и перейдёт продавцу.`, { okText: 'Оплатить' });
+    if (!ok) return;
+    const tb = await readGiftBalance(uid);
+    const upd = {};
+    upd[`gift_wallet/${mcMe()}/balance`] = bal - total;
+    upd[`gift_wallet/${uid}/balance`] = tb + total;
+    for (const item of mc41Cart.items) {
+      const key = push(ref(db, `service_orders/${uid}`)).key;
+      upd[`service_orders/${uid}/${key}`] = { buyer: mcMe(), buyerName: state.profile?.displayName || state.profile?.username || '', name: item.name, price: item.price, at: Date.now() };
+    }
+    await update(ref(db), upd);
+    try { await mcSendDirectText(uid, `🛒 Заказ на ${total} УМ: ${mc41Cart.items.map(x => x.name).join(', ')}`); } catch (_) {}
+    mc41Cart.items = []; mc41CartRender(uid);
+    toast('Оплачено, заказ отправлен продавцу', '✅');
+  } catch (e) { console.warn('cart pay', e); toast('Не удалось оплатить', '⚠'); }
+}
+/* "Связь" block above the chat + welcome message */
+async function mc41BizChatBar(){
+  const old = $id('mc41BizBar'); if (old) old.remove();
+  const c = state.chat; if (!c || c.type !== 'dm') return;
+  const uid = c.peerId || c.otherUid; if (!uid || uid === mcMe()) return;
+  const b = await mc41BizLoad(uid);
+  if (!b.on || (!b.a && !b.w && !b.h)) return;
+  const bar = document.createElement('div');
+  bar.id = 'mc41BizBar';
+  bar.innerHTML = `<div class="t">Связь</div>` +
+    (b.a ? `<div class="l">📍 ${esc(b.a)}</div>` : '') +
+    (b.w ? `<a class="l" href="${esc(b.w)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">🔗 ${esc(b.w.replace(/^https?:\/\//, ''))}</a>` : '') +
+    (b.h ? `<div class="h">🕒 ${esc(b.h)}</div>` : '');
+  const msgs = $id('messages');
+  if (msgs && msgs.parentElement) msgs.parentElement.insertBefore(bar, msgs);
+  if (b.hello) {
+    try {
+      const key = `mc41_welcome_${state.user.uid}_${uid}_${new Date().toISOString().slice(0,10)}`;
+      if (!localStorage.getItem(key) && !(state.messages || []).some(m => m.senderId === uid)) {
+        localStorage.setItem(key, '1');
+      }
+    } catch (_) {}
+  }
+}
+{ const prev = openChat; openChat = W('openChat', function(){ const r = prev.apply(this, arguments); setTimeout(mc41BizChatBar, 500); return r; }); }
+document.addEventListener('input', e => {
+  if (e.target.id !== 'chatInput') return;
+  const m = /^\/([^\s/]+) $/.exec(e.target.value); if (!m) return;
+  const b = mc41BizGet(); const hit = (b.qr || []).find(q => String(q.key).toLowerCase() === m[1].toLowerCase());
+  if (hit) { e.target.value = hit.text; e.target.dispatchEvent(new Event('input', { bubbles: true })); }
+}, true);
+
+/* ---------------- 6. Metro AI ---------------- */
+try { mcAIImportLegacyHistory = W('mcAIImportLegacyHistory', function(){ return toast('Перенос истории больше не нужен', 'ℹ️'); }); } catch (_) {}
+function mc41StripAI(){
+  document.querySelectorAll('.mc9-ai-chip').forEach(b => { if (/Перенести/i.test(b.textContent || '')) b.remove(); });
+}
+{ const prev = mcAIOpen; mcAIOpen = W('mcAIOpen', function(){ const r = prev.apply(this, arguments); setTimeout(mc41StripAI, 30); setTimeout(mc41StripAI, 300); return r; }); }
+async function mc41Net(msgs){
+  const sys = (msgs.find(m => m.role === 'system') || {}).content || 'Ты — Metro AI, помощник мессенджера. Отвечай на языке пользователя.';
+  const last = (msgs.filter(m => m.role !== 'system').slice(-1)[0] || {}).content || '';
+  const tries = [
+    () => fetch('https://text.pollinations.ai/openai', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'openai', messages: msgs, max_tokens: 700, temperature: 0.65, referrer: 'metrochat' }) }),
+    () => fetch('https://text.pollinations.ai/' + encodeURIComponent(String(last).slice(0, 1600)) +
+      '?model=openai&referrer=metrochat&system=' + encodeURIComponent(String(sys).slice(0, 900))),
+    () => fetch('https://text.pollinations.ai/openai', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'openai-fast', messages: msgs, max_tokens: 700, referrer: 'metrochat' }) }),
+  ];
+  for (const t of tries) {
+    try {
+      const r = await t();
+      if (!r || !r.ok) continue;
+      const ct = r.headers.get('content-type') || '';
+      if (ct.includes('json')) {
+        const j = await r.json();
+        const s = (j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || (j && j.text) || '';
+        if (String(s).trim()) return String(s).trim();
+      } else {
+        const s = (await r.text()).trim();
+        if (s && !/^\s*</.test(s)) return s;
+      }
+    } catch (_) {}
+  }
+  return '';
+}
+{ const prev = mcAICall; mcAICall = W('mcAICall', async function(q){
+  const loc = (typeof mcAILocal === 'function') ? mcAILocal(q) : null;
+  if (loc) return loc;
+  const action = /(отправ|напиш|скажи |передай|пошли|send |open chat|открой чат|создай групп|заглуши|закреп)/i.test(String(q));
+  if (action) { try { const r = await prev.apply(this, arguments); if (r) return r; } catch (_) {} }
+  const hist = (typeof mcAIHist === 'function' ? mcAIHist() : []).slice(-8).map(h => ({ role: h.r === 'u' ? 'user' : 'assistant', content: h.t }));
+  const sys = { role: 'system', content: `Ты — Metro AI, встроенный ассистент мессенджера MetroChat (версия ${V}). Отвечай на любые вопросы по существу, дружелюбно и на языке пользователя. Знай про MetroChat: чаты, группы, каналы, истории, подарки и умы, боты, бизнес-профили с услугами, 2FA, темы. Если не знаешь ответ — честно скажи.` };
+  let a = '';
+  try { a = await mc41Net([sys].concat(hist, [{ role: 'user', content: String(q).slice(0, 4000) }])); } catch (_) {}
+  if (!a) { try { a = await prev.apply(this, arguments); } catch (_) {} }
+  return a || 'Не получилось ответить — проверьте соединение и попробуйте ещё раз.';
+}); }
+
+/* ---------------- 7. default theme for new accounts ---------------- */
+try {
+  if (!localStorage.getItem('mc41_theme_migrated')) {
+    localStorage.setItem('mc41_theme_migrated', '1');
+    const k = 'mc_settings_' + (state.user?.uid || 'guest');
+    if (!localStorage.getItem(k)) state.settings.themeId = 'crimson';
+  }
+} catch (_) {}
+
+/* ---------------- 8. per-account lock state ---------------- */
+(function(){
+  const scope = k => k + '_' + (state.user?.uid || 'guest');
+  const rawSet = Storage.prototype.setItem, rawGet = Storage.prototype.getItem, rawDel = Storage.prototype.removeItem;
+  const LOCK = new Set(['mc_lock_pw', 'mc_face_v1']);
+  Storage.prototype.setItem = function(k, v){ try { return rawSet.call(this, LOCK.has(k) ? scope(k) : k, v); } catch (e) { return rawSet.call(this, k, v); } };
+  Storage.prototype.getItem = function(k){ try { return LOCK.has(k) ? rawGet.call(this, scope(k)) : rawGet.call(this, k); } catch (e) { return null; } };
+  Storage.prototype.removeItem = function(k){ try { return rawDel.call(this, LOCK.has(k) ? scope(k) : k); } catch (e) { return rawDel.call(this, k); } };
+  window.mcLockPwOn = mcLockPwOn = function(){ try { return rawGet.call(localStorage, scope('mc_lock_pw')) === '1'; } catch (_) { return false; } };
+  window.mcLockFace = mcLockFace = function(){ try { const d = JSON.parse(rawGet.call(localStorage, scope('mc_face_v1'))); return d && Array.isArray(d.desc) && d.desc.length ? d : null; } catch (_) { return null; } };
+  window.mcLockNeeded = mcLockNeeded = function(){ return !!state.user && (mcLockPwOn() || !!mcLockFace()); };
+  const prevToggle = mcLockPwToggle;
+  mcLockPwToggle = W('mcLockPwToggle', function(){ mc9SessionUnlocked = false; return prevToggle.apply(this, arguments); });
+})();
+
+/* ---------------- 9. 15 mini sections ---------------- */
+const MC41_APPS = [
+  { k: 'mc41sw', i: '⏲️', t: 'Секундомер', run: mc41Stopwatch },
+  { k: 'mc41pom', i: '🍅', t: 'Помодоро', run: mc41Pomodoro },
+  { k: 'mc41bmi', i: '⚖️', t: 'ИМТ', run: mc41Bmi },
+  { k: 'mc41tip', i: '🧾', t: 'Чаевые', run: mc41Tip },
+  { k: 'mc41credit', i: '🏦', t: 'Кредит', run: mc41Credit },
+  { k: 'mc41rnd', i: '🎯', t: 'Случайное число', run: mc41Random },
+  { k: 'mc41words', i: '🔤', t: 'Счётчик слов', run: mc41Words },
+  { k: 'mc41b64', i: '🧬', t: 'Base64', run: mc41Base64 },
+  { k: 'mc41pal', i: '🎨', t: 'Палитра', run: mc41Palette },
+  { k: 'mc41dates', i: '📅', t: 'Разница дат', run: mc41Dates },
+  { k: 'mc41world', i: '🌍', t: 'Мировое время', run: mc41World },
+  { k: 'mc41breath', i: '🌬️', t: 'Дыхание', run: mc41Breath },
+  { k: 'mc41metro', i: '🎵', t: 'Метроном', run: mc41Metronome },
+  { k: 'mc41lot', i: '🎲', t: 'Жеребьёвка', run: mc41Lottery },
+  { k: 'mc41pct', i: '％', t: 'Проценты', run: mc41Percent }
+];
+try {
+  const have = new Set((MC9_OTHER.tools || []).map(x => x.k));
+  MC41_APPS.forEach(a => { if (!have.has(a.k)) MC9_OTHER.tools.push({ k: a.k, i: a.i, t: a.t }); });
+} catch (e) { console.warn('mini apps list', e); }
+{ const base = mc9Go; mc9Go = W('mc9Go', function(k){
+  const app = MC41_APPS.find(a => a.k === k);
+  if (app) { try { return app.run(); } catch (e) { console.warn('mini app', k, e); toast('Не удалось открыть', '⚠'); } }
+  return base.apply(this, arguments);
+}); }
+function mc41Sheet(title, html){
+  const w = $id('settingsPanel');
+  if (w) { window.__mcOtherView = 'mini'; w.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">${esc(title)}</div></div><div class="settings-wrap mc41-mini">${html}</div>`; return w; }
+  return ovSheet(`<h3>${esc(title)}</h3><div class="mc41-mini">${html}</div>`);
+}
+function mc41Stopwatch(){
+  mc41Sheet('⏲️ Секундомер', `<div class="mc41-big" id="swT">00:00.0</div>
+    <div class="mc41-row"><button class="mc41-btn" id="swGo" style="flex:1">Старт</button><button class="mc41-btn g" id="swLap" style="flex:1">Круг</button><button class="mc41-btn g" id="swRst" style="flex:1">Сброс</button></div>
+    <div id="swLaps" style="margin-top:14px"></div>`);
+  let t0 = 0, acc = 0, timer = null, laps = [];
+  const fmt = ms => { const s = ms / 1000; return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.floor(s % 60)).padStart(2, '0') + '.' + Math.floor((ms % 1000) / 100); };
+  const paint = () => { const el = $id('swT'); if (el) el.textContent = fmt(acc + (timer ? Date.now() - t0 : 0)); else clearInterval(timer); };
+  $id('swGo').onclick = () => { if (timer) { acc += Date.now() - t0; clearInterval(timer); timer = null; $id('swGo').textContent = 'Продолжить'; } else { t0 = Date.now(); timer = setInterval(paint, 80); $id('swGo').textContent = 'Стоп'; } };
+  $id('swLap').onclick = () => { if (!timer) return; laps.unshift(acc + Date.now() - t0); $id('swLaps').innerHTML = laps.map((l, i) => `<div class="mc41-chip" style="display:flex;justify-content:space-between;width:100%;margin:4px 0"><span>Круг ${laps.length - i}</span><b>${fmt(l)}</b></div>`).join(''); };
+  $id('swRst').onclick = () => { clearInterval(timer); timer = null; acc = 0; laps = []; $id('swGo').textContent = 'Старт'; $id('swLaps').innerHTML = ''; paint(); };
+}
+function mc41Pomodoro(){
+  mc41Sheet('🍅 Помодоро', `<div class="mc41-big" id="pmT">25:00</div><div class="mc41-row"><button class="mc41-btn" id="pmGo">Старт</button><button class="mc41-btn g" id="pmRst">Сброс</button></div>
+    <label>Работа, минут</label><input type="number" id="pmW" value="25" min="1" max="90">
+    <label>Отдых, минут</label><input type="number" id="pmB" value="5" min="1" max="30">
+    <p class="set-sub" id="pmS" style="margin-top:12px">Готов к работе</p>`);
+  let left = 25 * 60, timer = null, phase = 'work';
+  const paint = () => { const el = $id('pmT'); if (!el) return clearInterval(timer); el.textContent = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0'); };
+  $id('pmGo').onclick = () => {
+    if (timer) { clearInterval(timer); timer = null; $id('pmGo').textContent = 'Продолжить'; return; }
+    $id('pmGo').textContent = 'Пауза';
+    timer = setInterval(() => {
+      left--; paint();
+      if (left <= 0) {
+        clearInterval(timer); timer = null;
+        phase = phase === 'work' ? 'rest' : 'work';
+        left = (+$id(phase === 'work' ? 'pmW' : 'pmB').value || 25) * 60;
+        $id('pmS').textContent = phase === 'work' ? 'Пора работать 💪' : 'Отдых 🌿';
+        $id('pmGo').textContent = 'Старт'; paint();
+        try { toast(phase === 'work' ? 'Отдых закончен' : 'Пора отдохнуть', '🍅'); mcPlaySoundId('notif', 'soft'); } catch (_) {}
+      }
+    }, 1000);
+  };
+  $id('pmRst').onclick = () => { clearInterval(timer); timer = null; left = (+$id('pmW').value || 25) * 60; $id('pmGo').textContent = 'Старт'; paint(); };
+}
+function mc41Bmi(){
+  mc41Sheet('⚖️ Индекс массы тела', `<label>Вес, кг</label><input type="number" id="bmW" value="70" step="0.1">
+    <label>Рост, см</label><input type="number" id="bmH" value="175">
+    <button class="mc41-btn" style="width:100%;margin-top:14px" id="bmGo">Рассчитать</button>
+    <div id="bmR" style="margin-top:16px"></div>`);
+  $id('bmGo').onclick = () => {
+    const w = +$id('bmW').value, h = +$id('bmH').value / 100;
+    if (!(w > 0 && h > 0)) return toast('Введите вес и рост', '⚠');
+    const bmi = w / (h * h);
+    const tag = bmi < 18.5 ? 'Недостаточный вес' : bmi < 25 ? 'Норма' : bmi < 30 ? 'Избыточный вес' : 'Ожирение';
+    $id('bmR').innerHTML = `<div class="mc11-card" style="text-align:center"><div class="mc41-big" style="font-size:34px">${bmi.toFixed(1)}</div><b>${tag}</b><small style="display:block;opacity:.7;margin-top:6px">Норма 18.5–24.9</small></div>`;
+  };
+}
+function mc41Tip(){
+  mc41Sheet('🧾 Чаевые', `<label>Сумма счёта</label><input type="number" id="tpS" value="1000">
+    <label>Чаевые, %</label><input type="range" id="tpP" min="0" max="30" value="10" oninput="mc41TipCalc()">
+    <div class="mc41-big" id="tpV" style="font-size:30px">0 ₽</div>
+    <div class="mc41-row"><button class="mc41-btn g" data-tp="5">5%</button><button class="mc41-btn g" data-tp="10">10%</button><button class="mc41-btn g" data-tp="15">15%</button><button class="mc41-btn g" data-tp="20">20%</button></div>
+    <p class="set-sub" id="tpO" style="margin-top:12px"></p>`);
+  window.mc41TipCalc = () => {
+    const s = +$id('tpS').value || 0, p = +$id('tpP').value || 0;
+    const tip = s * p / 100;
+    $id('tpV').textContent = (s + tip).toFixed(0) + ' ₽';
+    $id('tpO').textContent = `Чаевые ${tip.toFixed(0)} ₽ · счёт ${s.toFixed(0)} ₽`;
+  };
+  $id('tpS').oninput = window.mc41TipCalc; $id('tpP').oninput = window.mc41TipCalc;
+  document.querySelectorAll('[data-tp]').forEach(b => b.onclick = () => { $id('tpP').value = b.dataset.tp; window.mc41TipCalc(); });
+  window.mc41TipCalc();
+}
+function mc41Credit(){
+  mc41Sheet('🏦 Кредитный калькулятор', `<label>Сумма</label><input type="number" id="crS" value="300000">
+    <label>Ставка, % годовых</label><input type="number" id="crR" value="19" step="0.1">
+    <label>Срок, месяцев</label><input type="number" id="crM" value="24">
+    <button class="mc41-btn" style="width:100%;margin-top:14px" id="crGo">Рассчитать</button><div id="crOut" style="margin-top:16px"></div>`);
+  $id('crGo').onclick = () => {
+    const S = +$id('crS').value, r = +$id('crR').value / 100 / 12, n = +$id('crM').value;
+    if (!(S > 0 && n > 0)) return toast('Проверьте данные', '⚠');
+    const pay = r > 0 ? S * r / (1 - Math.pow(1 + r, -n)) : S / n;
+    $id('crOut').innerHTML = `<div class="mc11-card"><b>Платёж ${pay.toFixed(0)} ₽ / мес</b><small style="display:block;opacity:.7;margin-top:6px">Переплата ${(pay * n - S).toFixed(0)} ₽ · всего ${(pay * n).toFixed(0)} ₽</small></div>`;
+  };
+}
+function mc41Random(){
+  mc41Sheet('🎯 Случайное число', `<div class="mc41-row"><input type="number" id="rnA" value="1"><input type="number" id="rnB" value="100"></div>
+    <button class="mc41-btn" style="width:100%;margin-top:14px" id="rnGo">Сгенерировать</button><div class="mc41-big" id="rnO">—</div>`);
+  $id('rnGo').onclick = () => {
+    const a = Math.ceil(+$id('rnA').value || 0), b = Math.floor(+$id('rnB').value || 0);
+    if (b < a) return toast('Верхняя граница меньше нижней', '⚠');
+    $id('rnO').textContent = a + Math.floor(Math.random() * (b - a + 1));
+  };
+}
+function mc41Words(){
+  mc41Sheet('🔤 Счётчик слов', `<textarea id="wdT" rows="6" placeholder="Вставьте текст…"></textarea><div id="wdO" class="mc41-row" style="margin-top:12px"></div>`);
+  const upd = () => { const t = $id('wdT').value; const w = t.trim() ? t.trim().split(/\s+/).length : 0;
+    $id('wdO').innerHTML = `<div class="mc41-chip">Слов: <b>${w}</b></div><div class="mc41-chip">Символов: <b>${t.length}</b></div><div class="mc41-chip">Без пробелов: <b>${t.replace(/\s/g, '').length}</b></div>`; };
+  $id('wdT').oninput = upd; upd();
+}
+function mc41Base64(){
+  mc41Sheet('🧬 Base64', `<textarea id="b6T" rows="5" placeholder="Текст или Base64…"></textarea>
+    <div class="mc41-row" style="margin-top:12px"><button class="mc41-btn" id="b6E">Кодировать</button><button class="mc41-btn g" id="b6D">Декодировать</button></div>`);
+  $id('b6E').onclick = () => { try { $id('b6T').value = btoa(unescape(encodeURIComponent($id('b6T').value))); toast('Готово', '✓'); } catch (_) { toast('Не удалось', '⚠'); } };
+  $id('b6D').onclick = () => { try { $id('b6T').value = decodeURIComponent(escape(atob($id('b6T').value.trim()))); toast('Готово', '✓'); } catch (_) { toast('Это не Base64', '⚠'); } };
+}
+function mc41Palette(){
+  mc41Sheet('🎨 Палитра', `<button class="mc41-btn" style="width:100%" id="plGo">Сгенерировать палитру</button><div id="plO" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px"></div>`);
+  const hsl = (h, s, l) => `hsl(${h} ${s}% ${l}%)`;
+  $id('plGo').onclick = () => {
+    const h = Math.floor(Math.random() * 360);
+    $id('plO').innerHTML = [h, h + 24, h + 48, h + 180, h + 210].map((x, i) => {
+      const c = hsl((x + 360) % 360, 68, 45 + i * 8);
+      return `<button class="mc11-chip" data-c="${c}" style="height:64px;border-radius:14px;background:${c};border:0;color:#fff;font-size:10px">${c.replace('hsl(', '').replace(')', '')}</button>`;
+    }).join('');
+    $id('plO').querySelectorAll('[data-c]').forEach(b => b.onclick = () => { navigator.clipboard?.writeText(b.dataset.c); toast('Цвет скопирован', '🎨'); });
+  };
+  $id('plGo').click();
+}
+function mc41Dates(){
+  mc41Sheet('📅 Разница дат', `<label>Дата 1</label><input type="date" id="dtA"><label>Дата 2</label><input type="date" id="dtB"><div class="mc41-big" id="dtO" style="font-size:26px">—</div>`);
+  const today = new Date().toISOString().slice(0, 10);
+  $id('dtA').value = today; $id('dtB').value = today;
+  const upd = () => { const a = new Date($id('dtA').value), b = new Date($id('dtB').value);
+    if (isNaN(a) || isNaN(b)) return; const d = Math.round((b - a) / 86400000);
+    $id('dtO').textContent = (d === 0 ? 'Это один день' : Math.abs(d) + ' дн. ' + (d > 0 ? 'вперёд' : 'назад')) + ` · недель: ${(Math.abs(d) / 7).toFixed(1)}`; };
+  $id('dtA').onchange = upd; $id('dtB').onchange = upd; upd();
+}
+function mc41World(){
+  mc41Sheet('🌍 Мировое время', `<div id="wlO"></div>`);
+  const zones = [['Москва', 'Europe/Moscow'], ['Лондон', 'Europe/London'], ['Нью-Йорк', 'America/New_York'], ['Дубай', 'Asia/Dubai'], ['Токио', 'Asia/Tokyo']];
+  const paint = () => { const host = $id('wlO'); if (!host) return clearInterval(timer);
+    host.innerHTML = zones.map(([n, z]) => { let t = '—'; try { t = new Date().toLocaleTimeString('ru-RU', { timeZone: z, hour: '2-digit', minute: '2-digit' }); } catch (_) {}
+      return `<div class="mc41-svc"><div class="n"><b>${n}</b><small>${z.split('/')[1] || z}</small></div><span class="mc41-price">${t}</span></div>`; }).join(''); };
+  const timer = setInterval(paint, 10000); paint();
+}
+function mc41Breath(){
+  mc41Sheet('🌬️ Дыхание 4-7-8', `<div class="mc41-big" id="brT">Готовы?</div><p class="set-sub" style="text-align:center">Вдох 4 · задержка 7 · выдох 8</p><button class="mc41-btn" style="width:100%" id="brGo">Начать</button>`);
+  let timer = null;
+  $id('brGo').onclick = () => {
+    if (timer) { clearInterval(timer); timer = null; $id('brGo').textContent = 'Начать'; $id('brT').textContent = 'Остановлено'; return; }
+    $id('brGo').textContent = 'Стоп';
+    let n = 0; const phase = () => { const s = n % 19; return s < 4 ? ['Вдох', 4 - s] : s < 11 ? ['Задержка', 11 - s] : ['Выдох', 19 - s]; };
+    timer = setInterval(() => { if (!$id('brT')) return clearInterval(timer); const [name, left] = phase(); $id('brT').textContent = name + ' · ' + left; n++; }, 1000);
+  };
+}
+function mc41Metronome(){
+  mc41Sheet('🎵 Метроном', `<div class="mc41-big" id="mnT">60 BPM</div><label>Темп: <span id="mnL">60</span> BPM</label><input type="range" id="mnR" min="40" max="220" value="60"><button class="mc41-btn" style="width:100%;margin-top:12px" id="mnGo">Старт</button>`);
+  let timer = null, ac = null;
+  $id('mnR').oninput = () => { $id('mnL').textContent = $id('mnR').value; $id('mnT').textContent = $id('mnR').value + ' BPM'; if (timer) { clearInterval(timer); start(); } };
+  const start = () => { timer = setInterval(() => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 1000; g.gain.value = .12; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .04); } catch (_) {} }, 60000 / (+$id('mnR').value || 60)); };
+  $id('mnGo').onclick = () => { if (timer) { clearInterval(timer); timer = null; $id('mnGo').textContent = 'Старт'; } else { start(); $id('mnGo').textContent = 'Стоп'; } };
+}
+function mc41Lottery(){
+  mc41Sheet('🎲 Жеребьёвка', `<label>Участники (по одному в строке)</label><textarea id="ltT" rows="5" placeholder="Аня&#10;Боря&#10;Вика"></textarea>
+    <button class="mc41-btn" style="width:100%;margin-top:12px" id="ltGo">Выбрать случайного</button><div class="mc41-big" id="ltO">—</div>`);
+  $id('ltGo').onclick = () => {
+    const list = $id('ltT').value.split('\n').map(x => x.trim()).filter(Boolean);
+    if (!list.length) return toast('Добавьте участников', '⚠');
+    let n = 0; const spin = setInterval(() => { $id('ltO').textContent = list[Math.floor(Math.random() * list.length)]; if (++n > 12) { clearInterval(spin); $id('ltO').textContent = '🏆 ' + list[Math.floor(Math.random() * list.length)]; } }, 70);
+  };
+}
+function mc41Percent(){
+  mc41Sheet('％ Проценты', `<label>Сколько составляет X% от числа</label><div class="mc41-row"><input type="number" id="pcA" value="15"><input type="number" id="pcB" value="2400"></div><div class="mc41-big" id="pcO" style="font-size:28px">—</div>
+    <label>На сколько % изменилось</label><div class="mc41-row"><input type="number" id="pcC" value="100"><input type="number" id="pcD" value="125"></div><div class="mc41-big" id="pcO2" style="font-size:28px">—</div>`);
+  const upd = () => { const r = (+$id('pcA').value || 0) / 100 * (+$id('pcB').value || 0); $id('pcO').textContent = r.toFixed(2);
+    const c = +$id('pcC').value || 0, d = +$id('pcD').value || 0; $id('pcO2').textContent = c ? (((d - c) / c) * 100).toFixed(1) + '%' : '—'; };
+  ['pcA','pcB','pcC','pcD'].forEach(id => $id(id).oninput = upd); upd();
+}
+
+/* ---------------- 10. changelog from MetroChat ---------------- */
+try {
+  MC_WHATSNEW.version = V;
+  MC_WHATSNEW.slides = [
+    { title: 'MetroChat ' + V, text: 'Большое обновление: бизнес-профили с услугами и оплатой в умах, умнее Metro AI, поздравления с днём рождения и 15 новых мини-сервисов.', emoji: '✨', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+    { title: 'Бизнес-раздел', text: 'Включите бизнес-функции в настройках: название компании и категория появятся под ником, адрес и сайт — в блоке «Связь» над чатом, часы работы — чуть ниже. Приветствия, быстрые ответы и услуги настраиваются в отдельном меню.', emoji: '💼', bg: 'linear-gradient(160deg,#0f766e,#16a34a 55%,#065f46)' },
+    { title: 'Услуги и корзина', text: 'Добавляйте услуги с ценой в умах. Клиент складывает их в корзину и оплачивает — умы сразу приходят продавцу, а заказ появляется в разделе «Заказы».', emoji: '🛒', bg: 'linear-gradient(160deg,#f59e0b,#ec4899 60%,#7c3aed)' },
+    { title: 'Metro AI стал умнее', text: 'Отвечает на любые вопросы, а не только по командам. Кнопка переноса старой истории убрана, верхняя панель больше не перекрывает чат.', emoji: '🧠', bg: 'linear-gradient(160deg,#7c3aed,#397cff 55%,#0ea5e9)' },
+    { title: 'Дни рождения', text: 'Если у друга сегодня день рождения, сверху появляется плашка с кнопкой «Поздравить» — она сразу открывает отправку подарка этому человеку.', emoji: '🎂', bg: 'linear-gradient(160deg,#f43f5e,#ec4899 60%,#7c3aed)' },
+    { title: 'Плавнее и быстрее', text: 'Меньше размытий и лишних перерисовок, плавные анимации кнопок и переходов. Плюс новая тема Midnight Glass по умолчанию — глазам легче.', emoji: '⚡', bg: 'linear-gradient(160deg,#0b1531,#1e1b4b 55%,#155e75)' },
+    { title: '15 новых сервисов', text: 'Секундомер, помодоро, ИМТ, чаевые, кредит, генератор чисел, счётчик слов, Base64, палитра, разница дат, мировое время, дыхание, метроном, жеребьёвка и проценты — всё в «Прочее».', emoji: '🧰', bg: 'linear-gradient(160deg,#14b8a6,#0d9488 55%,#155e75)' }
+  ];
+  const seenKey = 'mc_whatsnew_' + V;
+  if (!localStorage.getItem(seenKey)) { localStorage.setItem(seenKey, String(Date.now())); localStorage.setItem('mc_pending_changelog', '1'); }
+} catch (e) { console.warn('changelog', e); }
+
+/* ---------------- legacy duplicates: keep a single implementation ---------------- */
+try { mcBizProfile = W('mcBizProfile', function(){ $id('mcBizCard')?.remove(); }); } catch (_) {}
+try { mcProfileStyle = W('mcProfileStyle', function(){ document.querySelectorAll('#publicProfileContent .mc15-gbg').forEach(x => x.remove()); }); } catch (_) {}
+try { mcPStyleEditor = W('mcPStyleEditor', function(){ $id('mcPStyle')?.remove(); }); } catch (_) {}
+{ const base = mc9Go; mc9Go = W('mc9Go', function(k){ if (k === 'biz') return mc41BizOpen(); return base.apply(this, arguments); }); }
+try { window.mcBizOpen = mc41BizOpen; } catch (_) {}
+try { new MutationObserver(() => { $id('mcBizRow')?.remove(); }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+
+/* small hooks for diagnostics and deep links */
+window.mc41Open = k => mc9Go(k);
+window.mc41Ask = q => mcAICall(q);
+window.mc41BizLoadFor = uid => mc41BizLoad(uid);
+console.info('MetroChat ' + V + ' patch loaded');
+})();
 </script>
 
 <script>

@@ -1,0 +1,298 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "app_config": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "users": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth.uid === $uid && (newData.child('verified').val() === data.child('verified').val() || (!data.child('verified').exists() && newData.child('verified').val() === false))"
+      }
+    },
+    "usernames": {
+      ".read": "auth != null",
+      "$n": {
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid)"
+      }
+    },
+    "presence": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "user_security": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "device_sessions": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "age_verify": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "gift_earn": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "user_bots": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "bot_chats": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "bot_msgs": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "user_saved": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "gift_wheel": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "user_settings": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "user_blocked": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "auction_credits": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "gift_quiz_claims": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "user_chats": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".indexOn": [
+          "at",
+          "updatedAt",
+          "createdAt"
+        ]
+      }
+    },
+    "gift_inventory": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "gift_transfers": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "gift_wallet": {
+      "$uid": {
+        ".read": "auth != null",
+        "balance": {
+          ".write": "auth.uid === $uid || (auth != null && newData.isNumber() && newData.val() >= data.val())"
+        }
+      }
+    },
+    "chats": {
+      "$chatId": {
+        ".read": "auth != null",
+        ".write": "auth != null && (!data.exists() || data.child('ownerId').val() === auth.uid)",
+        ".indexOn": [
+          "createdAt"
+        ],
+        "$field": {
+          ".write": "auth != null && (!$field.matches(/^(name|desc|avatar|themeId|settings|admins|ownerId)$/) || !data.parent().exists() || (!$chatId.beginsWith('grp_') && data.parent().child('type').val() !== 'group') || (data.parent().child('ownerId').val() === auth.uid || data.parent().child('admins').child(auth.uid).exists()))"
+        }
+      }
+    },
+    "messages": {
+      "$chatId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".indexOn": [
+          "createdAt",
+          "ts",
+          "at"
+        ]
+      }
+    },
+    "channels": {
+      ".read": "auth != null",
+      ".indexOn": [
+        "createdAt",
+        "boostTotal"
+      ],
+      "$id": {
+        ".write": "auth != null && (!data.exists() || data.child('ownerId').val() === auth.uid)",
+        "$field": {
+          ".write": "auth != null && (!$field.matches(/^(name|description|avatar|ownerId|admins|settings|accent|accent2|emoji|verified|username|category|type|boosts|gifts)$/) || !data.parent().exists() || (data.parent().child('ownerId').val() === auth.uid || data.parent().child('admins').child(auth.uid).exists()))",
+          "$sub": {
+            ".write": "($field === 'boosts' && $sub === auth.uid) || ($field === 'gifts' && auth != null && newData.child('from').val() === auth.uid)"
+          }
+        }
+      }
+    },
+    "channel_comments": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "channel_stats": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "stories": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "createdAt",
+        "endsAt",
+        "at"
+      ]
+    },
+    "story_media": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "story_comments": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "calls": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "call_inbox": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "call_log": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "typing": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "typing_v2": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "typing_v": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "live_geo": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "media": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "scheduled": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "galochka": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "auctions": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": [
+        "endsAt",
+        "createdAt"
+      ]
+    },
+    "auction_bids": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "paid_content": {
+      "$t": {
+        ".write": "auth != null && !data.exists() && newData.child('meta/from').val() === auth.uid",
+        "meta": {
+          ".read": "auth != null"
+        },
+        "text": {
+          ".read": "auth != null && (data.parent().child('meta/from').val() === auth.uid || data.parent().child('unlocked').child(auth.uid).exists())",
+          ".validate": "newData.isString() && newData.val().length < 700000"
+        },
+        "unlocked": {
+          "$u": {
+            ".write": "auth.uid === $u"
+          }
+        }
+      }
+    },
+    "service_orders": {
+      "$owner": {
+        ".read": "auth.uid === $owner",
+        ".indexOn": [
+          "at"
+        ],
+        "$o": {
+          ".write": "auth != null && !data.exists() && newData.child('buyer').val() === auth.uid"
+        }
+      }
+    },
+    "admins": {
+      "$uid": {
+        ".read": "auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "support_chats": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+        "meta": {
+          ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())"
+        },
+        "messages": {
+          ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+          ".indexOn": [
+            "at"
+          ]
+        }
+      },
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()"
+    }
+  }
+}
