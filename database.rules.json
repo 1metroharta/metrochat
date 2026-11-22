@@ -293,6 +293,61 @@
         }
       },
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "reports": {
+      ".read": "auth != null",
+      "$target": {
+        "$from": {
+          ".write": "auth != null && auth.uid === $from && $from !== $target",
+          ".validate": "newData.hasChildren(['at','reason'])"
+        }
+      }
+    },
+    "bans": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (!data.exists() && $uid !== auth.uid && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && newData.child('reportCount').val() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000))"
+      }
+    },
+    "ban_history": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null",
+        ".validate": "newData.isNumber()"
+      }
+    },
+    "ban_appeals": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['text','at'])"
+      }
+    },
+    "ban_notices": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+      }
+    },
+    "shops": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth.uid === $uid"
+      }
+    },
+    "shop_orders": {
+      ".read": "auth != null",
+      ".indexOn": [
+        "seller",
+        "buyer",
+        "at"
+      ],
+      "$id": {
+        ".write": "auth != null && (!data.exists() ? newData.child('buyer').val() === auth.uid : data.child('seller').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['seller','buyer','total','at'])"
+      }
     }
   }
 }
