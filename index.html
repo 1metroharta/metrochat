@@ -12756,7 +12756,7 @@ async function mcBotSendText(payload, label) {
   MCB.typing = true; mcBotRender(); const st = $('mcBotStatus'); if (st) st.textContent = 'печатает…';
   const t0 = Date.now();
   let ans;
-  try { ans = await b.reply(text); } catch (e) { console.warn('bot', id, e); ans = { text: '⚠️ Сервис временно недоступен. Попробуйте ещё раз чуть позже.' }; }
+  try { ans = await b.reply(text); } catch (e) { console.warn('bot', id, e); ans = { text: 'Я рядом 🙂 Напишите вопрос чуть иначе — и я отвечу.' }; }
   const wait = Math.max(0, 450 + Math.min(900, String(ans?.text || '').length * 4) - (Date.now() - t0));
   await new Promise(r => setTimeout(r, wait));
   MCB.typing = false; if (st) st.textContent = `@${id} · бот`;
@@ -14536,6 +14536,707 @@ Object.assign(window, {
 });
 
 console.info('MetroChat 4.2 repair patch loaded');
+
+// =====================================================================
+// MetroChat 4.6 — onboarding, profile decoration, appearance, layout, bots
+// =====================================================================
+(function metroFixes46(){
+  const doc = document;
+  const $id = id => doc.getElementById(id);
+
+  /* ---------------- styles ---------------- */
+  if (!$id('mc46-styles')) {
+    const st = doc.createElement('style');
+    st.id = 'mc46-styles';
+    st.textContent = `
+/* --- landing / auth --- */
+/* auth logo: gradient tile with the MetroChat mark (the icon image is for splash/empty chat) */
+#authScreen .auth-logo-mark{background-image:none!important;background-color:#e63946!important;font-size:26px!important;color:#fff!important}
+#mcLanding{position:fixed;inset:0;z-index:21000;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#070b16;color:#fff;font-family:inherit;transition:opacity .35s ease,transform .35s ease}
+#mcLanding.out{opacity:0;transform:scale(1.03);pointer-events:none}
+#mcLanding .mcl-bg{position:absolute;inset:-20%;filter:blur(70px);opacity:.65}
+#mcLanding .mcl-bg i{position:absolute;display:block;border-radius:50%;animation:mclFloat 18s ease-in-out infinite}
+#mcLanding .mcl-bg i:nth-child(1){width:46vmax;height:46vmax;left:-8vmax;top:-10vmax;background:#2563eb}
+#mcLanding .mcl-bg i:nth-child(2){width:38vmax;height:38vmax;right:-6vmax;top:8vmax;background:#7c3aed;animation-delay:-6s}
+#mcLanding .mcl-bg i:nth-child(3){width:32vmax;height:32vmax;left:22vmax;bottom:-12vmax;background:#0d9488;animation-delay:-11s}
+@keyframes mclFloat{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4vmax,-3vmax,0) scale(1.08)}}
+#mcLanding:before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(11,18,38,.15),rgba(5,9,20,.82) 72%),linear-gradient(180deg,rgba(5,9,20,.15),rgba(5,9,20,.7));z-index:1}
+#mcLanding .mcl-wrap{position:relative;z-index:2;width:100%;max-width:430px;padding:32px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:min(660px,92dvh)}
+#mcLanding .mcl-brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.02em;font-size:17px;opacity:.95;margin-bottom:auto}
+#mcLanding .mcl-brand span{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#e63946;font-size:19px;box-shadow:0 8px 24px rgba(230,57,70,.35)}
+#mcLanding .mcl-stage{width:100%;transition:opacity .35s ease,transform .45s cubic-bezier(.2,.9,.2,1),filter .35s}
+#mcLanding .mcl-stage.mcl-hidden{display:none}
+#mcLanding .mcl-stage.mcl-enter{animation:mclIn .6s cubic-bezier(.2,.9,.2,1) both}
+@keyframes mclIn{from{opacity:0;transform:translateY(22px) scale(.97);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+#mcLanding h1{font-size:clamp(28px,7vw,38px);line-height:1.12;font-weight:850;letter-spacing:-.03em;margin:0 0 10px;background:linear-gradient(100deg,#fff,#a5d8ff 40%,#c4b5fd 75%,#fff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:mclShine 6s linear infinite}
+@keyframes mclShine{to{background-position:200% center}}
+#mcLanding p{margin:0 0 26px;color:rgba(255,255,255,.72);font-size:14.5px;line-height:1.55}
+#mcLanding .mcl-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;margin-bottom:12px;border-radius:18px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#fff;font-size:16px;font-weight:750;cursor:pointer;backdrop-filter:blur(18px);transition:transform .16s,background .2s,box-shadow .2s}
+#mcLanding .mcl-btn:active{transform:scale(.975)}
+#mcLanding .mcl-btn.primary{background:#e63946;border-color:transparent;box-shadow:0 14px 34px rgba(230,57,70,.35)}
+#mcLanding .mcl-btn.ghost{background:rgba(255,255,255,.08)}
+#mcLanding .mcl-foot{margin-top:auto;padding-top:22px;display:flex;justify-content:center}
+#mcLanding .mcl-foot button{border:0;background:none;color:rgba(255,255,255,.65);font:inherit;font-size:13px;font-weight:600;padding:10px 14px;cursor:pointer;border-radius:12px}
+#mcLanding .mcl-foot button:hover{background:rgba(255,255,255,.08);color:#fff}
+#mcLanding .mcl-hint{font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.45);margin-top:14px}
+body.mc-landing #authScreen{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+/* auth screens: login and register are visually distinct */
+#authScreen{transition:opacity .3s ease;background:radial-gradient(900px 680px at 18% 8%,rgba(79,140,255,.22),transparent 62%),radial-gradient(820px 620px at 92% 92%,rgba(168,85,247,.2),transparent 62%),#070b16!important}
+#authScreen:before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1px);background-size:22px 22px;mask-image:radial-gradient(ellipse at 50% 40%,#000 25%,transparent 78%);-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000 25%,transparent 78%)}
+#authScreen[data-mode="register"] .auth-card{border-color:rgba(139,92,246,.55);box-shadow:0 30px 90px rgba(76,29,149,.35)}
+#authScreen[data-mode="login"] .auth-card{border-color:rgba(79,140,255,.5);box-shadow:0 30px 90px rgba(29,78,216,.3)}
+#authScreen[data-mode="register"] .auth-logo-mark{box-shadow:0 0 0 3px rgba(139,92,246,.6),0 16px 38px rgba(76,29,149,.45)!important}
+#authScreen[data-mode="login"] .auth-logo-mark{box-shadow:0 0 0 3px rgba(79,140,255,.55),0 16px 38px rgba(29,78,216,.4)!important}
+/* desktop: the sidebar tab row must not clip its last tabs */
+@media (min-width:761px){#sbNav{flex-wrap:wrap;overflow:visible}}
+#authScreen .auth-card{animation:mcAuthIn .45s cubic-bezier(.2,.9,.2,1) both}
+#authScreen[data-mode="register"] .auth-card{animation-name:mcAuthInRight}
+@keyframes mcAuthIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes mcAuthInRight{from{opacity:0;transform:translateX(22px) scale(.985)}to{opacity:1;transform:none}}
+#mcAuthLandingBack{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--text-2,#8aa0c0);font:inherit;font-size:13px;font-weight:650;padding:6px 0 14px;cursor:pointer}
+#mcAuthLandingBack:hover{color:var(--text,#fff)}
+/* onboarding percent */
+#onbPercent{display:flex;justify-content:space-between;gap:10px;margin:-18px 0 18px;font-size:12px;font-weight:750;color:var(--text-2);letter-spacing:.01em}
+#onbPercent b{color:var(--accent-ink,var(--accent))}
+#onbProgress{transition:width .45s cubic-bezier(.2,.9,.2,1)}
+/* post-registration wizard */
+.mc-setup{position:fixed;inset:0;z-index:250;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(900px 600px at 50% 0%,#182444,#070b16 70%);color:#fff;overflow-y:auto;animation:mcAuthIn .4s both}
+.mc-setup-card{width:100%;max-width:450px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:22px;backdrop-filter:blur(22px);box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.mc-setup-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.mc-setup-bar{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.mc-setup-bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#4f8cff,#a855f7);transition:width .4s cubic-bezier(.2,.9,.2,1)}
+.mc-setup-head span{font-size:12px;font-weight:800;min-width:38px;text-align:right;opacity:.8}
+.mc-setup h2{font-size:23px;margin:0 0 6px;font-weight:850;letter-spacing:-.02em}
+.mc-setup>p,.mc-setup-card>p{color:rgba(255,255,255,.62);font-size:13.5px;line-height:1.5;margin:0 0 16px}
+.mc-setup-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:17px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);margin-bottom:10px;transition:background .2s,border-color .2s}
+.mc-setup-item.done{border-color:rgba(34,197,94,.55);background:rgba(34,197,94,.12)}
+.mc-setup-item .mc-si-ico{width:42px;height:42px;flex:none;border-radius:14px;display:grid;place-items:center;font-size:21px;background:rgba(255,255,255,.1)}
+.mc-setup-item .mc-si-txt{flex:1;min-width:0}
+.mc-setup-item b{display:block;font-size:14.5px}
+.mc-setup-item small{display:block;margin-top:2px;font-size:11.5px;line-height:1.4;color:rgba(255,255,255,.55)}
+.mc-setup-item button{flex:none;border:0;border-radius:12px;padding:9px 13px;background:#fff;color:#111827;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+.mc-setup-item.done button{background:rgba(255,255,255,.14);color:#fff}
+.mc-setup-skip{width:100%;margin-top:8px;padding:14px;border-radius:16px;border:0;background:transparent;color:rgba(255,255,255,.6);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
+.mc-setup-skip:hover{background:rgba(255,255,255,.07);color:#fff}
+/* done + confetti */
+.mc-done{position:fixed;inset:0;z-index:21000;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(800px 600px at 50% 30%,#1b2a52,#070b16 70%);color:#fff;animation:mcAuthIn .4s both;transition:opacity .4s,transform .4s}
+.mc-done.out{opacity:0;transform:scale(1.05)}
+.mc-done-wrap{position:relative;z-index:2;text-align:center;padding:24px;max-width:420px}
+.mc-done-check{width:92px;height:92px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;font-size:46px;background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 0 0 0 rgba(34,197,94,.5);animation:mcDoneCheck .8s cubic-bezier(.2,.9,.2,1) both,mcDonePulse 2s ease-out .8s infinite}
+@keyframes mcDoneCheck{0%{transform:scale(.2) rotate(-25deg);opacity:0}60%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes mcDonePulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}100%{box-shadow:0 0 0 34px rgba(34,197,94,0)}}
+.mc-done h1{font-size:clamp(30px,8vw,40px);margin:0 0 10px;font-weight:900;letter-spacing:-.03em;animation:mcAuthIn .6s .1s both}
+.mc-done p{margin:0 0 28px;color:rgba(255,255,255,.65);font-size:14px;animation:mcAuthIn .6s .2s both}
+.mc-done-go{min-width:220px;padding:16px 28px;border-radius:18px;border:0;background:#e63946;color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s,filter .2s;box-shadow:0 16px 40px rgba(230,57,70,.35)}
+.mc-done.ready .mc-done-go{opacity:1;transform:none}
+.mc-done-go:active{filter:brightness(.92)}
+.mc-conf{position:absolute;inset:0;z-index:1;pointer-events:none}
+.mc-conf i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:mcConfFall linear forwards}
+@keyframes mcConfFall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(115vh) rotate(720deg);opacity:.9}}
+/* profile decoration */
+#profileModal #mcPStyle{margin:14px 0;padding:16px;border-radius:18px;background:var(--surface-2);border:1px solid var(--border)}
+#mcPStyle .mc16-sw-row{display:grid;grid-template-columns:repeat(5,32px);gap:10px;margin-top:10px}
+#mcPStyle .mc16-sw{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);cursor:pointer;background:var(--c);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+#mcPStyle .mc16-sw.active{outline:3px solid var(--accent);outline-offset:3px}
+#mcPStyle .mc16-toggle{display:flex;align-items:center;gap:10px;margin-top:12px;color:var(--text);font-size:13.5px;font-weight:600}
+#mcPStyle .mc16-toggle input{width:auto}
+#mcPStyle .mc16-actions{display:flex;gap:10px;margin-top:14px}
+#publicProfileContent .mc-pcard.mc16-tinted h3,#publicProfileContent .mc-pcard.mc16-tinted .mc-pcard-status,#publicProfileContent .mc-pcard.mc16-tinted .mc-pcard-user{color:inherit!important}
+#publicProfileContent .mc-pcard.mc16-tinted .mc-pcard-user{background:rgba(255,255,255,.16)}
+#publicProfileContent .public-profile-avatar{position:relative;z-index:1}
+.mc16-gift-ring{position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-50%);z-index:2;pointer-events:none}
+.mc16-gift-ring span{position:absolute;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.22);transform:translate(-50%,-50%);opacity:1!important}
+#publicProfileContent .mc-pcard{position:relative;overflow:visible}
+/* the camera badge must sit inside the round avatar, not under its clipped corner */
+.onb-avatar::after{bottom:5px;right:auto;left:50%;transform:translateX(-50%)}
+/* empty chat wallpaper */
+#chatPanel .messages:empty{display:none!important}
+html[data-theme] #chatPanel .chat-empty{background-color:var(--wall-base)!important}
+html[data-cw] #chatPanel .chat-empty{background:var(--mc-chat-bg)!important;background-size:cover!important}
+/* paid message layout */
+.mc14-paid-body{display:block;margin-top:6px}
+.mc14-paid-body img{display:block;max-width:100%;border-radius:12px}
+.msg .mc14-pay-btn{max-width:100%;white-space:normal}
+/* liquid glass actually changes the surface when enabled */
+html[data-glass="on"] #sidebar,html[data-glass="on"] .chat-header,html[data-glass="on"] .settings-header,html[data-glass="on"] .mobile-nav-inner,html[data-glass="on"] .chat-input-bar,html[data-glass="on"] .sb-top{background:color-mix(in srgb,var(--surface) 62%,transparent)!important;backdrop-filter:blur(24px) saturate(165%)!important;-webkit-backdrop-filter:blur(24px) saturate(165%)!important;border-color:rgba(255,255,255,.14)!important}
+html[data-glass="on"] .mc11-sheet,html[data-glass="on"] .modal,html[data-glass="on"] .mc-setup-card,html[data-glass="on"] .auth-card{background:color-mix(in srgb,var(--surface, #101827) 76%,transparent)!important;backdrop-filter:blur(26px) saturate(160%)!important;-webkit-backdrop-filter:blur(26px) saturate(160%)!important}
+html[data-glass="on"] .msg.in{background:color-mix(in srgb,var(--surface) 76%,transparent)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+/* bots quick actions */
+.mc-bot-kb button{min-width:calc(50% - 6px)}
+@media (prefers-reduced-motion: reduce){#mcLanding .mcl-bg i,#mcLanding h1,.mc-done-check{animation:none!important}}
+`;
+    doc.head.appendChild(st);
+  }
+
+  /* ---------------- landing + auth ---------------- */
+  function mcAuthScreenMode(mode){
+    const a = $id('authScreen'); if (!a) return;
+    a.dataset.mode = mode;
+    const h = $id('welcomeAnimated') || $id('mcAuthHeading');
+    if (h) {
+      h.id = 'mcAuthHeading';
+      h.textContent = mode === 'register' ? 'Создать аккаунт' : 'Войти в MetroChat';
+    }
+    const sub = a.querySelector('.auth-logo-text p');
+    if (sub) sub.textContent = mode === 'register' ? 'НОВОЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ' : 'РАДЫ ВИДЕТЬ ВАС СНОВА';
+    const actions = a.querySelector('.auth-bottom-actions');
+    if (actions) actions.style.display = 'none';
+    if (!$id('mcAuthLandingBack') && a.querySelector('.auth-card')) {
+      const b = doc.createElement('button');
+      b.type = 'button'; b.id = 'mcAuthLandingBack';
+      b.innerHTML = '← На главный экран';
+      b.onclick = () => { try { mcWelcome(); } catch (_) {} };
+      a.querySelector('.auth-card').prepend(b);
+    }
+    try { hideSplash(); } catch (_) {}
+    try { setAuthMode(mode); } catch (_) {}
+  }
+  function mcOpenAuthMode(mode){
+    const land = $id('mcLanding');
+    if (land) { land.classList.add('out'); setTimeout(() => land.remove(), 360); }
+    doc.body.classList.remove('mc-landing');
+    const a = $id('authScreen');
+    if (a) a.classList.remove('hidden');
+    mcAuthScreenMode(mode);
+    setTimeout(() => { const e = $id('authEmail'); if (e && window.innerWidth > 760) e.focus(); }, 380);
+  }
+  function mcSupportSheet(){
+    if ($id('mcSupportSheet')) return;
+    const o = doc.createElement('div');
+    o.id = 'mcSupportSheet';
+    o.style.cssText = 'position:fixed;inset:0;z-index:21500;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(4,8,18,.72);backdrop-filter:blur(6px)';
+    o.innerHTML = '<div style="width:100%;max-width:380px;background:var(--surface,#111827);color:var(--text,#fff);border:1px solid var(--border,#2b3a55);border-radius:22px;padding:22px"><h3 style="margin:0 0 8px;font-size:19px">Поддержка MetroChat</h3><p style="margin:0 0 16px;font-size:13px;line-height:1.5;color:var(--text-2,#8aa0c0)">Ответим на вопросы о входе, аккаунте и приложении.</p><a href="mailto:support@metrochat.app" style="display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;background:var(--surface-2,#182235);color:inherit;text-decoration:none;margin-bottom:8px">✉️ support@metrochat.app</a><a href="https://github.com/1metroharta/metrochat/issues" target="_blank" rel="noopener" style="display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;background:var(--surface-2,#182235);color:inherit;text-decoration:none">💬 Сообщить о проблеме</a><button type="button" style="width:100%;margin-top:14px;padding:12px;border:0;border-radius:14px;background:var(--accent,#4f8cff);color:#fff;font:inherit;font-weight:750;cursor:pointer">Закрыть</button></div>';
+    doc.body.appendChild(o);
+    o.addEventListener('click', e => { if (e.target === o || e.target.tagName === 'BUTTON') o.remove(); });
+  }
+  mcWelcome = function(){
+    if ($id('mc2faScreen')) return;
+    const verify = $id('verifyScreen');
+    if (verify && !verify.classList.contains('hidden')) return;
+    if ($id('mcLanding')) { $id('mcLanding').style.display = 'flex'; return; }
+    if ($id('mc14Welcome')) $id('mc14Welcome').remove();
+    if (state.user) return;
+    const oldHeading = $id('welcomeAnimated'); if (oldHeading) oldHeading.id = 'mcAuthHeading';
+    const d = doc.createElement('div');
+    d.id = 'mcLanding';
+    d.innerHTML = '<div class="mcl-bg"><i></i><i></i><i></i></div><div class="mcl-wrap">' +
+      '<div class="mcl-brand"><span>M</span>MetroChat</div>' +
+      '<div class="mcl-stage mcl-enter" id="mclStage1"><h1>Добро пожаловать<br>в MetroChat</h1><p>Соединяем людей — быстро, красиво и безопасно.</p><button type="button" class="mcl-btn primary" id="mclStart">Начать</button></div>' +
+      '<div class="mcl-stage mcl-hidden" id="mclStage2"><h1>Давайте начнём?</h1><p>Создайте новый аккаунт или войдите в уже существующий.</p><button type="button" class="mcl-btn primary" data-mode="register">Создать аккаунт</button><button type="button" class="mcl-btn ghost" data-mode="login">Войти</button><div class="mcl-hint">Продолжая, вы принимаете Политику конфиденциальности.</div></div>' +
+      '<div class="mcl-foot"><button type="button" id="mclSupport">Поддержка</button></div></div>';
+    doc.body.appendChild(d);
+    doc.body.classList.add('mc-landing');
+    d.querySelector('#mclStart').onclick = () => {
+      const s1 = d.querySelector('#mclStage1'), s2 = d.querySelector('#mclStage2');
+      if (!s1 || !s2) return;
+      s1.style.opacity = '0'; s1.style.transform = 'translateY(-14px) scale(.97)';
+      setTimeout(() => {
+        s1.classList.add('mcl-hidden');
+        s2.classList.remove('mcl-hidden'); s2.classList.add('mcl-enter');
+      }, 240);
+    };
+    d.querySelectorAll('[data-mode]').forEach(b => { b.onclick = () => mcOpenAuthMode(b.dataset.mode === 'register' ? 'register' : 'login'); });
+    d.querySelector('#mclSupport').onclick = mcSupportSheet;
+  };
+  // show landing whenever the signed-out auth screen becomes visible
+  {
+    const a = $id('authScreen');
+    if (a) {
+      const chk = () => { if (!a.classList.contains('hidden') && !state.user) { try { mcWelcome(); } catch (_) {} } };
+      new MutationObserver(chk).observe(a, { attributes: true, attributeFilter: ['class'] });
+      setTimeout(chk, 900);
+    }
+  }
+
+  /* ---------------- onboarding progress + photo-step fix ---------------- */
+  const onb = $id('onboarding');
+  if (onb) {
+    if (!$id('onbFinish')) {
+      const f = doc.createElement('button');
+      f.type = 'button'; f.id = 'onbFinish'; f.style.display = 'none';
+      f.textContent = 'Готово ✨';
+      onb.appendChild(f);
+    }
+    if (!$id('onbPercent') && onb.querySelector('.onb-progress')) {
+      const p = doc.createElement('div');
+      p.id = 'onbPercent';
+      p.innerHTML = '<span id="onbPercentStep">Шаг 1</span><b id="onbPercentValue">16%</b>';
+      onb.querySelector('.onb-progress').insertAdjacentElement('afterend', p);
+    }
+  }
+  const _renderOnb46 = renderOnb;
+  renderOnb = function(){
+    const r = _renderOnb46.apply(this, arguments);
+    try {
+      const i = Math.max(0, ORDER.indexOf(onbStep));
+      const pct = Math.round(((i + 1) / ORDER.length) * 100);
+      const v = $id('onbPercentValue'), s = $id('onbPercentStep');
+      if (v) v.textContent = pct + '%';
+      if (s) s.textContent = 'Шаг ' + (i + 1) + ' из ' + ORDER.length;
+    } catch (_) {}
+    return r;
+  };
+
+  /* ---------------- post-registration: notifications, install, 2FA ---------------- */
+  function mcSetupMark(){
+    const bar = $id('mcSetupBar'), pct = $id('mcSetupPct');
+    const n = doc.querySelectorAll('.mc-setup-item.done').length;
+    const p = Math.round((n / 3) * 100);
+    if (bar) bar.style.width = p + '%';
+    if (pct) pct.textContent = p + '%';
+    const skip = $id('mcSetupSkip');
+    if (skip) skip.textContent = n >= 3 ? 'Готово →' : 'Пропустить';
+  }
+  function mcOnbSetup(){
+    try { hideSplash(); } catch (_) {}
+    $id('authScreen')?.classList.add('hidden');
+    $id('verifyScreen')?.classList.add('hidden');
+    $id('onboarding')?.classList.add('hidden');
+    $id('app')?.classList.add('hidden');
+    $id('mcOnbSetup')?.remove();
+    const d = doc.createElement('div');
+    d.id = 'mcOnbSetup'; d.className = 'mc-setup';
+    d.innerHTML = '<div class="mc-setup-card"><div class="mc-setup-head"><div class="mc-setup-bar"><i id="mcSetupBar"></i></div><span id="mcSetupPct">0%</span></div>' +
+      '<h2>Осталось три шага</h2><p>Сделайте MetroChat удобнее и безопаснее. Можно пропустить и настроить позже.</p>' +
+      '<div class="mc-setup-list">' +
+      '<div class="mc-setup-item" data-k="notif"><div class="mc-si-ico">🔔</div><div class="mc-si-txt"><b>Уведомления</b><small>Не пропускайте новые сообщения и звонки</small></div><button type="button" data-act="notif">Включить</button></div>' +
+      '<div class="mc-setup-item" data-k="install"><div class="mc-si-ico">📲</div><div class="mc-si-txt"><b>Установить приложение</b><small>MetroChat на главном экране, как обычное приложение</small></div><button type="button" data-act="install">Установить</button></div>' +
+      '<div class="mc-setup-item" data-k="2fa"><div class="mc-si-ico">🛡️</div><div class="mc-si-txt"><b>Обезопасить аккаунт</b><small>Двухфакторная защита входа (2FA)</small></div><button type="button" data-act="2fa">Включить</button></div>' +
+      '</div><button type="button" class="mc-setup-skip" id="mcSetupSkip">Пропустить</button></div>';
+    doc.body.appendChild(d);
+    mcSetupMark();
+    const finishCard = (card) => { if (card && !card.classList.contains('done')) { card.classList.add('done'); const b = card.querySelector('button'); if (b) b.textContent = 'Готово ✓'; mcSetupMark(); } };
+    d.querySelector('[data-act="notif"]').onclick = async e => {
+      const card = e.target.closest('.mc-setup-item');
+      try {
+        if ('Notification' in window && Notification.permission !== 'denied') await Notification.requestPermission();
+      } catch (_) {}
+      finishCard(card);
+    };
+    d.querySelector('[data-act="install"]').onclick = e => {
+      const card = e.target.closest('.mc-setup-item');
+      try { installMetroChat(); } catch (_) {}
+      finishCard(card);
+    };
+    d.querySelector('[data-act="2fa"]').onclick = e => {
+      finishCard(e.target.closest('.mc-setup-item'));
+      try { mcOpen2faSettings(); } catch (_) { toast('2FA доступна в Настройки → Безопасность', '🛡️'); }
+    };
+    d.querySelector('#mcSetupSkip').onclick = () => finishNotifPrompt();
+  }
+  showNotifPrompt = function(){ mcOnbSetup(); };
+  allowNotifFromOnb = async function(){
+    try { if ('Notification' in window && Notification.permission === 'default') await Notification.requestPermission(); } catch (_) {}
+    finishNotifPrompt();
+  };
+  skipNotifPrompt = function(){ finishNotifPrompt(); };
+  function mcCelebrateDone(){
+    $id('mcDone')?.remove();
+    const d = doc.createElement('div');
+    d.id = 'mcDone'; d.className = 'mc-done';
+    const colors = ['#e63946', '#4f8cff', '#a855f7', '#22c55e', '#f59e0b', '#14b8a6', '#ec4899'];
+    let conf = '';
+    for (let i = 0; i < 90; i++) {
+      const c = colors[i % colors.length];
+      conf += `<i style="left:${(Math.random() * 100).toFixed(2)}%;background:${c};animation-duration:${(2.4 + Math.random() * 2.6).toFixed(2)}s;animation-delay:${(Math.random() * 1.4).toFixed(2)}s;transform:rotate(${Math.floor(Math.random() * 360)}deg);opacity:${(0.55 + Math.random() * 0.45).toFixed(2)}"></i>`;
+    }
+    d.innerHTML = '<div class="mc-conf">' + conf + '</div><div class="mc-done-wrap"><div class="mc-done-check">✓</div><h1>Всё готово</h1><p>Аккаунт создан. Добро пожаловать в MetroChat!</p><button type="button" class="mc-done-go" id="mcDoneGo">Начнём</button></div>';
+    doc.body.appendChild(d);
+    try { if (typeof mcConfettiBurst === 'function') mcConfettiBurst(80); } catch (_) {}
+    setTimeout(() => d.classList.add('ready'), 950);
+    $id('mcDoneGo').onclick = () => {
+      d.classList.add('out');
+      setTimeout(() => { d.remove(); try { startApp(); } catch (e) { console.warn('startApp', e); } }, 420);
+    };
+  }
+  finishNotifPrompt = function(){
+    $id('mcOnbSetup')?.remove();
+    if (state.user) set(ref(db, 'user_settings/' + state.user.uid + '/notificationsAsked'), true).catch(() => {});
+    mcCelebrateDone();
+  };
+
+  /* ---------------- appearance: 10 solid colors, working glass ---------------- */
+  window.mcApplyGlass = function(){
+    try { doc.documentElement.dataset.glass = (upGet().glass === 'on') ? 'on' : 'off'; } catch (_) {}
+  };
+  {
+    const prev = upApply;
+    upApply = function(...a){ const r = prev.apply(this, a); window.mcApplyGlass(); return r; };
+    upApply();
+  }
+  window.mcUiReset = function(){
+    const x = upGet();
+    ['accent', 'wa', 'wb', 'cw1', 'cw2', 'cang', 'cdim', 'chatSolid', 'font'].forEach(k => delete x[k]);
+    localStorage.setItem(UP, JSON.stringify(x));
+    ['--wall-a', '--wall-b', '--mc-chat-bg', '--accent-solid'].forEach(k => doc.documentElement.style.removeProperty(k));
+    delete doc.documentElement.dataset.cw;
+    try { applySettings(); } catch (_) {}
+    upApply();
+    try { mcSetGo('appearance'); } catch (_) {}
+  };
+  mcSetAppearance = function(){
+    const s = state.settings || {}, u = upGet(), fs = s.fontSize || '14px';
+    const palette = ['#4f8cff', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#0ea5e9', '#64748b'];
+    const walls = ['#f1f5f9', '#e2e8f0', '#e0f2fe', '#dcfce7', '#fef3c7', '#fce7f3', '#ede9fe', '#172554', '#172033', '#0f172a'];
+    const glassOn = u.glass === 'on';
+    return sHead('Оформление') +
+      '<div class="settings-wrap ms-wrap mc42-appearance">' +
+      '<div class="ms-preview" data-wall="' + (typeof mcEffectiveWall === 'function' ? mcEffectiveWall() : 'classic') + '"><div class="ms-pv-msg in">Привет! Как тебе новая тема? 🎨</div><div class="ms-pv-msg out">Выглядит отлично 👍<span>12:30 ✓✓</span></div></div>' +
+      sGroup('', [sRow({ ico: s.darkMode ? '🌙' : '☀️', c: '#6366f1', label: 'Ночной режим', on: !!s.darkMode, act: 'toggleDarkMode()' })]) +
+      '<section class="ms-group"><h3>Тема</h3><div class="ms-card ms-pad"><div class="theme-grid">' + THEMES.map(t => `<button type="button" class="theme-item ${s.themeId === t.id ? 'active' : ''}" onclick="setTheme('${t.id}')"><span class="theme-preview" style="background:${t.grad[0]};color:#fff">M</span><span class="theme-name">${esc(t.name)}</span></button>`).join('') + '</div></div></section>' +
+      '<section class="ms-group"><h3>Обои чата · 10 цветов</h3><div class="ms-card ms-pad"><div class="mc42-color-grid">' + walls.map(c => `<button type="button" data-mc-wall="${c}" class="mc42-color ${u.chatSolid === c ? 'active' : ''}" style="--swatch:${c}" aria-label="Цвет обоев ${c}" onclick="mcPatchSolidWall('${c}')"></button>`).join('') + '</div><button type="button" class="mc42-reset" onclick="mcUiReset()">Обои по теме</button></div></section>' +
+      '<section class="ms-group"><h3>Акцентный цвет · 10 цветов</h3><div class="ms-card ms-pad"><div class="mc42-color-grid">' + palette.map(c => `<button type="button" data-mc-accent="${c}" class="mc42-color ${u.accent === c ? 'active' : ''}" style="--swatch:${c}" aria-label="Акцент ${c}" onclick="mcPatchAccent('${c}')"></button>`).join('') + '</div></div></section>' +
+      '<section class="ms-group"><h3>Размер текста</h3><div class="ms-card ms-pad"><div class="mc-seg ms-fs">' + [['13px', 'Мелкий'], ['14px', 'Обычный'], ['15px', 'Средний'], ['16px', 'Крупный'], ['18px', 'Огромный']].map(([v, l]) => `<button type="button" class="${fs === v ? 'active' : ''}" onclick="mcSetVal('fontSize','${v}')" style="font-size:${v}">${l}</button>`).join('') + '</div></div></section>' +
+      '<section class="ms-group"><h3>Дополнительно</h3><div class="ms-card ms-pad"><div class="mc42-option"><div><b>Жидкое стекло</b><small>Прозрачные панели с размытием</small></div><button type="button" class="mc42-switch ' + (glassOn ? 'on' : '') + '" aria-pressed="' + glassOn + '" onclick="mcUiSet(\'glass\',upGet().glass===\'on\'?\'off\':\'on\');window.mcApplyGlass();this.classList.toggle(\'on\',upGet().glass===\'on\');this.setAttribute(\'aria-pressed\',String(upGet().glass===\'on\'))"><i></i></button></div><button type="button" class="mc42-reset" onclick="mcUiReset()">Сбросить оформление</button></div></section>' +
+      '</div>';
+  };
+
+  /* ---------------- settings main: folders in general, business in "Другое" ---------------- */
+  mcSetMain = function(){
+    const p = state.profile || {}, s = state.settings || {};
+    const theme = getTheme(s.themeId) || {};
+    const perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+    const notifSub = s.notifications === false ? 'Выключены' : perm === 'granted' ? (mcInDnd() ? 'Не беспокоить до ' + (s.dndTo || '08:00') : 'Включены') : perm === 'denied' ? 'Заблокированы в браузере' : 'Нужно разрешение';
+    const soundSub = s.sound === false ? 'Без звука' : `${mcSoundName('notif')} · ${Math.round(mcVol() * 100)}%`;
+    const blockedN = Object.keys(state.blocked || {}).length;
+    const schedN = typeof mcSchedCount === 'function' ? mcSchedCount() : 0;
+    const name = p.displayName || p.firstName || 'Пользователь';
+    const verified = state.galochka?.[state.user?.uid]?.confirmed === true;
+    return sHead('Настройки', false) +
+      '<div class="settings-wrap ms-wrap">' +
+      `<button type="button" class="ms-profile" onclick="openProfileModal()">${avatarHTML({ name, avatar: p.avatar, size: 'big' })}<span class="ms-profile-txt"><b>${esc(name)}${verified ? ' <span class="ms-verified" title="Подтверждён">✔</span>' : ''}</b>${p.username ? `<small class="ms-un">@${esc(p.username)}</small>` : ''}<small>${esc(p.email || state.user?.email || '')}</small></span><span class="ms-profile-edit">Изменить</span></button>` +
+      sGroup('', [
+        sRow({ ico: '🎨', c: '#8b5cf6', label: 'Оформление', sub: `${esc(theme.name || 'Тема')} · ${s.darkMode ? 'тёмная' : 'светлая'}`, act: "mcSetGo('appearance')" }),
+        sRow({ ico: '🔔', c: '#ef4444', label: 'Уведомления', sub: notifSub, act: "mcSetGo('notif')" }),
+        sRow({ ico: '🔊', c: '#f97316', label: 'Звук', sub: esc(soundSub), act: "mcSetGo('sound')" }),
+        sRow({ ico: '🔒', c: '#3b82f6', label: 'Конфиденциальность', sub: blockedN ? `Заблокировано: ${blockedN}` : 'Статус, прочтение, блокировки', act: "mcSetGo('privacy')" }),
+        sRow({ ico: '📁', c: '#f59e0b', label: 'Папки с чатами', sub: 'Группируйте чаты, до 25 в папке', act: 'mcFoldersOpen()' }),
+      ]) +
+      sGroup('', [
+        sRow({ ico: '📞', c: '#22c55e', label: 'Звонки', sub: 'Мелодия, журнал, проверка связи', act: "mcSetGo('calls')" }),
+        sRow({ ico: '💬', c: '#14b8a6', label: 'Чаты', sub: 'Отправка, черновики, размер текста', act: "mcSetGo('chats')" }),
+        sRow({ ico: '⏰', c: '#f59e0b', label: 'Запланированные', sub: schedN ? `${schedN} ${mcPl6(schedN, ['сообщение', 'сообщения', 'сообщений'])}` : 'Отложенные и повторяющиеся', act: 'mcOpenScheduledList()' }),
+      ]) +
+      sGroup('Безопасность', [sRow({ ico: '🛡️', c: '#0ea5e9', label: 'Блокировка и вход', sub: 'Пароль, лицо, 2FA, устройства', act: "mcSetGo('security')" })]) +
+      sGroup('Язык', [sRow({ ico: '🌐', c: '#8b5cf6', label: 'Язык приложения', sub: MC_LANG_NAME(), right: '', act: 'mcLangOpen()' })]) +
+      sGroup('Другое', [
+        sRow({ ico: '💼', c: '#16a34a', label: 'Для бизнеса', sub: 'Профиль компании, быстрые ответы, услуги', act: 'mcBizOpen()' }),
+        sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку', act: 'openVerificationModal()' }),
+        sRow({ ico: '❓', c: '#a855f7', label: 'Вопросы и ответы', act: 'mcOpenFaq()' }),
+        sRow({ ico: '📄', c: '#64748b', label: 'Политика конфиденциальности', href: 'https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy' }),
+      ]) +
+      sGroup('Аккаунт', [
+        sRow({ ico: '⎋', c: '#64748b', label: 'Выйти', act: 'confirmLogout()' }),
+        sRow({ ico: '⚠️', c: '#dc2626', label: 'Удалить аккаунт', act: 'confirmDeleteAccount()', danger: true }),
+      ]) +
+      '</div>';
+  };
+  window.mcSetMain = mcSetMain;
+  window.mcSetAppearance = mcSetAppearance;
+
+  /* ---------------- desktop: keep chat list visible beside settings ---------------- */
+  {
+    const prev = switchTab;
+    switchTab = function(tab){
+      const r = prev.apply(this, arguments);
+      try {
+        if (window.innerWidth > 760) {
+          const isPanel = tab === 'settings' || tab === 'other' || tab === 'bots';
+          if (isPanel) {
+            const nav = $id('sbNav'), list = $id('sbList'), sw = $id('sbSearchWrap');
+            if (nav) nav.style.display = 'flex';
+            if (list) list.style.display = 'block';
+            if (sw) sw.style.display = 'block';
+          } else {
+            $id('settingsPanel')?.classList.add('hidden');
+          }
+        }
+      } catch (_) {}
+      return r;
+    };
+    window.switchTab = switchTab;
+    const prevOpen = openChat;
+    openChat = function(...a){
+      if (window.innerWidth > 760) {
+        $id('settingsPanel')?.classList.add('hidden');
+        $id('chatPanel')?.classList.remove('hidden');
+      }
+      return prevOpen.apply(this, a);
+    };
+    window.openChat = openChat;
+  }
+
+  /* ---------------- profile decoration: solid color + gifts around avatar ---------------- */
+  function mc16Light(hex){
+    const h = String(hex || '#4f8cff').replace('#', '');
+    if (h.length !== 6) return false;
+    const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+    return (0.299 * r + 0.587 * g + 0.114 * b) > 158;
+  }
+  mcProfileStyle = async function(uid){
+    const box = $id('publicProfileContent'); if (!box) return;
+    box.querySelectorAll('.mc16-gift-ring').forEach(x => x.remove());
+    const card = box.querySelector('.mc-pcard');
+    if (card) {
+      card.classList.remove('mc16-tinted');
+      card.style.background = ''; card.style.color = ''; card.style.borderColor = '';
+    }
+    box.style.background = ''; box.style.color = '';
+    let v = null;
+    try { v = (await get(ref(db, 'users/' + uid + '/pstyle'))).val(); } catch (_) {}
+    if (!v || !v.c1 || v.on === false || !card) return;
+    const fg = mc16Light(v.c1) ? '#101828' : '#ffffff';
+    card.classList.add('mc16-tinted');
+    card.style.background = v.c1;
+    card.style.color = fg;
+    card.style.borderColor = 'rgba(255,255,255,.22)';
+    if (v.gifts) {
+      try {
+        const snap = await get(ref(db, 'gift_inventory/' + uid));
+        const gifts = Object.values(snap.val() || {}).filter(g => g && !g.hidden).slice(0, 10);
+        const av = card.querySelector('.public-profile-avatar');
+        if (gifts.length && av) {
+          const ring = doc.createElement('div');
+          ring.className = 'mc16-gift-ring';
+          const n = gifts.length;
+          ring.innerHTML = gifts.map((g, i) => {
+            const ang = (i / n) * Math.PI * 2 - Math.PI / 2;
+            const x = 50 + 47 * Math.cos(ang), y = 50 + 47 * Math.sin(ang);
+            return `<span style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;transform:translate(-50%,-50%) rotate(${((i * 37) % 24) - 12}deg)" title="${esc(g.name || 'Подарок')}">${esc(g.emoji || '🎁')}</span>`;
+          }).join('');
+          if (!av.querySelector('.mc16-gift-ring')) av.appendChild(ring);
+        }
+      } catch (_) {}
+    }
+  };
+  {
+    const prev = openPublicProfile;
+    openPublicProfile = function(u){ const r = prev.apply(this, arguments); Promise.resolve(r).then(() => setTimeout(() => mcProfileStyle(u), 180)); return r; };
+    window.openPublicProfile = openPublicProfile;
+  }
+  let mcPStyleSeq = 0;
+  mcPStyleEditor = async function(){
+    const bio = $id('profileBio'); if (!bio) return;
+    $id('mcPStyle')?.remove();
+    const seq = ++mcPStyleSeq;
+    let v = {};
+    try { v = (await get(ref(db, `users/${mcMe()}/pstyle`)).catch(() => null))?.val?.() || {}; } catch (_) {}
+    if (seq !== mcPStyleSeq || $id('profileBio') !== bio) return;
+    const colors = ['#4f8cff', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', '#eab308', '#22c55e', '#14b8a6', '#0ea5e9', '#64748b'];
+    const d = doc.createElement('div');
+    d.id = 'mcPStyle';
+    d.innerHTML = '<b>🎨 Оформление профиля</b><div class="mc16-toggle"><input type="checkbox" id="psOn" ' + (v.on !== false && v.c1 ? 'checked' : '') + '><span>Включить оформление</span></div>' +
+      '<div class="mc16-sw-row">' + colors.map(c => `<button type="button" class="mc16-sw ${v.c1 === c ? 'active' : ''}" style="--c:${c}" data-c="${c}" aria-label="Цвет ${c}"></button>`).join('') + '</div>' +
+      '<div class="mc16-toggle"><input type="checkbox" id="psC" ' + (v.gifts ? 'checked' : '') + '><span>Подарки вокруг аватара (до 10)</span></div>' +
+      '<div class="mc16-actions"><button type="button" class="mc11-btn g" id="psX" style="flex:1">Выключить</button><button type="button" class="mc11-btn" id="psS" style="flex:2">Применить</button></div>';
+    const anchor = $id('profileGiftPreview');
+    if (anchor) anchor.insertAdjacentElement('beforebegin', d);
+    else ($id('profileModal')?.querySelector('.modal') || $id('profileModal'))?.appendChild(d);
+    let color = v.c1 || '#4f8cff';
+    d.querySelectorAll('[data-c]').forEach(b => { b.onclick = () => { color = b.dataset.c; d.querySelectorAll('[data-c]').forEach(x => x.classList.toggle('active', x === b)); d.querySelector('#psOn').checked = true; }; });
+    d.querySelector('#psS').onclick = async () => {
+      const on = d.querySelector('#psOn').checked;
+      const gifts = d.querySelector('#psC').checked;
+      try {
+        if (!on) { await remove(ref(db, `users/${mcMe()}/pstyle`)); toast('Оформление профиля выключено', '🎨'); return; }
+        await set(ref(db, `users/${mcMe()}/pstyle`), { on: true, c1: color, gifts });
+        toast('Оформление профиля сохранено', '🎨');
+      } catch (_) { toast('Не удалось сохранить', '⚠'); }
+    };
+    d.querySelector('#psX').onclick = async () => {
+      try { await remove(ref(db, `users/${mcMe()}/pstyle`)); d.querySelector('#psOn').checked = false; d.querySelector('#psC').checked = false; toast('Сброшено', '✅'); } catch (_) {}
+    };
+  };
+  {
+    const prev = openProfileModal;
+    openProfileModal = function(){ const r = prev.apply(this, arguments); setTimeout(mcPStyleEditor, 80); return r; };
+    window.openProfileModal = openProfileModal;
+  }
+
+  /* ---------------- paid messages: no layout jumps / re-render loops ---------------- */
+  mcPaidDecorate = async function(){
+    const box = $id('messages'); if (!box) return;
+    if (box.textContent.indexOf('🔒 Платное') < 0) return;
+    const walker = doc.createTreeWalker(box, NodeFilter.SHOW_TEXT);
+    const hits = []; let n;
+    while ((n = walker.nextNode())) if (n.nodeValue.indexOf('🔒 Платное') >= 0) hits.push(n);
+    if (!hits.length) return;
+    const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 140;
+    for (const t of hits) {
+      const m = PM_RE.exec(t.nodeValue), p = t.parentElement;
+      if (!m || !p || p.dataset.pm) continue;
+      p.dataset.pm = m[2];
+      const tok = m[2], lbl = +m[1];
+      const draw = async () => {
+        try {
+          const v = (await get(ref(db, `paid_content/${tok}/text`))).val();
+          if (v) {
+            p.innerHTML = `<div class="mc14-pay">💎 ${lbl} УМ</div><div class="mc14-paid-body">` + (String(v).startsWith('data:image/') ? `<img src="${v}" alt="">` : esc(v)) + '</div>';
+            return true;
+          }
+        } catch (_) {}
+        return false;
+      };
+      p.innerHTML = '<div class="mc14-pay">🔒 Платное сообщение</div>';
+      if (!(await draw())) {
+        p.innerHTML = `<button type="button" class="mc14-pay-btn">Узнать за ${lbl} УМ</button>`;
+        p.querySelector('button').onclick = async () => {
+          try {
+            const meta = (await get(ref(db, `paid_content/${tok}/meta`))).val();
+            if (!meta) return toast('Сообщение недоступно', '⚠');
+            const me = mcMe(), bal = await readGiftBalance();
+            if (bal < meta.price) return toast(`Нужно ${meta.price} УМ, у вас ${bal}`, '💎');
+            const tb = await readGiftBalance(meta.from);
+            await update(ref(db), { [`gift_wallet/${me}/balance`]: bal - meta.price, [`gift_wallet/${meta.from}/balance`]: tb + meta.price, [`paid_content/${tok}/unlocked/${me}`]: true });
+            await draw();
+          } catch (_) { toast('Не удалось открыть', '⚠'); }
+        };
+      }
+    }
+    if (atBottom) box.scrollTop = box.scrollHeight;
+  };
+  {
+    let t46 = 0;
+    const b = $id('messages');
+    if (b) new MutationObserver(() => {
+      if (b.textContent.indexOf('🔒 Платное') < 0) return;
+      clearTimeout(t46); t46 = setTimeout(() => { try { mcPaidDecorate(); } catch (_) {} }, 160);
+    }).observe(b, { childList: true, subtree: true });
+  }
+
+  /* ---------------- bots: real AI + constructor + message buttons ---------------- */
+  async function mcBotAiReply(b, text){
+    const t = String(text || '').trim();
+    const low = t.toLowerCase();
+    const rules = Array.isArray(b.rules) ? b.rules.filter(r => r && r.q) : [];
+    const hit = rules.find(r => low === r.q.toLowerCase() || (r.q.length > 2 && low.includes(r.q.toLowerCase())));
+    const sys = `Ты — «${b.name || 'бот'}», дружелюбный бот в мессенджере MetroChat. Характер: ${b.tone || 'дружелюбный'}. Отвечай на языке пользователя, кратко (2–5 предложений), по делу и без выдумок. Ты не можешь сам менять настройки приложения.` + (rules.length ? ' Подсказки-правила: ' + rules.slice(0, 10).map(r => `«${r.q}» → «${r.a}»`).join('; ') : '');
+    const history = (MCB.msgs || []).slice(-8).map(m => ({ role: m.from === 'u' ? 'user' : 'assistant', content: String(m.text || '').slice(0, 2000) })).filter(m => m.content);
+    const messages = [...history];
+    const last = messages[messages.length - 1];
+    if (!(last && last.role === 'user' && last.content === t.slice(0, 3000))) messages.push({ role: 'user', content: t.slice(0, 3000) });
+    const kb = [];
+    const push = (a, c) => { if (a && c && !kb.some(x => x[0] === a)) kb.push([String(a).slice(0, 40), String(c).slice(0, 300)]); };
+    (Array.isArray(b.kb) ? b.kb : []).forEach(x => push(x[0], x[1]));
+    rules.slice(0, 4).forEach(r => push(r.q.charAt(0).toUpperCase() + r.q.slice(1), r.q));
+    push('Продолжи', 'Продолжи'); push('Короче', 'Ответь короче');
+    if (hit && low === hit.q.toLowerCase()) return { text: hit.a, kb: kb.slice(0, 6) };
+    let answer = '';
+    try {
+      const r = await mcMetroAiCallable({ instructions: sys, messages });
+      answer = String(r?.data?.text || '').trim();
+    } catch (e) { console.warn('bot AI callable:', e?.message || e); }
+    if (!answer) {
+      try { answer = String(await mcLLM([{ role: 'system', content: sys }, ...messages], false) || '').trim(); } catch (e) { console.warn('bot AI fallback:', e?.message || e); }
+    }
+    if (!answer) answer = hit ? hit.a : (b.fallback || 'Я рядом 🙂 Напишите вопрос чуть иначе — и я отвечу.');
+    return { text: answer, kb: kb.slice(0, 6) };
+  }
+  function mcFixBots46(){
+    try {
+      Object.values(MC_BOT_MAP).forEach(b => {
+        if (!b) return;
+        if (typeof b.reply !== 'function' || b.__mcAi !== true) {
+          b.reply = async function(text){ return mcBotAiReply(this, text); };
+          b.__mcAi = true;
+        }
+        if (!Array.isArray(b.cmds) || !b.cmds.length) b.cmds = [['/start', 'Начать'], ['/help', 'Помощь']];
+      });
+    } catch (_) {}
+  }
+  window.mcBotSendText = mcBotSendText = async function(payload, label){
+    const id = MCB.open, b = MC_BOT_MAP[id];
+    if (!b || !$id('mcBotInput')) return;
+    const inp = $id('mcBotInput');
+    let text = payload != null ? String(payload) : (inp.value || '').trim();
+    if (!text) return;
+    if (payload == null) { inp.value = ''; inp.style.height = 'auto'; }
+    $id('mcBotCmds')?.classList.add('hidden');
+    const nav = /^open:(\w+)$/.exec(text);
+    if (nav) {
+      const go = nav[1];
+      try { mcBotClose(true); } catch (_) {}
+      try { switchTab('other'); } catch (_) {}
+      if (go === 'earn') mcEarnOpen('other'); else if (go === 'channels') renderOtherChannels(); else if (go === 'gifts') renderGiftShop();
+      return;
+    }
+    const visible = label || text;
+    const isPayload = /^(rps|qa|del|snooze\d+):/.test(text);
+    try { await mcBotPush(id, { from: 'u', text: isPayload ? visible : text }); }
+    catch (e) { return toast('Сообщение не отправлено. Проверьте правила Firebase (bot_msgs).', '⚠'); }
+    MCB.typing = true;
+    try { mcBotRender(); } catch (_) {}
+    const st = $id('mcBotStatus'); if (st) st.textContent = 'печатает…';
+    const t0 = Date.now();
+    mcFixBots46();
+    let ans = null;
+    try { ans = await b.reply(text); } catch (e) { console.warn('bot reply', id, e); }
+    if (!ans || !ans.text) ans = await mcBotAiReply(b, text);
+    const wait = Math.max(0, 420 + Math.min(850, String(ans.text || '').length * 3) - (Date.now() - t0));
+    await new Promise(r => setTimeout(r, wait));
+    MCB.typing = false;
+    if (st) st.textContent = `@${id} · бот`;
+    if (MCB.open !== id) { await mcBotPush(id, { from: 'b', ...ans }).catch(() => {}); return; }
+    try { await mcBotPush(id, { from: 'b', ...ans }); try { mcEarnSfx('tap'); } catch (_) {} }
+    catch (_) { try { mcBotRender(); } catch (__) {} }
+  };
+  window.mcBotStudio = mcBotStudio = function(id){
+    const list = mcCBots();
+    const b = id ? list.find(x => x.id === id) : null;
+    const E = ['🤖', '🦊', '🐱', '🚀', '🎧', '📚', '💼', '🎮', '🌈', '⚡'];
+    const o = ovSheet(`<h3>${b ? 'Настройка бота' : 'Конструктор бота'}</h3>
+      <label>Имя</label><input id="bsN" maxlength="30" value="${esc(b?.name || '')}" autocomplete="off" placeholder="Например: Мой помощник">
+      <label>Эмодзи</label><div class="mc11-chips" id="bsE">${E.map(e => `<button type="button" class="mc11-chip ${(b?.e || '🤖') === e ? 'on' : ''}" data-e="${e}">${e}</button>`).join('')}</div>
+      <label>Цвета</label><div style="display:flex;gap:10px"><input type="color" id="bsC1" value="${esc(b?.c1 || '#3b82f6')}" style="height:42px;flex:1"><input type="color" id="bsC2" value="${esc(b?.c2 || '#7c3aed')}" style="height:42px;flex:1"></div>
+      <label>Описание</label><input id="bsD" maxlength="80" value="${esc(b?.desc || '')}" autocomplete="off" placeholder="Коротко о боте">
+      <label>Приветствие</label><textarea id="bsH" rows="2" maxlength="300">${esc(b?.hello || 'Привет! Я ваш бот 🤖 Чем помочь?')}</textarea>
+      <label>Характер</label><select id="bsT">${['дружелюбный', 'деловой', 'весёлый', 'краткий'].map(t => `<option ${b?.tone === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
+      <label>Быстрые ответы: «вопрос => ответ», по строке</label><textarea id="bsR" rows="4" autocomplete="off">${esc((b?.rules || [{ q: 'привет', a: 'Привет! Чем помочь?' }]).map(r => r.q + ' => ' + r.a).join('\n'))}</textarea>
+      <label>Кнопки под ответом: «Текст кнопки => сообщение», по строке</label><textarea id="bsKb" rows="3" autocomplete="off" placeholder="Помощь => помоги мне\nИдея => придумай идею">${esc((b?.kb || []).map(x => x[0] + ' => ' + x[1]).join('\n'))}</textarea>
+      <p class="mc9-note">Бот отвечает с помощью ИИ, а правила и кнопки помогают быстро начать разговор.</p>
+      <div style="display:flex;gap:10px;margin-top:16px">${b ? '<button class="mc11-btn g" id="bsX" style="background:rgba(239,68,68,.15);color:#ef4444">Удалить</button>' : ''}<span style="flex:1"></span><button class="mc11-btn g" id="bsC">Отмена</button><button class="mc11-btn" id="bsOk">Сохранить</button></div>`);
+    let emo = b?.e || '🤖';
+    o.querySelectorAll('[data-e]').forEach(x => x.onclick = () => { emo = x.dataset.e; o.querySelectorAll('[data-e]').forEach(y => y.classList.toggle('on', y === x)); });
+    o.querySelector('#bsC').onclick = () => o.remove();
+    if (b) o.querySelector('#bsX').onclick = () => { mcCBotsSave(mcCBots().filter(x => x.id !== id)); o.remove(); mcBotsHub(); };
+    o.querySelector('#bsOk').onclick = () => {
+      const name = o.querySelector('#bsN').value.trim();
+      if (!name) return toast('Введите имя', '⚠');
+      const rules = o.querySelector('#bsR').value.split('\n').map(l => l.split('=>')).filter(a => a.length > 1 && a[0].trim()).map(a => ({ q: a[0].trim().toLowerCase(), a: a.slice(1).join('=>').trim() }));
+      const kb = o.querySelector('#bsKb').value.split('\n').map(l => l.split('=>')).filter(a => a.length > 1 && a[0].trim()).map(a => [a[0].trim().slice(0, 40), a.slice(1).join('=>').trim().slice(0, 300)]);
+      const nb = { ...(b || {}), id: b?.id || ('cb' + Date.now().toString(36)), name, e: emo, c1: o.querySelector('#bsC1').value, c2: o.querySelector('#bsC2').value, shape: b?.shape || 'squircle', desc: o.querySelector('#bsD').value.trim() || 'Ваш бот', hello: o.querySelector('#bsH').value.trim() || 'Привет! Я ваш бот 🤖', fallback: b?.fallback || 'Не совсем понял — попробуйте иначе.', tone: o.querySelector('#bsT').value, delay: +(b?.delay ?? 600), rules, kb, cmds: rules.slice(0, 8).map(r => [r.q, r.a.slice(0, 60)]), cat: 'Мои', custom: true, ai: true };
+      const all = mcCBots(); const i = all.findIndex(x => x.id === nb.id);
+      if (i >= 0) all[i] = nb; else all.push(nb);
+      mcCBotsSave(all);
+      setTimeout(mcFixBots46, 0);
+      o.remove(); mcBotsHub();
+    };
+  };
+  window.mcBotCreateOpen = mcBotCreateOpen = mcBotStudio;
+  mcBotsCatalog = function(){ window.__mcOtherView = 'bots'; return mcBotsHub(); };
+  window.mcBotsCatalog = mcBotsCatalog;
+  {
+    const prevBotOpen = mcBotOpen;
+    mcBotOpen = function(id){
+      const b = MC_BOT_MAP[id], uid = state.user?.uid;
+      const first = !!(b && uid && !MCB.meta?.[id]?.added);
+      if (first) {
+        MCB.meta[id] = { ...(MCB.meta[id] || {}), added: true };
+        update(ref(db, `bot_chats/${uid}/${id}`), { added: true, addedAt: Date.now(), lastTs: Date.now(), unread: 0 }).catch(() => {});
+      }
+      const r = prevBotOpen.apply(this, arguments);
+      if (first) setTimeout(() => {
+        if (MCB.open === id && !(MCB.msgs || []).length) mcBotPush(id, { from: 'b', text: b.hello || 'Привет! Я ваш бот 🤖', kb: b.kb || [] }).catch(() => {});
+      }, 700);
+      return r;
+    };
+    window.mcBotOpen = mcBotOpen;
+  }
+  setInterval(() => { try { if (state.user) { $id('mcLanding')?.remove(); doc.body.classList.remove('mc-landing'); } } catch (_) {} }, 1200);
+  setTimeout(mcFixBots46, 400);
+  setInterval(mcFixBots46, 2500);
+  Object.assign(window, { mcWelcome, showNotifPrompt, allowNotifFromOnb, skipNotifPrompt, finishNotifPrompt, mcProfileStyle, mcPStyleEditor, mcPaidDecorate, mcSetupMark, mcCelebrateDone });
+})();
 
 </script>
 
