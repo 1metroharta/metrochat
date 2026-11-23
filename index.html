@@ -8396,7 +8396,7 @@ async function mcUserCardHtml(uid, mode) {
   const closeFn = inDm ? "closeModal('chatInfoModal')" : "closeModal('publicProfileModal')";
   /* «Магазин» показываем только у аккаунтов с включёнными бизнес-функциями */
   let hasBiz = false;
-  if (!isMe) { try { hasBiz = !!(await mc41BizLoad(uid)).on; } catch (_) {} }
+  if (!isMe) { try { hasBiz = !!(await window.mc41BizLoad(uid)).on; } catch (_) {} }
   const q = (fn, ic, label, extra = '') => `<button type="button" class="mc-pq ${extra}" onclick="${fn}"><span>${ic}</span><small>${label}</small></button>`;
   const quick = isMe ? '' : `<div class="mc-pq-row">
     ${inDm ? q(`closeModal('chatInfoModal'); openChatSearch()`, '🔍', 'Поиск') : q(`closeModal('publicProfileModal'); closeModal('chatInfoModal'); openOrCreateDM('${uid}')`, '💬', 'Написать')}
@@ -15542,18 +15542,36 @@ const mc41BizGet = () => { try { return JSON.parse(localStorage.getItem(MC41_BIZ
 const mc41BizSetCache = v => { try { localStorage.setItem(MC41_BIZ_KEY + (state.user?.uid || 'guest'), JSON.stringify(v)); } catch (_) {} };
 async function mc41BizLoad(uid){
   uid = uid || state.user?.uid || '';
-  let b = {};
-  try { b = (await get(ref(db, `user_settings/${uid}/business`))).val() || {}; } catch (_) { b = {}; }
-  b = mc41BizNormalize(b);
+  let raw = null;
+  try { raw = (await get(ref(db, `user_settings/${uid}/business`))).val(); } catch (_) { raw = null; }
+  const b = mc41BizNormalize(raw);
+  /* Записи, созданные до появления переключателя, не содержат поля on.
+     Если у аккаунта уже есть магазин, бизнес-функции считаем включёнными. */
+  if ((!raw || typeof raw.on !== 'boolean') && !b.on) {
+    try {
+      const shop = (await get(ref(db, 'shops/' + uid))).val() || {};
+      const p = shop.profile || {};
+      const hasShop = Object.keys(shop.items || {}).length > 0 || !!(p.headline || p.name || p.desc);
+      if (hasShop) {
+        b.on = true;
+        if (uid === state.user?.uid) {
+          try { await set(ref(db, `user_settings/${uid}/business`), Object.assign({}, raw, { on: true })); } catch (_) {}
+        }
+      }
+    } catch (_) {}
+  }
   if (uid === state.user?.uid) mc41BizSetCache(b);
   return b;
 }
 function mc41BizNormalize(raw){
-  const b = Object.assign({}, raw || {});
-  b.on = b.on !== false && (b.on === true || !!b.n || !!b.c || !!b.h || !!b.a || !!b.w || !!b.sv);
-  if (b.on === undefined) b.on = false;
+  raw = raw || {};
+  const b = Object.assign({}, raw);
   b.sv = (Array.isArray(b.sv) ? b.sv : String(b.sv || '').split('\n').map(l => { const p = l.split('|'); return p[1] ? { name: p[0].trim(), price: Math.round(+p[1] || 0) } : null; }))
     .filter(x => x && x.name && x.price > 0).map((x, i) => ({ id: x.id || 's' + i, name: x.name, price: Math.round(x.price), desc: x.desc || '' }));
+  const filled = [b.n, b.c, b.h, b.a, b.w, b.d, b.g, b.hello, b.o, b.q].some(v => String(v || '').trim())
+    || b.sv.length > 0 || (Array.isArray(b.qm) && b.qm.length > 0) || (Array.isArray(b.qr) && b.qr.length > 0);
+  /* явный выбор пользователя (вкл/выкл) важнее автопределения по заполненным полям */
+  b.on = raw.on === false ? false : (raw.on === true || filled);
   b.hello = b.hello || b.g || '';
   b.qr = Array.isArray(b.qr) ? b.qr : [];
   b.qm = Array.isArray(b.qm) ? b.qm : [];
@@ -15615,6 +15633,8 @@ async function mc41BizOpen(tab){
   if (b.on) mc41BizBody(b, tab);
 }
 window.mc41BizOpen = mc41BizOpen;
+window.mc41BizLoad = mc41BizLoad;
+window.mc41BizSave = mc41BizSave;
 function mc41BizBody(b, tab){
   const box = $id('mc41BizBody'); if (!box) return;
   if (tab === 'profile') {
@@ -17740,7 +17760,8 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     };
     try {
       const snap = await get(ref(db, 'shop_orders'));
-      const rows = Object.values(snap.val() || {}).filter(o => o && o.seller === me).sort((a, b) => (b.at || 0) - (a.at || 0));
+      const rows = Object.entries(snap.val() || {}).filter(([, o]) => o && o.seller === me)
+        .map(([id, o]) => Object.assign({ id }, o)).sort((a, b) => (b.at || 0) - (a.at || 0));
       const host = $id51('mc51BizOrders');
       if (!host) return;
       host.innerHTML = rows.length ? rows.map(o => `<div class="mc51-order"><div class="grow">
@@ -17851,7 +17872,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     let data;
     /* магазин в профиле виден только у аккаунтов с включёнными бизнес-функциями */
     let biz;
-    try { biz = await mc41BizLoad(uid); } catch (_) { return; }
+    try { biz = await window.mc41BizLoad(uid); } catch (_) { return; }
     if (!biz.on) return;
     try { data = await shopGet(uid); } catch (_) { return; }
     const p = data.profile || {};
@@ -17981,6 +18002,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   const MAX = 10;
   const apps = {};
   window.__mc52 = true;
+  window.__mc53 = true;
 
   (function css(){
     if (d('mc52-style')) return;
