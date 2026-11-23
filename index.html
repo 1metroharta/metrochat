@@ -17935,6 +17935,21 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   window.mc51ShopOpen = openShop;
   window.mc51ReportUser = reportUser;
   window.mc51ProfileShop = profileShop;
+
+  /* профиль часто открывают inline-обработчиком через window.openPublicProfile:
+     навешиваем вкладку «Магазин» и на этот путь, иначе она не появится из чата */
+  try {
+    const prevWinProfile = window.openPublicProfile;
+    if (typeof prevWinProfile === 'function' && !prevWinProfile.__mc51) {
+      const wrappedProfile = function(u){
+        const r = prevWinProfile.apply(this, arguments);
+        Promise.resolve(r).then(() => setTimeout(() => { try { profileShop(u); } catch (_) {} }, 240));
+        return r;
+      };
+      wrappedProfile.__mc51 = true;
+      window.openPublicProfile = wrappedProfile;
+    }
+  } catch (_) {}
   window.mc51RefreshShop = () => { if (shopView.uid) openShop(shopView.uid); };
   window.mc51BizShopTab = bizShopTab;
   window.mc51BizGoodsTab = bizGoodsTab;
