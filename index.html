@@ -1068,7 +1068,8 @@ button, .btn, .mini-btn, .set-row, .mc-tool-card{ transition:background-color .1
 }
 
 /* ---------- Новые диалоги (вместо confirm/prompt) ---------- */
-.mc-dlg-overlay{ position:fixed; inset:0; z-index:30000; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(4,8,18,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); opacity:0; transition:opacity .2s var(--mc-ease); }
+/* диалог подтверждения всегда выше магазина (mc51: страница 30500, корзина 30600) и бана (32000), иначе кнопка «Оплатить» открывала его под корзиной */
+.mc-dlg-overlay{ position:fixed; inset:0; z-index:33000; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(4,8,18,.5); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); opacity:0; transition:opacity .2s var(--mc-ease); }
 .mc-dlg-overlay.open{ opacity:1; } .mc-dlg-overlay.closing{ opacity:0; pointer-events:none; }
 .mc-dlg{ width:min(400px,100%); max-height:calc(100dvh - 36px); overflow:auto; background:var(--mc-card); color:var(--text); border:1px solid var(--mc-line); border-radius:22px; padding:22px 20px 16px; box-shadow:0 30px 80px rgba(0,0,0,.35); transform:translateY(16px) scale(.96); opacity:0; transition:transform .32s var(--mc-ease-out), opacity .22s var(--mc-ease); text-align:center; }
 .mc-dlg.is-wide{ width:min(520px,100%); text-align:left; }
@@ -17075,6 +17076,8 @@ async function mc5ChatReceipts(force){
   });
   box.scrollTop = box.scrollHeight;
 }
+/* обновление чека сразу после оплаты (checkout вызывает эту функцию через 900 мс) */
+window.mc5ReceiptRefresh = () => { receiptsSig = ''; return mc5ChatReceipts(true).catch(() => {}); };
 new MutationObserver(() => {
   const box = $id('messages');
   if (!box || state.chat?.type !== 'dm') return;
@@ -18003,6 +18006,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   const apps = {};
   window.__mc52 = true;
   window.__mc53 = true;
+  window.__mc54 = true;
 
   (function css(){
     if (d('mc52-style')) return;
