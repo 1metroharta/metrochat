@@ -313,7 +313,7 @@
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
-        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (($uid !== auth.uid) && (data.child('until').val() <= now || !data.exists()) && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && newData.child('reportCount').val() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000))"
+        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (($uid !== auth.uid) && (!data.exists() || data.child('until').val() <= now) && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && newData.child('reportCount').val() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000))"
       }
     },
     "ban_history": {
