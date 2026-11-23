@@ -35,7 +35,7 @@ exports.metroAi = onCall({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-6.2-sol',
+        model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
         instructions,
         input: messages,
         reasoning: { effort: 'low' },

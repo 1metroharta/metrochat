@@ -296,10 +296,16 @@
     },
     "reports": {
       ".read": "auth != null",
+      ".indexOn": [
+        "at"
+      ],
       "$target": {
+        ".indexOn": [
+          "at"
+        ],
         "$from": {
           ".write": "auth != null && auth.uid === $from && $from !== $target",
-          ".validate": "newData.hasChildren(['at','reason'])"
+          ".validate": "newData.hasChildren(['at','reason']) && newData.child('at').isNumber() && newData.child('reason').isString() && newData.child('reason').val().length <= 80 && (!newData.child('text').exists() || (newData.child('text').isString() && newData.child('text').val().length <= 400))"
         }
       }
     },
@@ -307,7 +313,7 @@
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
-        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (!data.exists() && $uid !== auth.uid && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && newData.child('reportCount').val() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000))"
+        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (($uid !== auth.uid) && (data.child('until').val() <= now || !data.exists()) && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && newData.child('reportCount').val() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000))"
       }
     },
     "ban_history": {
@@ -319,10 +325,13 @@
     },
     "ban_appeals": {
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": [
+        "at"
+      ],
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
         ".write": "auth != null && auth.uid === $uid",
-        ".validate": "newData.hasChildren(['text','at'])"
+        ".validate": "newData.hasChildren(['text','at']) && newData.child('text').isString() && newData.child('text').val().length >= 10 && newData.child('text').val().length <= 600"
       }
     },
     "ban_notices": {
@@ -334,7 +343,12 @@
     "shops": {
       ".read": "auth != null",
       "$uid": {
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid",
+        "items": {
+          "$item": {
+            ".validate": "newData.hasChildren(['name','price','at']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 60 && newData.child('price').isNumber() && newData.child('price').val() > 0 && newData.child('price').val() <= 100000 && (!newData.child('img').exists() || (newData.child('img').isString() && newData.child('img').val().length <= 240000))"
+          }
+        }
       }
     },
     "shop_orders": {
@@ -346,7 +360,13 @@
       ],
       "$id": {
         ".write": "auth != null && (!data.exists() ? newData.child('buyer').val() === auth.uid : data.child('seller').val() === auth.uid)",
-        ".validate": "newData.hasChildren(['seller','buyer','total','at'])"
+        ".validate": "newData.hasChildren(['seller','buyer','total','at','items']) && newData.child('items').hasChildren() && newData.child('total').isNumber() && newData.child('total').val() > 0",
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'paid' || newData.val() === 'delivered')"
+        },
+        "deliveredAt": {
+          ".validate": "newData.isNumber()"
+        }
       }
     }
   }
