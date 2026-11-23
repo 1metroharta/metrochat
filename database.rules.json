@@ -368,6 +368,18 @@
           ".validate": "newData.isNumber()"
         }
       }
+    },
+    "shop_reviews": {
+      ".read": "auth != null",
+      ".indexOn": [
+        "seller",
+        "buyer",
+        "at"
+      ],
+      "$id": {
+        ".write": "auth != null && !data.exists() && newData.child('buyer').val() === auth.uid",
+        ".validate": "newData.hasChildren(['orderId','seller','buyer','rating','at']) && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && (!newData.child('text').exists() || (newData.child('text').isString() && newData.child('text').val().length <= 300))"
+      }
     }
   }
 }

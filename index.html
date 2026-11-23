@@ -8738,7 +8738,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = 'b5.0';
+const MC_VERSION = 'b5.0.2';
 const MC_SUPPORT_EMAIL = 'metrochatsupport@gmail.com';
 
 // ---------- Поддержка на экранах входа/регистрации ----------
@@ -15619,7 +15619,7 @@ async function mc41BizOpen(tab){
   if (!b.on) { window.__mc41BizOn = false; }
   tab = tab || window.__mc41BizTab || 'profile';
   window.__mc41BizTab = tab;
-  const tabs = [['profile','Профиль'],['msg','Сообщения'],['shop','Магазин'],['goods','Товары']];
+  const tabs = [['profile','Профиль'],['msg','Сообщения'],['shop','Магазин'],['goods','Товары'],['board','Панель']];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('settings')">←</button><div class="settings-title">Для бизнеса</div></div>
   <div class="settings-wrap mc9-wrap">
     <div class="mc11-card" style="cursor:pointer;margin-bottom:6px" id="mc41BizMaster">
@@ -15687,6 +15687,7 @@ function mc41BizBody(b, tab){
   }
   if (tab === 'shop') { if (typeof window.mc51BizShopTab === 'function') return window.mc51BizShopTab(box); return; }
   if (tab === 'goods') { if (typeof window.mc51BizGoodsTab === 'function') return window.mc51BizGoodsTab(box); return; }
+  if (tab === 'board') { if (typeof window.mc502SellerBoard === 'function') return window.mc502SellerBoard(box); return; }
   if (false && tab === 'svc') {
     box.innerHTML = `<div id="mc41SvcList">${(b.sv || []).map((s, i) => `<div class="mc41-svc"><div class="n"><b>${esc(s.name)}</b><small>${esc(s.desc || 'Услуга')}</small></div><span class="mc41-price">${s.price} УМ</span><button class="mini-btn" data-svdel="${i}">✕</button></div>`).join('') || '<p class="mc9-note" style="text-align:center;margin:18px 0">Пока нет услуг.</p>'}</div>
       <div class="mc11-sheet" style="border-radius:20px;max-height:none;margin-top:10px">
@@ -16152,7 +16153,7 @@ console.info('MetroChat ' + V + ' patch loaded');
 (function mc50(){
 'use strict';
 const $id = id => document.getElementById(id);
-const V50 = 'b5.0';
+const V50 = 'b5.0.2';
 const now50 = () => Date.now();
 const LSget = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 const LSset = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
@@ -16885,7 +16886,7 @@ function renderShop50(){
         <span class="emoji">${esc50(it.emoji)}</span>
         <b>${esc50(it.name)}</b>
         <small>${esc50(it.desc || it.cat)}</small>
-        <div class="row"><span class="mc50-price">${fmt50(it.price)} УМ</span>
+        <div class="row"><span class="mc50-price">${Number(it.oldPrice) > Number(it.price) ? `<s style="opacity:.55;font-weight:600">${fmt50(it.oldPrice)}</s> ` : ''}${fmt50(it.price)} УМ${Number(it.oldPrice) > Number(it.price) ? ` <b style="color:#e11d48">−${Math.round((1 - Number(it.price) / Number(it.oldPrice)) * 100)}%</b>` : ''}</span>
         ${it.owner === me50() ? '<span class="mc50-muted" style="margin-left:auto;font-size:11px">ваш товар</span>' : `<button type="button" class="mc50-add" data-add="${esc50(it.owner)}|${esc50(it.id)}">В корзину</button>`}</div>
       </div>`).join('') : '<p class="set-sub" style="grid-column:1/-1;text-align:center;padding:24px 0">Товаров пока нет. Компании могут добавить их в разделе «Мои товары».</p>'}</div>
   </div>
@@ -16965,7 +16966,7 @@ async function checkout50(sheet){
     // перенаправляем к продавцу и показываем чек прямо в чате
     if (sellers.length === 1) {
       try { openOrCreateDM(sellers[0]); } catch (_) {}
-      setTimeout(() => { try { mc5ChatReceipts(true); } catch (_) {} }, 900);
+      window.mc5ReceiptFocus(sellers[0]);
     } else {
       toast('Заказы отправлены ' + sellersNames.join(', '), '📦');
     }
@@ -17043,22 +17044,33 @@ async function mc5ChatReceipts(force){
   } catch (_) { return; }
   all.sort((a, b) => (a.at || 0) - (b.at || 0));
   const recent = all.slice(-6);
-  const sig = c.id + '|' + recent.map(o => o.id + ':' + o.status).join(',');
-  if (!force && sig === receiptsSig && box.querySelector('.mc50-receipt')) { /* уже на месте */ }
+  let revs = {};
+  try { revs = (await get(ref(db, 'shop_reviews'))).val() || {}; } catch (_) { revs = {}; }
+  const sig = c.id + '|' + recent.map(o => o.id + ':' + o.status + ':' + (revs[o.id] ? 1 : 0)).join(',');
+  /* чеки уже на своих местах — не перерисовываем, иначе они прыгают на каждом сообщении */
+  if (!force && sig === receiptsSig && box.querySelectorAll('.mc50-receipt').length === recent.length) return;
   receiptsSig = sig;
+  const wasAtBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 90;
+  const h0 = box.scrollHeight, t0 = box.scrollTop;
   box.querySelectorAll('.mc50-receipt').forEach(x => x.remove());
   if (!recent.length) return;
-  recent.forEach(o => {
+  for (const o of recent) {
     const el = document.createElement('div');
     el.className = 'mc50-receipt';
     const mine = o.buyer === uid;
+    const myRev = revs[o.id] || null;
     const rcode = o.sig ? (o.sig.slice(0, 4) + '-' + o.sig.slice(4, 8) + '-' + o.sig.slice(8, 12) + '-' + o.sig.slice(12, 16)) : '';
-    el.innerHTML = `<div class="head">✅ ${mine ? 'Вы оплатили заказ' : 'Покупатель оплатил заказ'}</div>
+    el.innerHTML = `<div class="head">🧾 <span>${mine ? 'Ваш чек об оплате' : 'Покупатель оплатил заказ'}</span>
+      <span class="mc502-pill ${o.status === 'delivered' ? 'ok' : ''}">${o.status === 'delivered' ? '✓ выдан' : '⏳ ждёт выдачи'}</span></div>
       <div class="items">${(o.items || []).map(x => `${x.img ? `<img src="${esc50(x.img)}" alt="">` : esc50(x.emoji || '📦')} ${esc50(x.name)} × ${x.qty} — ${fmt50(x.price * x.qty)} УМ`).join('<br>')}</div>
-      <div class="tot">Итого: ${fmt50(o.total)} УМ · ${esc50(o.status === 'delivered' ? 'товар выдан' : 'ожидает выдачи')}</div>
-      ${rcode ? `<div class="mc50-rcode">Код чека: ${esc50(rcode)}</div>` : ''}
+      <div class="tot">${o.discount > 0 ? `<span class="mc502-disc">Скидка ${o.promo ? esc50(o.promo) + ' ' : ''}−${fmt50(o.discount)} УМ</span>` : ''}Итого: ${fmt50(o.total)} УМ</div>
+      <div class="mc502-meta">${esc50(dt50(o.at))}${rcode ? ' · код чека ' + esc50(rcode) : ''}</div>
+      ${myRev ? `<div class="mc502-rev">${'⭐'.repeat(Math.max(1, Math.min(5, Number(myRev.rating) || 5)))} <span>ваша оценка</span>${myRev.text ? `<div class="mc502-rev-txt">«${esc50(myRev.text)}»</div>` : ''}</div>` : ''}
       <div style="margin-top:8px;display:flex;gap:7px;flex-wrap:wrap"><button type="button" class="mc50-btn g" data-rcpt="${esc50(o.id)}">${mine ? 'Написать продавцу' : 'Написать покупателю'}</button>
+      ${mine && o.status === 'delivered' && !myRev ? `<button type="button" class="mc50-btn" data-rate="${esc50(o.id)}">⭐ Оценить заказ</button>` : ''}
       ${!mine && o.status !== 'delivered' ? `<button type="button" class="mc50-btn" data-deliver="${esc50(o.id)}">Выдать товар</button>` : ''}</div>`;
+    const rateBtn = el.querySelector('[data-rate]');
+    if (rateBtn) rateBtn.onclick = () => { try { window.mc502RateOrder(o.id); } catch (_) {} };
     el.querySelector('[data-rcpt]').onclick = () => {
       const other = mine ? o.seller : o.buyer;
       try { openOrCreateDM(other); } catch (_) {}
@@ -17072,12 +17084,32 @@ async function mc5ChatReceipts(force){
         mc5ChatReceipts(true);
       } catch (_) { toast('Не удалось отметить выдачу', '⚠'); }
     };
-    box.appendChild(el);
-  });
-  box.scrollTop = box.scrollHeight;
+    /* ставим чек на его место в переписке, а не в самый низ под все сообщения */
+    let anchor = null;
+    for (const node of box.querySelectorAll('.msg')) {
+      const mid = String(node.id || '').replace(/^msg-/, '');
+      const m = state.messages.find(x => String(x.id) === mid);
+      if (m && Number(m.createdAt || 0) > Number(o.at || 0)) { anchor = node; break; }
+    }
+    if (anchor) box.insertBefore(el, anchor); else box.appendChild(el);
+  }
+  if (wasAtBottom) box.scrollTop = box.scrollHeight;
+  else box.scrollTop = t0 + Math.max(0, box.scrollHeight - h0);
 }
 /* обновление чека сразу после оплаты (checkout вызывает эту функцию через 900 мс) */
 window.mc5ReceiptRefresh = () => { receiptsSig = ''; return mc5ChatReceipts(true).catch(() => {}); };
+/* после оплаты ждём, пока откроется нужный личный чат, и показываем чек в нём */
+window.mc5ReceiptFocus = function(peer, tries){
+  const left = tries == null ? 26 : tries;
+  const c = state.chat;
+  if (c && c.type === 'dm' && (c.peerId || c.otherUid) === peer) {
+    receiptsSig = '';
+    mc5ChatReceipts(true).catch(() => {});
+    return;
+  }
+  if (left <= 0) return;
+  setTimeout(() => window.mc5ReceiptFocus(peer, left - 1), 350);
+};
 new MutationObserver(() => {
   const box = $id('messages');
   if (!box || state.chat?.type !== 'dm') return;
@@ -17178,7 +17210,7 @@ function addHubCards50(){ return; // b5.1: магазин убран из «Пр
   const shopCard = mk(`<button type="button" class="other-hub-card" data-mc50-shop="1"><span class="other-hub-icon">🛍️</span><b>Магазин</b><small>Товары, категории, корзина и оплата в умах</small><span class="other-hub-arrow">Открыть →</span></button>`);
   shopCard.onclick = () => openShop50();
   grid.insertBefore(shopCard, grid.children[1] || null);
-  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было в b4.1 и что нового в b5.0</small><span class="other-hub-arrow">Смотреть →</span></button>`);
+  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.0.2</small><span class="other-hub-arrow">Смотреть →</span></button>`);
   histCard.onclick = () => renderHistory50();
   grid.appendChild(histCard);
   isAdmin50().then(adm => {
@@ -17207,6 +17239,15 @@ function renderHistory50(){
     'Боты: каталог, конструктор и история в Firebase.',
     'Вход по паролю и по лицу, 2FA, сессии устройств.'
   ];
+  const b502 = [
+    'Чек в чате встал на своё место в переписке: новые сообщения теперь уходят выше него, а не под чек.',
+    'После оплаты приложение само дожидается нужного чата и показывает чек сразу — больше не теряется.',
+    'Покупатель может оценить выданный заказ звёздами прямо из чека.',
+    'Панель продавца: выручка, заказы за 7 дней, средний чек, доля выдачи, топ-товары и отзывы.',
+    'Скидки: старая цена зачёркнута, рядом бейдж «−%». Видно остаток, а при нуле — «нет в наличии».',
+    'Промокоды: продавец задаёт код и процент, покупатель вводит его в корзине.',
+    'В настройках магазина — быстрый переход в панель продавца.'
+  ];
   const b50 = [
     'Исправлен контраст в светлой и тёмной темах: кнопки, подписи, поля, Metro AI и карточки.',
     'Metro AI отвечает на каждый запрос: очередь, повторы, несколько моделей, кэш и локальные ответы вместо «нет интернета».',
@@ -17225,7 +17266,9 @@ function renderHistory50(){
   ];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">История версий</div></div>
   <div class="settings-wrap mc50-hist">
-    <div class="ver"><h3>MetroChat b5.0 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+    <div class="ver"><h3>MetroChat b5.0.2 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+      <ul>${b502.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
+    <div class="ver"><h3>MetroChat b5.0</h3><small class="set-sub">Ноябрь 2026</small>
       <ul>${b50.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
     <div class="ver"><h3>MetroChat b4.1</h3><small class="set-sub">Предыдущий релиз</small>
       <ul>${b41.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
@@ -17238,7 +17281,8 @@ try {
   if (typeof MC_WHATSNEW === 'object' && MC_WHATSNEW) {
     MC_WHATSNEW.version = V50;
     MC_WHATSNEW.slides = [
-      { title: 'MetroChat b5.0', text: 'Большой релиз: Магазин с корзиной и оплатой в умах, жалобы и блокировки с обжалованием, надёжный Metro AI и аккуратный контраст в обеих темах.', emoji: '🚀', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+      { title: 'MetroChat b5.0.2', text: 'Чек в чате больше не занимает первое место: он живёт на своём месте в переписке, а после оплаты нужный чат открывается сразу.', emoji: '🚀', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+      { title: 'Магазин для продавцов', text: 'Скидки: старая цена зачёркнута, рядом бейдж «−%». Остатки на складе, промокоды и панель продавца: выручка, заказы за неделю, топ-товары и оценки покупателей.', emoji: '📊', bg: 'linear-gradient(160deg,#16a34a,#0891b2 55%,#4338ca)' },
       { title: 'Магазин и оплата', text: 'В профиле появился «Магазин»: товары по категориям, корзина и оплата умами. После оплаты открывается чат с продавцом, а у продавца появляется проверенный чек из базы — подделать его сообщением нельзя.', emoji: '🛍️', bg: 'linear-gradient(160deg,#f59e0b,#ec4899 60%,#7c3aed)' },
       { title: 'Жалобы и блокировки', text: 'Кнопка «Пожаловаться» в каждом профиле. Четыре жалобы — бан на 1 день, повторные — на 30 дней. Есть экран блокировки с обжалованием, админ-панель и разблокировка с повторным входом по паролю.', emoji: '🛡️', bg: 'linear-gradient(160deg,#ef4444,#7f1d1d 60%,#0f172a)' },
       { title: 'Metro AI без обрывов', text: 'Очередь запросов, повторы и несколько моделей: ответ приходит на каждый вопрос, а не только на первый. Панель AI теперь на всю ширину.', emoji: '🧠', bg: 'linear-gradient(160deg,#7c3aed,#397cff 55%,#0ea5e9)' },
@@ -17251,8 +17295,8 @@ try {
 } catch (e) { console.warn('whatsnew b5', e); }
 
 window.mc5IsAdmin = isAdmin50;
-document.title = 'MetroChat b5.0';
-console.info('MetroChat b5.0 patch loaded');
+document.title = 'MetroChat b5.0.2';
+console.info('MetroChat b5.0.2 patch loaded');
 })();
 
 (function mc50nav(){
@@ -17530,11 +17574,20 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   }
   function cartSave(uid){ try { localStorage.setItem(cartKey(uid), JSON.stringify(shopView.cart)); } catch (_) {} }
   function cartSum(){ return shopView.cart.reduce((n, x) => n + x.price * x.qty, 0); }
+  function promoPct(){
+    const p = (shopView.data && shopView.data.profile) || {};
+    const want = String(shopView.promo && shopView.promo.code || '').trim().toLowerCase();
+    const have = String(p.promoCode || '').trim().toLowerCase();
+    if (!want || !have || want !== have) return 0;
+    return Math.min(90, Math.max(0, Math.round(Number(p.promoPercent) || 0)));
+  }
+  function paySum(){ return Math.max(0, Math.round(cartSum() * (100 - promoPct()) / 100)); }
   function cartQty(){ return shopView.cart.reduce((n, x) => n + x.qty, 0); }
 
   async function openShop(uid){
     if (!uid) return;
     shopView.uid = uid;
+    shopView.promo = { code: '', percent: 0 };
     cartLoad(uid);
     const ov = overlay(`<div class="mc51-page"><div class="mc51-top"><button class="mc51-back" id="mc51Close">←</button><div class="mc51-title"><b>Магазин</b><small>Загрузка…</small></div></div><div class="mc51-empty"><span class="big">🛍️</span>Загружаем товары…</div></div>`);
     $id51('mc51Close').onclick = () => ov.remove();
@@ -17546,6 +17599,8 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     try { bal = Number(await readGiftBalance()) || 0; } catch (_) {}
     shopView.data = data;
     shopView.cat = 'all';
+    shopView.rating = null;
+    try { shopView.rating = await window.mc502ShopRating(uid); } catch (_) {}
     renderShop(ov, seller, bal);
   }
 
@@ -17569,6 +17624,8 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
           <span>📦 ${data.items.length} ${data.items.length === 1 ? 'товар' : 'товаров'}</span>
           ${cats.length ? `<span>🗂 ${cats.length} ${cats.length === 1 ? 'категория' : 'категории'}</span>` : ''}
           <span>⚡ Оплата в УМ</span>
+          ${profile.promoCode ? `<span>🎟 Промокод ${esc51(profile.promoCode)} · −${Math.min(90, Math.max(1, Math.round(Number(profile.promoPercent) || 0)))}%</span>` : ''}
+          ${shopView.rating ? `<span>⭐ ${shopView.rating.avg} · ${shopView.rating.count} ${shopView.rating.count === 1 ? 'отзыв' : 'отзывов'}</span>` : ''}
         </div>
       </div>
       <div class="mc51-sec"><h3>Каталог</h3><span class="cnt">${list.length} шт.</span></div>
@@ -17597,8 +17654,13 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
         if (it.cat) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = it.cat; card.querySelector('.mc51-photo').appendChild(t); }
         const body = document.createElement('div');
         body.className = 'mc51-body';
+        const oldPrice = Math.round(Number(it.oldPrice) || 0);
+        const sale = oldPrice > Number(it.price) && Number(it.price) > 0;
+        const off = sale ? Math.round((1 - Number(it.price) / oldPrice) * 100) : 0;
+        const hasStock = it.stock !== '' && it.stock != null && Number(it.stock) >= 0;
+        const soldOut = hasStock && Number(it.stock) <= 0;
         body.innerHTML = `<b>${esc51(it.name)}</b><small>${esc51(it.desc || it.cat || 'Товар продавца')}</small>
-          <div class="mc51-row"><span class="mc51-price">${money51(it.price)} УМ</span>${it.stock === 0 ? '<span style="font-size:11px;color:var(--text-2);margin-left:auto">нет в наличии</span>' : '<button class="mc51-addbtn" type="button">В корзину</button>'}</div>`;
+          <div class="mc51-row"><span class="mc51-price">${sale ? `<s class="mc502-old">${money51(oldPrice)}</s> ` : ''}${money51(it.price)} УМ${sale ? ` <b class="mc502-sale">−${off}%</b>` : ''}</span>${soldOut ? '<span style="font-size:11px;color:var(--text-2);margin-left:auto">нет в наличии</span>' : (hasStock && Number(it.stock) <= 5 ? `<span class="mc502-stock">осталось ${Number(it.stock)}</span>` : '') + '<button class="mc51-addbtn" type="button">В корзину</button>'}</div>`;
         card.appendChild(body);
         const add = body.querySelector('.mc51-addbtn');
         if (add) add.onclick = () => { addToCart(it); renderCartBar(); toast('«' + it.name + '» в корзине', '🛒'); };
@@ -17620,7 +17682,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     const n = cartQty();
     bar.classList.toggle('show', n > 0);
     const s = $id51('mc51CartSum'), c = $id51('mc51CartCnt');
-    if (s) s.textContent = money51(cartSum()) + ' УМ';
+    if (s) s.textContent = money51(paySum()) + ' УМ';
     if (c) c.textContent = n ? n + ' ' + (n === 1 ? 'товар' : 'товаров') + ' в корзине' : 'Корзина пуста';
   }
 
@@ -17635,12 +17697,21 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
             <div class="grow"><b>${esc51(x.name)}</b><small>${money51(x.price)} УМ за шт.</small></div>
             <div class="mc51-qty"><button type="button" data-minus="${i}">−</button><span>${x.qty}</span><button type="button" data-plus="${i}">+</button></div>
           </div>`).join('') : '<div class="mc51-empty"><span class="big">🛒</span>Корзина пуста</div>'}</div>
-        <div class="mc51-total"><span>Итого</span><b>${money51(cartSum())} УМ</b></div>
+        <div class="mc51-promo"><input class="mc51-input" id="mc51Promo" maxlength="24" autocomplete="off" placeholder="Промокод" value="${esc51(shopView.promo && shopView.promo.code || '')}"><button type="button" class="mc51-btn g" id="mc51PromoGo">Применить</button></div>
+        ${promoPct() ? `<div class="mc51-promo-ok">🎟 Промокод ${esc51(shopView.promo.code)}: −${promoPct()}% · выгода ${money51(cartSum() - paySum())} УМ</div>` : ''}
+        <div class="mc51-total"><span>Итого</span><b>${money51(paySum())} УМ</b></div>
         <p class="mc51-hint">Баланс: ${money51(bal)} УМ. После оплаты продавец получит чек и выдаст товар.</p>
         <div class="mc51-actions"><button class="mc51-btn g" id="mc51CartClose">Закрыть</button><button class="mc51-btn" id="mc51Pay" ${shopView.cart.length ? '' : 'disabled'}>Оплатить</button></div>
       </div>`;
       wrap.querySelectorAll('[data-plus]').forEach(b => b.onclick = () => { shopView.cart[+b.dataset.plus].qty += 1; cartSave(shopView.uid); render(); renderCartBar(); });
       wrap.querySelectorAll('[data-minus]').forEach(b => b.onclick = () => { const i = +b.dataset.minus; shopView.cart[i].qty -= 1; if (shopView.cart[i].qty <= 0) shopView.cart.splice(i, 1); cartSave(shopView.uid); render(); renderCartBar(); });
+      const promoGo = wrap.querySelector('#mc51PromoGo');
+      if (promoGo) promoGo.onclick = () => {
+        shopView.promo = { code: (wrap.querySelector('#mc51Promo').value || '').trim() };
+        const pct = promoPct();
+        render(); renderCartBar();
+        toast(pct ? `Промокод принят: −${pct}%` : 'Промокод не подошёл', pct ? '🎟' : '⚠');
+      };
       const closeBtn = wrap.querySelector('#mc51CartClose');
       if (closeBtn) closeBtn.onclick = () => wrap.remove();
       const pay = wrap.querySelector('#mc51Pay');
@@ -17667,7 +17738,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     if (!me) return toast('Войдите в аккаунт', '⚠');
     if (!shopView.cart.length) return;
     const seller = shopView.uid;
-    const total = cartSum();
+    const total = paySum();
     let bal = 0;
     try { bal = Number(await readGiftBalance()) || 0; } catch (_) {}
     if (bal < total) return toast(`Нужно ${money51(total)} УМ, у вас ${money51(bal)} УМ. Заработайте умы: «Прочее → Подарки → Заработать».`, '💎');
@@ -17677,7 +17748,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     const orderRef = push(ref(db, 'shop_orders'));
     const id = orderRef.key;
     const at = Date.now();
-    const order = { id, seller, buyer: me, buyerName: (state.profile && (state.profile.displayName || state.profile.username)) || 'Покупатель', items, total, at, status: 'paid' };
+    const order = { id, seller, buyer: me, buyerName: (state.profile && (state.profile.displayName || state.profile.username)) || 'Покупатель', items, total, at, status: 'paid', subtotal: cartSum(), discount: Math.max(0, cartSum() - total), promo: promoPct() ? String(shopView.promo.code || '') : '' };
     order.sig = await orderSign(order);
     try {
       const sb = Number(await readGiftBalance(seller)) || 0;
@@ -17694,13 +17765,14 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       return toast('Оплата не прошла. Проверьте правила Firebase для shop_orders и gift_wallet.', '⚠');
     }
     shopView.cart = [];
+    shopView.promo = { code: '', percent: 0 };
     cartSave(seller);
     cartWrap.remove();
     shopOv.remove();
     renderCartBar();
     toast('Оплачено! Чек отправлен продавцу', '✅');
     try { openOrCreateDM(seller); } catch (_) {}
-    setTimeout(() => { try { if (typeof window.mc5ReceiptRefresh === 'function') window.mc5ReceiptRefresh(); } catch (_) {} }, 900);
+    try { if (typeof window.mc5ReceiptFocus === 'function') window.mc5ReceiptFocus(seller); } catch (_) {}
   }
 
   async function buyerOrdersSheet(){
@@ -17734,6 +17806,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       <div class="mc51-panel">
         <h3>🛍️ Настройки магазина</h3>
         <p class="sub">Магазин показывается в вашем профиле отдельной вкладкой. Покупатель складывает товары в корзину и платит умами.</p>
+        <button type="button" class="mc51-btn g" id="mc51ShopBoard" style="width:100%;margin-bottom:12px">📊 Панель продавца — выручка, заказы, отзывы</button>
         <div class="mc51-field" style="display:flex;align-items:center;gap:10px;padding:12px 13px;border:1px solid var(--border);border-radius:14px;background:var(--surface-2)">
           <div style="flex:1"><b style="font-size:13.5px">Магазин включён</b><div class="sub" style="margin:2px 0 0">Показывать вкладку «Магазин» в профиле</div></div>
           <button type="button" class="mc-toggle ${p.on !== false ? 'on' : ''}" id="mc51ShopOn"></button>
@@ -17741,10 +17814,17 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
         <div class="mc51-field" style="margin-top:12px"><label>Название магазина</label><input class="mc51-input" id="mc51ShopName" maxlength="60" placeholder="Например, Кофейня на углу" value="${esc51(p.headline || '')}"></div>
         <div class="mc51-field"><label>Описание</label><textarea class="mc51-input" id="mc51ShopDesc" rows="3" maxlength="300" placeholder="Что вы продаёте, сроки и условия">${esc51(p.desc || '')}</textarea></div>
         <div class="mc51-field"><label>Категории — через запятую</label><input class="mc51-input" id="mc51ShopCats" maxlength="200" placeholder="Напитки, Выпечка, Мерч" value="${esc51((data.cats || []).join(', '))}"></div>
+        <div class="mc51-field" style="display:flex;gap:8px">
+          <div style="flex:1"><label>Промокод</label><input class="mc51-input" id="mc51ShopPromo" maxlength="24" autocomplete="off" placeholder="SALE10" value="${esc51(p.promoCode || '')}"></div>
+          <div style="width:120px"><label>Скидка, %</label><input class="mc51-input" id="mc51ShopPromoP" type="number" inputmode="numeric" min="1" max="90" placeholder="10" value="${esc51(p.promoPercent || '')}"></div>
+        </div>
+        <p class="mc51-hint">Покупатель вводит промокод в корзине — скидка применяется ко всему заказу.</p>
         <button type="button" class="mc51-btn" id="mc51ShopSave" style="width:100%">Сохранить магазин</button>
       </div>
       <div class="mc51-sec"><h3>Заказы магазина</h3></div>
       <div id="mc51BizOrders"><p class="sub">Загрузка…</p></div>`;
+    const boardBtn = $id51('mc51ShopBoard');
+    if (boardBtn) boardBtn.onclick = () => window.mc41BizOpen('board');
     const onBtn = $id51('mc51ShopOn');
     const shopOn = p.on !== false;
     onBtn.onclick = async () => {
@@ -17756,7 +17836,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     $id51('mc51ShopSave').onclick = async () => {
       const cats = ($id51('mc51ShopCats').value || '').split(',').map(x => x.trim()).filter(Boolean).slice(0, 30);
       try {
-        await shopSaveProfile(me, { on: $id51('mc51ShopOn').classList.contains('on'), headline: $id51('mc51ShopName').value.trim(), desc: $id51('mc51ShopDesc').value.trim(), cats });
+        await shopSaveProfile(me, { on: $id51('mc51ShopOn').classList.contains('on'), headline: $id51('mc51ShopName').value.trim(), desc: $id51('mc51ShopDesc').value.trim(), cats, promoCode: ($id51('mc51ShopPromo').value || '').trim().toUpperCase(), promoPercent: Math.min(90, Math.max(0, Math.round(Number($id51('mc51ShopPromoP').value) || 0))) });
         toast('Магазин сохранён', '✓');
         bizShopTab(box);
       } catch (_) { toast('Не удалось сохранить магазин. Проверьте правила Firebase (shops)', '⚠'); }
@@ -17813,6 +17893,10 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
             <div style="flex:1"><label>Категория</label><input class="mc51-input" id="mc51GoodC" maxlength="24" list="mc51CatsList" placeholder="Напитки">
               <datalist id="mc51CatsList">${(data.cats || []).map(c => `<option value="${esc51(c)}">`).join('')}</datalist></div>
           </div>
+          <div class="mc51-field" style="display:flex;gap:8px">
+            <div style="flex:1"><label>Старая цена, УМ</label><input class="mc51-input" id="mc51GoodOld" type="number" inputmode="numeric" min="0" max="100000" placeholder="для скидки"></div>
+            <div style="flex:1"><label>Остаток, шт.</label><input class="mc51-input" id="mc51GoodStock" type="number" inputmode="numeric" min="0" max="99999" placeholder="без лимита"></div>
+          </div>
           <div class="mc51-field"><label>Описание</label><input class="mc51-input" id="mc51GoodD" maxlength="90" placeholder="Коротко о товаре"></div>
           <div style="display:flex;gap:8px">
             <button type="button" class="mc51-btn" id="mc51GoodAdd" style="flex:1">${editId ? 'Сохранить товар' : '＋ Добавить товар'}</button>
@@ -17822,7 +17906,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
         <div class="mc51-sec"><h3>В магазине</h3><span class="cnt">${data.items.length} шт.</span></div>
         <div id="mc51GoodsList">${data.items.length ? data.items.map(it => `
           <div class="mc51-product"><div class="thumb">${it.img ? `<img src="${it.img}" alt="">` : esc51(it.emoji || '📦')}</div>
-            <div class="grow"><b>${esc51(it.name)}</b><small>${money51(it.price)} УМ · ${esc51(it.cat || 'Разное')}</small></div>
+            <div class="grow"><b>${esc51(it.name)}</b><small>${Number(it.oldPrice) > Number(it.price) ? `<s>${money51(it.oldPrice)}</s> ` : ''}${money51(it.price)} УМ · ${esc51(it.cat || 'Разное')}${it.stock !== '' && it.stock != null ? ' · остаток ' + Number(it.stock) : ''}</small></div>
             <button type="button" class="mc51-icon-btn" data-edit="${esc51(it.id)}">✏️</button>
             <button type="button" class="mc51-icon-btn" data-del="${esc51(it.id)}">✕</button>
           </div>`).join('') : '<div class="mc51-empty"><span class="big">📦</span>Товаров пока нет.</div>'}</div>`;
@@ -17846,6 +17930,8 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
         $id51('mc51GoodP').value = it.price || '';
         $id51('mc51GoodC').value = it.cat || '';
         $id51('mc51GoodD').value = it.desc || '';
+        $id51('mc51GoodOld').value = Number(it.oldPrice) > Number(it.price) ? it.oldPrice : '';
+        $id51('mc51GoodStock').value = it.stock === '' || it.stock == null ? '' : it.stock;
       });
       $id51('mc51GoodAdd').onclick = async () => {
         const name = ($id51('mc51GoodN').value || '').trim();
@@ -17853,7 +17939,10 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
         if (!name) return toast('Введите название товара', '⚠');
         if (!(price > 0)) return toast('Цена должна быть больше 0 УМ', '⚠');
         const id = editId || ('p' + Date.now().toString(36) + Math.floor(Math.random() * 90).toString(36));
-        const item = { name, price, cat: ($id51('mc51GoodC').value || 'Разное').trim() || 'Разное', desc: ($id51('mc51GoodD').value || '').trim(), at: Date.now() };
+        const oldPrice = Math.round(Number($id51('mc51GoodOld').value) || 0);
+        const stockRaw = ($id51('mc51GoodStock').value || '').trim();
+        const stock = stockRaw === '' ? null : Math.max(0, Math.round(Number(stockRaw) || 0));
+        const item = { name, price, cat: ($id51('mc51GoodC').value || 'Разное').trim() || 'Разное', desc: ($id51('mc51GoodD').value || '').trim(), at: Date.now(), oldPrice: oldPrice > price ? oldPrice : 0, stock };
         if (pendingImg) item.img = pendingImg;
         try {
           const prev = editId ? ((await get(ref(db, 'shops/' + me + '/items/' + id))).val() || {}) : {};
@@ -17967,6 +18056,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
 
   /* ----------------------------------------------- публичные API */
   window.mc51ShopOpen = openShop;
+  window.mc51ShopUid = () => shopView.uid;
   window.mc51ReportUser = reportUser;
   window.mc51ProfileShop = profileShop;
 
@@ -18007,6 +18097,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   window.__mc52 = true;
   window.__mc53 = true;
   window.__mc54 = true;
+  window.__mc502 = true;
 
   (function css(){
     if (d('mc52-style')) return;
@@ -18247,6 +18338,239 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       try { localStorage.removeItem(PENDING_KEY); } catch (_) {}
     }
   }, 2500);
+})();
+
+/* ============================================================================
+   MetroChat b5.0.2 — панель продавца, отзывы покупателей, скидки и промокоды.
+   Чек в чате живёт на своём месте в переписке (см. mc5ChatReceipts).
+   ========================================================================== */
+(function mc502(){
+  'use strict';
+
+  const $id = id => document.getElementById(id);
+  const me = () => (state.user && state.user.uid) || (auth.currentUser && auth.currentUser.uid) || null;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const num = n => Number(n || 0).toLocaleString('ru-RU');
+  const money = n => num(n) + ' УМ';
+  const dt = ts => new Date(Number(ts) || Date.now()).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const dayKey = ts => { const x = new Date(Number(ts) || Date.now()); return x.getFullYear() + '-' + x.getMonth() + '-' + x.getDate(); };
+  const stars = n => { const v = Math.max(0, Math.min(5, Math.round(Number(n) || 0))); return '★'.repeat(v) + '☆'.repeat(5 - v); };
+  window.__mc502 = true;
+
+  (function css(){
+    if ($id('mc502-style')) return;
+    const st = document.createElement('style');
+    st.id = 'mc502-style';
+    st.textContent = `
+.mc502-old{opacity:.55;font-weight:600;font-size:11px}
+.mc502-sale{display:inline-block;padding:1px 6px;border-radius:7px;background:#e11d48;color:#fff;font-size:10.5px;font-weight:850;vertical-align:1px}
+.mc502-stock{font-size:10.5px;font-weight:750;color:#c2410c;margin-left:auto;margin-right:6px}
+.mc502-photo-sale{position:absolute;top:8px;right:8px;padding:3px 7px;border-radius:8px;background:#e11d48;color:#fff;font-size:11px;font-weight:850}
+.mc51-promo{display:flex;gap:7px;margin:10px 0 4px}
+.mc51-promo .mc51-input{margin:0;flex:1;min-width:0}
+.mc51-promo .mc51-btn{width:auto;padding:0 16px;white-space:nowrap}
+.mc51-promo-ok{font-size:12px;font-weight:750;color:#047857;margin:4px 0 6px}
+[data-theme="dark"] .mc51-promo-ok{color:#6ee7b7}
+.mc50-receipt{position:relative;box-shadow:0 8px 22px rgba(15,23,42,.06)}
+.mc50-receipt .head{display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:11.5px}
+.mc50-receipt .head>span:first-of-type{flex:1;min-width:0}
+.mc50-receipt .items{margin:8px 0 0;gap:3px;font-size:12.5px;line-height:1.45}
+.mc50-receipt .tot{margin-top:8px;padding-top:7px;border-top:1px dashed color-mix(in srgb,var(--accent) 40%,var(--border));display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.mc502-disc{font-weight:700;font-size:11.5px;color:#047857;margin-right:auto}
+[data-theme="dark"] .mc502-disc{color:#6ee7b7}
+.mc502-pill{font-size:10px;font-weight:850;padding:3px 8px;border-radius:999px;background:rgba(245,158,11,.16);color:#b45309;white-space:nowrap}
+.mc502-pill.ok{background:rgba(16,185,129,.16);color:#047857}
+[data-theme="dark"] .mc502-pill{color:#fcd34d}
+[data-theme="dark"] .mc502-pill.ok{color:#6ee7b7}
+.mc502-meta{margin-top:5px;font-size:10.5px;color:var(--text-2);word-break:break-word}
+.mc502-rev{margin-top:7px;font-size:12px;font-weight:750;color:#b45309}
+.mc502-rev span{font-weight:600;color:var(--text-2);font-size:10.5px;margin-left:5px}
+.mc502-rev-txt{font-weight:500;color:var(--text);font-size:11.5px;margin-top:3px;font-style:italic}
+[data-theme="dark"] .mc502-rev{color:#fcd34d}
+
+/* панель продавца */
+.mc502-wrap{display:flex;flex-direction:column;gap:12px}
+.mc502-hero{border-radius:20px;padding:18px;color:#fff;background:linear-gradient(135deg,#0f766e,#0e7490 45%,#4338ca);box-shadow:0 14px 34px rgba(13,99,120,.26)}
+.mc502-hero small{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;font-weight:850}
+.mc502-hero b{display:block;font-size:22px;margin:5px 0 3px}
+.mc502-hero p{margin:0;font-size:12.5px;line-height:1.5;opacity:.9}
+.mc502-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px}
+.mc502-kpi{padding:13px 14px;border-radius:16px;border:1px solid var(--border);background:var(--surface)}
+.mc502-kpi small{display:block;font-size:10.5px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2)}
+.mc502-kpi b{display:block;font-size:19px;margin:4px 0 2px}
+.mc502-kpi span{font-size:11px;color:var(--text-2)}
+.mc502-sec{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.mc502-sec h3{font-size:14px;margin:0}
+.mc502-sec span{font-size:11.5px;color:var(--text-2)}
+.mc502-chart{display:flex;align-items:flex-end;gap:6px;height:120px;padding:10px 12px;border-radius:16px;border:1px solid var(--border);background:var(--surface)}
+.mc502-bar{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.mc502-bar i{display:block;width:100%;max-width:34px;border-radius:7px 7px 4px 4px;background:linear-gradient(180deg,#22d3ee,#4338ca);min-height:3px}
+.mc502-bar b{font-size:9.5px;font-weight:800;color:var(--text-2)}
+.mc502-bar em{font-style:normal;font-size:9px;color:var(--text-2);opacity:.8}
+.mc502-top{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:14px;border:1px solid var(--border);background:var(--surface);margin:7px 0}
+.mc502-top .rk{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;font-size:11.5px;font-weight:900;background:var(--accent-light,var(--surface-2));color:var(--accent);flex-shrink:0}
+.mc502-top .grow{flex:1;min-width:0}
+.mc502-top b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc502-top small{font-size:11px;color:var(--text-2)}
+.mc502-revcard{padding:12px 13px;border-radius:14px;border:1px solid var(--border);background:var(--surface);margin:7px 0}
+.mc502-revcard b{display:block;font-size:12.5px;color:#b45309}
+.mc502-revcard .txt{font-size:12.5px;margin-top:4px;line-height:1.45}
+.mc502-revcard small{display:block;font-size:10.5px;color:var(--text-2);margin-top:5px}
+[data-theme="dark"] .mc502-revcard b{color:#fcd34d}
+.mc502-note{font-size:11.5px;line-height:1.5;color:var(--text-2);padding:2px}
+.mc502-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+
+/* оценка заказа */
+.mc502-ov{position:fixed;inset:0;z-index:34000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,8,20,.55);backdrop-filter:blur(4px)}
+.mc502-card{width:min(420px,100%);border-radius:22px;padding:20px;background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.mc502-card h3{margin:0 0 6px;font-size:17px}
+.mc502-card p{margin:0 0 12px;font-size:12.5px;line-height:1.5;color:var(--text-2)}
+.mc502-stars{display:flex;gap:6px;justify-content:center;margin:6px 0 14px}
+.mc502-stars button{border:0;background:transparent;font-size:30px;line-height:1;cursor:pointer;color:#cbd5e1;padding:0 2px}
+.mc502-stars button.on{color:#f59e0b;text-shadow:0 4px 12px rgba(245,158,11,.35)}
+.mc502-card textarea{width:100%;box-sizing:border-box;min-height:74px;padding:11px;border-radius:13px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font:inherit;font-size:13px;resize:vertical;outline:none}
+.mc502-card .row{display:flex;gap:8px;margin-top:12px}
+.mc502-card .row button{flex:1;border:1px solid var(--border);border-radius:13px;padding:12px;font:inherit;font-weight:800;font-size:13.5px;cursor:pointer;background:var(--surface-2);color:var(--text)}
+.mc502-card .row button.pri{border:0;color:#fff;background:linear-gradient(135deg,#1d4ed8,#6d28d9)}
+.mc502-card .row button.pri[disabled]{opacity:.45;cursor:default}
+`;
+    document.head.appendChild(st);
+  })();
+
+  async function allOrders(seller){
+    const snap = await get(ref(db, 'shop_orders'));
+    return Object.values(snap.val() || {}).filter(o => o && o.seller === seller).sort((a, b) => (Number(b.at) || 0) - (Number(a.at) || 0));
+  }
+  async function allReviews(seller){
+    try {
+      const snap = await get(ref(db, 'shop_reviews'));
+      return Object.values(snap.val() || {}).filter(r => r && r.seller === seller).sort((a, b) => (Number(b.at) || 0) - (Number(a.at) || 0));
+    } catch (_) { return []; }
+  }
+
+  /* рейтинг магазина: используется в карточке магазина у покупателя */
+  window.mc502ShopRating = async function(uid){
+    if (!uid) return null;
+    const rows = await allReviews(uid);
+    if (!rows.length) return null;
+    const sum = rows.reduce((n, r) => n + Math.max(1, Math.min(5, Number(r.rating) || 5)), 0);
+    return { avg: (Math.round(sum / rows.length * 10) / 10).toFixed(1), count: rows.length };
+  };
+
+  /* панель продавца: выручка, заказы, топ-товары и отзывы */
+  window.mc502SellerBoard = async function(box){
+    const uid = me();
+    if (!uid || !box) return;
+    box.innerHTML = '<p class="sub" style="text-align:center;padding:24px 0">Считаем выручку и заказы…</p>';
+    let orders = [], reviews = [];
+    try { orders = await allOrders(uid); } catch (_) {}
+    reviews = await allReviews(uid);
+    const now = Date.now();
+    const week = orders.filter(o => now - (Number(o.at) || 0) <= 7 * 864e5);
+    const revenue = orders.reduce((n, o) => n + (Number(o.total) || 0), 0);
+    const revenueWeek = week.reduce((n, o) => n + (Number(o.total) || 0), 0);
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+    const avgCheck = orders.length ? Math.round(revenue / orders.length) : 0;
+    const share = orders.length ? Math.round(delivered / orders.length * 100) : 0;
+    const rating = reviews.length ? (Math.round(reviews.reduce((n, r) => n + Math.max(1, Math.min(5, Number(r.rating) || 5)), 0) / reviews.length * 10) / 10) : 0;
+
+    const buckets = [];
+    for (let i = 6; i >= 0; i--) {
+      const dt0 = new Date(now - i * 864e5);
+      dt0.setHours(0, 0, 0, 0);
+      buckets.push({ t: dt0.getTime(), key: dayKey(dt0.getTime()), label: dt0.toLocaleDateString('ru-RU', { weekday: 'short' }), sum: 0, n: 0 });
+    }
+    week.forEach(o => { const b = buckets.find(x => x.key === dayKey(o.at)); if (b) { b.sum += Number(o.total) || 0; b.n += 1; } });
+    const max = Math.max(1, ...buckets.map(b => b.sum));
+
+    const prod = {};
+    orders.forEach(o => (o.items || []).forEach(it => {
+      const k = String(it.name || 'Товар');
+      const row = prod[k] || (prod[k] = { name: k, qty: 0, sum: 0, emoji: it.emoji || '📦' });
+      row.qty += Number(it.qty) || 1;
+      row.sum += (Number(it.price) || 0) * (Number(it.qty) || 1);
+    }));
+    const top = Object.values(prod).sort((a, b) => b.sum - a.sum).slice(0, 5);
+
+    const chart = buckets.map(b => `<div class="mc502-bar" title="${num(b.sum)} УМ · ${b.n} заказ(ов)"><em>${b.n || ''}</em><i style="height:${Math.max(3, Math.round(b.sum / max * 100))}%"></i><b>${esc(b.label)}</b></div>`).join('');
+    const topHtml = top.length ? top.map((t, i) => `<div class="mc502-top"><span class="rk">${i + 1}</span><div class="grow"><b>${esc(t.name)}</b><small>${t.qty} шт · ${money(t.sum)}</small></div></div>`).join('')
+      : '<p class="mc502-note">Пока нет продаж. Добавьте товары и поделитесь магазином из профиля.</p>';
+    const revHtml = reviews.length ? reviews.slice(0, 4).map(r => `<div class="mc502-revcard"><b>${stars(r.rating)}</b>${r.text ? `<div class="txt">${esc(r.text)}</div>` : ''}<small>${esc(r.buyerName || 'Покупатель')} · ${esc(dt(r.at))}</small></div>`).join('')
+      : '<p class="mc502-note">Отзывов пока нет. Покупатель может оценить заказ звёздами прямо из чека в чате.</p>';
+
+    box.innerHTML = `<div class="mc502-wrap">
+      <div class="mc502-hero">
+        <small>Панель продавца</small>
+        <b>${money(revenue)}</b>
+        <p>${orders.length ? `Всего заказов: ${orders.length} · выдано ${delivered} · средний чек ${money(avgCheck)}` : 'Пока ни одного заказа. Витрина готова — ждём первых покупателей.'}</p>
+      </div>
+      <div class="mc502-kpis">
+        <div class="mc502-kpi"><small>За 7 дней</small><b>${money(revenueWeek)}</b><span>${week.length ? week.length + ' заказ(ов)' : 'пока тихо'}</span></div>
+        <div class="mc502-kpi"><small>Выдано</small><b>${share}%</b><span>${delivered} из ${orders.length || 0}</span></div>
+        <div class="mc502-kpi"><small>Средний чек</small><b>${money(avgCheck)}</b><span>по всем заказам</span></div>
+        <div class="mc502-kpi"><small>Рейтинг</small><b>${rating ? rating.toFixed(1) + ' ★' : '—'}</b><span>${reviews.length ? reviews.length + ' отзыв(ов)' : 'нет отзывов'}</span></div>
+      </div>
+      <div class="mc502-sec"><h3>Выручка за неделю</h3><span>${money(revenueWeek)}</span></div>
+      <div class="mc502-chart">${chart}</div>
+      <div class="mc502-sec"><h3>Топ товаров</h3><span>по выручке</span></div>
+      <div>${topHtml}</div>
+      <div class="mc502-sec"><h3>Отзывы</h3><span>${rating ? rating.toFixed(1) + ' ★' : 'пока нет'}</span></div>
+      <div>${revHtml}</div>
+      <div class="mc502-actions">
+        <button type="button" class="mc51-btn" data-go="shop">Настроить витрину</button>
+        <button type="button" class="mc51-btn g" data-go="goods">Товары и скидки</button>
+        <button type="button" class="mc51-btn g" data-go="profile">Профиль компании</button>
+      </div>
+    </div>`;
+    box.querySelectorAll('[data-go]').forEach(b => b.onclick = () => { try { window.mc41BizOpen(b.dataset.go); } catch (_) {} });
+  };
+
+  /* покупатель оценивает выданный заказ из чека */
+  window.mc502RateOrder = async function(orderId){
+    const uid = me();
+    if (!uid || !orderId) return;
+    let o = null;
+    try { o = (await get(ref(db, 'shop_orders/' + orderId))).val(); } catch (_) {}
+    if (!o) return toast('Заказ не найден', '⚠');
+    if (o.buyer !== uid) return toast('Оценить заказ может только покупатель', '🔒');
+    if (o.status !== 'delivered') return toast('Оценка появится после выдачи товара', '⏳');
+    let rating = 5;
+    const ov = document.createElement('div');
+    ov.className = 'mc502-ov';
+    ov.innerHTML = `<div class="mc502-card" role="dialog" aria-modal="true" aria-label="Оценка заказа">
+      <h3>⭐ Как прошёл заказ?</h3>
+      <p>${esc((o.items || []).map(x => x.name).join(', ') || 'Заказ')} · ${money(o.total)}. Оценка видна продавцу и другим покупателям.</p>
+      <div class="mc502-stars">${[1,2,3,4,5].map(i => `<button type="button" data-star="${i}" class="${i <= rating ? 'on' : ''}" aria-label="${i} из 5">★</button>`).join('')}</div>
+      <textarea id="mc502RevText" maxlength="300" placeholder="Что понравилось или что улучшить (необязательно)"></textarea>
+      <div class="row"><button type="button" id="mc502RevCancel">Отмена</button><button type="button" class="pri" id="mc502RevSend">Отправить оценку</button></div>
+    </div>`;
+    document.body.appendChild(ov);
+    const paint = () => ov.querySelectorAll('[data-star]').forEach(b => b.classList.toggle('on', Number(b.dataset.star) <= rating));
+    ov.querySelectorAll('[data-star]').forEach(b => b.onclick = () => { rating = Number(b.dataset.star) || 5; paint(); });
+    const close = () => ov.remove();
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
+    $id('mc502RevCancel').onclick = close;
+    $id('mc502RevSend').onclick = async () => {
+      const btn = $id('mc502RevSend');
+      btn.disabled = true; btn.textContent = 'Отправляем…';
+      try {
+        await set(ref(db, 'shop_reviews/' + orderId), {
+          orderId, seller: o.seller, buyer: uid,
+          buyerName: (state.profile && (state.profile.displayName || state.profile.username)) || 'Покупатель',
+          rating, text: ($id('mc502RevText').value || '').trim().slice(0, 300), at: Date.now()
+        });
+        close();
+        toast('Спасибо за оценку!', '⭐');
+        try { if (typeof window.mc5ReceiptRefresh === 'function') window.mc5ReceiptRefresh(); } catch (_) {}
+      } catch (e) {
+        console.warn('review', e);
+        btn.disabled = false; btn.textContent = 'Отправить оценку';
+        toast('Не удалось отправить оценку. Проверьте правила Firebase (shop_reviews)', '⚠');
+      }
+    };
+  };
+
+  console.info('MetroChat b5.0.2 seller tools loaded');
 })();
 </script>
 
