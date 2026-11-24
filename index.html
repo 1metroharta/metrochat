@@ -4182,10 +4182,129 @@ function renderPinnedBar() {
   $('pinText').textContent = pinned.text || '📎 Вложение';
   $('pinnedBar').classList.remove('hidden');
 }
+/* ---------------- b5.0.3: кэш сообщений и офлайн-очередь ---------------- */
+const MC_CHAT_CACHE_MAX = 40;
+const MC_CHAT_CACHE_TTL = 7 * 86400000;
+async function mcChatCacheGet(chatId) {
+  try { localStorage.removeItem('metrochat_msg_cache_v1_' + chatId); } catch (_) {}
+  const row = await mcIdbGet('chatcache:' + chatId);
+  if (!row || !Array.isArray(row.msgs)) return null;
+  row.t = row.t || 0;
+  if (Date.now() - row.t > MC_CHAT_CACHE_TTL) { mcIdbDel('chatcache:' + chatId); return null; }
+  return row.msgs;
+}
+function mcChatCacheSet(chatId, msgs) {
+  if (!chatId || !Array.isArray(msgs)) return;
+  mcIdbSet('chatcache:' + chatId, { t: Date.now(), msgs: msgs.slice(-MC_CHAT_CACHE_MAX) }).catch(() => {});
+}
+async function mcChatCachePrune() {
+  try {
+    const d = await mcIdbOpen(); if (!d) return;
+    const rows = [];
+    await new Promise(res => { try { const tx = d.transaction('kv', 'readonly'); const cur = tx.objectStore('kv').openCursor(); cur.onsuccess = () => { const c = cur.result; if (!c) return res(); if (String(c.key).startsWith('chatcache:')) rows.push([c.key, (c.value && c.value.t) || 0]); c.continue(); }; cur.onerror = () => res(); } catch (_) { res(); } });
+    const now = Date.now();
+    let old = rows.filter(([, t]) => now - t > MC_CHAT_CACHE_TTL);
+    const fresh = rows.filter(([, t]) => now - t <= MC_CHAT_CACHE_TTL).sort((a, b) => b[1] - a[1]);
+    old = old.concat(fresh.slice(MC_CHAT_CACHE_MAX));
+    if (!old.length) return;
+    const tx = d.transaction('kv', 'readwrite'); const st = tx.objectStore('kv');
+    old.forEach(([k]) => st.delete(k));
+  } catch (_) {}
+}
+setTimeout(() => { mcChatCachePrune(); }, 20000);
+window.mcClearCache = async () => {
+  try {
+    const d = await mcIdbOpen();
+    if (d) await new Promise(res => { try { const tx = d.transaction('kv', 'readwrite'); tx.objectStore('kv').clear(); tx.oncomplete = () => res(); tx.onerror = () => res(); tx.onabort = () => res(); } catch (_) { res(); } });
+    Object.keys(localStorage).filter(k => k.startsWith('metrochat_msg_cache_v1_')).forEach(k => { try { localStorage.removeItem(k); } catch (_) {} });
+    if ('caches' in window) { const keys = await caches.keys(); await Promise.all(keys.filter(k => k.startsWith('metrochat-')).map(k => caches.delete(k))); }
+    toast('Кэш очищен. Оболочка скачается заново', '🧹');
+  } catch (e) { toast('Не удалось очистить кэш', '⚠'); }
+};
+
+const mcOutbox = { items: [], loaded: false, busy: false, key: 'outbox_v1' };
+async function mcOutboxLoad() {
+  if (mcOutbox.loaded) return mcOutbox.items;
+  mcOutbox.loaded = true;
+  try { const row = await mcIdbGet(mcOutbox.key); if (row && Array.isArray(row.items)) mcOutbox.items = row.items; } catch (_) {}
+  return mcOutbox.items;
+}
+function mcOutboxSave() { mcIdbSet(mcOutbox.key, { t: Date.now(), items: mcOutbox.items }).catch(() => {}); }
+function mcOutboxFor(chatId) { return mcOutbox.items.filter(x => x.chatId === chatId); }
+async function mcOutboxAdd(chatId, msg, chat) {
+  await mcOutboxLoad();
+  if (!msg.clientId) msg.clientId = 'c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  mcOutbox.items.push({ id: msg.clientId, chatId, msg, chatType: chat?.type || 'dm', peerId: chat?.peerId || chat?.otherUid || '', at: Date.now() });
+  if (mcOutbox.items.length > 80) mcOutbox.items.splice(0, mcOutbox.items.length - 80);
+  mcOutboxSave();
+  if (state.chat?.id === chatId) renderMessages();
+  return msg.clientId;
+}
+async function mcOutboxFlush() {
+  if (mcOutbox.busy || !navigator.onLine) return;
+  await mcOutboxLoad();
+  if (!mcOutbox.items.length) return;
+  mcOutbox.busy = true;
+  let sent = 0;
+  try {
+    for (const item of [...mcOutbox.items]) {
+      try {
+        await mcPushMessage(item.chatId, item.msg);
+        mcOutbox.items = mcOutbox.items.filter(x => x.id !== item.id);
+        mcOutboxSave();
+        sent++;
+        const preview = { text: mcStripFmt(item.msg.text || '') || MC_PREVIEW_MAP[item.msg.type] || '', senderId: item.msg.senderId, type: item.msg.type || 'text' };
+        if (state.user?.uid) update(ref(db, 'user_chats/' + state.user.uid + '/' + item.chatId), { lastTs: item.msg.createdAt, lastMessage: preview, unread: 0 }).catch(() => {});
+        if (item.chatType === 'dm' && item.peerId) update(ref(db, 'user_chats/' + item.peerId + '/' + item.chatId), { type: 'dm', peerId: item.msg.senderId, lastTs: item.msg.createdAt, lastMessage: preview, unread: increment(1) }).catch(() => {});
+      } catch (e) {
+        if (mcIsNetworkError(e)) break;
+        mcOutbox.items = mcOutbox.items.filter(x => x.id !== item.id);
+        mcOutboxSave();
+        toast('Очередное сообщение отклонено сервером', '⚠');
+      }
+    }
+    if (sent) { toast(`Отправлено из очереди: ${sent}`, '✓'); if (state.chat) renderMessages(); }
+  } finally { mcOutbox.busy = false; }
+}
+function mcIsNetworkError(e) {
+  if (navigator.onLine === false) return true;
+  const s = String(e?.code || '') + ' ' + String(e?.message || '') + ' ' + String(e?.name || '');
+  return /network|offline|unavailable|timeout|failed to get|connection|disconnected/i.test(s);
+}
+window.addEventListener('online', () => { setTimeout(() => mcOutboxFlush(), 600); });
+setTimeout(() => { mcOutboxLoad().then(() => mcOutboxFlush()); }, 4000);
+
+const mcReadSent = new Set();
+function mcMsgRead(m) {
+  const by = m && m.readBy;
+  if (!by || typeof by !== 'object') return false;
+  return Object.keys(by).some(u => u !== state.user?.uid);
+}
+function mcMarkChatRead(chatId) {
+  if (!state.settings?.readReceipts || !state.user || document.visibilityState !== 'visible' || state.chat?.id !== chatId) return;
+  if (mcReadSent.size > 2000) mcReadSent.clear();
+  const me = state.user.uid;
+  const upd = {};
+  for (const m of state.messages.slice(-25)) {
+    if (!m || m.system || !m.senderId || m.senderId === me) continue;
+    if (m.readBy && m.readBy[me]) continue;
+    const k = chatId + ':' + m.id;
+    if (mcReadSent.has(k)) continue;
+    mcReadSent.add(k);
+    upd[`messages/${chatId}/${m.id}/readBy/${me}`] = Date.now();
+  }
+  if (!Object.keys(upd).length) return;
+  update(ref(db), upd).catch(() => {});
+}
+
 function subscribeMessages(chatId) {
   if (state.chatUnsub) { try { state.chatUnsub(); } catch(e) {} }
   const cacheKey = 'metrochat_msg_cache_v1_' + chatId;
-  try { const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null'); if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); } } catch(_) {}
+  // b5.0.3: кэш в IndexedDB, без JSON.stringify в главном потоке.
+  mcChatCacheGet(chatId).then(cached => {
+    if (state.chat?.id !== chatId || state.messages.length) return;
+    if (Array.isArray(cached) && cached.length) { state.messages = cached; renderMessages(); renderPinnedBar(); }
+  }).catch(() => {});
   state.msgLim = state.msgLim || {}; const q = query(ref(db, 'messages/' + chatId), orderByChild('createdAt'), limitToLast(state.msgLim[chatId] || 40));
   let mcFirstSnap = true;
   state.chatUnsub = onValue(q, snap => {
@@ -4194,9 +4313,10 @@ function subscribeMessages(chatId) {
     const mcWasFirst = mcFirstSnap; mcFirstSnap = false;
     const data = snap.val() || {};
     state.messages = Object.entries(data).map(([id, m]) => ({ id, ...m })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-    try { localStorage.setItem(cacheKey, JSON.stringify(state.messages.slice(-30))); } catch(_) {}
+    mcChatCacheSet(chatId, state.messages);
     state.messages.forEach(m => { if (m.senderId && !getUser(m.senderId)) fetchUserIfMissing(m.senderId); });
     renderMessages(); renderPinnedBar();
+    mcMarkChatRead(chatId);
     const mcNewMsgs = (prevLen > 0 && mcPrevLastTs) ? state.messages.filter(m => Number(m.createdAt || 0) > mcPrevLastTs) : [];
     if (mcNewMsgs.length && !(mcWasFirst && Date.now() - mcPrevLastTs > 120000)) {
       const newMsgs = mcNewMsgs;
@@ -4273,11 +4393,17 @@ function renderMessages() {
       }).join('') + '</div>';
     }
     const timeHtml = state.settings.showTimestamps ? timeShort(m.createdAt) : '';
+    const mcTicks = isOwn && state.settings.readReceipts ? (mcMsgRead(m) ? ' ✓✓' : ' ✓') : '';
     const authorRow = (showAuthor && state.settings.showAvatarsInGroups && sender) ? `<div class="msg-author">${esc(sender?.firstName || sender?.displayName || 'Участник')}</div>` : '';
     const stickerCls = ((m.type === 'sticker' || m.type === 'videoCircle') ? ' sticker' : '') + (wxData ? ' weather-msg' : '') + (m.type === 'table' ? ' table-msg' : '') + (m.type === 'liveGeo' ? ' live-msg' : '');
-    html += `${authorRow}<div class="msg ${isOwn ? 'out' : 'in'}${stickerCls}" id="msg-${m.id}" oncontextmenu="return msgCtxFromEvent(event,'${m.id}')" ondblclick="setReply('${m.id}')" ontouchstart="msgTouchStart(event,'${m.id}')" ontouchmove="msgTouchMove(event)" ontouchend="msgTouchEnd(event)">${inner}<button type="button" class="msg-react-btn" title="Добавить реакцию" aria-label="Добавить реакцию" onclick="event.stopPropagation(); showReactionPicker(event,'${m.id}')">☺+</button><span class="time">${m.pinned ? '📌 ' : ''}${m.edited ? '<span class="edited-tag">изм.</span>' : ''}${timeHtml}${isOwn && state.settings.readReceipts ? ' ✓✓' : ''}</span>${reactionsHtml}</div>`;
+    html += `${authorRow}<div class="msg ${isOwn ? 'out' : 'in'}${stickerCls}" id="msg-${m.id}" oncontextmenu="return msgCtxFromEvent(event,'${m.id}')" ondblclick="setReply('${m.id}')" ontouchstart="msgTouchStart(event,'${m.id}')" ontouchmove="msgTouchMove(event)" ontouchend="msgTouchEnd(event)">${inner}<button type="button" class="msg-react-btn" title="Добавить реакцию" aria-label="Добавить реакцию" onclick="event.stopPropagation(); showReactionPicker(event,'${m.id}')">☺+</button><span class="time">${m.pinned ? '📌 ' : ''}${m.edited ? '<span class="edited-tag">изм.</span>' : ''}${timeHtml}${mcTicks}</span>${reactionsHtml}</div>`;
     lastSender = m.senderId;
   });
+  for (const p of mcOutboxFor(state.chat.id)) {
+    const pm = p.msg || {};
+    const label = pm.text ? esc(pm.text) : ({ image: '🖼️ Фото', file: '📄 Файл', poll: '📊 Опрос', voice: '🎤 Голосовое', sticker: '😀 Стикер', videoCircle: '⭕ Видеокружок', geo: '📍 Геолокация' }[pm.type] || 'Вложение');
+    html += `<div class="msg out" style="opacity:.62" data-pending="${esc(p.id)}">${label}<span class="time">⏳ отправляется</span></div>`;
+  }
   if (state.settings.typingIndicator) {
     const tu = Object.values(state.typing).filter(t => t.chatId === state.chat.id && t.uid !== state.user.uid);
     if (tu.length) { const names = tu.map(t => getUser(t.uid)?.firstName || 'Кто-то').join(', '); html += `<div class="typing">${esc(names)} печатает...</div>`; }
@@ -4527,7 +4653,17 @@ async function sendMessage() {
     cancelReply(); updateSendBtn();
     const chatId = state.chat.id;
     try { localStorage.removeItem('metro_draft_' + chatId); } catch(_) {}
-    await mcPushMessage(chatId, msg, mcExtraHeavy);
+    msg.clientId = msg.clientId || ('c_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7));
+    let mcQueued = false;
+    try {
+      await mcPushMessage(chatId, msg, mcExtraHeavy);
+    } catch (mcSendErr) {
+      if (!mcIsNetworkError(mcSendErr)) throw mcSendErr;
+      await mcOutboxAdd(chatId, msg, state.chat);
+      mcQueued = true;
+      toast('Нет сети — сообщение в очереди и отправится само', '📡');
+    }
+    if (mcQueued) { mcTypingStop(chatId); return; }
     const map = MC_PREVIEW_MAP;
     const preview = { text: mcStripFmt(msg.text) || map[msg.type] || '', senderId: state.user.uid, type: msg.type || 'text' };
     if (msg.silent) preview.silent = true;
@@ -4548,7 +4684,10 @@ async function sendMessage() {
       })));
     }
     mcTypingStop(chatId);
-  } catch (e) { toast('Ошибка: ' + humanErr(e), '⚠'); }
+  } catch (e) {
+    console.error('sendMessage:', e);
+    toast(mcIsNetworkError(e) ? 'Нет сети — сообщение в очереди и отправится само.' : 'Не удалось отправить: ' + humanErr(e), '⚠');
+  }
   finally { state.sending = false; }
 }
 function bindChatInputs() {
@@ -6006,6 +6145,7 @@ function renderSettings() {
       </div>
       <div class="settings-group">
         <h3>Другое</h3>
+        <div class="set-row" onclick="mcClearCache()"><div class="set-icon">🧹</div><div class="set-info"><div class="set-label">Очистить кэш</div><div class="set-sub">Сообщения, вложения и оболочка скачаются заново</div></div><div class="set-arrow">›</div></div>
         <div class="set-row" onclick="openVerificationModal()"><div class="set-icon">☑️</div><div class="set-info"><div class="set-label">Верификация аккаунта</div><div class="set-sub">${state.galochka?.[state.user?.uid]?.confirmed === true ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку на галочку'}</div></div><div class="set-arrow">›</div></div>
       </div>
       <div class="settings-group">
@@ -8738,7 +8878,54 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = 'b5.0.2';
+const MC_VERSION = 'b5.0.3';
+
+/* b5.0.3: единый экран ошибки вместо молчания. Показываем только неожиданные сбои,
+   сетевые и permission-ошибки Firebase остаются в консоли и обрабатываются точечно. */
+(function mc503ErrorScreen() {
+  if (window.__mc503Errors) return;
+  window.__mc503Errors = true;
+  let shownAt = 0;
+  function show(detail) {
+    try {
+      if (Date.now() - shownAt < 15000 || !document.body) return;
+      shownAt = Date.now();
+      document.getElementById('mc503Err')?.remove();
+      const ov = document.createElement('div');
+      ov.id = 'mc503Err';
+      ov.setAttribute('role', 'alertdialog');
+      ov.setAttribute('aria-modal', 'true');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,8,20,.72);backdrop-filter:blur(6px)';
+      const card = document.createElement('div');
+      card.style.cssText = 'width:min(420px,100%);border-radius:20px;padding:22px;background:var(--surface,#16203a);color:var(--text,#e6edf7);border:1px solid var(--border,#2a3752);box-shadow:0 24px 70px rgba(0,0,0,.5)';
+      const h = document.createElement('h3'); h.textContent = 'Что-то пошло не так'; h.style.cssText = 'margin:0 0 8px;font-size:18px';
+      const p = document.createElement('p'); p.textContent = 'Приложение столкнулось с ошибкой. Данные не потеряны — можно повторить.'; p.style.cssText = 'margin:0 0 12px;opacity:.8;font-size:14px;line-height:1.45';
+      const pre = document.createElement('div'); pre.textContent = String(detail || '').slice(0, 240); pre.style.cssText = 'font:12px/1.4 ui-monospace,SFMono-Regular,monospace;opacity:.55;word-break:break-word;margin-bottom:16px';
+      const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end'
+      const close = document.createElement('button'); close.type = 'button'; close.textContent = 'Закрыть';
+      close.style.cssText = 'border:1px solid var(--border,#2a3752);background:transparent;color:inherit;border-radius:10px;padding:10px 14px;font:inherit;cursor:pointer';
+      close.onclick = () => ov.remove();
+      const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Повторить';
+      retry.style.cssText = 'border:0;background:var(--accent,#e63946);color:#fff;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer';
+      retry.onclick = () => location.reload();
+      row.append(close, retry);
+      card.append(h, p, pre, row); ov.appendChild(card);
+      ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+      document.body.appendChild(ov);
+    } catch (_) {}
+  }
+  window.addEventListener('error', e => {
+    const msg = (e && (e.message || (e.error && e.error.message))) || '';
+    if (!msg || /ResizeObserver|Script error|permission_denied|PERMISSION_DENIED/i.test(msg)) return;
+    show(msg);
+  });
+  window.addEventListener('unhandledrejection', e => {
+    const r = e && e.reason;
+    const msg = (r && (r.message || r.code)) || String(r || '');
+    if (/permission|denied|network|offline|timeout|AbortError|QuotaExceeded|play\(\)|user gesture/i.test(msg)) return;
+    show(msg);
+  });
+})();
 const MC_SUPPORT_EMAIL = 'metrochatsupport@gmail.com';
 
 // ---------- Поддержка на экранах входа/регистрации ----------
@@ -9559,22 +9746,68 @@ function mcPreviewSound(slot, id) {
   setTimeout(() => { if (mcPreviewStop === st) { st(); mcPreviewStop = null; } }, 4200);
 }
 
-// ---------- Системные уведомления через Service Worker ----------
+// ---------- Системные уведомления и оболочка через Service Worker ----------
 let mcSwReg = null;
+let mcSwReloading = false;
+function mcSwUpdateBanner(reg) {
+  try {
+    if (document.getElementById('mcSwUpdate')) return;
+    const el = document.createElement('div');
+    el.id = 'mcSwUpdate';
+    el.setAttribute('role', 'status');
+    el.style.cssText = 'position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9998;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface,#16203a);color:var(--text,#e6edf7);border:1px solid var(--border,#2a3752);box-shadow:0 14px 40px rgba(0,0,0,.35);font:14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif';
+    const txt = document.createElement('div');
+    txt.style.cssText = 'flex:1;min-width:0';
+    const b = document.createElement('b'); b.textContent = 'Доступна новая версия';
+    const s = document.createElement('div'); s.textContent = 'MetroChat ' + MC_VERSION + ' уже загружена.'; s.style.cssText = 'opacity:.72;font-size:12px;margin-top:2px';
+    txt.append(b, s);
+    const go = document.createElement('button');
+    go.type = 'button'; go.textContent = 'Обновить';
+    go.style.cssText = 'border:0;border-radius:10px;padding:9px 14px;background:var(--accent,#e63946);color:#fff;font:inherit;font-weight:700;cursor:pointer';
+    go.onclick = () => { mcSwApplyUpdate(reg); };
+    const x = document.createElement('button');
+    x.type = 'button'; x.textContent = '✕'; x.setAttribute('aria-label', 'Скрыть');
+    x.style.cssText = 'border:0;background:transparent;color:inherit;opacity:.6;font:16px/1 system-ui;padding:6px;cursor:pointer';
+    x.onclick = () => el.remove();
+    el.append(txt, go, x);
+    document.body.appendChild(el);
+  } catch (_) {}
+}
+function mcSwApplyUpdate(reg) {
+  if (mcSwReloading) return;
+  mcSwReloading = true;
+  const worker = reg && (reg.waiting || reg.installing);
+  if (worker) { try { worker.postMessage({ type: 'SKIP_WAITING' }); } catch (_) {} }
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (mcSwReloading) { mcSwReloading = false; location.reload(); }
+  }, { once: true });
+  setTimeout(() => { if (mcSwReloading) location.reload(); }, 1800);
+}
 async function mcSwInit() {
   if (!('serviceWorker' in navigator) || !window.isSecureContext) return null;
   try {
-    mcSwReg = await navigator.serviceWorker.register('sw.js', { scope: './' });
+    // Версия кэша оболочки берётся из версии приложения — один источник правды.
+    mcSwReg = await navigator.serviceWorker.register('sw.js?v=' + encodeURIComponent(MC_VERSION), { scope: './' });
     navigator.serviceWorker.addEventListener('message', e => {
       const d = e.data || {};
       if (d.type === 'open-chat' && d.chatId) mcOpenChatById(d.chatId);
       if (d.type === 'call-accept' && typeof mcCallAcceptFromNotif === 'function') mcCallAcceptFromNotif(d.callId);
       if (d.type === 'call-decline' && typeof mcCallDeclineFromNotif === 'function') mcCallDeclineFromNotif(d.callId);
     });
+    if (mcSwReg.waiting && navigator.serviceWorker.controller) mcSwUpdateBanner(mcSwReg);
+    mcSwReg.addEventListener('updatefound', () => {
+      const next = mcSwReg.installing;
+      if (!next) return;
+      next.addEventListener('statechange', () => {
+        if (next.state === 'installed' && navigator.serviceWorker.controller) mcSwUpdateBanner(mcSwReg);
+      });
+    });
+    setTimeout(() => { try { mcSwReg.update(); } catch (_) {} }, 8000);
   } catch (e) { console.warn('SW:', e); mcSwReg = null; }
   return mcSwReg;
 }
 mcSwInit();
+window.mcSwApplyUpdate = mcSwApplyUpdate;
 function mcOpenChatById(chatId) {
   const c = state.chats?.[chatId]; if (!c) return;
   try { window.focus(); } catch (_) {}
@@ -16153,7 +16386,7 @@ console.info('MetroChat ' + V + ' patch loaded');
 (function mc50(){
 'use strict';
 const $id = id => document.getElementById(id);
-const V50 = 'b5.0.2';
+const V50 = 'b5.0.3';
 const now50 = () => Date.now();
 const LSget = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 const LSset = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
@@ -16613,11 +16846,10 @@ async function mc50Report(uid){
     if (count >= 4) {
       const cur = await getBan(uid);
       if (!cur || Number(cur.until || 0) <= now50()) {
-        const prev = await getBanCount(uid);
-        const days = prev >= 5 ? 30 : 1;
+        // b5.0.3: срок считается по числу реальных жалоб, а не по клиентскому счётчику.
+        const days = count >= 8 ? 30 : 1;
         try {
           await set(ref(db, 'bans/' + uid), { at: now50(), until: now50() + days * 864e5, days, reportCount: count, by: me50(), automatic: true, reason: 'Жалобы пользователей' });
-          await set(ref(db, 'ban_history/' + uid + '/count'), prev + 1);
         } catch (e) { console.warn('ban write', e); }
       }
     }
@@ -17210,7 +17442,7 @@ function addHubCards50(){ return; // b5.1: магазин убран из «Пр
   const shopCard = mk(`<button type="button" class="other-hub-card" data-mc50-shop="1"><span class="other-hub-icon">🛍️</span><b>Магазин</b><small>Товары, категории, корзина и оплата в умах</small><span class="other-hub-arrow">Открыть →</span></button>`);
   shopCard.onclick = () => openShop50();
   grid.insertBefore(shopCard, grid.children[1] || null);
-  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.0.2</small><span class="other-hub-arrow">Смотреть →</span></button>`);
+  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.0.3</small><span class="other-hub-arrow">Смотреть →</span></button>`);
   histCard.onclick = () => renderHistory50();
   grid.appendChild(histCard);
   isAdmin50().then(adm => {
@@ -17248,6 +17480,18 @@ function renderHistory50(){
     'Промокоды: продавец задаёт код и процент, покупатель вводит его в корзине.',
     'В настройках магазина — быстрый переход в панель продавца.'
   ];
+  const b503 = [
+    'Безопасность: чаты, звонки, вложения и «печатает» теперь видны только участникам. Чужие узлы больше не читаются и не пишутся.',
+    'Сообщения, истории, комментарии, жалобы и подарки проходят проверку длины и типа в правилах Firebase.',
+    'Бан стал настоящим ограничением: заблокированный аккаунт не может писать в чаты, истории и комментарии даже в обход приложения.',
+    'Галочка верификации закрыта от самостоятельной выдачи — её ставит только администрация.',
+    'Офлайн-режим: оболочка и иконки кэшируются, при потере сети открывается сохранённое приложение.',
+    'Если сообщение не ушло, оно не пропадает: попадает в очередь и отправляется само, когда сеть вернётся. Статус «отправляется» виден в чате.',
+    'Отчёты о прочтении стали честными: одна галочка — отправлено, две — прочитано собеседником.',
+    'Кэш сообщений перенесён в IndexedDB: больше нет фризов и ошибок переполнения localStorage. В настройках появилась кнопка «Очистить кэш».',
+    'Плашка «Доступна новая версия» с кнопкой «Обновить» — обновление приложения больше не требует очистки кэша вручную.',
+    'Глобальный перехват ошибок: вместо «молчания» появляется понятный экран с кнопкой «Повторить».'
+  ];
   const b50 = [
     'Исправлен контраст в светлой и тёмной темах: кнопки, подписи, поля, Metro AI и карточки.',
     'Metro AI отвечает на каждый запрос: очередь, повторы, несколько моделей, кэш и локальные ответы вместо «нет интернета».',
@@ -17266,7 +17510,9 @@ function renderHistory50(){
   ];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">История версий</div></div>
   <div class="settings-wrap mc50-hist">
-    <div class="ver"><h3>MetroChat b5.0.2 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+    <div class="ver"><h3>MetroChat b5.0.3 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+      <ul>${b503.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
+    <div class="ver"><h3>MetroChat b5.0.2</h3><small class="set-sub">Ноябрь 2026</small>
       <ul>${b502.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
     <div class="ver"><h3>MetroChat b5.0</h3><small class="set-sub">Ноябрь 2026</small>
       <ul>${b50.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
@@ -17281,7 +17527,9 @@ try {
   if (typeof MC_WHATSNEW === 'object' && MC_WHATSNEW) {
     MC_WHATSNEW.version = V50;
     MC_WHATSNEW.slides = [
-      { title: 'MetroChat b5.0.2', text: 'Чек в чате больше не занимает первое место: он живёт на своём месте в переписке, а после оплаты нужный чат открывается сразу.', emoji: '🚀', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+      { title: 'MetroChat b5.0.3', text: 'Безопасность и офлайн: чаты и звонки закрыты для посторонних, сообщения не теряются без сети, а обновление приходит само.', emoji: '🛡️', bg: 'linear-gradient(160deg,#0ea5e9,#1e3a8a 55%,#111827)' },
+      { title: 'Честные галочки', text: 'Одна галочка — сообщение отправлено, две — собеседник прочитал. Если сети нет, сообщение встаёт в очередь и уходит само.', emoji: '✓', bg: 'linear-gradient(160deg,#22c55e,#0f766e 55%,#0f172a)' },
+      { title: 'Чек на своём месте', text: 'Чек заказа живёт на своём месте в переписке: новые сообщения уходят выше него, а после оплаты нужный чат открывается сразу.', emoji: '🧾', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
       { title: 'Магазин для продавцов', text: 'Скидки: старая цена зачёркнута, рядом бейдж «−%». Остатки на складе, промокоды и панель продавца: выручка, заказы за неделю, топ-товары и оценки покупателей.', emoji: '📊', bg: 'linear-gradient(160deg,#16a34a,#0891b2 55%,#4338ca)' },
       { title: 'Магазин и оплата', text: 'В профиле появился «Магазин»: товары по категориям, корзина и оплата умами. После оплаты открывается чат с продавцом, а у продавца появляется проверенный чек из базы — подделать его сообщением нельзя.', emoji: '🛍️', bg: 'linear-gradient(160deg,#f59e0b,#ec4899 60%,#7c3aed)' },
       { title: 'Жалобы и блокировки', text: 'Кнопка «Пожаловаться» в каждом профиле. Четыре жалобы — бан на 1 день, повторные — на 30 дней. Есть экран блокировки с обжалованием, админ-панель и разблокировка с повторным входом по паролю.', emoji: '🛡️', bg: 'linear-gradient(160deg,#ef4444,#7f1d1d 60%,#0f172a)' },
@@ -17295,8 +17543,8 @@ try {
 } catch (e) { console.warn('whatsnew b5', e); }
 
 window.mc5IsAdmin = isAdmin50;
-document.title = 'MetroChat b5.0.2';
-console.info('MetroChat b5.0.2 patch loaded');
+document.title = 'MetroChat b5.0.3';
+console.info('MetroChat b5.0.3 patch loaded');
 })();
 
 (function mc50nav(){
@@ -18341,7 +18589,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
 })();
 
 /* ============================================================================
-   MetroChat b5.0.2 — панель продавца, отзывы покупателей, скидки и промокоды.
+   MetroChat b5.0.3 — безопасные правила, офлайн-очередь, IndexedDB-кэш и PWA-обновления.
    Чек в чате живёт на своём месте в переписке (см. mc5ChatReceipts).
    ========================================================================== */
 (function mc502(){
@@ -18570,7 +18818,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     };
   };
 
-  console.info('MetroChat b5.0.2 seller tools loaded');
+  console.info('MetroChat b5.0.3 security shell loaded');
 })();
 </script>
 
