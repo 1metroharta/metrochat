@@ -31,7 +31,21 @@
 
     "galochka": {
       ".read": "auth != null",
-      ".write": false
+      ".write": false,
+      "$uid": {
+        "requestedAt": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.isNumber()"
+        },
+        "socialLinks": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['0', '1']) && newData.child('0').isString() && newData.child('0').val().length <= 300 && newData.child('1').isString() && newData.child('1').val().length <= 300"
+        },
+        "confirmed": {
+          ".write": "auth != null && auth.uid === $uid && newData.val() === false",
+          ".validate": "newData.isBoolean()"
+        }
+      }
     },
 
     "user_security": {
@@ -131,7 +145,7 @@
     "user_chats": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth != null && (auth.uid === $uid || ($chatId.beginsWith('dm_') && $chatId.contains('_' + auth.uid + '_') && $chatId.contains('_' + $uid + '_')) || (root.child('chats').child($chatId).child('members').child($uid).val() === true && (root.child('chats').child($chatId).child('ownerId').val() === auth.uid || root.child('chats').child($chatId).child('admins').child(auth.uid).val() === true)) || (root.child('channels').child($chatId).child('members').child($uid).val() === true && (root.child('channels').child($chatId).child('ownerId').val() === auth.uid || root.child('channels').child($chatId).child('admins').child(auth.uid).val() === true)))",
+        ".write": "auth != null && (auth.uid === $uid || ($chatId.beginsWith('dm_') && ($chatId.contains('_' + auth.uid + '_') || $chatId.endsWith('_' + auth.uid)) && ($chatId.contains('_' + $uid + '_') || $chatId.endsWith('_' + $uid))) || (root.child('chats').child($chatId).child('members').child($uid).val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true) || (root.child('channels').child($chatId).child('members').child($uid).val() === true && (root.child('channels').child($chatId).child('ownerId').val() === auth.uid || root.child('channels').child($chatId).child('admins').child(auth.uid).val() === true)))",
         ".indexOn": ["lastTs", "at", "updatedAt", "createdAt"]
       }
     },
