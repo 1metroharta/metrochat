@@ -226,12 +226,9 @@
           },
           "reactions": {
             "$uid": {
-              ".write": "auth != null && $uid === auth.uid"
-            },
-            "$emoji": {
-              ".validate": "newData.isString() && newData.val().length <= 8"
-            },
-            ".write": "auth != null"
+              ".write": "auth != null && $uid === auth.uid",
+              ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 8)"
+            }
           },
           "poll": {
             "votes": {
