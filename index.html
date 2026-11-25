@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MetroChat">
-<title>MetroChat b5.0</title>
+<title>MetroChat b5.1</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://metrochatmetroharta-i89op-default-rtdb.firebaseio.com">
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
@@ -2539,8 +2539,15 @@ html[data-cw] #messages{background:var(--mc-chat-bg)!important}
 <div class="splash" id="splash"><div class="splash-inner"><div class="splash-badge">MetroChat</div><h1 class="splash-greeting" id="splashGreeting">Добро пожаловать в MetroChat</h1><div class="splash-sub">Соединяем людей — быстро и безопасно</div><div class="splash-dots"><i></i><i></i><i></i></div></div></div>
 <script id="mc-splash-bg">(function(){var I={morning:"splash/morning.webp",day:"splash/day.webp",evening:"splash/evening.webp",night:"splash/night.webp"};
 var h=new Date().getHours(),k=h>=5&&h<11?'morning':h>=11&&h<17?'day':h>=17&&h<22?'evening':'night';
-window.__mcSplashPeriod=k;window.__mcSplashBg=I[k];
-var s=document.getElementById('splash');if(s){var b=document.createElement('div');b.className='splash-bg';b.style.backgroundImage='url("'+I[k]+'")';s.insertBefore(b,s.firstChild);s.setAttribute('data-period',k);}
+window.__mcSplashPeriod=k;
+var seen=false;try{seen=localStorage.getItem('mc_splash_bg_once')==='1';}catch(_){}
+if(!seen)window.__mcSplashBg=I[k];
+var s=document.getElementById('splash');if(s){
+  if(!seen){var b=document.createElement('div');b.className='splash-bg';b.style.backgroundImage='url("'+I[k]+'")';s.insertBefore(b,s.firstChild);}
+  s.setAttribute('data-period',k);
+}
+/* b5.1: обои заставки скачиваются один раз за всё время — дальше рисуется градиент темы. */
+try{if(!seen)localStorage.setItem('mc_splash_bg_once','1');}catch(_){}
 })();</script>
 
 <div class="auth-screen hidden" id="authScreen">
@@ -8878,7 +8885,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = 'b5.0.3';
+const MC_VERSION = 'b5.1';
 
 /* b5.0.3: единый экран ошибки вместо молчания. Показываем только неожиданные сбои,
    сетевые и permission-ошибки Firebase остаются в консоли и обрабатываются точечно. */
@@ -16386,7 +16393,7 @@ console.info('MetroChat ' + V + ' patch loaded');
 (function mc50(){
 'use strict';
 const $id = id => document.getElementById(id);
-const V50 = 'b5.0.3';
+const V50 = 'b5.1';
 const now50 = () => Date.now();
 const LSget = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 const LSset = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
@@ -17442,7 +17449,7 @@ function addHubCards50(){ return; // b5.1: магазин убран из «Пр
   const shopCard = mk(`<button type="button" class="other-hub-card" data-mc50-shop="1"><span class="other-hub-icon">🛍️</span><b>Магазин</b><small>Товары, категории, корзина и оплата в умах</small><span class="other-hub-arrow">Открыть →</span></button>`);
   shopCard.onclick = () => openShop50();
   grid.insertBefore(shopCard, grid.children[1] || null);
-  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.0.3</small><span class="other-hub-arrow">Смотреть →</span></button>`);
+  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.1</small><span class="other-hub-arrow">Смотреть →</span></button>`);
   histCard.onclick = () => renderHistory50();
   grid.appendChild(histCard);
   isAdmin50().then(adm => {
@@ -17510,7 +17517,22 @@ function renderHistory50(){
   ];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">История версий</div></div>
   <div class="settings-wrap mc50-hist">
-    <div class="ver"><h3>MetroChat b5.0.3 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+    <div class="ver"><h3>MetroChat b5.1 <span class="tag">сейчас</span></h3><small class="set-sub">Ноябрь 2026</small>
+      <ul>
+        <li>Принципиально новый главный экран: истории — кнопкой слева от карандаша, плавное раскрытие вниз и свайп вверх для закрытия.</li>
+        <li>Верхняя панель «Чаты / Группы / Поиск / Прочее» удалена, а поиск по никнейму объединён с общим поиском по чатам и каналам.</li>
+        <li>Нижняя панель стала полностью прозрачной, с мягким свечением и индикатором активной вкладки.</li>
+        <li>Кнопка статуса рядом с именем: выпадающий список эмодзи, статус сохраняется в аккаунте.</li>
+        <li>Без «жидкого стекла» у чатов больше нет обводок — только чистые строки.</li>
+        <li>Единый экран входа «Добрый день, имя» без второго приветствия; обои заставки загружаются один раз.</li>
+        <li>Меньше трафика: кэш профилей и историй, редкий heartbeat присутствия, 30 сообщений при открытии чата.</li>
+        <li>Привязка к номеру телефона с проверкой на устройстве без SMS и бережной миграцией существующих аккаунтов.</li>
+        <li>Верификация аккаунта за 1249 УМ: заявка, проверка администратором и возврат умов при отказе.</li>
+        <li>Одноразовая анимация обновления в духе ColorOS 17: «Абсолютно новый интерфейс» → «Обновление завершено».</li>
+        <li>Исправлены комментарии к постам каналов и историям, реакции и лайки появляются мгновенно.</li>
+        <li>«Прочее»: приветствие, Metro AI, длинная кнопка подарков, кнопка каналов; боты переехали в «Сервисы».</li>
+      </ul></div>
+    <div class="ver"><h3>MetroChat b5.0.3</h3><small class="set-sub">Ноябрь 2026</small>
       <ul>${b503.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
     <div class="ver"><h3>MetroChat b5.0.2</h3><small class="set-sub">Ноябрь 2026</small>
       <ul>${b502.map(x => `<li>${esc50(x)}</li>`).join('')}</ul></div>
@@ -17543,8 +17565,8 @@ try {
 } catch (e) { console.warn('whatsnew b5', e); }
 
 window.mc5IsAdmin = isAdmin50;
-document.title = 'MetroChat b5.0.3';
-console.info('MetroChat b5.0.3 patch loaded');
+document.title = 'MetroChat b5.1';
+console.info('MetroChat b5.1 patch loaded');
 })();
 
 (function mc50nav(){
@@ -18817,6 +18839,1091 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       }
     };
   };
+
+/* =====================================================================
+   MetroChat b5.1 — новый главный экран, единый вход, телефон, верификация
+   Модуль вставляется внутрь основного <script type="module">, поэтому
+   видит state, db, ref, mcSheet, toast и остальные внутренние функции.
+   ===================================================================== */
+(function mc51(){
+  'use strict';
+  const V51 = 'b5.1';
+  const $i = id => document.getElementById(id);
+  const q = (s, r) => (r || document).querySelector(s);
+  const qa = (s, r) => [...(r || document).querySelectorAll(s)];
+  const esc51 = v => (typeof esc === 'function' ? esc(v) : String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+  const toast51 = (m, i) => { try { toast(m, i); } catch (_) {} };
+  const me51 = () => (typeof state !== 'undefined' && state.user ? state.user.uid : null);
+  const save51 = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
+  const load51 = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } };
+  const hour51 = () => { const h = new Date().getHours(); return h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'; };
+  const displayName51 = () => {
+    const p = (typeof state !== 'undefined' && state.profile) || {};
+    return p.firstName || String(p.displayName || '').split(' ')[0] || p.username || (state.user && state.user.email ? state.user.email.split('@')[0] : '') || '';
+  };
+
+  /* ---------------------------------------------------------------- CSS */
+  const css = `
+  /* ---------- b5.1 · главный экран ---------- */
+  #sbNav{display:none!important}
+  .sb-top.mcb51-top{padding:14px 14px 10px;gap:8px;border-bottom:0;background:transparent!important;align-items:center}
+  .mcb51-id{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .mcb51-name-row{display:flex;align-items:center;gap:6px;min-width:0}
+  .mcb51-name-row .sb-me-name{font-size:15px;font-weight:800;letter-spacing:-.01em}
+  .mcb51-status-btn{flex:0 0 auto;width:27px;height:27px;border-radius:50%;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 10%,transparent);background:color-mix(in srgb,var(--surface-2) 70%,transparent);color:var(--text-2);font-size:13px;line-height:1;padding:0;transition:transform .18s var(--mc-spring),background .18s}
+  .mcb51-status-btn.has{border:1px solid transparent;background:linear-gradient(135deg,rgba(39,216,242,.22),rgba(135,88,246,.22));font-size:15px;box-shadow:0 0 0 1px rgba(120,160,255,.25),0 4px 14px rgba(80,120,255,.18)}
+  .mcb51-status-btn:active{transform:scale(.9)}
+  .mcb51-status-pop{position:fixed;z-index:26000;width:min(304px,calc(100vw - 24px));padding:12px;border-radius:22px;background:var(--mc-glass,rgba(18,25,40,.92));border:1px solid var(--mc-line,var(--border));box-shadow:0 24px 60px rgba(0,0,0,.38);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);animation:mc51pop .22s cubic-bezier(.16,1,.3,1) both}
+  @keyframes mc51pop{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
+  .mcb51-status-pop h4{margin:0 0 8px;font-size:13px;font-weight:800;letter-spacing:.02em;color:var(--text)}
+  .mcb51-status-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .mcb51-status-grid button{aspect-ratio:1;border:0;border-radius:12px;background:transparent;font-size:18px;display:grid;place-items:center;transition:background .15s,transform .15s}
+  .mcb51-status-grid button:hover{background:var(--surface-2)}
+  .mcb51-status-grid button:active{transform:scale(.86)}
+  .mcb51-status-pop .mcb51-clear{width:100%;margin-top:9px;padding:9px;border-radius:13px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:12.5px;font-weight:700}
+  .mcb51-my-status{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--text-2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* истории: кнопка рядом с карандашом + плавное раскрытие */
+  .sb-top .mcb51-stories-btn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;position:relative;background:linear-gradient(160deg,rgba(39,216,242,.16),rgba(135,88,246,.18));border:1px solid rgba(120,170,255,.28);color:var(--text);font-size:17px;flex:0 0 auto;transition:transform .18s var(--mc-spring),box-shadow .2s}
+  .sb-top .mcb51-stories-btn:active{transform:scale(.92)}
+  .sb-top .mcb51-stories-btn .stories-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#ff5d8f;opacity:0;box-shadow:0 0 0 2px var(--surface)}
+  .sb-top .mcb51-stories-btn .stories-dot.on{opacity:1;animation:mc51dot 1.8s ease-in-out infinite}
+  @keyframes mc51dot{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+  .mcb51-stories-wrap{overflow:hidden;max-height:0;opacity:0;transform:translateY(-10px);transition:max-height .46s cubic-bezier(.16,1,.3,1),opacity .3s ease,transform .4s cubic-bezier(.16,1,.3,1);will-change:max-height,opacity,transform;padding:0 10px;border:0}
+  .mcb51-stories-wrap.open{max-height:340px;opacity:1;transform:none;padding:4px 10px 12px}
+  .mcb51-stories-wrap .stories-panel{padding:10px 4px 2px;background:transparent!important;border:0!important;backdrop-filter:none!important}
+  .mcb51-stories-hint{font-size:10.5px;color:var(--text-3);text-align:center;padding:2px 0 0;letter-spacing:.02em}
+
+  /* нижняя панель: полностью прозрачная + эффекты */
+  #mobileNav.mcb51-nav{background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;left:0!important;right:0!important;bottom:0!important;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+  #mobileNav.mcb51-nav::before{content:"";position:absolute;inset:auto 12px 6px;height:64px;border-radius:26px;background:linear-gradient(180deg,rgba(10,16,32,.34),rgba(10,16,32,.06));box-shadow:0 18px 40px rgba(4,10,26,.28),inset 0 1px rgba(255,255,255,.08);pointer-events:none}
+  html[data-theme="light"] #mobileNav.mcb51-nav::before{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.18));box-shadow:0 16px 34px rgba(30,55,110,.14),inset 0 1px rgba(255,255,255,.85)}
+  #mobileNav.mcb51-nav .mobile-nav-inner{background:transparent!important;border:0!important;height:68px}
+  #mobileNav.mcb51-nav .mobile-nav-item{background:transparent!important;color:var(--text-2)!important;position:relative;z-index:1;border-radius:20px;margin:6px 3px;gap:2px;font-size:10.5px;letter-spacing:.01em}
+  #mobileNav.mcb51-nav .mobile-nav-item.active{background:transparent!important;color:var(--text)!important}
+  #mobileNav.mcb51-nav .mobile-nav-item.active .mobile-nav-icon{filter:drop-shadow(0 0 12px rgba(110,160,255,.55));transform:translateY(-1px) scale(1.08)}
+  #mobileNav.mcb51-nav .mobile-nav-item.active::after{content:"";position:absolute;bottom:6px;left:50%;width:18px;height:3px;border-radius:2px;transform:translateX(-50%);background:linear-gradient(90deg,#27d8f2,#8758f6);box-shadow:0 0 12px rgba(110,150,255,.7)}
+  #mobileNav.mcb51-nav .mobile-nav-icon{transition:transform .22s var(--mc-spring),filter .22s}
+  #mobileNav.mcb51-nav .nav-count{border-color:transparent!important;box-shadow:0 0 10px rgba(90,140,255,.6)}
+  body.mcb51-onboard #mobileNav{display:none!important}
+
+  /* без жидкого стекла — без обводок у чатов */
+  html[data-glass="off"] #sbList .list-item,html[data-glass="off"] #sbList .list-item:hover,html[data-glass="off"] #sbList .list-item.active,html[data-glass="off"] #sbList .list-item.pinned{background:transparent!important;border:0!important;box-shadow:none!important;outline:0!important}
+  html[data-glass="off"] #sbList .list-item.active{background:color-mix(in srgb,var(--accent) 12%,transparent)!important}
+  html[data-glass="off"] .mcb51-row,html[data-glass="off"] .mcb51-card{border-color:transparent!important;box-shadow:none!important}
+
+  /* поиск */
+  .mcb51-search-head{padding:14px 10px 4px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+  .mcb51-empty{padding:26px 16px;text-align:center;color:var(--text-2);font-size:13px}
+
+  /* единый экран входа */
+  .splash-greeting{max-width:22ch!important}
+  #mc14Welcome{display:none!important}
+
+  /* телефон */
+  .mcb51-gate{position:fixed;inset:0;z-index:23200;display:flex;flex-direction:column;justify-content:flex-end;background:radial-gradient(900px 600px at 50% 0%,color-mix(in srgb,var(--accent) 22%,#070b16),#070b16 70%);animation:mc51fade .3s both}
+  @keyframes mc51fade{from{opacity:0}to{opacity:1}}
+  .mcb51-gate-card{width:100%;max-width:520px;margin:0 auto;padding:22px 20px calc(22px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:var(--surface,#101a2e);border:1px solid var(--border,#24314c);box-shadow:0 -20px 70px rgba(0,0,0,.45);max-height:92dvh;overflow:auto;animation:mc51up .42s cubic-bezier(.16,1,.3,1) both}
+  @keyframes mc51up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .mcb51-gate-badge{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:26px;background:linear-gradient(140deg,rgba(39,216,242,.22),rgba(135,88,246,.26));border:1px solid rgba(130,170,255,.3);margin-bottom:14px}
+  .mcb51-gate h2{margin:0 0 6px;font-size:22px;letter-spacing:-.02em}
+  .mcb51-gate p{margin:0 0 14px;font-size:13.5px;line-height:1.5;color:var(--text-2)}
+  .mcb51-phone-row{display:flex;gap:8px}
+  .mcb51-phone-row select{flex:0 0 106px;padding:13px 8px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:14px}
+  .mcb51-phone-row input{flex:1;min-width:0;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:16px;letter-spacing:.02em}
+  .mcb51-gate .mcb51-main{width:100%;margin-top:14px;padding:15px;border:0;border-radius:16px;font-size:15.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6);box-shadow:0 12px 30px rgba(70,120,255,.35);transition:transform .16s}
+  .mcb51-gate .mcb51-main:active{transform:scale(.98)}
+  .mcb51-gate .mcb51-main[disabled]{opacity:.6}
+  .mcb51-gate .mcb51-alt{display:flex;justify-content:center;gap:14px;margin-top:12px}
+  .mcb51-gate .mcb51-alt button{border:0;background:none;color:var(--text-3);font-size:12.5px;font-weight:700;padding:8px}
+  .mcb51-check{display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);font-size:13px;color:var(--text-2);margin-top:12px}
+  .mcb51-spin{width:18px;height:18px;border-radius:50%;border:2px solid color-mix(in srgb,var(--accent) 40%,transparent);border-top-color:var(--accent);animation:mc51spin .8s linear infinite;flex:0 0 auto}
+  @keyframes mc51spin{to{transform:rotate(360deg)}}
+  .mcb51-note{font-size:11.5px;line-height:1.45;color:var(--text-3);margin-top:10px}
+
+  /* верификация */
+  .mcb51-verif-price{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(39,216,242,.12),rgba(135,88,246,.16));border:1px solid rgba(120,160,255,.25);font-size:13px;margin:10px 0}
+  .mcb51-verif-price b{font-size:19px}
+  .mcb51-link-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .mcb51-link-row span{font-size:18px;width:26px;text-align:center}
+  .mcb51-link-row input{flex:1;min-width:0;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:14px}
+
+  /* вступление после обновления */
+  #mc51Intro{position:fixed;inset:0;z-index:40000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:28px;text-align:center;background:radial-gradient(900px 700px at 50% 35%,#101b3c,#05070f 75%);color:#fff;overflow:hidden}
+  #mc51Intro .mcb51-orb{position:absolute;border-radius:50%;filter:blur(46px);opacity:.6;animation:mc51float 9s ease-in-out infinite}
+  #mc51Intro .o1{width:320px;height:320px;background:#2b7fff;top:-90px;left:-80px}
+  #mc51Intro .o2{width:280px;height:280px;background:#a855f7;bottom:-70px;right:-60px;animation-delay:-3s}
+  #mc51Intro .o3{width:210px;height:210px;background:#22d3ee;top:38%;right:18%;animation-delay:-5s;opacity:.35}
+  @keyframes mc51float{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(18px,-22px,0) scale(1.12)}}
+  #mc51Intro .mcb51-logo{width:86px;height:86px;border-radius:26px;display:grid;place-items:center;font-size:40px;background:linear-gradient(140deg,rgba(39,216,242,.3),rgba(135,88,246,.34));border:1px solid rgba(160,190,255,.4);box-shadow:0 22px 60px rgba(40,90,220,.45),inset 0 1px rgba(255,255,255,.35);backdrop-filter:blur(14px);animation:mc51logoIn .9s cubic-bezier(.16,1,.3,1) both}
+  @keyframes mc51logoIn{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:1;transform:none}}
+  #mc51Intro .mcb51-t1{font-size:clamp(26px,7vw,40px);font-weight:900;letter-spacing:-.035em;line-height:1.1;max-width:14ch;background:linear-gradient(100deg,#fff,#a9c8ff 45%,#c9a8ff);-webkit-background-clip:text;background-clip:text;color:transparent;animation:mc51riseIn .8s cubic-bezier(.16,1,.3,1) .18s both}
+  #mc51Intro .mcb51-t2{font-size:14px;font-weight:650;color:rgba(255,255,255,.72);max-width:30ch;line-height:1.55;animation:mc51riseIn .8s cubic-bezier(.16,1,.3,1) .34s both}
+  @keyframes mc51riseIn{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+  #mc51Intro .mcb51-strip{width:min(320px,74vw);height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;position:relative}
+  #mc51Intro .mcb51-strip i{position:absolute;inset:0;width:38%;border-radius:99px;background:linear-gradient(90deg,#22d3ee,#3b82f6,#a855f7);animation:mc51load 1.55s cubic-bezier(.4,0,.2,1) infinite}
+  @keyframes mc51load{0%{transform:translateX(-110%)}100%{transform:translateX(300%)}}
+  #mc51Intro .mcb51-done{display:none;flex-direction:column;align-items:center;gap:16px;animation:mc51riseIn .7s cubic-bezier(.16,1,.3,1) both}
+  #mc51Intro.ready .mcb51-done{display:flex}
+  #mc51Intro .mcb51-check{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:34px;background:linear-gradient(140deg,#22c55e,#0ea5e9);box-shadow:0 16px 44px rgba(34,197,94,.42);animation:mc51popCheck .6s cubic-bezier(.16,1.4,.4,1) both}
+  @keyframes mc51popCheck{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+  #mc51Intro .mcb51-done h2{margin:0;font-size:clamp(23px,6vw,32px);letter-spacing:-.03em}
+  #mc51Intro .mcb51-done p{margin:0;font-size:13.5px;color:rgba(255,255,255,.7);max-width:28ch;line-height:1.5}
+  #mc51Intro .mcb51-go{margin-top:6px;padding:15px 34px;border:0;border-radius:18px;font-size:16px;font-weight:850;color:#fff;background:linear-gradient(135deg,#27d8f2,#397cff 55%,#8758f6);box-shadow:0 16px 40px rgba(70,120,255,.42);animation:mc51pulse 2.4s ease-in-out infinite}
+  @keyframes mc51pulse{0%,100%{box-shadow:0 16px 40px rgba(70,120,255,.42)}50%{box-shadow:0 18px 54px rgba(110,150,255,.62)}}
+  #mc51Intro .mcb51-go:active{transform:scale(.97)}
+
+  /* админ: заявки на верификацию */
+  .mcb51-admin-row{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:14px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:8px;font-size:13px}
+  .mcb51-admin-row .grow{flex:1;min-width:0}
+  .mcb51-admin-row b{display:block;margin-bottom:3px}
+  .mcb51-admin-row small{display:block;color:var(--text-2);word-break:break-all;line-height:1.45}
+  .mcb51-admin-row button{margin-left:6px;padding:7px 10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;font-weight:700}
+  .mcb51-admin-row button.ok{background:#16a34a;border-color:#16a34a;color:#fff}
+  .mcb51-admin-row button.no{background:#dc2626;border-color:#dc2626;color:#fff}
+
+  /* «Прочее» */
+  .mcb51-other{padding:16px 14px calc(108px + env(safe-area-inset-bottom))}
+  .mcb51-hello{font-size:clamp(22px,5.4vw,28px);font-weight:900;letter-spacing:-.03em;line-height:1.18;margin:6px 4px 2px}
+  .mcb51-hello-sub{font-size:12.5px;color:var(--text-2);margin:0 4px 16px}
+  .mcb51-hero-ai{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:22px;border:1px solid rgba(130,170,255,.28);background:linear-gradient(135deg,rgba(39,216,242,.16),rgba(80,120,255,.2) 45%,rgba(135,88,246,.24));color:var(--text);text-align:left;margin-bottom:10px;transition:transform .18s var(--mc-spring)}
+  .mcb51-hero-ai:active{transform:scale(.985)}
+  .mcb51-hero-ai img{width:46px;height:46px;border-radius:14px;flex:0 0 auto}
+  .mcb51-hero-ai .grow{flex:1;min-width:0}
+  .mcb51-hero-ai b{display:block;font-size:16px;font-weight:850}
+  .mcb51-hero-ai small{display:block;font-size:11.5px;color:var(--text-2);margin-top:2px}
+  .mcb51-wide{display:flex;align-items:center;gap:14px;width:100%;padding:16px 18px;border-radius:20px;border:1px solid var(--border);background:color-mix(in srgb,var(--surface-2) 65%,transparent);color:var(--text);text-align:left;margin-bottom:10px;transition:transform .18s var(--mc-spring),border-color .2s}
+  .mcb51-wide:active{transform:scale(.985)}
+  .mcb51-wide .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex:0 0 auto;background:linear-gradient(140deg,rgba(39,216,242,.16),rgba(135,88,246,.2))}
+  .mcb51-wide .grow{flex:1;min-width:0}
+  .mcb51-wide b{display:block;font-size:15.5px;font-weight:820}
+  .mcb51-wide small{display:block;font-size:11.5px;color:var(--text-2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mcb51-wide .arrow{color:var(--text-3);font-size:18px}
+  .mcb51-gifts{background:linear-gradient(135deg,rgba(236,72,153,.16),rgba(249,115,22,.14))!important;border-color:rgba(244,114,182,.28)!important}
+  .mcb51-channels{background:linear-gradient(135deg,rgba(39,216,242,.14),rgba(59,130,246,.16))!important;border-color:rgba(96,165,250,.28)!important}
+  .mcb51-sec-title{margin:20px 4px 10px;font-size:11px;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
+
+  @media (max-width:760px){
+    .sb-top.mcb51-top{padding-top:calc(10px + env(safe-area-inset-top))}
+    .mcb51-gate-card{border-radius:26px 26px 0 0}
+  }
+  `;
+  try {
+    if (!$i('mcb51-style')) {
+      const st = document.createElement('style');
+      st.id = 'mcb51-style';
+      st.textContent = css;
+      document.head.appendChild(st);
+    }
+  } catch (e) { console.warn('b5.1 css', e); }
+
+  /* ------------------------------------------------ версия и заголовки */
+  try {
+    document.title = 'MetroChat ' + V51;
+    const t = q('title'); if (t) t.textContent = 'MetroChat ' + V51;
+    if (typeof MC_WHATSNEW === 'object' && MC_WHATSNEW) {
+      MC_WHATSNEW.version = V51;
+      MC_WHATSNEW.slides = [
+        { title: 'MetroChat ' + V51, text: 'Совсем новый главный экран: истории раскрываются прямо над чатами, статус — рядом с именем, а нижняя панель стала прозрачной.', emoji: '✨', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+        { title: 'Истории в одно касание', text: 'Кнопка историй теперь слева от карандаша. Лента плавно раскрывается вниз, а одно движение вверх по экрану аккуратно её закрывает.', emoji: '📱', bg: 'linear-gradient(160deg,#f472b6,#be185d 60%,#831843)' },
+        { title: 'Статус рядом с именем', text: 'Выберите эмодзи-статус: он появится рядом с вашим именем и будет виден в списке чатов и профиле.', emoji: '😊', bg: 'linear-gradient(160deg,#f59e0b,#ec4899 60%,#7c3aed)' },
+        { title: 'Один экран входа', text: 'Больше нет двух приветствий подряд: при входе сразу «Добрый день, имя». Обои заставки загружаются один раз и дальше берутся из кэша.', emoji: '👋', bg: 'linear-gradient(160deg,#0ea5e9,#1d4ed8 55%,#312e81)' },
+        { title: 'Телефон вместо почты', text: 'Аккаунт можно привязать к номеру телефона. Проверка проходит на устройстве без SMS, все данные остаются на своих местах.', emoji: '📞', bg: 'linear-gradient(160deg,#22c55e,#0f766e 55%,#0f172a)' },
+        { title: 'Галочка за умы', text: 'Верификация через соцсети стоит 1249 УМ. Если заявку отклонят, умы вернутся на баланс автоматически.', emoji: '☑️', bg: 'linear-gradient(160deg,#3b82f6,#1e40af 60%,#0f172a)' },
+        { title: 'Меньше трафика', text: 'Истории и профили кэшируются, присутствие обновляется реже и только на активном экране. Firebase получает заметно меньше запросов.', emoji: '📉', bg: 'linear-gradient(160deg,#0b1531,#1e1b4b 55%,#155e75)' },
+        { title: 'Комментарии и лайки', text: 'Комментарии к постам каналов и историям теперь сохраняются, а отметка «нравится» появляется сразу — без перезагрузки.', emoji: '💬', bg: 'linear-gradient(160deg,#14b8a6,#0d9488 55%,#155e75)' }
+      ];
+      try { localStorage.removeItem('mc_whatsnew_b5.0.3'); } catch (_) {}
+      const seen = 'mc_whatsnew_' + V51;
+      if (!localStorage.getItem(seen)) { localStorage.setItem(seen, String(Date.now())); localStorage.setItem('mc_pending_changelog', '1'); }
+    }
+    if (typeof MC_FAQ !== 'undefined' && Array.isArray(MC_FAQ)) {
+      const acc = MC_FAQ.find(x => x && x.cat === 'Аккаунт и вход');
+      if (acc && Array.isArray(acc.items)) {
+        acc.items.unshift(['Зачем MetroChat просит номер телефона?', 'Номер заменяет длинную почту при входе и восстановлении. Подтверждение проходит <b>на вашем устройстве</b> без SMS: приложение получает разрешение и в течение 5 секунд ищет номер среди контактов и журнала звонков — как в WhatsApp. Если браузер не даёт такого доступа (например, на компьютере), номер сохраняется, а заявка уходит на проверку администратору. Данные аккаунта при этом не переносятся и не удаляются.']);
+        acc.items.unshift(['Сколько стоит галочка верификации?', 'Верификация аккаунта стоит <b>1249 УМ</b>. Укажите ссылки на профили в соцсетях (префикс https:// не обязателен), оплатите умами — заявка уйдёт администратору. Если заявку отклонят, умы вернутся на баланс.']);
+      }
+      const ch = MC_FAQ.find(x => x && x.cat === 'Чаты, истории и подарки');
+      if (ch && Array.isArray(ch.items)) ch.items.unshift(['Почему комментарии и лайки теперь работают?', 'В правилах Firebase исправлены пути <b>channel_comments</b>, <b>story_comments</b> и лайков: раньше запись блокировалась проверкой узла канала. Теперь комментарий к посту сохраняется сразу, а сердечко появляется без перезагрузки.']);
+    }
+  } catch (e) { console.warn('b5.1 meta', e); }
+
+  /* ============================================================
+     1. ЕДИНЫЙ ЭКРАН ВХОДА + ОБОИ ОДИН РАЗ
+     ============================================================ */
+  const splashOnce = () => {
+    try { return localStorage.getItem('mc_splash_bg_once') === '1'; } catch (_) { return false; }
+  };
+  const GREET_LOCAL = {
+    ru: ['Доброй ночи', 'Доброе утро', 'Добрый день', 'Добрый вечер'],
+    en: ['Good night', 'Good morning', 'Good afternoon', 'Good evening'],
+    fr: ['Bonne nuit', 'Bonjour', 'Bon après-midi', 'Bonsoir'],
+    de: ['Gute Nacht', 'Guten Morgen', 'Guten Tag', 'Guten Abend'],
+    zh: ['夜深了', '早上好', '下午好', '晚上好'],
+    ko: ['안녕히 주무세요', '좋은 아침', '좋은 오후', '좋은 저녁']
+  };
+  function greeting51() {
+    const h = new Date().getHours();
+    let L = 'ru';
+    try { const stored = localStorage.getItem('mc_lang'); if (stored && GREET_LOCAL[stored]) L = stored; } catch (_) {}
+    if (!GREET_LOCAL[L]) L = 'ru';
+    const arr = GREET_LOCAL[L];
+    const base = arr[h < 5 ? 0 : h < 12 ? 1 : h < 18 ? 2 : 3];
+    let name = load51('mc_last_name', '') || displayName51();
+    if (L !== 'ru' && /[а-яё]/i.test(name)) name = '';
+    return name ? base + ', ' + name : base;
+  }
+  function mc51UnifiedGreeting() {
+    const line = greeting51();
+    const sp = $i('splashGreeting'); if (sp) sp.textContent = line;
+    // останавливаем многоязычную карусель: у заголовка больше нет id, который она ищет
+    const aw = $i('welcomeAnimated');
+    if (aw) { aw.id = 'mc51Greeting'; aw.textContent = line; }
+    const sub = q('#authScreen .auth-logo-text p');
+    if (sub) sub.textContent = 'ВАШЕ ПРОСТРАНСТВО ДЛЯ ОБЩЕНИЯ';
+  }
+  function mc51SplashOnce() {
+    if (splashOnce()) {
+      const bg = q('#splash .splash-bg');
+      if (bg) { bg.style.backgroundImage = 'none'; }
+    } else {
+      try { localStorage.setItem('mc_splash_bg_once', '1'); } catch (_) {}
+    }
+  }
+  try { localStorage.setItem('mc_welcomed', '1'); } catch (_) {}
+  mc51SplashOnce(); mc51UnifiedGreeting();
+  document.addEventListener('DOMContentLoaded', mc51UnifiedGreeting);
+  setTimeout(mc51UnifiedGreeting, 60); setTimeout(mc51UnifiedGreeting, 500); setTimeout(mc51UnifiedGreeting, 1600);
+
+  try {
+    if (typeof showPersonalWelcome === 'function') {
+      const _pw = showPersonalWelcome;
+      showPersonalWelcome = function () { /* единый экран: второе приветствие не показываем */ };
+      window.showPersonalWelcome = showPersonalWelcome;
+      void _pw;
+    }
+  } catch (e) { console.warn('b5.1 welcome', e); }
+  try {
+    if (typeof mcWelcome === 'function') { mcWelcome = function () {}; window.mcWelcome = mcWelcome; }
+  } catch (_) {}
+
+  /* ============================================================
+     2. ГЛАВНЫЙ ЭКРАН: ИСТОРИИ, СТАТУС, ПРОЗРАЧНАЯ ПАНЕЛЬ, ПОИСК
+     ============================================================ */
+  const STATUS_EMOJI = ['😊','😎','🔥','❤️','🌙','☕','🎧','🏃','💼','📚','🎮','✈️','🎨','💡','🫶','🥳','🌊','🍀','⭐','🚀','🐾','🍕','💤','🧘','🎯','🌧️','🎸','🧊','🦋','🌈','👀','🙌','😴','🤍','🖤','💫'];
+
+  function mc51PaintStatus() {
+    const uid = me51(); if (!uid) return;
+    const s = (state.status51 && state.status51[uid]) || (state.profile && state.profile.statusEmoji) || '';
+    const btn = $i('mc51StatusBtn');
+    if (btn) {
+      btn.textContent = s || '＋';
+      btn.classList.toggle('has', !!s);
+      btn.title = s ? 'Ваш статус: ' + s : 'Добавить статус';
+    }
+    const chip = $i('mc51StatusChip');
+    if (chip) chip.textContent = s || '';
+    document.querySelectorAll('#sbMeName').forEach(n => n.textContent = (state.profile && (state.profile.displayName || state.profile.firstName)) || 'MetroChat');
+  }
+  async function mc51LoadStatus() {
+    const uid = me51(); if (!uid) return;
+    try {
+      const snap = await get(ref(db, 'user_status/' + uid));
+      state.status51 = state.status51 || {};
+      state.status51[uid] = snap.exists() ? (snap.val() || {}).emoji || '' : '';
+      mc51PaintStatus();
+    } catch (_) {}
+  }
+  function mc51StatusPopover(anchor) {
+    document.getElementById('mc51StatusPop')?.remove();
+    const pop = document.createElement('div');
+    pop.id = 'mc51StatusPop'; pop.className = 'mcb51-status-pop';
+    pop.innerHTML = '<h4>Ваш статус</h4><div class="mcb51-status-grid">' +
+      STATUS_EMOJI.map(e => `<button type="button" data-e="${e}" aria-label="Статус ${e}">${e}</button>`).join('') +
+      '</div><button type="button" class="mcb51-clear" id="mc51StatusClear">Убрать статус</button>';
+    document.body.appendChild(pop);
+    const r = anchor.getBoundingClientRect();
+    const w = pop.offsetWidth || 300;
+    pop.style.left = Math.max(10, Math.min(r.left - 10, window.innerWidth - w - 10)) + 'px';
+    pop.style.top = Math.min(r.bottom + 8, window.innerHeight - pop.offsetHeight - 12) + 'px';
+    pop.addEventListener('click', async ev => {
+      const b = ev.target.closest('[data-e]');
+      if (b) { await mc51SetStatus(b.dataset.e); pop.remove(); return; }
+      if (ev.target.closest('#mc51StatusClear')) { await mc51SetStatus(''); pop.remove(); }
+    });
+    const off = ev => { if (!pop.contains(ev.target) && !anchor.contains(ev.target)) { pop.remove(); document.removeEventListener('pointerdown', off, true); } };
+    setTimeout(() => document.addEventListener('pointerdown', off, true), 30);
+  }
+  async function mc51SetStatus(emoji) {
+    const uid = me51(); if (!uid) return;
+    state.status51 = state.status51 || {}; state.status51[uid] = emoji;
+    if (state.profile) state.profile.statusEmoji = emoji;
+    mc51PaintStatus();
+    try {
+      if (emoji) await set(ref(db, 'user_status/' + uid), { emoji, at: Date.now() });
+      else await remove(ref(db, 'user_status/' + uid));
+      toast51(emoji ? 'Статус обновлён' : 'Статус убран', emoji || '✓');
+    } catch (e) { toast51('Не удалось сохранить статус. Проверьте правила Firebase (user_status)', '⚠'); }
+  }
+
+  function mc51BuildHeader() {
+    const top = q('#sidebar .sb-top'); if (!top || top.dataset.mc51) return;
+    top.dataset.mc51 = '1';
+    top.classList.add('mcb51-top');
+    const meBlock = q('.sb-me', top);
+    const fab = $i('fabBtn'), set = $i('settingsBtn'), stories = $i('storiesToggle');
+
+    // левая часть: аватар + имя + кнопка статуса
+    if (meBlock && !q('.mcb51-name-row', meBlock)) {
+      const info = q('.sb-me-info', meBlock);
+      if (info) {
+        info.innerHTML = `<div class="mcb51-name-row"><div class="sb-me-name" id="sbMeName">MetroChat</div><button type="button" class="mcb51-status-btn" id="mc51StatusBtn" aria-label="Добавить статус">＋</button></div><div class="sb-me-status" id="sbMeStatus"><span class="mcb51-my-status" id="mc51StatusChip"></span></div>`;
+        const btn = $i('mc51StatusBtn');
+        if (btn) btn.addEventListener('click', ev => { ev.stopPropagation(); mc51StatusPopover(btn); });
+        const chip = $i('mc51StatusChip');
+        if (chip) chip.addEventListener('click', ev => { ev.stopPropagation(); mc51StatusPopover($i('mc51StatusBtn')); });
+      }
+    }
+
+    // истории — слева от карандаша
+    if (stories && fab) {
+      stories.classList.add('mcb51-stories-btn');
+      stories.classList.remove('sb-tab');
+      stories.innerHTML = '<span>◍</span><span class="stories-dot"></span>';
+      stories.title = 'Истории';
+      top.insertBefore(stories, fab);
+      stories.onclick = ev => { ev.preventDefault(); window.mc51ToggleStories(); };
+    }
+    if (fab && set) top.insertBefore(fab, set);
+
+    // верхняя панель вкладок убрана с экрана (элемент остаётся для switchTab)
+    const nav = $i('sbNav');
+    if (nav) { nav.style.display = 'none'; nav.setAttribute('aria-hidden', 'true'); }
+    // лента историй: плавное раскрытие
+    const panel = $i('storiesPanel');
+    if (panel && !panel.parentElement.classList.contains('mcb51-stories-wrap')) {
+      const wrap = document.createElement('div');
+      wrap.className = 'mcb51-stories-wrap'; wrap.id = 'mc51StoriesWrap';
+      panel.parentElement.insertBefore(wrap, panel);
+      wrap.appendChild(panel);
+      wrap.insertAdjacentHTML('beforeend', '<div class="mcb51-stories-hint">Свайп вверх — закрыть истории</div>');
+      panel.classList.remove('hidden');
+    }
+    // поиск: никнейм объединён с общим поиском
+    const sb = $i('sbSearch');
+    if (sb) {
+      sb.placeholder = 'Поиск: чаты, люди, @ник, каналы';
+      sb.oninput = null;
+      sb.addEventListener('input', () => { clearTimeout(window.__mc51sq); window.__mc51sq = setTimeout(() => mc51Search(sb.value), 160); });
+    }
+    mc51PaintStatus();
+    mc51LoadStatus();
+  }
+
+  window.mc51BuildHeader = mc51BuildHeader;
+  function mc51StoriesOpen() { const w = $i('mc51StoriesWrap'); return !!(w && w.classList.contains('open')); }
+  function mc51StoriesShow(open) {
+    const w = $i('mc51StoriesWrap'); if (!w) return;
+    w.classList.toggle('open', !!open);
+    const panel = $i('storiesPanel'); if (panel) panel.classList.remove('hidden');
+    const b = $i('storiesToggle'); if (b) b.classList.toggle('active-stories', !!open);
+    if (open) { try { loadStories(); } catch (_) {} }
+    document.body.classList.toggle('mcb51-stories-open', !!open);
+  }
+  window.mc51ToggleStories = function () { mc51BuildHeader(); mc51StoriesShow(!mc51StoriesOpen()); };
+  try { if (typeof toggleStoriesPanel === 'function') { toggleStoriesPanel = window.mc51ToggleStories; } } catch (_) {}
+  window.toggleStoriesPanel = window.mc51ToggleStories;
+  // свайп вверх в любой области экрана закрывает истории
+  let mc51Sy = 0, mc51Sx = 0, mc51Swipe = false;
+  document.addEventListener('touchstart', e => {
+    if (!mc51StoriesOpen()) return;
+    const t = e.touches[0]; mc51Sy = t.clientY; mc51Sx = t.clientX; mc51Swipe = true;
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!mc51Swipe) return;
+    const t = e.touches[0];
+    if (mc51Sy - t.clientY > 46 && Math.abs(t.clientX - mc51Sx) < 70) { mc51Swipe = false; mc51StoriesShow(false); }
+  }, { passive: true });
+  document.addEventListener('touchend', () => { mc51Swipe = false; });
+
+  /* ---- объединённый поиск ---- */
+  let mc51SearchSeq = 0;
+  function mc51ChatRows(items) {
+    return items.map(it => {
+      const last = it.lastMessage && (it.lastMessage.text || ({ image: '🖼️ Фото', file: '📄 Файл', voice: '🎤 Голосовое', poll: '📊 Опрос' }[it.lastMessage.type] || '')) || 'Нет сообщений';
+      const av = typeof avatarHTML === 'function' ? avatarHTML({ name: it.name, avatar: it.avatar, square: it.type !== 'dm', online: it.type === 'dm' && it.online }) : '<div class="avatar">' + esc51((it.name || '?')[0]) + '</div>';
+      return `<div class="list-item" data-chat-id="${esc51(it.id)}" onclick="openChat('${String(it.id).replace(/'/g, '')}','${String(it.type).replace(/'/g, '')}')">${av}<div class="list-info"><div class="list-name">${esc51(it.name)}${it.type === 'dm' && typeof verifiedMark === 'function' ? verifiedMark(it.peerId) : ''}</div><div class="list-last">${esc51(last)}</div></div><div class="list-meta"><div class="list-time">${it.lastTs && typeof timeList === 'function' ? timeList(it.lastTs) : ''}</div>${it.unread ? `<div class="list-unread">${it.unread}</div>` : ''}</div></div>`;
+    }).join('');
+  }
+  async function mc51Search(raw) {
+    const value = String(raw || '').trim();
+    const list = $i('sbList'); if (!list) return;
+    if (!value) { try { renderList(); } catch (_) {} return; }
+    const s = value.toLowerCase().replace(/^@/, '');
+    let all = [];
+    try { all = (typeof getAllChatsList === 'function' ? getAllChatsList() : []); } catch (_) {}
+    const chats = all.filter(x => (x.name || '').toLowerCase().includes(s) || String(x.code || '').includes(s));
+    const chans = Object.entries(state.channels || {}).filter(([, c]) => c && (String(c.name || '').toLowerCase().includes(s) || String(c.description || '').toLowerCase().includes(s))).slice(0, 12)
+      .map(([id, c]) => ({ id, type: 'channel', name: c.name || 'Канал', avatar: c.avatar, lastMessage: { text: c.description || 'Канал' } }));
+    const seq = ++mc51SearchSeq;
+    list.innerHTML = (chats.length || chans.length) ? `<div class="mcb51-search-head">Чаты и каналы</div>${mc51ChatRows(chats.concat(chans))}` : '';
+    if (s.length < 3) {
+      if (!chats.length && !chans.length) list.innerHTML = '<div class="mcb51-empty">Введите минимум 3 символа ника или название чата</div>';
+      return;
+    }
+    try {
+      const snap = await get(ref(db, 'usernames/' + s));
+      if (seq !== mc51SearchSeq) return;
+      if (snap.exists() && snap.val() !== me51()) {
+        const uid = snap.val();
+        const u = await (typeof fetchUserIfMissing === 'function' ? fetchUserIfMissing(uid) : Promise.resolve(null));
+        if (seq !== mc51SearchSeq) return;
+        if (u) {
+          const name = u.displayName || u.firstName || u.username || s;
+          const av = typeof avatarHTML === 'function' ? avatarHTML({ name, avatar: u.avatar }) : '';
+          list.insertAdjacentHTML('afterbegin', `<div class="mcb51-search-head">Люди</div><div class="list-item" onclick="openOrCreateDM('${uid}')">${av}<div class="list-info"><div class="list-name">${esc51(name)}${typeof verifiedMark === 'function' ? verifiedMark(uid) : ''} <span class="uname">@${esc51(u.username || s)}</span></div><div class="list-last">${u.statusEmoji ? esc51(u.statusEmoji) + ' ' : ''}Написать сообщение</div></div><div class="list-meta">💬</div></div>`);
+          return;
+        }
+      }
+      if (!chats.length && !chans.length) list.innerHTML = `<div class="empty" style="padding:24px"><div class="empty-icon">🔎</div><h3>Ничего не найдено</h3><p>Проверьте никнейм или название канала.</p></div>`;
+    } catch (e) { console.warn('b5.1 search', e); }
+  }
+  window.mc51Search = mc51Search;
+
+  /* ============================================================
+     3. ОПТИМИЗАЦИЯ ТРАФИКА
+     ============================================================ */
+  // 3.1 присутствие: реже, и только когда вкладка активна
+  try {
+    if (typeof setupPresence === 'function') {
+      const _sp = setupPresence;
+      setupPresence = function () {
+        if (!state.user) return;
+        const pRef = ref(db, 'presence/' + state.user.uid);
+        const beat = () => {
+          if (!state.user || document.hidden) return;
+          update(pRef, { online: true, lastSeen: Date.now(), showOnline: state.settings.onlineStatus !== false, showLastSeen: state.settings.showLastSeen !== false }).catch(() => {});
+        };
+        beat();
+        onDisconnect(pRef).update({ online: false }).catch(() => {});
+        if (state.presenceTimer) clearInterval(state.presenceTimer);
+        state.presenceTimer = setInterval(beat, 120000);
+        if (!window.__mc51vis) {
+          window.__mc51vis = 1;
+          document.addEventListener('visibilitychange', () => { if (!document.hidden) { try { beat(); } catch (_) {} } });
+        }
+      };
+      window.setupPresence = setupPresence;
+      void _sp;
+    }
+  } catch (e) { console.warn('b5.1 presence', e); }
+
+  // 3.2 истории: кэш 60 секунд, без повторного скачивания при каждом открытии
+  try {
+    if (typeof loadStories === 'function') {
+      const _ls = loadStories;
+      loadStories = function () {
+        const now = Date.now();
+        if (state.storiesCache51 && now - state.storiesCache51 < 60000 && typeof mcRenderStoryBar === 'function') {
+          try { mcRenderStoryBar(); } catch (_) {}
+          return Promise.resolve();
+        }
+        state.storiesCache51 = now;
+        return _ls.apply(this, arguments);
+      };
+      window.loadStories = loadStories;
+    }
+  } catch (e) { console.warn('b5.1 stories cache', e); }
+
+  // 3.3 профили: локальный кэш на 7 дней, чтобы не читать users/{uid} заново
+  try {
+    if (typeof fetchUserIfMissing === 'function') {
+      const _fu = fetchUserIfMissing;
+      const KEY = 'mc51_users_cache';
+      fetchUserIfMissing = async function (uid) {
+        if (!uid) return null;
+        if (state.users[uid] || state.cacheUsers[uid]) return state.users[uid] || state.cacheUsers[uid];
+        const cache = load51(KEY, {});
+        const hit = cache[uid];
+        if (hit && Date.now() - (hit.t || 0) < 7 * 864e5 && hit.p) {
+          state.cacheUsers[uid] = hit.p;
+          return hit.p;
+        }
+        const p = await _fu.apply(this, arguments);
+        if (p) {
+          try {
+            const c = load51(KEY, {});
+            const slim = { ...p }; delete slim.avatar; delete slim.photoURL; delete slim.banner;
+            c[uid] = { t: Date.now(), p: slim };
+            const keys = Object.keys(c);
+            if (keys.length > 300) keys.slice(0, 60).forEach(k => delete c[k]);
+            save51(KEY, c);
+          } catch (_) {}
+        }
+        return p;
+      };
+      window.fetchUserIfMissing = fetchUserIfMissing;
+    }
+  } catch (e) { console.warn('b5.1 user cache', e); }
+
+  // 3.4 стартовая загрузка переписки: 30 сообщений вместо 40
+  try {
+    if (typeof subscribeMessages === 'function') {
+      const _sm = subscribeMessages;
+      subscribeMessages = function (chatId) {
+        state.msgLim = state.msgLim || {};
+        if (!state.msgLim[chatId]) state.msgLim[chatId] = 30;
+        return _sm.apply(this, arguments);
+      };
+      window.subscribeMessages = subscribeMessages;
+    }
+  } catch (_) {}
+
+  /* ============================================================
+     4. «ПРОЧЕЕ»: приветствие, Metro AI, подарки, каналы, сервисы
+     ============================================================ */
+  renderOtherHome = function () {
+    window.__mcOtherView = 'home';
+    const wrap = $i('settingsPanel'); if (!wrap) return;
+    const p = state.profile || {};
+    const name = p.firstName || String(p.displayName || '').split(' ')[0] || '';
+    const emoji = (state.status51 && state.status51[me51()]) || p.statusEmoji || '';
+    const svc = Array.isArray(MC9_OTHER && MC9_OTHER.services) ? MC9_OTHER.services : [];
+    const tools = Array.isArray(MC9_OTHER && MC9_OTHER.tools) ? MC9_OTHER.tools : [];
+    const tile = (x, n) => `<button type="button" class="mc9-tile" data-go="${esc51(x.k)}" style="animation:mc9In .3s cubic-bezier(.16,1,.3,1) both;animation-delay:${Math.min(n * 16, 240)}ms"><span>${x.i}</span><b>${esc51(x.n || x.t || '')}</b></button>`;
+    wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="switchTab('chats')">←</button><div class="settings-title">Прочее</div></div>
+      <div class="settings-wrap mcb51-other">
+        <div class="mcb51-hello">${esc51(hour51())}${name ? ', ' + esc51(name) : ''} ${emoji ? `<span style="font-size:.8em">${esc51(emoji)}</span>` : ''}</div>
+        <div class="mcb51-hello-sub">MetroChat ${esc51(V51)} · всё под рукой</div>
+        <button type="button" class="mcb51-hero-ai" onclick="mcAIOpen()">
+          <img src="${typeof MC_AI_LOGO !== 'undefined' ? MC_AI_LOGO : ''}" alt="Metro AI"><span class="grow"><b>Metro AI</b><small>Нейросеть-помощник: вопросы, переводы, управление чатами</small></span><span class="arrow">→</span>
+        </button>
+        <button type="button" class="mcb51-wide mcb51-gifts" onclick="mc9Go('gifts')">
+          <span class="ico">🎁</span><span class="grow"><b>Подарки</b><small>Витрина, крафт и подарки друзьям за умы</small></span><span class="arrow">→</span>
+        </button>
+        <button type="button" class="mcb51-wide mcb51-channels" onclick="mc9Go('channels')">
+          <span class="ico">📡</span><span class="grow"><b>Каналы</b><small>Найдите канал по интересам и подпишитесь</small></span><span class="arrow">→</span>
+        </button>
+        <div class="mcb51-sec-title">Сервисы</div>
+        <div class="mc9-grid">${svc.filter(x => x.k !== 'gifts' && x.k !== 'channels' && x.k !== 'browser').map(tile).join('')}${tile({ k: 'bots', i: '🤖', n: 'Боты' }, 3)}</div>
+        <div class="mcb51-sec-title">Инструменты и игры</div>
+        <div class="mc9-grid">${tools.filter(x => x.k !== 'bots').map((x, i) => tile(x, i)).join('')}</div>
+        <p class="mc9-note" style="margin-top:18px;text-align:center">MetroChat ${esc51(V51)} · <a href="javascript:mc9ShowChangelog()" style="color:var(--accent)">что нового</a></p>
+      </div>`;
+    wrap.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { try { mc9Go(b.dataset.go); } catch (e) { toast51('Раздел недоступен', '⚠'); } }));
+    (async () => {
+      try {
+        const bal = await readGiftBalance();
+        const el = q('#mc51Bal', wrap);
+        if (el) el.textContent = Number(bal) || 0;
+      } catch (_) {}
+    })();
+  };
+  try { window.renderOtherHome = renderOtherHome; } catch (_) {}
+
+  /* ============================================================
+     5. ТЕЛЕФОН: миграция и проверка на устройстве
+     ============================================================ */
+  const CC = [
+    ['+7', '🇷🇺 +7'], ['+375', '🇧🇾 +375'], ['+77', '🇰🇿 +77'], ['+996', '🇰🇬 +996'], ['+992', '🇹🇯 +992'],
+    ['+998', '🇺🇿 +998'], ['+374', '🇦🇲 +374'], ['+995', '🇬🇪 +995'], ['+373', '🇲🇩 +373'], ['+380', '🇺🇦 +380'],
+    ['+1', '🇺🇸 +1'], ['+44', '🇬🇧 +44'], ['+49', '🇩🇪 +49'], ['+33', '🇫🇷 +33'], ['+39', '🇮🇹 +39'], ['+34', '🇪🇸 +34'],
+    ['+90', '🇹🇷 +90'], ['+971', '🇦🇪 +971'], ['+994', '🇦🇿 +994'], ['+86', '🇨🇳 +86'], ['+81', '🇯🇵 +81'], ['+82', '🇰🇷 +82'], ['+91', '🇮🇳 +91']
+  ];
+  const phoneDigits = v => String(v || '').replace(/\D/g, '');
+  const phoneKey = v => phoneDigits(v).slice(-10);
+  function phoneValid(cc, rest) {
+    const n = phoneDigits(rest);
+    return n.length >= 6 && n.length <= 14 && !(cc === '+7' && n.length !== 10 && n.length !== 11);
+  }
+  async function mc51SavePhone(full, extra) {
+    const uid = me51(); if (!uid) return false;
+    const phone = String(full || '').trim();
+    const x = extra || {};
+    const verified = x.phoneVerified === true;
+    // Номер живёт в приватном узле user_phones/{uid}: профиль users/{uid} читают все,
+    // а телефон не должен быть виден никому, кроме владельца и администраторов.
+    state.phone51 = { phone, verified, at: Date.now() };
+    state.profile = state.profile || {};
+    state.profile.phone = phone;
+    Object.assign(state.profile, x);
+    try {
+      await update(ref(db), {
+        ['user_phones/' + uid]: { phone, at: Date.now(), verified, method: x.phoneVerifyMethod || '' },
+        ['users/' + uid]: { phoneUpdatedAt: Date.now(), phoneVerified: verified, phoneStatus: x.phoneStatus || (verified ? 'verified' : 'pending') }
+      });
+    } catch (e) {
+      toast51('Номер сохранён на устройстве, но не ушёл в базу. Проверьте правила user_phones', '⚠');
+    }
+    try { save51('mc51_phone_' + uid, phone); } catch (_) {}
+    try { save51('mc_last_name', displayName51()); } catch (_) {}
+    return true;
+  }
+  async function mc51LoadPhone() {
+    const uid = me51(); if (!uid) return;
+    try {
+      const snap = await get(ref(db, 'user_phones/' + uid));
+      const v = snap.val() || {};
+      if (v.phone) {
+        state.phone51 = v;
+        state.profile = state.profile || {};
+        state.profile.phone = v.phone;
+        state.profile.phoneVerified = v.verified === true;
+        try { save51('mc51_phone_' + uid, v.phone); } catch (_) {}
+      }
+    } catch (_) {
+      const local = load51('mc51_phone_' + uid, '');
+      if (local) { state.phone51 = { phone: local }; state.profile = state.profile || {}; state.profile.phone = local; }
+    }
+  }
+  async function mc51DevicePhoneCheck(number) {
+    const target = phoneKey(number);
+    if (!target) return { available: false, found: false };
+    // нативная оболочка (Android WebView) может сама прочитать журнал звонков
+    try {
+      const native = window.MetroNative || window.MetroBridge;
+      if (native && typeof native.readCallLog === 'function') {
+        const raw = await native.readCallLog();
+        const list = Array.isArray(raw) ? raw : String(raw || '').split(/\D*[,;|\n]+\D*/);
+        return { available: true, found: list.some(x => phoneKey(x) === target), method: 'call-log' };
+      }
+    } catch (_) {}
+    // браузер: Contacts Picker API (Android Chrome). Это ближайший к журналу
+    // звонков доступный вебу источник — сам журнал браузеру недоступен.
+    const picker = navigator.contacts && typeof navigator.contacts.select === 'function' ? navigator.contacts : null;
+    if (!picker) return { available: false, found: false };
+    try {
+      const picked = await Promise.race([
+        picker.select(['tel'], { multiple: true }),
+        new Promise(res => setTimeout(() => res(null), 5000))
+      ]);
+      if (!Array.isArray(picked)) return { available: true, found: false, method: 'contacts' };
+      const nums = picked.flatMap(c => (c.tel || c.all || []).map(x => (x && x.value) || x)).filter(Boolean);
+      return { available: true, found: nums.some(n => phoneKey(n) === target), method: 'contacts' };
+    } catch (e) {
+      return { available: true, found: false, method: 'contacts', denied: true };
+    }
+  }
+  function mc51PhoneGate(force) {
+    if ($i('mc51Gate')) return;
+    const p = state.profile || {};
+    const saved = (state.phone51 && state.phone51.phone) || p.phone || load51('mc51_phone_' + me51(), '');
+    if (!force && saved) {
+      let later = false;
+      try { later = sessionStorage.getItem('mc51_phone_later_' + me51()) === '1'; } catch (_) {}
+      if (!p.phoneVerified && !later) mc51PhoneGate(true);
+      return;
+    }
+    document.body.classList.add('mcb51-onboard');
+    const el = document.createElement('div');
+    el.className = 'mcb51-gate'; el.id = 'mc51Gate';
+    el.innerHTML = `<div class="mcb51-gate-card" role="dialog" aria-modal="true" aria-label="Номер телефона">
+      <div class="mcb51-gate-badge">📞</div>
+      <h2>${saved ? 'Подтвердите номер' : 'Привяжите номер телефона'}</h2>
+      <p>${saved ? 'Мы уже сохранили номер. Подтвердите его на этом устройстве — без SMS.' : 'Номер нужен вместо длинной почты: по нему проще войти и восстановить доступ. Все ваши чаты, истории и настройки останутся на месте.'}</p>
+      <div class="mcb51-phone-row">
+        <select id="mc51Cc">${CC.map(([c, l]) => `<option value="${c}">${l}</option>`).join('')}</select>
+        <input id="mc51Phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 123-45-67" value="${esc51(saved ? String(saved).replace(/^\+\d{1,4}/, '') : '')}">
+      </div>
+      <div id="mc51PhoneState"></div>
+      <button type="button" class="mcb51-main" id="mc51PhoneGo">Проверить по звонкам</button>
+      <div class="mcb51-alt"><button type="button" id="mc51PhoneSave">Сохранить без проверки</button><button type="button" id="mc51PhoneLater">Позже</button></div>
+      <p class="mcb51-note">Браузер не имеет доступа к журналу звонков. Проверка использует разрешение на контакты (Android Chrome) или нативный мост приложения и занимает до 5 секунд. Если доступа нет — номер сохранится, а заявка уйдёт администратору. Номер никогда не публикуется в профиле.</p>
+    </div>`;
+    document.body.appendChild(el);
+    const cc = $i('mc51Cc'), input = $i('mc51Phone'), stateBox = $i('mc51PhoneState'), go = $i('mc51PhoneGo');
+    if (saved) { const m = String(saved).match(/^(\+\d{1,4})/); if (m && CC.some(x => x[0] === m[1])) cc.value = m[1]; }
+    const full = () => cc.value + phoneDigits(input.value).replace(/^0+/, '');
+    input.addEventListener('input', () => { stateBox.innerHTML = ''; });
+    const finish = () => { el.remove(); document.body.classList.remove('mcb51-onboard'); };
+    $i('mc51PhoneLater').onclick = () => { try { sessionStorage.setItem('mc51_phone_later_' + me51(), '1'); } catch (_) {} toast51('Напомним о номере при следующем входе', '📞'); finish(); };
+    $i('mc51PhoneSave').onclick = async () => {
+      if (!me51()) return toast51('Сначала войдите в аккаунт', '⚠');
+      if (!phoneValid(cc.value, input.value)) return toast51('Введите номер полностью', '⚠');
+      go.disabled = true;
+      const ok = await mc51SavePhone(full(), { phoneVerified: false, phoneStatus: 'pending' });
+      if (ok) {
+        try { await set(ref(db, 'phone_requests/' + me51()), { phone: full(), at: Date.now(), method: 'manual', name: displayName51() }); } catch (_) {}
+        toast51('Номер сохранён. Заявка отправлена на проверку', '✓');
+      }
+      finish();
+    };
+    go.onclick = async () => {
+      if (!me51()) return toast51('Сначала войдите в аккаунт', '⚠');
+      if (!phoneValid(cc.value, input.value)) return toast51('Введите номер полностью', '⚠');
+      const number = full();
+      go.disabled = true; go.textContent = 'Проверяем…';
+      stateBox.innerHTML = '<div class="mcb51-check"><span class="mcb51-spin"></span><span id="mc51Sec">Ищем номер на устройстве… 5 с</span></div>';
+      let left = 5;
+      const tick = setInterval(() => { left = Math.max(0, left - 1); const s = $i('mc51Sec'); if (s) s.textContent = left > 0 ? `Ищем номер на устройстве… ${left} с` : 'Почти готово…'; }, 1000);
+      let res = { available: false, found: false };
+      try { res = await mc51DevicePhoneCheck(number); } catch (_) {}
+      clearInterval(tick);
+      if (res.found) {
+        await mc51SavePhone(number, { phoneVerified: true, phoneStatus: 'verified', phoneVerifiedAt: Date.now(), phoneVerifyMethod: res.method || 'device' });
+        try { await remove(ref(db, 'phone_requests/' + me51())); } catch (_) {}
+        stateBox.innerHTML = '<div class="mcb51-check" style="border-color:#16a34a55"><span style="color:#22c55e;font-size:18px">✓</span><span>Номер подтверждён на этом устройстве</span></div>';
+        toast51('Номер подтверждён', '✅');
+        setTimeout(finish, 750);
+        return;
+      }
+      await mc51SavePhone(number, { phoneVerified: false, phoneStatus: 'pending' });
+      try {
+        await set(ref(db, 'phone_requests/' + me51()), {
+          phone: number, at: Date.now(), name: displayName51(),
+          method: res.available ? 'device-no-match' : 'no-device-access',
+          note: res.denied ? 'доступ не разрешён' : ''
+        });
+      } catch (_) {}
+      stateBox.innerHTML = `<div class="mcb51-check"><span style="font-size:18px">🕓</span><span>${res.available ? 'Номер не найден среди разрешённых данных. ' : 'Браузер не даёт доступа к звонкам. '}Номер сохранён, заявка ушла на проверку.</span></div>`;
+      go.disabled = false; go.textContent = 'Продолжить';
+      go.onclick = finish;
+    };
+  }
+  window.mc51PhoneGate = mc51PhoneGate;
+  window.mc51PhoneCheck = mc51DevicePhoneCheck;
+
+  /* ============================================================
+     6. ВЕРИФИКАЦИЯ ЗА 1249 УМ
+     ============================================================ */
+  const VERIFY_PRICE = 1249;
+  function mc51VerifyOpen() {
+    const uid = me51(); if (!uid) return toast51('Сначала войдите в аккаунт', '⚠');
+    const req = (state.galochka && state.galochka[uid]) || {};
+    if (req.confirmed === true) return toast51('Аккаунт уже подтверждён', '✓');
+    const links = Array.isArray(req.socialLinks) ? req.socialLinks : [];
+    const sheet = mcSheet('mc51Verify', `${mcSheetHead('Верификация аккаунта', 'mc51Verify')}
+      <p class="mc9-note">Укажите ссылки на профили в соцсетях. Префикс https:// не обязателен — мы добавим его сами. После оплаты заявку проверит администратор.</p>
+      <div class="mcb51-link-row"><span>🔗</span><input id="mc51V1" maxlength="300" placeholder="t.me/username" value="${esc51(links[0] || '')}" autocomplete="off"></div>
+      <div class="mcb51-link-row"><span>🔗</span><input id="mc51V2" maxlength="300" placeholder="instagram.com/username" value="${esc51(links[1] || '')}" autocomplete="off"></div>
+      <div class="mcb51-link-row"><span>🔗</span><input id="mc51V3" maxlength="300" placeholder="vk.com/username (необязательно)" value="${esc51(links[2] || '')}" autocomplete="off"></div>
+      <div class="mcb51-verif-price"><span>Стоимость проверки<br><small style="color:var(--text-2)">вернём, если заявку отклонят</small></span><b>${VERIFY_PRICE} УМ</b></div>
+      <div id="mc51VBal" class="mcb51-note">Баланс: …</div>
+      <div id="mc51VState"></div>
+      <button type="button" class="mc11-btn" id="mc51VGo" style="width:100%;margin-top:14px">Оплатить ${VERIFY_PRICE} УМ и отправить</button>`,
+      { cls: 'mcb51-verify' });
+    const btn = $i('mc51VGo');
+    (async () => {
+      try { const b = await readGiftBalance(); $i('mc51VBal').textContent = 'Баланс: ' + (Number(b) || 0) + ' УМ'; btn.disabled = (Number(b) || 0) < VERIFY_PRICE; if (btn.disabled) btn.textContent = 'Недостаточно умов'; } catch (_) { $i('mc51VBal').textContent = 'Не удалось узнать баланс'; }
+    })();
+    btn.onclick = async () => {
+      const raw = [1, 2, 3].map(i => (($i('mc51V' + i) || {}).value || '').trim()).filter(Boolean);
+      if (raw.length < 2) return toast51('Укажите минимум две ссылки', '⚠');
+      const norm = raw.map(v => /^https?:\/\//i.test(v) ? v : 'https://' + v.replace(/^\/+/, ''));
+      if (norm.some(v => { try { return !new URL(v).hostname.includes('.'); } catch (_) { return true; } })) return toast51('Проверьте ссылки — похоже, там ошибка', '⚠');
+      btn.disabled = true; btn.textContent = 'Отправляем…';
+      try {
+        const bal = Number(await readGiftBalance()) || 0;
+        if (bal < VERIFY_PRICE) throw new Error('no-balance');
+        await update(ref(db), {
+          ['gift_wallet/' + me51() + '/balance']: bal - VERIFY_PRICE,
+          ['galochka/' + me51() + '/socialLinks']: norm,
+          ['galochka/' + me51() + '/requestedAt']: Date.now(),
+          ['galochka/' + me51() + '/confirmed']: false
+        });
+        await set(ref(db, 'verification_orders/' + me51()), {
+          uid: me51(), name: displayName51(), links: norm, price: VERIFY_PRICE,
+          status: 'pending', at: Date.now(), refunded: false
+        });
+        state.galochka = state.galochka || {};
+        state.galochka[me51()] = { ...(state.galochka[me51()] || {}), socialLinks: norm, requestedAt: Date.now(), confirmed: false, paid: VERIFY_PRICE };
+        mcCloseSheet('mc51Verify');
+        toast51('Заявка оплачена и отправлена на проверку', '☑️');
+      } catch (e) {
+        console.warn('b5.1 verify', e);
+        btn.disabled = false; btn.textContent = 'Оплатить ' + VERIFY_PRICE + ' УМ и отправить';
+        toast51(e.message === 'no-balance' ? 'Недостаточно умов на балансе' : 'Не удалось отправить заявку. Проверьте правила Firebase (galochka, verification_orders)', '⚠');
+      }
+    };
+  }
+  window.mc51Verify = mc51VerifyOpen;
+  try {
+    if (typeof openVerificationModal === 'function') { openVerificationModal = mc51VerifyOpen; window.openVerificationModal = mc51VerifyOpen; }
+  } catch (_) {}
+  window.openVerificationModal = window.openVerificationModal || mc51VerifyOpen;
+
+  /* ---- админ: очередь заявок + возврат ---- */
+  async function mc51AdminVerify() {
+    const isAdm = await (window.mc5IsAdmin ? window.mc5IsAdmin() : Promise.resolve(false));
+    if (!isAdm) return toast51('Раздел доступен администраторам', '🔒');
+    let orders = {}, phones = {};
+    try { orders = (await get(ref(db, 'verification_orders'))).val() || {}; } catch (_) {}
+    try { phones = (await get(ref(db, 'phone_requests'))).val() || {}; } catch (_) {}
+    const rows = Object.entries(orders).filter(([, o]) => o && o.status === 'pending').map(([uid, o]) => `<div class="mcb51-admin-row" data-uid="${esc51(uid)}"><div class="grow"><b>${esc51(o.name || uid.slice(0, 8))}</b><small>${(o.links || []).map(esc51).join('<br>')}</small><small>${o.price} УМ · ${new Date(o.at || Date.now()).toLocaleString('ru-RU')}</small></div><div><button class="ok" data-ok="${esc51(uid)}">Выдать</button><br><button class="no" data-no="${esc51(uid)}" style="margin-top:6px">Отклонить</button></div></div>`).join('');
+    const phoneRows = Object.entries(phones).filter(([, p]) => p && p.phone).map(([uid, p]) => `<div class="mcb51-admin-row"><div class="grow"><b>${esc51(p.name || uid.slice(0, 8))}</b><small>${esc51(p.phone)} · ${esc51(p.method || '')}</small></div><button class="ok" data-pok="${esc51(uid)}">Подтвердить</button></div>`).join('');
+    const wrap = $i('settingsPanel'); if (!wrap) return;
+    wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="window.mc5Admin?window.mc5Admin():renderOtherHome()">←</button><div class="settings-title">Верификация</div></div>
+      <div class="settings-wrap"><h3 style="font-size:14px;margin:4px 0 10px">Заявки на галочку</h3>${rows || '<p class="set-sub">Заявок нет.</p>'}
+      <h3 style="font-size:14px;margin:20px 0 10px">Заявки на телефон</h3>${phoneRows || '<p class="set-sub">Заявок нет.</p>'}</div>`;
+    wrap.querySelectorAll('[data-ok]').forEach(b => b.onclick = async () => {
+      const uid = b.dataset.ok;
+      try {
+        await update(ref(db), { ['galochka/' + uid + '/confirmed']: true, ['galochka/' + uid + '/confirmedAt']: Date.now(), ['verification_orders/' + uid + '/status']: 'approved' });
+        toast51('Галочка выдана', '☑️'); mc51AdminVerify();
+      } catch (e) { toast51('Не удалось выдать галочку (правила galochka)', '⚠'); }
+    });
+    wrap.querySelectorAll('[data-no]').forEach(b => b.onclick = async () => {
+      const uid = b.dataset.no;
+      try {
+        let bal = 0; try { const s = await get(ref(db, 'gift_wallet/' + uid + '/balance')); bal = Number(s.val()) || 0; } catch (_) {}
+        await update(ref(db), {
+          ['gift_wallet/' + uid + '/balance']: bal + VERIFY_PRICE,
+          ['verification_orders/' + uid + '/status']: 'rejected',
+          ['verification_orders/' + uid + '/refunded']: true,
+          ['galochka/' + uid + '/requestedAt']: null,
+          ['galochka/' + uid + '/socialLinks']: null,
+          ['galochka/' + uid + '/confirmed']: false
+        });
+        toast51('Заявка отклонена, умы возвращены', '↩️'); mc51AdminVerify();
+      } catch (e) { toast51('Не удалось отклонить заявку', '⚠'); }
+    });
+    wrap.querySelectorAll('[data-pok]').forEach(b => b.onclick = async () => {
+      const uid = b.dataset.pok;
+      try {
+        await update(ref(db), {
+          ['users/' + uid]: { phoneVerified: true, phoneStatus: 'verified', phoneVerifiedAt: Date.now(), phoneVerifyMethod: 'admin' },
+          ['user_phones/' + uid + '/verified']: true
+        });
+        await remove(ref(db, 'phone_requests/' + uid));
+        toast51('Номер подтверждён', '✓'); mc51AdminVerify();
+      } catch (e) { toast51('Не удалось подтвердить номер', '⚠'); }
+    });
+  }
+  window.mc51AdminVerify = mc51AdminVerify;
+
+  /* ============================================================
+     7. АНИМАЦИЯ ПОСЛЕ ОБНОВЛЕНИЯ — ОДИН РАЗ
+     ============================================================ */
+  function mc51Intro(force) {
+    const KEY = 'mc51_intro_seen';
+    if (!force && localStorage.getItem(KEY) === '1') return;
+    if ($i('mc51Intro')) return;
+    const el = document.createElement('div');
+    el.id = 'mc51Intro';
+    el.innerHTML = `<i class="mcb51-orb o1"></i><i class="mcb51-orb o2"></i><i class="mcb51-orb o3"></i>
+      <div class="mcb51-logo">✦</div>
+      <div class="mcb51-t1">Абсолютно новый интерфейс</div>
+      <div class="mcb51-t2">MetroChat ${esc51(V51)} · истории, статусы и телефон в одном месте</div>
+      <div class="mcb51-strip"><i></i></div>
+      <div class="mcb51-done">
+        <div class="mcb51-check">✓</div>
+        <h2>Обновление завершено</h2>
+        <p>Всё готово. Интерфейс уже собран заново — зайдите в «Прочее» и посмотрите.</p>
+        <button type="button" class="mcb51-go" id="mc51IntroGo">Продолжить</button>
+      </div>`;
+    document.body.appendChild(el);
+    const steps = [el.querySelector('.mcb51-logo'), el.querySelector('.mcb51-t1'), el.querySelector('.mcb51-t2'), el.querySelector('.mcb51-strip')];
+    setTimeout(() => { steps.forEach(n => { if (n) n.style.display = 'none'; }); el.classList.add('ready'); }, 2600);
+    $i('mc51IntroGo').onclick = () => {
+      try { localStorage.setItem(KEY, '1'); } catch (_) {}
+      el.style.transition = 'opacity .45s, transform .45s';
+      el.style.opacity = '0'; el.style.transform = 'scale(1.03)';
+      setTimeout(() => el.remove(), 460);
+    };
+  }
+  window.mc51Intro = mc51Intro;
+
+  /* ============================================================
+     8. КОММЕНТАРИИ И ЛАЙКИ
+     ============================================================ */
+  // 8.1 реакции в сообщениях: мгновенный отклик в интерфейсе
+  try {
+    if (typeof toggleReaction === 'function') {
+      const _tr = toggleReaction;
+      toggleReaction = async function (msgId, emoji) {
+        const m = (state.messages || []).find(x => x.id === msgId);
+        const uid = me51();
+        if (m && uid) {
+          m.reactions = { ...(m.reactions || {}) };
+          if (m.reactions[uid] === emoji) delete m.reactions[uid]; else m.reactions[uid] = emoji;
+          try { renderMessages(); } catch (_) {}
+        }
+        try { await _tr.apply(this, arguments); }
+        catch (e) { m && uid && (delete m.reactions[uid]); try { renderMessages(); } catch (_) {} toast51('Не удалось поставить реакцию', '⚠'); }
+      };
+      window.toggleReaction = toggleReaction;
+    }
+  } catch (e) { console.warn('b5.1 reaction', e); }
+
+  // 8.2 лайки постов канала
+  let mc51LikeCid = null, mc51LikeUnsub = null, mc51Likes = {};
+  function mc51PaintLikes() {
+    document.querySelectorAll('#messages .mc-ch-foot').forEach(f => {
+      const mid = f.dataset.mid; const b = f.querySelector('.mcb51-like'); if (!b || !mid) return;
+      const uids = Object.keys((mc51Likes[mid]) || {});
+      b.classList.toggle('on', uids.includes(me51()));
+      b.innerHTML = (uids.includes(me51()) ? '♥' : '♡') + ' <b>' + (uids.length || '') + '</b>';
+    });
+  }
+  function mc51LikeSub(cid) {
+    if (mc51LikeCid === cid) return;
+    if (mc51LikeUnsub) { try { mc51LikeUnsub(); } catch (_) {} }
+    mc51LikeCid = cid; mc51Likes = {};
+    if (!cid) return;
+    mc51LikeUnsub = onValue(ref(db, 'channel_stats/' + cid + '/likes'), s => { mc51Likes = s.val() || {}; mc51PaintLikes(); }, () => {});
+  }
+  try {
+    if (typeof mcChDecorate === 'function') {
+      const _cd = mcChDecorate;
+      mcChDecorate = function () {
+        const r = _cd.apply(this, arguments);
+        try {
+          const c = state.chat;
+          if (c && c.type === 'channel') {
+            mc51LikeSub(c.id);
+            document.querySelectorAll('#messages .mc-ch-foot').forEach(f => {
+              if (f.querySelector('.mcb51-like')) return;
+              const b = document.createElement('button');
+              b.type = 'button'; b.className = 'sh mcb51-like'; b.title = 'Нравится';
+              b.onclick = async ev => {
+                ev.stopPropagation();
+                const mid = f.dataset.mid, uid = me51();
+                if (!mid || !uid) return;
+                const path = `channel_stats/${c.id}/likes/${mid}/${uid}`;
+                const was = !!(mc51Likes[mid] || {})[uid];
+                mc51Likes[mid] = { ...(mc51Likes[mid] || {}) };
+                if (was) delete mc51Likes[mid][uid]; else mc51Likes[mid][uid] = true;
+                mc51PaintLikes();
+                try { if (was) await remove(ref(db, path)); else await set(ref(db, path), true); }
+                catch (e) { toast51('Не удалось поставить отметку. Проверьте правила channel_stats', '⚠'); }
+              };
+              f.appendChild(b);
+            });
+            mc51PaintLikes();
+          } else { mc51LikeSub(null); }
+        } catch (e) { console.warn('b5.1 likes', e); }
+        return r;
+      };
+    }
+  } catch (e) { console.warn('b5.1 likedecorate', e); }
+
+  // 8.3 комментарии к историям: чиним чтение и отправку
+  try {
+    if (typeof openStoryComments === 'function') {
+      const _osc = openStoryComments;
+      openStoryComments = async function (id) {
+        try { return await _osc.apply(this, arguments); }
+        catch (e) { toast51('Не удалось открыть комментарии', '⚠'); }
+      };
+    }
+    if (typeof sendStoryComment === 'function') {
+      const _ssc = sendStoryComment;
+      sendStoryComment = async function () {
+        const inp = $i('storyCommentInput');
+        const text = ((inp && inp.value) || '').trim();
+        if (!text) return;
+        try { await _ssc.apply(this, arguments); }
+        catch (e) { toast51('Комментарий не отправлен. Проверьте правила story_comments', '⚠'); }
+      };
+    }
+  } catch (e) { console.warn('b5.1 story comments', e); }
+
+  /* ============================================================
+     9. НАСТРОЙКИ, НАВИГАЦИЯ, СТАРТ
+     ============================================================ */
+  // строка «Номер телефона» в настройках
+  try {
+    if (typeof mcSetMain === 'function') {
+      const _sm = mcSetMain;
+      mcSetMain = function () {
+        const html = _sm.apply(this, arguments);
+        return html + `<div class="mc11-card" style="cursor:pointer" onclick="window.mc51PhoneGate(true)"><div class="mc11-av" style="background:linear-gradient(135deg,#22c55e,#0ea5e9);border-radius:14px">📞</div><div class="mc11-grow"><b>Номер телефона</b><small>${(() => { const ph = (state.phone51 && state.phone51.phone) || (state.profile && state.profile.phone); const ok = (state.phone51 && state.phone51.verified) || (state.profile && state.profile.phoneVerified); return ph ? esc51(ph) + (ok ? ' · подтверждён' : ' · ждёт проверки') : 'Привязать номер без SMS'; })()}</small></div>›</div>`;
+      };
+      window.mcSetMain = mcSetMain;
+    }
+  } catch (_) {}
+  // верификация: строка ведёт на новый экран с оплатой
+  try {
+    const old = window.openAccountVerification;
+    if (old) window.openAccountVerification = mc51VerifyOpen;
+  } catch (_) {}
+
+  // мобильная навигация: прозрачная с эффектами
+  function mc51NavStyle() {
+    const nav = $i('mobileNav'); if (!nav) return;
+    nav.classList.add('mcb51-nav');
+  }
+
+  function mc51AfterStart() {
+    mc51BuildHeader();
+    mc51NavStyle();
+    mc51PaintStatus();
+    mc51LoadStatus();
+    const uid = me51();
+    if (uid) {
+      const name = displayName51();
+      if (name) save51('mc_last_name', name);
+      // одноразовая анимация обновления, затем телефон
+      const introKey = 'mc51_intro_seen';
+      mc51LoadPhone().finally(() => {
+        if (localStorage.getItem(introKey) !== '1') {
+          setTimeout(() => {
+            mc51Intro();
+            const wait = setInterval(() => {
+              if (!$i('mc51Intro')) { clearInterval(wait); setTimeout(() => mc51PhoneGate(), 120); }
+            }, 400);
+          }, 500);
+        } else {
+          setTimeout(() => mc51PhoneGate(), 900);
+        }
+      });
+    }
+  }
+  try {
+    if (typeof startApp === 'function') {
+      const _sa = startApp;
+      startApp = function () {
+        const r = _sa.apply(this, arguments);
+        try { mc51AfterStart(); } catch (e) { console.warn('b5.1 after start', e); }
+        return r;
+      };
+      window.startApp = startApp;
+    }
+  } catch (e) { console.warn('b5.1 startApp', e); }
+
+  // если приложение уже запущено к моменту загрузки модуля
+  setTimeout(() => { try { if (state && state.booted) mc51AfterStart(); } catch (_) {} }, 1200);
+
+  // следим за заголовком/новыми вкладками
+  if (typeof switchTab === 'function') {
+    try {
+      const _st = switchTab;
+      switchTab = function (tab) {
+        const r = _st.apply(this, arguments);
+        try {
+          mc51BuildHeader(); mc51NavStyle();
+          if (tab === 'chats' || tab === 'groups') { /* лента историй остаётся доступной */ }
+          else mc51StoriesShow(false);
+        } catch (_) {}
+        return r;
+      };
+      window.switchTab = switchTab;
+    } catch (_) {}
+  }
+  try {
+    const obs = new MutationObserver(() => {
+      mc51NavStyle();
+      if (!$i('sbNav') || q('#sidebar .sb-top')) mc51BuildHeader();
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(() => obs.disconnect(), 12000);
+  } catch (_) {}
+
+  // при смене стекла — обновляем вид списка
+  try {
+    if (typeof upApply === 'function') {
+      const _up = upApply;
+      upApply = function () {
+        const r = _up.apply(this, arguments);
+        try { document.documentElement.dataset.glass = (load51('mc_ui_prefs', {}).glass === 'on') ? 'on' : 'off'; } catch (_) {}
+        return r;
+      };
+      window.upApply = upApply;
+    }
+  } catch (_) {}
+
+  console.info('MetroChat ' + V51 + ' shell loaded');
+})();
 
   console.info('MetroChat b5.0.3 security shell loaded');
 })();
