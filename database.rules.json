@@ -131,13 +131,16 @@
     "user_chats": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth != null && (auth.uid === $uid || ($chatId.beginsWith('dm_') && ($chatId.contains('_' + auth.uid + '_') || $chatId.endsWith('_' + auth.uid)) && ($chatId.contains('_' + $uid + '_') || $chatId.endsWith('_' + $uid))) || (root.child('chats').child($chatId).child('members').child($uid).val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true) || (root.child('channels').child($chatId).child('members').child($uid).val() === true && (root.child('channels').child($chatId).child('ownerId').val() === auth.uid || root.child('channels').child($chatId).child('admins').child(auth.uid).val() === true)))",
+        ".write": "auth != null && auth.uid === $uid",
         ".indexOn": [
           "lastTs",
           "at",
           "updatedAt",
           "createdAt"
-        ]
+        ],
+        "$chatId": {
+          ".write": "auth != null && (auth.uid === $uid || ($chatId.beginsWith('dm_') && ($chatId.contains('_' + auth.uid + '_') || $chatId.endsWith('_' + auth.uid)) && ($chatId.contains('_' + $uid + '_') || $chatId.endsWith('_' + $uid))) || (root.child('chats').child($chatId).child('members').child($uid).val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true) || (root.child('channels').child($chatId).child('members').child($uid).val() === true && (root.child('channels').child($chatId).child('ownerId').val() === auth.uid || root.child('channels').child($chatId).child('admins').child(auth.uid).val() === true)))"
+        }
       }
     },
     "gift_inventory": {
@@ -511,15 +514,15 @@
       ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
-        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (($uid !== auth.uid) && (!data.exists() || data.child('until').val() <= now) && newData.child('by').val() === auth.uid && newData.child('automatic').val() === true && root.child('reports').child($uid).numChildren() >= 4 && newData.child('until').val() > now && newData.child('until').val() <= now + 2678400000 && (newData.child('days').val() === 1 || (newData.child('days').val() === 30 && root.child('reports').child($uid).numChildren() >= 8))))",
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
         ".validate": "newData.hasChildren(['at', 'until']) && newData.child('until').isNumber() && newData.child('at').isNumber()"
       }
     },
     "ban_history": {
-      ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
       "$uid": {
         ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
-        ".validate": "!newData.exists() || newData.isNumber()"
+        ".validate": "!newData.exists() || newData.isNumber()",
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())"
       }
     },
     "ban_appeals": {
