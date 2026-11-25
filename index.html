@@ -17526,7 +17526,7 @@ function renderHistory50(){
         <li>Без «жидкого стекла» у чатов больше нет обводок — только чистые строки.</li>
         <li>Единый экран входа «Добрый день, имя» без второго приветствия; обои заставки загружаются один раз.</li>
         <li>Меньше трафика: кэш профилей и историй, редкий heartbeat присутствия, 30 сообщений при открытии чата.</li>
-        <li>Привязка к номеру телефона с проверкой на устройстве без SMS и бережной миграцией существующих аккаунтов.</li>
+        <li>Вход и регистрация — только по e-mail, как раньше: экран номера телефона убран, существующие аккаунты не затронуты.</li>
         <li>Верификация аккаунта за 1249 УМ: заявка, проверка администратором и возврат умов при отказе.</li>
         <li>Одноразовая анимация обновления в духе ColorOS 17: «Абсолютно новый интерфейс» → «Обновление завершено».</li>
         <li>Исправлены комментарии к постам каналов и историям, реакции и лайки появляются мгновенно.</li>
@@ -18886,6 +18886,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   /* истории: кнопка рядом с карандашом + плавное раскрытие */
   .sb-top .mcb51-stories-btn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;position:relative;background:linear-gradient(160deg,rgba(39,216,242,.16),rgba(135,88,246,.18));border:1px solid rgba(120,170,255,.28);color:var(--text);font-size:17px;flex:0 0 auto;transition:transform .18s var(--mc-spring),box-shadow .2s}
   .sb-top .mcb51-stories-btn:active{transform:scale(.92)}
+  .sb-top .mcb51-stories-btn svg{width:21px;height:21px;display:block}
   .sb-top .mcb51-stories-btn .stories-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#ff5d8f;opacity:0;box-shadow:0 0 0 2px var(--surface)}
   .sb-top .mcb51-stories-btn .stories-dot.on{opacity:1;animation:mc51dot 1.8s ease-in-out infinite}
   @keyframes mc51dot{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
@@ -19189,7 +19190,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     if (stories && fab) {
       stories.classList.add('mcb51-stories-btn');
       stories.classList.remove('sb-tab');
-      stories.innerHTML = '<span>◍</span><span class="stories-dot"></span>';
+      stories.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7.5" y="4.5" width="12.5" height="14.5" rx="3.4" opacity=".45"/><rect x="4" y="7" width="12.5" height="14.5" rx="3.4"/><path d="M9.9 12.4v4l3.4-2z" fill="currentColor" stroke="none"/></svg><span class="stories-dot"></span>';
       stories.title = 'Истории';
       top.insertBefore(stories, fab);
       stories.onclick = ev => { ev.preventDefault(); window.mc51ToggleStories(); };
@@ -19504,82 +19505,8 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       return { available: true, found: false, method: 'contacts', denied: true };
     }
   }
-  function mc51PhoneGate(force) {
-    if ($i('mc51Gate')) return;
-    const p = state.profile || {};
-    const saved = (state.phone51 && state.phone51.phone) || p.phone || load51('mc51_phone_' + me51(), '');
-    if (!force && saved) {
-      let later = false;
-      try { later = sessionStorage.getItem('mc51_phone_later_' + me51()) === '1'; } catch (_) {}
-      if (!p.phoneVerified && !later) mc51PhoneGate(true);
-      return;
-    }
-    document.body.classList.add('mcb51-onboard');
-    const el = document.createElement('div');
-    el.className = 'mcb51-gate'; el.id = 'mc51Gate';
-    el.innerHTML = `<div class="mcb51-gate-card" role="dialog" aria-modal="true" aria-label="Номер телефона">
-      <div class="mcb51-gate-badge">📞</div>
-      <h2>${saved ? 'Подтвердите номер' : 'Привяжите номер телефона'}</h2>
-      <p>${saved ? 'Мы уже сохранили номер. Подтвердите его на этом устройстве — без SMS.' : 'Номер нужен вместо длинной почты: по нему проще войти и восстановить доступ. Все ваши чаты, истории и настройки останутся на месте.'}</p>
-      <div class="mcb51-phone-row">
-        <select id="mc51Cc">${CC.map(([c, l]) => `<option value="${c}">${l}</option>`).join('')}</select>
-        <input id="mc51Phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 123-45-67" value="${esc51(saved ? String(saved).replace(/^\+\d{1,4}/, '') : '')}">
-      </div>
-      <div id="mc51PhoneState"></div>
-      <button type="button" class="mcb51-main" id="mc51PhoneGo">Проверить по звонкам</button>
-      <div class="mcb51-alt"><button type="button" id="mc51PhoneSave">Сохранить без проверки</button><button type="button" id="mc51PhoneLater">Позже</button></div>
-      <p class="mcb51-note">Браузер не имеет доступа к журналу звонков. Проверка использует разрешение на контакты (Android Chrome) или нативный мост приложения и занимает до 5 секунд. Если доступа нет — номер сохранится, а заявка уйдёт администратору. Номер никогда не публикуется в профиле.</p>
-    </div>`;
-    document.body.appendChild(el);
-    const cc = $i('mc51Cc'), input = $i('mc51Phone'), stateBox = $i('mc51PhoneState'), go = $i('mc51PhoneGo');
-    if (saved) { const m = String(saved).match(/^(\+\d{1,4})/); if (m && CC.some(x => x[0] === m[1])) cc.value = m[1]; }
-    const full = () => cc.value + phoneDigits(input.value).replace(/^0+/, '');
-    input.addEventListener('input', () => { stateBox.innerHTML = ''; });
-    const finish = () => { el.remove(); document.body.classList.remove('mcb51-onboard'); };
-    $i('mc51PhoneLater').onclick = () => { try { sessionStorage.setItem('mc51_phone_later_' + me51(), '1'); } catch (_) {} toast51('Напомним о номере при следующем входе', '📞'); finish(); };
-    $i('mc51PhoneSave').onclick = async () => {
-      if (!me51()) return toast51('Сначала войдите в аккаунт', '⚠');
-      if (!phoneValid(cc.value, input.value)) return toast51('Введите номер полностью', '⚠');
-      go.disabled = true;
-      const ok = await mc51SavePhone(full(), { phoneVerified: false, phoneStatus: 'pending' });
-      if (ok) {
-        try { await set(ref(db, 'phone_requests/' + me51()), { phone: full(), at: Date.now(), method: 'manual', name: displayName51() }); } catch (_) {}
-        toast51('Номер сохранён. Заявка отправлена на проверку', '✓');
-      }
-      finish();
-    };
-    go.onclick = async () => {
-      if (!me51()) return toast51('Сначала войдите в аккаунт', '⚠');
-      if (!phoneValid(cc.value, input.value)) return toast51('Введите номер полностью', '⚠');
-      const number = full();
-      go.disabled = true; go.textContent = 'Проверяем…';
-      stateBox.innerHTML = '<div class="mcb51-check"><span class="mcb51-spin"></span><span id="mc51Sec">Ищем номер на устройстве… 5 с</span></div>';
-      let left = 5;
-      const tick = setInterval(() => { left = Math.max(0, left - 1); const s = $i('mc51Sec'); if (s) s.textContent = left > 0 ? `Ищем номер на устройстве… ${left} с` : 'Почти готово…'; }, 1000);
-      let res = { available: false, found: false };
-      try { res = await mc51DevicePhoneCheck(number); } catch (_) {}
-      clearInterval(tick);
-      if (res.found) {
-        await mc51SavePhone(number, { phoneVerified: true, phoneStatus: 'verified', phoneVerifiedAt: Date.now(), phoneVerifyMethod: res.method || 'device' });
-        try { await remove(ref(db, 'phone_requests/' + me51())); } catch (_) {}
-        stateBox.innerHTML = '<div class="mcb51-check" style="border-color:#16a34a55"><span style="color:#22c55e;font-size:18px">✓</span><span>Номер подтверждён на этом устройстве</span></div>';
-        toast51('Номер подтверждён', '✅');
-        setTimeout(finish, 750);
-        return;
-      }
-      await mc51SavePhone(number, { phoneVerified: false, phoneStatus: 'pending' });
-      try {
-        await set(ref(db, 'phone_requests/' + me51()), {
-          phone: number, at: Date.now(), name: displayName51(),
-          method: res.available ? 'device-no-match' : 'no-device-access',
-          note: res.denied ? 'доступ не разрешён' : ''
-        });
-      } catch (_) {}
-      stateBox.innerHTML = `<div class="mcb51-check"><span style="font-size:18px">🕓</span><span>${res.available ? 'Номер не найден среди разрешённых данных. ' : 'Браузер не даёт доступа к звонкам. '}Номер сохранён, заявка ушла на проверку.</span></div>`;
-      go.disabled = false; go.textContent = 'Продолжить';
-      go.onclick = finish;
-    };
-  }
+  /* Вход и регистрация — только по e-mail, экран номера телефона убран. */
+  function mc51PhoneGate() { return; }
   window.mc51PhoneGate = mc51PhoneGate;
   window.mc51PhoneCheck = mc51DevicePhoneCheck;
 
@@ -19821,17 +19748,6 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
   /* ============================================================
      9. НАСТРОЙКИ, НАВИГАЦИЯ, СТАРТ
      ============================================================ */
-  // строка «Номер телефона» в настройках
-  try {
-    if (typeof mcSetMain === 'function') {
-      const _sm = mcSetMain;
-      mcSetMain = function () {
-        const html = _sm.apply(this, arguments);
-        return html + `<div class="mc11-card" style="cursor:pointer" onclick="window.mc51PhoneGate(true)"><div class="mc11-av" style="background:linear-gradient(135deg,#22c55e,#0ea5e9);border-radius:14px">📞</div><div class="mc11-grow"><b>Номер телефона</b><small>${(() => { const ph = (state.phone51 && state.phone51.phone) || (state.profile && state.profile.phone); const ok = (state.phone51 && state.phone51.verified) || (state.profile && state.profile.phoneVerified); return ph ? esc51(ph) + (ok ? ' · подтверждён' : ' · ждёт проверки') : 'Привязать номер без SMS'; })()}</small></div>›</div>`;
-      };
-      window.mcSetMain = mcSetMain;
-    }
-  } catch (_) {}
   // верификация: строка ведёт на новый экран с оплатой
   try {
     const old = window.openAccountVerification;
@@ -19853,20 +19769,11 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     if (uid) {
       const name = displayName51();
       if (name) save51('mc_last_name', name);
-      // одноразовая анимация обновления, затем телефон
+      // одноразовая анимация обновления (номер телефона больше не спрашиваем)
       const introKey = 'mc51_intro_seen';
-      mc51LoadPhone().finally(() => {
-        if (localStorage.getItem(introKey) !== '1') {
-          setTimeout(() => {
-            mc51Intro();
-            const wait = setInterval(() => {
-              if (!$i('mc51Intro')) { clearInterval(wait); setTimeout(() => mc51PhoneGate(), 120); }
-            }, 400);
-          }, 500);
-        } else {
-          setTimeout(() => mc51PhoneGate(), 900);
-        }
-      });
+      if (localStorage.getItem(introKey) !== '1') {
+        setTimeout(() => mc51Intro(), 500);
+      }
     }
   }
   try {
