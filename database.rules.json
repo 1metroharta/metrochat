@@ -131,13 +131,13 @@
     "user_chats": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid",
         ".indexOn": [
           "lastTs",
           "at",
           "updatedAt",
           "createdAt"
         ],
+        ".write": "auth != null && auth.uid === $uid",
         "$chatId": {
           ".write": "auth != null && (auth.uid === $uid || ($chatId.beginsWith('dm_') && ($chatId.contains('_' + auth.uid + '_') || $chatId.endsWith('_' + auth.uid)) && ($chatId.contains('_' + $uid + '_') || $chatId.endsWith('_' + $uid))) || (root.child('chats').child($chatId).child('members').child($uid).val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true) || (root.child('channels').child($chatId).child('members').child($uid).val() === true && (root.child('channels').child($chatId).child('ownerId').val() === auth.uid || root.child('channels').child($chatId).child('admins').child(auth.uid).val() === true)))"
         }
@@ -303,13 +303,11 @@
       }
     },
     "channel_comments": {
-      ".read": "auth != null",
       "$channelId": {
-        "$messageId": {
-          "$commentId": {
-            ".write": "auth != null && !(root.child('bans').child(auth.uid).child('until').val() > now) && ((newData.exists() && newData.child('uid').val() === auth.uid) || (!newData.exists() && data.child('uid').val() === auth.uid) || root.child('channels').child($channelId).child('ownerId').val() === auth.uid || root.child('channels').child($channelId).child('admins').child(auth.uid).val() === true)",
-            ".validate": "newData.hasChildren(['uid', 'text', 'at']) && newData.child('uid').isString() && newData.child('text').isString() && newData.child('text').val().length <= 1000 && newData.child('at').isNumber()"
-          }
+        ".read": "auth != null",
+        "$commentId": {
+          ".write": "auth != null && !(root.child('bans').child(auth.uid).child('until').val() > now) && (!data.exists() ? newData.child('uid').val() === auth.uid : (data.child('uid').val() === auth.uid || root.child('channels').child($channelId).child('ownerId').val() === auth.uid || root.child('channels').child($channelId).child('admins').child(auth.uid).val() === true))",
+          ".validate": "newData.hasChildren(['uid', 'text', 'at']) && newData.child('text').isString() && newData.child('text').val().length <= 1000 && newData.child('at').isNumber()"
         }
       }
     },
@@ -332,14 +330,12 @@
         "views": {
           "$uid": {
             ".write": "auth != null && $uid === auth.uid"
-          },
-          ".write": "auth != null"
+          }
         },
         "likes": {
           "$uid": {
             ".write": "auth != null && $uid === auth.uid"
-          },
-          ".write": "auth != null"
+          }
         }
       }
     },
@@ -353,8 +349,9 @@
     "story_comments": {
       "$storyId": {
         ".read": "auth != null",
+        ".write": "auth != null && !newData.exists() && root.child('stories').child($storyId).child('uid').val() === auth.uid",
         "$commentId": {
-          ".write": "auth != null && !(root.child('bans').child(auth.uid).child('until').val() > now) && ((newData.exists() && newData.child('uid').val() === auth.uid) || (!newData.exists() && (data.child('uid').val() === auth.uid || root.child('stories').child($storyId).child('uid').val() === auth.uid)))",
+          ".write": "auth != null && !(root.child('bans').child(auth.uid).child('until').val() > now) && (!data.exists() ? newData.child('uid').val() === auth.uid : (data.child('uid').val() === auth.uid || root.child('stories').child($storyId).child('uid').val() === auth.uid))",
           ".validate": "newData.hasChildren(['uid', 'text', 'createdAt']) && newData.child('text').isString() && newData.child('text').val().length <= 600 && newData.child('createdAt').isNumber()"
         }
       }
@@ -620,14 +617,6 @@
         ".validate": "!newData.exists() || (newData.hasChildren(['phone', 'at']) && newData.child('phone').isString() && newData.child('phone').val().length <= 20 && newData.child('at').isNumber())"
       }
     },
-    "verification_orders": {
-      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
-      "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
-        ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
-        ".validate": "!newData.exists() || (newData.hasChildren(['uid', 'links', 'price', 'status', 'at']) && newData.child('links').hasChildren() && newData.child('price').isNumber() && newData.child('status').isString() && newData.child('at').isNumber())"
-      }
-    },
     "user_phones": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
@@ -636,6 +625,14 @@
         "verified": {
           ".validate": "newData.isBoolean()"
         }
+      }
+    },
+    "verification_orders": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+        ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).exists())",
+        ".validate": "!newData.exists() || (newData.hasChildren(['uid', 'links', 'price', 'status', 'at']) && newData.child('links').hasChildren() && newData.child('price').isNumber() && newData.child('status').isString() && newData.child('at').isNumber())"
       }
     }
   }
