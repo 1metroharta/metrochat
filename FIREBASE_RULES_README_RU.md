@@ -1,6 +1,24 @@
-# Firebase Realtime Database Rules — MetroChat b5.1.3
+# Firebase Realtime Database Rules — MetroChat b6.0.0
 
 Файл `database.rules.json` — полный набор правил для Realtime Database. Версия b5.1 закрывает публичные узлы, которые раньше были доступны любому авторизованному пользователю.
+
+## b6.0.0 — каналы, бусты, статистика и комментарии
+
+Полная таблица всех узлов с правами чтения и записи лежит в [FIREBASE_RULES_FULL_RU.md](FIREBASE_RULES_FULL_RU.md). Кратко, что добавлено или исправлено:
+
+| Узел | Правило b6.0.0 |
+| --- | --- |
+| `channels/$id/boostTotal` | любой авторизованный может **увеличить** итог (прирост 0…500, максимум 1 000 000). Раньше правило отсутствовало, запись требовала прав владельца — из-за этого бусты не работали |
+| `channels/$id/boostLog/$entry` | создаёт только сам бустер (`by = auth.uid`), валидация суммы и времени, `.indexOn: ["at"]` |
+| `channels/$id/boosts/$uid` | только свой `uid`, валидация `n`, имени, анонимности |
+| `channels/$id/settings/$key` | только владелец/админ, значения: boolean, строка ≤ 2000 или число |
+| `channels/$id/accent`, `accent2`, `emoji`, `badge`, `username` | только владелец/админ, ограничение длины |
+| `channel_stats/$cid/views/$mid/$uid` | только свой `uid`; `likes/$mid/$uid` — только `true` от своего `uid`; `cc/$mid` — число 0…1 000 000; `growth/$day/$uid` — только свой `uid` |
+| `channel_comment_likes/$cid/$mid/$commentId/$uid` | чтение авторизованным, запись только своего лайка |
+| `channel_mutes/$cid/$uid` | пишут только владелец/админ канала |
+| `story_comment_likes/$storyId/$commentId/$uid` | чтение авторизованным, запись только своего лайка |
+| `story_stats/$storyId/cc` | число 0…1 000 000 |
+| `channel_comments` / `story_comments` | добавлены `replyTo` (≤ 64), `replyName` (≤ 80) и `name` (≤ 80) |
 
 ## Как опубликовать
 

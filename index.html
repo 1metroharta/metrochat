@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MetroChat">
-<title>MetroChat b5.1.5</title>
+<title>MetroChat b6.0.0</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://metrochatmetroharta-i89op-default-rtdb.firebaseio.com">
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
@@ -9039,7 +9039,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = 'b5.1.5';
+const MC_VERSION = 'b6.0.0';
 
 /* b5.0.3: единый экран ошибки вместо молчания. Показываем только неожиданные сбои,
    сетевые и permission-ошибки Firebase остаются в консоли и обрабатываются точечно. */
@@ -16547,7 +16547,7 @@ console.info('MetroChat ' + V + ' patch loaded');
 (function mc50(){
 'use strict';
 const $id = id => document.getElementById(id);
-const V50 = 'b5.1.5';
+const V50 = 'b6.0.0';
 const now50 = () => Date.now();
 const LSget = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 const LSset = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
@@ -17603,7 +17603,7 @@ function addHubCards50(){ return; // b5.1: магазин убран из «Пр
   const shopCard = mk(`<button type="button" class="other-hub-card" data-mc50-shop="1"><span class="other-hub-icon">🛍️</span><b>Магазин</b><small>Товары, категории, корзина и оплата в умах</small><span class="other-hub-arrow">Открыть →</span></button>`);
   shopCard.onclick = () => openShop50();
   grid.insertBefore(shopCard, grid.children[1] || null);
-  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.1.5</small><span class="other-hub-arrow">Смотреть →</span></button>`);
+  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b6.0.0</small><span class="other-hub-arrow">Смотреть →</span></button>`);
   histCard.onclick = () => renderHistory50();
   grid.appendChild(histCard);
   isAdmin50().then(adm => {
@@ -17671,7 +17671,19 @@ function renderHistory50(){
   ];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">История версий</div></div>
   <div class="settings-wrap mc50-hist">
-    <div class="ver"><h3>MetroChat b5.1.5 <span class="tag">сейчас</span></h3><small class="set-sub">26 ноября 2026 · звонки и статус в профиле</small>
+    <div class="ver"><h3>MetroChat b6.0.0 <span class="tag">сейчас</span></h3><small class="set-sub">26 ноября 2026 · Каналы 2.0, бусты и истории</small>
+      <ul>
+        <li>Каналы собраны заново: центр управления с разделами «Обзор», «Настройки», «Статистика», «Комментарии», «Подписчики» и «Оформление». Открывается шестерёнкой в шапке канала.</li>
+        <li>Много настроек канала: комментарии и правила доступа к ним, лайки, медленный режим (10 сек — 5 мин), показ статистики и числа подписчиков, приветствие, правила, ссылки, подпись автора, пересылка и автозакрепление.</li>
+        <li>Статистика: охваты, лайки, комментарии, вовлечённость, средний охват, активность за 14 дней, топ публикаций, топ комментаторов и топ бустеров.</li>
+        <li>Комментарии к постам переработаны: ответы на комментарии, лайки комментариев, сортировка «новые / по лайкам», живые счётчики и удаление без перезагрузки.</li>
+        <li>Модерация: владелец и админы видят последние комментарии, могут удалить любой и запретить нарушителю писать в канал.</li>
+        <li>Бусты переработаны: 5 уровней с бонусами, пакеты, история бустов, топ бустеров, анонимность и оформление канала (цвет, эмодзи, градиент, знак) за уровни.</li>
+        <li>Исправлено главное: буст не проходил, потому что <b>boostTotal</b> не имел собственного правила записи и требовал прав владельца. Теперь прирост разрешён бустеру, а история и лог пишутся отдельными правилами.</li>
+        <li>Истории: комментарии с ответами и лайками, живой список «кому понравилось», счётчик сердечек обновляется у всех.</li>
+        <li>Правила Firebase: <b>channel_stats</b> больше не открыт на запись целиком; добавлены <b>channel_comment_likes</b>, <b>channel_mutes</b>, <b>story_comment_likes</b> и <b>story_stats</b>.</li>
+      </ul></div>
+    <div class="ver"><h3>MetroChat b5.1.5</h3><small class="set-sub">26 ноября 2026 · звонки и статус в профиле</small>
       <ul>
         <li>Звонки снова работают: правило <b>call_inbox</b> проверяло callerId не на том уровне пути, поэтому звонящий не мог создать входящий звонок у собеседника и получал «Permission denied». Проверка перенесена на уровень конкретного звонка.</li>
         <li>Эмодзи-статус снова виден после имени в профиле собеседника (открывается из шапки личного чата) и обновляется, даже если профиль уже открыт.</li>
@@ -17758,7 +17770,7 @@ try {
 } catch (e) { console.warn('whatsnew b5', e); }
 
 window.mc5IsAdmin = isAdmin50;
-document.title = 'MetroChat b5.1.5';
+document.title = 'MetroChat b6.0.0';
 console.info('MetroChat b5.1 patch loaded');
 })();
 
@@ -19040,7 +19052,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
    ===================================================================== */
 (function mc51(){
   'use strict';
-  const V51 = 'b5.1.5';
+  const V51 = 'b6.0.0';
   const $i = id => document.getElementById(id);
   const q = (s, r) => (r || document).querySelector(s);
   const qa = (s, r) => [...(r || document).querySelectorAll(s)];
@@ -20164,6 +20176,806 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
 })();
 
   console.info('MetroChat b5.1.1 security shell loaded');
+
+/* b6.0 module */
+/* =====================================================================
+   MetroChat b6.0 — «Каналы 2.0», бусты, статистика, комментарии
+   и переработанные комментарии/лайки историй.
+   Модуль вставляется в основной <script type="module"> и видит state, db,
+   ref, mcSheet, toast, mcChSubs, mcBoostLv и остальные внутренние функции.
+   ===================================================================== */
+(function mc60(){
+  'use strict';
+  const V60 = 'b6.0.0';
+  const $6 = id => document.getElementById(id);
+  const esc6 = v => {
+    try { if (typeof esc === 'function') return esc(v); } catch (_) {}
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  };
+  const t6 = (m, i) => { try { toast(m, i); } catch (_) {} };
+  const me6 = () => (state.user ? state.user.uid : null);
+  const prof6 = u => (u && u === me6() ? (state.profile || {}) : (getUser(u) || {}));
+  const nm6 = u => prof6(u).displayName || prof6(u).firstName || prof6(u).username || 'Пользователь';
+  const fmt6 = n => { try { return mcChFmt(n); } catch (_) { return String(n || 0); } };
+  const subs6 = c => Object.values((c && c.members) || {}).filter(Boolean).length;
+  const mgr6 = c => { const u = me6(); return !!u && !!c && (c.ownerId === u || !!(c.admins && c.admins[u])); };
+  const mem6 = (id, c) => !!(state.chats && state.chats[id]) || !!(c && c.members && c.members[me6()]) || !!(c && c.ownerId === me6());
+  const cat6 = id => { try { return mcChCat(id); } catch (_) { return { e: '📢', n: 'Канал' }; } };
+  const time6 = ts => { try { return new Date(Number(ts) || 0).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } };
+  const ago6 = ts => { try { return mcTimeAgo(Number(ts) || Date.now()); } catch (_) { return time6(ts); } };
+  const dateKey = ts => { const d = new Date(Number(ts) || Date.now()); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+
+  const CFG_DEF = {
+    comments: true, commentPolicy: 'members', reactions: true, slow: 0,
+    showStats: true, showSubs: true, welcome: '', rules: '', links: '',
+    signature: false, allowForward: true, autoPin: false, badge: ''
+  };
+  const m60Cfg = c => Object.assign({}, CFG_DEF, (c && c.settings) || {});
+  const m60Ch = id => (state.channels && state.channels[id]) || (state.chat && state.chat.id === id ? state.chat : null);
+  const m60Cover = (id, c) => {
+    if (c && c.accent) return 'linear-gradient(135deg,' + c.accent + ',' + (c.accent2 || c.accent) + ')';
+    try { return mcChCover(id); } catch (_) { return 'linear-gradient(135deg,#397cff,#8758f6)'; }
+  };
+  const m60Role = (c, u) => (c && c.ownerId === u) ? 'владелец' : (c && c.admins && c.admins[u]) ? 'админ' : '';
+  const m60Lv = n => { try { return mcBoostLv(n); } catch (_) { return 0; } };
+  const LV_NAMES = ['Новый', 'Заметный', 'Популярный', 'Крупный', 'Легенда', 'Мега'];
+  const LV_TH = [0, 3, 10, 25, 60, 150];
+
+  const MC60 = { cmUnsub: null, cmLikeUnsub: null, cmCid: null, cmMid: null, cmSort: 'new', cmReply: null, cmLast: 0, stId: null, stUnsub: null, stLikeUnsub: null, stReply: null, statsId: null };
+
+  /* ------------------------------------------------------------------ CSS */
+  try {
+    const css = `
+    .mc60-sheet .mc-sheet{max-height:94dvh;overflow:auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 20px)}
+    .mc60-hub-head{position:relative;display:flex;align-items:flex-end;gap:12px;padding:16px 16px 12px;min-height:112px;margin:-2px -2px 0;border-radius:22px 22px 0 0;overflow:hidden}
+    .mc60-hub-head .mc60-cover{position:absolute;inset:0;z-index:0;opacity:.92}
+    .mc60-hub-head:after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,12,24,.05),rgba(7,12,24,.66))}
+    .mc60-hub-head>*{position:relative;z-index:2}
+    .mc60-hub-head .mc-ch-av{box-shadow:0 8px 24px rgba(0,0,0,.28);border:2px solid rgba(255,255,255,.28)}
+    .mc60-hub-head h2{color:#fff;font-size:20px;line-height:1.15;margin:0 0 3px;text-shadow:0 2px 10px rgba(0,0,0,.35)}
+    .mc60-hub-head small{color:rgba(255,255,255,.82);font-size:12px;display:block}
+    .mc60-hub-x{margin-left:auto;align-self:flex-start;width:32px;height:32px;border-radius:50%;border:0;background:rgba(10,16,30,.42);color:#fff;font-size:15px;display:grid;place-items:center}
+    .mc60-tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;position:sticky;top:0;z-index:6;background:var(--surface);border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch}
+    .mc60-tabs button{flex:0 0 auto;border:1px solid var(--border);background:var(--surface-2);color:var(--text-2);font-size:12px;font-weight:750;border-radius:999px;padding:8px 12px;white-space:nowrap}
+    .mc60-tabs button.on{background:linear-gradient(135deg,#398bff,#8955f6);border-color:transparent;color:#fff}
+    .mc60-body{padding:14px 14px 0}
+    .mc60-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 14px}
+    .mc60-kpis>div{padding:11px 10px;border-radius:15px;border:1px solid var(--border);background:var(--surface-2);min-width:0}
+    .mc60-kpis small{display:block;font-size:10px;color:var(--text-2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+    .mc60-kpis b{font-size:17px;line-height:1.1}
+    .mc60-sec{margin:0 0 16px;padding:14px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+    .mc60-sec>h4{margin:0 0 10px;font-size:13px;letter-spacing:.02em}
+    .mc60-sec>p{margin:0 0 10px;font-size:12px;color:var(--text-2);line-height:1.5}
+    .mc60-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .mc60-act{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px;font-weight:650;text-align:left}
+    .mc60-act span:first-child{font-size:18px;width:24px;text-align:center}
+    .mc60-act em{margin-left:auto;font-style:normal;color:var(--text-2);font-size:11px}
+    .mc60-lvl{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,rgba(245,158,11,.14),rgba(239,68,68,.1));border:1px solid rgba(245,158,11,.32);margin-bottom:12px}
+    .mc60-lvl b{font-size:15px}.mc60-lvl small{display:block;color:var(--text-2);font-size:11px}
+    .mc60-bar{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:8px 0 4px}
+    .mc60-bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#f59e0b,#ef4444)}
+    .mc60-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+    .mc60-row:last-child{border-bottom:0}.mc60-row .grow{flex:1;min-width:0}.mc60-row small{color:var(--text-2);font-size:11px}
+    .mc60-sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+    .mc60-sw:last-child{border-bottom:0}.mc60-sw b{font-size:13px;font-weight:650;display:block}.mc60-sw small{font-size:11px;color:var(--text-2);display:block;margin-top:2px}
+    .mc60-sw input[type=checkbox]{width:44px;height:25px;appearance:none;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);position:relative;flex:0 0 auto;transition:.18s;cursor:pointer}
+    .mc60-sw input[type=checkbox]:checked{background:linear-gradient(135deg,#398bff,#8955f6);border-color:transparent}
+    .mc60-sw input[type=checkbox]:after{content:'';position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.18s}
+    .mc60-sw input[type=checkbox]:checked:after{left:21px}
+    .mc60-lbl{display:block;font-size:11px;font-weight:750;color:var(--text-2);margin:12px 0 5px;letter-spacing:.03em;text-transform:uppercase}
+    .mc60-inp,.mc60-sel,.mc60-ta{width:100%;box-sizing:border-box;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:12px;padding:10px 11px;font-size:13px;font-family:inherit;outline:0}
+    .mc60-ta{resize:vertical;min-height:66px;line-height:1.45}
+    .mc60-inp:focus,.mc60-sel:focus,.mc60-ta:focus{border-color:var(--accent)}
+    .mc60-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:13px;padding:11px 14px;font-size:13px;font-weight:750;background:linear-gradient(135deg,#398bff,#8955f6);color:#fff;cursor:pointer}
+    .mc60-btn.g{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+    .mc60-btn.r{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+    .mc60-btn[disabled]{opacity:.5;pointer-events:none}
+    .mc60-btn.w{width:100%;margin-top:12px}
+    .mc60-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;background:rgba(57,139,255,.14);color:#398bff}
+    .mc60-badge.a{background:rgba(16,185,129,.15);color:#10b981}
+    .mc60-badge.o{background:rgba(245,158,11,.16);color:#f59e0b}
+    .mc60-be{display:flex;gap:5px;padding:0 0 3px}
+    .mc60-be button{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:11px;padding:9px 6px;font-size:11px;font-weight:750}
+    .mc60-be button.on{background:linear-gradient(135deg,#398bff,#8955f6);border-color:transparent;color:#fff}
+    .mc60-bars{display:flex;align-items:flex-end;gap:5px;height:110px;padding:8px 0 0}
+    .mc60-bars>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;min-width:0}
+    .mc60-bars i{display:block;width:70%;max-width:14px;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,#398bff,#8955f6);min-height:2px;transition:height .4s}
+    .mc60-bars span{font-size:8px;color:var(--text-2);white-space:nowrap}
+    .mc60-list{display:flex;flex-direction:column;gap:0}
+    .mc60-cm{padding:10px 0;border-bottom:1px solid var(--border)}
+    .mc60-cm:last-child{border-bottom:0}
+    .mc60-cm .top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+    .mc60-cm .top b{font-size:12px}.mc60-cm .top small{font-size:10px;color:var(--text-2);margin-left:auto}
+    .mc60-cm p{margin:0;font-size:13px;line-height:1.45;word-break:break-word}
+    .mc60-cm .acts{display:flex;gap:6px;margin-top:7px}
+    .mc60-cm .acts button{border:0;background:transparent;color:var(--text-2);font-size:11px;font-weight:650;padding:2px 4px;border-radius:6px}
+    .mc60-cm .acts button.on{color:#ff4d6d}
+    .mc60-cm .acts button.del{color:#ef4444}
+    .mc60-reply{display:flex;align-items:center;gap:8px;padding:7px 10px;margin:0 0 8px;border-radius:10px;background:rgba(57,139,255,.1);font-size:11px;color:var(--text-2)}
+    .mc60-reply b{color:var(--text)}.mc60-reply button{margin-left:auto;border:0;background:transparent;color:var(--text-2);font-size:14px}
+    .mc60-composer{display:flex;gap:8px;align-items:flex-end;padding:10px 0 0;position:sticky;bottom:0;background:var(--surface)}
+    .mc60-composer textarea{flex:1;min-height:42px;max-height:120px;resize:none;border:1px solid var(--border);border-radius:14px;background:var(--surface-2);color:var(--text);padding:10px 12px;font-size:13px;font-family:inherit;outline:0}
+    .mc60-composer button{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,#398bff,#8955f6);color:#fff;font-size:17px}
+    .mc60-composer button[disabled]{opacity:.45}
+    .mc60-hero-lvl{font-size:11px;color:var(--text-2);margin:2px 0 0}
+    .mc60-pkg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+    .mc60-pkg button{padding:12px 8px;border-radius:14px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-weight:750;font-size:12px;text-align:center}
+    .mc60-pkg button.on{border-color:#f59e0b;background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(239,68,68,.14));box-shadow:0 0 0 1px rgba(245,158,11,.35) inset}
+    .mc60-pkg button small{display:block;font-weight:500;color:var(--text-2);font-size:10px;margin-top:2px}
+    .mc60-perk{display:flex;gap:8px;align-items:flex-start;padding:8px 0;font-size:12px;line-height:1.4;border-bottom:1px dashed var(--border)}
+    .mc60-perk:last-child{border-bottom:0}.mc60-perk i{font-style:normal;width:18px;text-align:center;flex:0 0 auto}
+    .mc60-perk.lock{opacity:.5}
+    .mc60-designs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}
+    .mc60-designs button{width:34px;height:34px;border-radius:10px;border:2px solid transparent}
+    .mc60-designs button.on{border-color:var(--text);box-shadow:0 0 0 2px var(--surface)}
+    .mc60-preview{padding:18px;border-radius:16px;color:#fff;position:relative;overflow:hidden;margin-bottom:10px}
+    .mc60-preview b{font-size:16px;display:block;position:relative}
+    .mc60-preview small{font-size:11px;opacity:.85;position:relative}
+    .mc60-st-list{display:flex;flex-direction:column;gap:10px;max-height:44dvh;overflow:auto;padding-right:2px}
+    .mc60-st-cm{display:flex;gap:8px;align-items:flex-start}
+    .mc60-st-cm .b{flex:1;min-width:0;background:rgba(255,255,255,.06);border-radius:12px;padding:8px 10px}
+    .mc60-st-cm .b b{font-size:12px}.mc60-st-cm .b p{margin:3px 0 0;font-size:12px;line-height:1.4;word-break:break-word}
+    .mc60-st-cm .b small{font-size:10px;opacity:.7;display:block;margin-top:4px}
+    .mc60-st-cm .acts{display:flex;gap:4px;align-items:center;margin-top:5px}
+    .mc60-st-cm .acts button{border:0;background:transparent;color:inherit;opacity:.72;font-size:11px;font-weight:650;padding:2px 3px}
+    .mc60-st-cm .acts button.on{color:#ff5c8d;opacity:1}
+    .mc60-st-reply{margin-left:22px;border-left:2px solid rgba(255,255,255,.14);padding-left:8px}
+    .mc60-st-form{display:flex;gap:7px;margin-top:10px;position:sticky;bottom:0}
+    .mc60-st-form input{flex:1;min-width:0;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);color:#fff;padding:10px 13px;font-size:12px;outline:0}
+    .mc60-st-form input::placeholder{color:rgba(255,255,255,.6)}
+    .mc60-st-form button{border:0;border-radius:50%;width:40px;height:40px;background:#fff;color:#111;font-size:15px}
+    .mc60-likepill{display:inline-flex;align-items:center;gap:4px;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:7px 10px;margin-left:4px}
+    .mc60-likers{display:flex;flex-direction:column;gap:8px;max-height:46dvh;overflow:auto}
+    .mc60-likers .r{display:flex;align-items:center;gap:9px;font-size:13px}
+    .mc60-empty{padding:22px 12px;text-align:center;color:var(--text-2);font-size:12px}
+    .mc60-empty b{display:block;color:var(--text);font-size:13px;margin-bottom:3px}
+    html[data-theme="light"] .mc60-hub-head h2{color:#fff}
+    @media(max-width:420px){.mc60-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.mc60-grid2{grid-template-columns:1fr}}
+    `;
+    const st = document.createElement('style'); st.id = 'mc60-style'; st.textContent = css; document.head.appendChild(st);
+  } catch (e) { console.warn('mc60 css', e); }
+
+  /* --------------------------------------------------------- настройки */
+  function m60Set(id, key, val) {
+    const c = m60Ch(id); if (!c) return;
+    c.settings = Object.assign({}, c.settings || {}, { [key]: val });
+    update(ref(db, 'channels/' + id + '/settings'), { [key]: val }).catch(e => {
+      console.warn('channel setting', e);
+      t6('Настройка не сохранилась: проверьте правила channels/settings', '⚠');
+    });
+  }
+  function m60SaveMain(id) {
+    const c = m60Ch(id); if (!c || !mgr6(c)) return;
+    const name = ($6('m60Name') ? $6('m60Name').value : '').trim();
+    const desc = ($6('m60Desc') ? $6('m60Desc').value : '').trim();
+    const cat = ($6('m60Cat') ? $6('m60Cat').value : 'other');
+    const user = ($6('m60User') ? $6('m60User').value : '').trim().toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 32);
+    if (name.length < 2) return t6('Название слишком короткое', '⚠');
+    if (user && !/^[a-z][a-z0-9_]{3,31}$/.test(user)) return t6('Ссылка: латиница, от 4 символов, начинается с буквы', '⚠');
+    const taken = user && Object.entries(state.channels || {}).some(([cid, ch]) => cid !== id && String((ch && ch.username) || '').toLowerCase() === user);
+    if (taken) return t6('Ссылка @' + user + ' уже занята', '⚠');
+    const patch = { name, description: desc, category: cat, username: user || null };
+    Object.assign(c, patch);
+    update(ref(db, 'channels/' + id), patch).then(() => {
+      t6('Канал сохранён', '✓');
+      try { renderChannels(($6('sbSearch') ? $6('sbSearch').value : '') || ''); } catch (_) {}
+      try { renderChatHeader(); } catch (_) {}
+      mcChHub(id, 'overview');
+    }).catch(e => { console.warn(e); t6('Не удалось сохранить канал: проверьте правила channels', '⚠'); });
+  }
+  function m60SaveText(id) {
+    const c = m60Ch(id); if (!c || !mgr6(c)) return;
+    const patch = {
+      welcome: $6('m60Welcome') ? $6('m60Welcome').value.trim().slice(0, 300) : '',
+      rules: $6('m60Rules') ? $6('m60Rules').value.trim().slice(0, 1500) : '',
+      links: $6('m60Links') ? $6('m60Links').value.trim().slice(0, 600) : ''
+    };
+    m60Set(id, 'welcome', patch.welcome);
+    m60Set(id, 'rules', patch.rules);
+    m60Set(id, 'links', patch.links);
+    t6('Тексты канала сохранены', '✓');
+  }
+  function m60Design(id, key, val) {
+    const c = m60Ch(id); if (!c || !mgr6(c)) return;
+    const lv = m60Lv(c.boostTotal);
+    if (key === 'accent' && lv < 1) return t6('Цвет канала открывается на 1 уровне буста', '🔒');
+    if (key === 'emoji' && lv < 2) return t6('Эмодзи-статус открывается на 2 уровне буста', '🔒');
+    if (key === 'accent2' && lv < 3) return t6('Градиент открывается на 3 уровне буста', '🔒');
+    if (key === 'badge' && lv < 4) return t6('Знак престижа открывается на 4 уровне буста', '🔒');
+    c[key] = val || null;
+    update(ref(db, 'channels/' + id), { [key]: val || null }).catch(() => t6('Не удалось сохранить оформление', '⚠'));
+    mcChHub(id, 'design');
+  }
+
+  /* --------------------------------------------------------------- хаб */
+  function mcChHub(id, tab) {
+    tab = tab || 'overview';
+    const c = m60Ch(id);
+    if (!c) return t6('Канал не найден', '⚠');
+    if (!mgr6(c)) return m60ChannelInfo(id, c);
+    const cfg = m60Cfg(c), lv = m60Lv(c.boostTotal), subs = subs6(c), cat = cat6(c.category);
+    const next = LV_TH[lv + 1];
+    const tabs = [['overview', 'Обзор'], ['settings', 'Настройки'], ['stats', 'Статистика'], ['comments', 'Комментарии'], ['subs', 'Подписчики'], ['design', 'Оформление']];
+    const head = `<div class="mc60-hub-head"><div class="mc60-cover" style="background:${m60Cover(id, c)}"></div>${mcChAv(id, c, 62)}<div><h2>${esc6(c.name)}${c.badge ? ' ' + esc6(c.badge) : ''}</h2><small>${cat.e} ${cat.n}${c.username ? ' · @' + esc6(c.username) : ''}<br>${fmt6(subs)} ${mcPl8(subs, 'подписчик', 'подписчика', 'подписчиков')} · ⚡ ${lv} ур.</small></div><button type="button" class="mc60-hub-x" onclick="mcCloseSheet('mcChHub')">✕</button></div>
+      <div class="mc60-tabs">${tabs.map(t => `<button type="button" class="${tab === t[0] ? 'on' : ''}" onclick="mcChHub('${id}','${t[0]}')">${t[1]}</button>`).join('')}</div>`;
+    let body = '';
+    if (tab === 'overview') {
+      body = `<div class="mc60-body">
+        <div class="mc60-lvl"><span style="font-size:24px">⚡</span><div class="grow" style="flex:1"><b>Уровень ${lv} · ${LV_NAMES[lv]}</b><small>${c.boostTotal || 0} бустов${next ? ' · до следующего ещё ' + (next - (+c.boostTotal || 0)) : ' · максимум'}</small><div class="mc60-bar"><i style="width:${next ? Math.min(100, ((+c.boostTotal || 0) - LV_TH[lv]) / (next - LV_TH[lv]) * 100) : 100}%"></i></div></div></div>
+        <div class="mc60-kpis"><div><small>Подписчики</small><b>${fmt6(subs)}</b></div><div><small>Публикации</small><b>${(state.chat && state.chat.id === id ? (state.messages || []).filter(m => m && !m.deleted && !m.system).length : '—')}</b></div><div><small>Комментарии</small><b>${cfg.comments ? 'Вкл' : 'Выкл'}</b></div></div>
+        <div class="mc60-sec"><h4>Быстрые действия</h4><div class="mc60-grid2">
+          <button type="button" class="mc60-act" onclick="mcChStatsOpen('${id}')"><span>📊</span>Статистика</button>
+          <button type="button" class="mc60-act" onclick="mcChHub('${id}','settings')"><span>⚙️</span>Настройки</button>
+          <button type="button" class="mc60-act" onclick="mcChHub('${id}','comments')"><span>💬</span>Модерация<em>${cfg.comments ? 'вкл' : 'выкл'}</em></button>
+          <button type="button" class="mc60-act" onclick="mcBoostOpen('${id}')"><span>🚀</span>Бусты<em>⚡${lv}</em></button>
+          <button type="button" class="mc60-act" onclick="mcChHub('${id}','subs')"><span>👥</span>Подписчики</button>
+          <button type="button" class="mc60-act" onclick="mcChHub('${id}','design')"><span>🎨</span>Оформление</button>
+        </div></div>
+        <div class="mc60-sec"><h4>О канале</h4><p>${esc6(c.description || 'Описание пока не заполнено.')}</p>${cfg.welcome ? `<p><b>Приветствие:</b> ${esc6(cfg.welcome)}</p>` : ''}${cfg.links ? `<p><b>Ссылки:</b> ${esc6(cfg.links).replace(/\n/g, '<br>')}</p>` : ''}<div class="mc60-row"><span class="grow">Публичная ссылка</span><b>${c.username ? '@' + esc6(c.username) : 'нет'}</b></div><div class="mc60-row"><span class="grow">Фото и шапка</span><button type="button" class="mc60-btn g" onclick="mcCloseSheet('mcChHub');openChannelProfileEditor()">Изменить</button></div><div class="mc60-row"><span class="grow">Ссылка для приглашения</span><button type="button" class="mc60-btn g" onclick="copyChannelLink('${id}')">Копировать</button></div></div>
+        <div class="mc60-sec"><h4>Опасная зона</h4><p>Удаление канала навсегда убирает публикации и статистику.</p><button type="button" class="mc60-btn r w" onclick="mcCloseSheet('mcChHub');deleteOwnedChannel('${id}')">Удалить канал</button></div>
+      </div>`;
+    } else if (tab === 'settings') {
+      body = `<div class="mc60-body">
+        <div class="mc60-sec"><h4>Основное</h4>
+          <label class="mc60-lbl">Название</label><input id="m60Name" class="mc60-inp" maxlength="80" value="${esc6(c.name)}">
+          <label class="mc60-lbl">Описание</label><textarea id="m60Desc" class="mc60-ta" maxlength="600">${esc6(c.description || '')}</textarea>
+          <label class="mc60-lbl">Публичная ссылка</label><input id="m60User" class="mc60-inp" maxlength="32" placeholder="username" autocapitalize="off" spellcheck="false" value="${esc6(c.username || '')}">
+          <label class="mc60-lbl">Категория</label><select id="m60Cat" class="mc60-sel">${MC_CH_CATS.slice(1).map(x => `<option value="${x.id}" ${((c.category || 'other') === x.id) ? 'selected' : ''}>${x.e} ${x.n}</option>`).join('')}</select>
+          <button type="button" class="mc60-btn w" onclick="mc60SaveMain('${id}')">Сохранить основное</button>
+        </div>
+        <div class="mc60-sec"><h4>Комментарии и реакции</h4>
+          <div class="mc60-sw"><div><b>Комментарии к постам</b><small>Подписчики могут обсуждать публикации</small></div><input type="checkbox" ${cfg.comments ? 'checked' : ''} onchange="mc60Set('${id}','comments',this.checked)"></div>
+          <label class="mc60-lbl">Кто может комментировать</label><select class="mc60-sel" onchange="mc60Set('${id}','commentPolicy',this.value)"><option value="members" ${cfg.commentPolicy === 'members' ? 'selected' : ''}>Все подписчики</option><option value="admins" ${cfg.commentPolicy === 'admins' ? 'selected' : ''}>Только администраторы</option></select>
+          <div class="mc60-sw"><div><b>Лайки и реакции</b><small>Сердечки и реакции на постах</small></div><input type="checkbox" ${cfg.reactions ? 'checked' : ''} onchange="mc60Set('${id}','reactions',this.checked)"></div>
+          <label class="mc60-lbl">Медленный режим</label><select class="mc60-sel" onchange="mc60Set('${id}','slow',Number(this.value)||0)">${[[0, 'Выключен'], [10, '10 секунд'], [30, '30 секунд'], [60, '1 минута'], [300, '5 минут']].map(x => `<option value="${x[0]}" ${Number(cfg.slow) === x[0] ? 'selected' : ''}>${x[1]}</option>`).join('')}</select>
+        </div>
+        <div class="mc60-sec"><h4>Приватность и видимость</h4>
+          <div class="mc60-sw"><div><b>Показывать статистику</b><small>Подписчики видят просмотры и охваты</small></div><input type="checkbox" ${cfg.showStats ? 'checked' : ''} onchange="mc60Set('${id}','showStats',this.checked)"></div>
+          <div class="mc60-sw"><div><b>Показывать число подписчиков</b><small>Скрыть счётчик в шапке канала</small></div><input type="checkbox" ${cfg.showSubs ? 'checked' : ''} onchange="mc60Set('${id}','showSubs',this.checked)"></div>
+          <div class="mc60-sw"><div><b>Подпись автора</b><small>Добавлять имя автора к постам</small></div><input type="checkbox" ${cfg.signature ? 'checked' : ''} onchange="mc60Set('${id}','signature',this.checked)"></div>
+          <div class="mc60-sw"><div><b>Разрешить пересылку</b><small>Кнопка «Поделиться» у постов</small></div><input type="checkbox" ${cfg.allowForward ? 'checked' : ''} onchange="mc60Set('${id}','allowForward',this.checked)"></div>
+          <div class="mc60-sw"><div><b>Автозакрепление</b><small>Новый пост автоматически закрепляется</small></div><input type="checkbox" ${cfg.autoPin ? 'checked' : ''} onchange="mc60Set('${id}','autoPin',this.checked)"></div>
+        </div>
+        <div class="mc60-sec"><h4>Тексты для подписчиков</h4>
+          <label class="mc60-lbl">Приветствие</label><textarea id="m60Welcome" class="mc60-ta" maxlength="300" placeholder="Что увидит новый подписчик">${esc6(cfg.welcome || '')}</textarea>
+          <label class="mc60-lbl">Правила канала</label><textarea id="m60Rules" class="mc60-ta" maxlength="1500" placeholder="Правила общения и модерации">${esc6(cfg.rules || '')}</textarea>
+          <label class="mc60-lbl">Ссылки (по одной в строке)</label><textarea id="m60Links" class="mc60-ta" maxlength="600" placeholder="https://…">${esc6(cfg.links || '')}</textarea>
+          <button type="button" class="mc60-btn w" onclick="mc60SaveText('${id}')">Сохранить тексты</button>
+        </div>
+      </div>`;
+    } else if (tab === 'stats') {
+      body = `<div class="mc60-body"><div class="mc60-sec"><h4>Статистика канала</h4><p>Полный отчёт: охваты, вовлечённость, рост подписчиков, топ постов и комментаторов.</p><button type="button" class="mc60-btn w" onclick="mcChStatsOpen('${id}')">Открыть отчёт</button></div></div>`;
+    } else if (tab === 'comments') {
+      body = `<div class="mc60-body"><div class="mc60-sec"><h4>Модерация комментариев</h4><p>Последние комментарии во всех постах. Можно удалить комментарий или запретить пользователю писать.</p><div id="m60ModList" class="mc60-list"><div class="mc60-empty">Загрузка…</div></div></div></div>`;
+      setTimeout(() => m60LoadModeration(id), 30);
+    } else if (tab === 'subs') {
+      body = `<div class="mc60-body"><div id="m60SubsList"><div class="mc60-empty">Загрузка подписчиков…</div></div></div>`;
+      setTimeout(() => m60LoadSubs(id), 30);
+    } else {
+      const lv2 = lv;
+      body = `<div class="mc60-body">
+        <div class="mc60-sec"><h4>Предпросмотр</h4><div class="mc60-preview" style="background:${m60Cover(id, c)}"><b>${c.emoji ? esc6(c.emoji) + ' ' : ''}${esc6(c.name)} ${c.badge ? esc6(c.badge) : ''}</b><small>${esc6(c.description || 'Публичный канал')}</small></div>
+          <div class="mc60-grid2"><button type="button" class="mc60-btn g" onclick="mcCloseSheet('mcChHub');openChannelProfileEditor()">Фото и шапка</button><button type="button" class="mc60-btn" onclick="mcBoostOpen('${id}')">🚀 Бусты</button></div>
+        </div>
+        <div class="mc60-sec"><h4>Цвет канала ${lv2 < 1 ? '🔒' : ''}</h4><p>Доступен с 1 уровня буста.</p><div class="mc60-designs">${['#398bff', '#8b5cf6', '#ec4899', '#ef4444', '#f97316', '#22c55e', '#14b8a6', '#eab308'].map(x => `<button type="button" class="${c.accent === x ? 'on' : ''}" style="background:${x}" onclick="mc60Design('${id}','accent','${x}')"></button>`).join('')}</div>
+          <label class="mc60-lbl">Второй цвет (градиент) ${lv2 < 3 ? '🔒' : ''}</label><input type="color" class="mc60-inp" value="${esc6(c.accent2 || '#8b5cf6')}" onchange="mc60Design('${id}','accent2',this.value)">
+        </div>
+        <div class="mc60-sec"><h4>Эмодзи и знак ${lv2 < 2 ? '🔒' : ''}</h4>
+          <label class="mc60-lbl">Эмодзи канала</label><input id="m60Emoji" class="mc60-inp" maxlength="2" placeholder="📢" value="${esc6(c.emoji || '')}">
+          <label class="mc60-lbl">Знак престижа ${lv2 < 4 ? '🔒' : ''}</label><input id="m60Badge" class="mc60-inp" maxlength="3" placeholder="⚡" value="${esc6(c.badge || '')}">
+          <button type="button" class="mc60-btn w" onclick="mc60SaveDesignText('${id}')">Сохранить оформление</button>
+        </div>
+      </div>`;
+    }
+    mcSheet('mcChHub', head + body, { cls: 'mc60-sheet' });
+  }
+  function m60SaveDesignText(id) {
+    const c = m60Ch(id); if (!c || !mgr6(c)) return;
+    const lv = m60Lv(c.boostTotal);
+    if (lv < 2 && $6('m60Emoji') && $6('m60Emoji').value) return t6('Эмодзи открывается на 2 уровне буста', '🔒');
+    if (lv < 4 && $6('m60Badge') && $6('m60Badge').value) return t6('Знак престижа открывается на 4 уровне буста', '🔒');
+    const emoji = $6('m60Emoji') ? $6('m60Emoji').value.trim() : '';
+    const badge = $6('m60Badge') ? $6('m60Badge').value.trim() : '';
+    c.emoji = emoji || null; c.badge = badge || null;
+    update(ref(db, 'channels/' + id), { emoji: emoji || null, badge: badge || null }).then(() => { t6('Оформление сохранено', '✓'); mcChHub(id, 'design'); }).catch(() => t6('Не удалось сохранить', '⚠'));
+  }
+
+  function m60ChannelInfo(id, c) {
+    const cfg = m60Cfg(c), lv = m60Lv(c.boostTotal), subs = subs6(c), cat = cat6(c.category), joined = mem6(id, c);
+    mcSheet('mcChHub', `<div class="mc60-hub-head"><div class="mc60-cover" style="background:${m60Cover(id, c)}"></div>${mcChAv(id, c, 62)}<div><h2>${esc6(c.name)}</h2><small>${cat.e} ${cat.n} · ${fmt6(subs)} подписчиков · ⚡${lv}</small></div><button type="button" class="mc60-hub-x" onclick="mcCloseSheet('mcChHub')">✕</button></div>
+      <div class="mc60-body"><div class="mc60-sec"><p>${esc6(c.description || 'Публичный канал MetroChat')}</p>${cfg.welcome ? `<p>${esc6(cfg.welcome)}</p>` : ''}${cfg.rules ? `<p><b>Правила:</b><br>${esc6(cfg.rules).replace(/\n/g, '<br>')}</p>` : ''}${cfg.links ? `<p>${esc6(cfg.links).replace(/\n/g, '<br>')}</p>` : ''}
+      <div class="mc60-kpis"><div><small>Подписчики</small><b>${fmt6(subs)}</b></div><div><small>Бусты</small><b>⚡${lv}</b></div><div><small>Комментарии</small><b>${cfg.comments ? 'да' : 'нет'}</b></div></div>
+      <button type="button" class="mc60-btn w" onclick="mcCloseSheet('mcChHub');${joined ? `openChat('${id}','channel')` : `mcChJoin('${id}')`}">${joined ? 'Открыть канал' : '🔔 Подписаться'}</button>
+      <button type="button" class="mc60-btn g w" onclick="mcCloseSheet('mcChHub');mcBoostOpen('${id}')">🚀 Поддержать бустом</button></div></div>`, { cls: 'mc60-sheet' });
+  }
+
+  async function m60LoadSubs(id) {
+    const box = $6('m60SubsList'); if (!box) return;
+    const c = m60Ch(id); if (!c) return;
+    const ids = Object.keys(c.members || {}).filter(u => c.members[u]);
+    await Promise.all(ids.map(u => fetchUserIfMissing(u).catch(() => null)));
+    if (!$6('m60SubsList') || !state.channels[id]) return;
+    const cfg = m60Cfg(c);
+    box.innerHTML = `<div class="mc60-sec"><h4>Подписчики · ${ids.length}</h4>${cfg.showSubs ? '' : '<p>Счётчик скрыт от подписчиков, но вы видите полный список.</p>'}<div class="mc60-list">${ids.length ? ids.map(u => {
+      const r = m60Role(c, u);
+      return `<div class="mc60-row">${avatarHTML({ name: nm6(u), avatar: prof6(u).avatar, size: 'small' })}<div class="grow"><b>${esc6(nm6(u))}${u === me6() ? ' · вы' : ''}</b><small>${r || 'подписчик'}</small></div>${(mgr6(c) && u !== c.ownerId && u !== me6()) ? `${r ? `<button type="button" class="mc60-btn g" onclick="mc60RoleSet('${id}','${u}',false)">Снять админа</button>` : `<button type="button" class="mc60-btn g" onclick="mc60RoleSet('${id}','${u}',true)">Админ</button>`}<button type="button" class="mc60-btn r" onclick="mc60Kick('${id}','${u}')">Убрать</button>` : ''}</div>`;
+    }).join('') : '<div class="mc60-empty"><b>Пока никого</b>Поделитесь ссылкой на канал</div>'}</div><button type="button" class="mc60-btn g w" onclick="copyChannelLink('${id}')">↗ Скопировать ссылку</button></div>`;
+  }
+  function m60RoleSet(id, u, admin) {
+    const c = m60Ch(id); if (!c || c.ownerId !== me6()) return t6('Менять роли может только владелец', '🔒');
+    const p = admin ? update(ref(db, 'channels/' + id + '/admins'), { [u]: true }) : remove(ref(db, 'channels/' + id + '/admins/' + u));
+    p.then(() => {
+      c.admins = Object.assign({}, c.admins || {});
+      if (admin) c.admins[u] = true; else delete c.admins[u];
+      t6(admin ? 'Права администратора выданы' : 'Права сняты', '✓');
+      m60LoadSubs(id);
+    }).catch(() => t6('Не удалось изменить роль', '⚠'));
+  }
+  function m60Kick(id, u) {
+    const c = m60Ch(id); if (!c || !mgr6(c)) return;
+    if (u === c.ownerId) return t6('Владельца убрать нельзя', '⚠');
+    remove(ref(db, 'channels/' + id + '/members/' + u)).then(() => {
+      if (c.members) delete c.members[u];
+      t6('Подписчик удалён', '✓'); m60LoadSubs(id);
+    }).catch(() => t6('Не удалось удалить подписчика', '⚠'));
+  }
+
+  async function m60LoadModeration(id) {
+    const box = $6('m60ModList'); if (!box) return;
+    const c = m60Ch(id); if (!c) return;
+    let raw = {};
+    try { raw = (await get(ref(db, 'channel_comments/' + id))).val() || {}; } catch (e) { console.warn(e); }
+    const rows = [];
+    Object.entries(raw).forEach(([mid, map]) => Object.entries(map || {}).forEach(([k, v]) => { if (v && v.text) rows.push(Object.assign({ k, mid }, v)); }));
+    rows.sort((a, b) => (b.at || 0) - (a.at || 0));
+    if (!$6('m60ModList')) return;
+    if (!rows.length) { box.innerHTML = '<div class="mc60-empty"><b>Комментариев нет</b>Здесь появятся новые обсуждения</div>'; return; }
+    await Promise.all([...new Set(rows.slice(0, 40).map(r => r.uid))].map(u => fetchUserIfMissing(u).catch(() => null)));
+    const postTitle = mid => { const m = (state.messages || []).find(x => x.id === mid); return (m && (m.text || (m.poll && m.poll.question))) || 'Публикация'; };
+    box.innerHTML = rows.slice(0, 60).map(r => `<div class="mc60-cm"><div class="top">${avatarHTML({ name: nm6(r.uid), avatar: prof6(r.uid).avatar, size: 'small' })}<b>${esc6(nm6(r.uid))}</b>${m60Role(c, r.uid) ? `<span class="mc60-badge">${m60Role(c, r.uid)}</span>` : ''}<small>${ago6(r.at)}</small></div><p>${esc6(r.text)}</p><div class="acts"><button type="button" onclick="mcChComments('${r.mid}')">К посту: ${esc6(String(postTitle(r.mid)).slice(0, 40))}</button><button type="button" class="del" onclick="mc60ModDel('${id}','${r.mid}','${r.k}')">Удалить</button><button type="button" onclick="mc60Mute('${id}','${r.uid}')">Запретить писать</button></div></div>`).join('');
+  }
+  async function mc60ModDel(cid, mid, key) {
+    if (!(await mcConfirm('Удалить комментарий?', 'Он исчезнет у всех подписчиков.', { danger: true, okText: 'Удалить' }))) return;
+    try {
+      await remove(ref(db, 'channel_comments/' + cid + '/' + mid + '/' + key));
+      await runTransaction(ref(db, 'channel_stats/' + cid + '/cc/' + mid), v => Math.max(0, (Number(v) || 0) - 1)).catch(() => {});
+      t6('Комментарий удалён', '✓'); m60LoadModeration(cid);
+    } catch (_) { t6('Не удалось удалить', '⚠'); }
+  }
+  async function mc60Mute(cid, u) {
+    if (!(await mcConfirm('Запретить комментарии?', nm6(u) + ' больше не сможет писать в этом канале. Администраторы смогут снять запрет.', { danger: true, okText: 'Запретить' }))) return;
+    try {
+      await set(ref(db, 'channel_mutes/' + cid + '/' + u), { at: Date.now(), by: me6(), name: nm6(u) });
+      t6('Пользователь не может комментировать', '🔇');
+    } catch (_) { t6('Не удалось выдать запрет: проверьте правила channel_mutes', '⚠'); }
+  }
+  async function mc60Unmute(cid, u) {
+    try { await remove(ref(db, 'channel_mutes/' + cid + '/' + u)); t6('Запрет снят', '✓'); }
+    catch (_) { t6('Не удалось снять запрет', '⚠'); }
+  }
+
+  /* --------------------------------------------------- статистика */
+  async function mcChStatsOpen60(id) {
+    const cid = id || (state.chat && state.chat.id);
+    const c = m60Ch(cid || '');
+    if (!c || c.type !== 'channel') return t6('Откройте канал, чтобы смотреть статистику', '⚠');
+    const cfg = m60Cfg(c);
+    if (!cfg.showStats && !mgr6(c)) return t6('Владелец скрыл статистику канала', '🔒');
+    mcSheet('mcChStats60', `<div class="mc60-hub-head"><div class="mc60-cover" style="background:${m60Cover(cid, c)}"></div><div style="flex:1"><h2>Статистика</h2><small>${esc6(c.name)}</small></div><button type="button" class="mc60-hub-x" onclick="mcCloseSheet('mcChStats60')">✕</button></div><div class="mc60-body" id="m60StatsBody"><div class="mc60-empty">Считаем охваты…</div></div>`, { cls: 'mc60-sheet' });
+    let msgs = [], stats = {}, comments = {};
+    try {
+      const snap = await get(query(ref(db, 'messages/' + cid), orderByChild('createdAt'), limitToLast(200)));
+      msgs = Object.entries(snap.val() || {}).map(([k, v]) => Object.assign({ id: k }, v)).filter(m => m && !m.deleted && !m.system);
+    } catch (e) { console.warn('stats messages', e); }
+    try { stats = (await get(ref(db, 'channel_stats/' + cid))).val() || {}; } catch (e) { console.warn('stats node', e); }
+    try { comments = (await get(ref(db, 'channel_comments/' + cid))).val() || {}; } catch (e) { console.warn('stats comments', e); }
+    const body = $6('m60StatsBody'); if (!body) return;
+    const subs = subs6(c);
+    const viewsMap = stats.views || {}, likesMap = stats.likes || {};
+    const viewsPost = mid => Object.keys(viewsMap[mid] || {}).length;
+    const likesPost = mid => Object.keys(likesMap[mid] || {}).length;
+    const totalViews = Object.values(viewsMap).reduce((s, o) => s + Object.keys(o || {}).length, 0);
+    const totalLikes = Object.values(likesMap).reduce((s, o) => s + Object.keys(o || {}).length, 0);
+    let totalCm = 0, cmAll = [];
+    Object.entries(comments).forEach(([mid, map]) => Object.entries(map || {}).forEach(([k, v]) => { if (v && v.text) { totalCm++; cmAll.push(Object.assign({ k, mid }, v)); } }));
+    const avg = msgs.length ? Math.round(totalViews / msgs.length) : 0;
+    const er = msgs.length && totalViews ? ((totalLikes + totalCm) / totalViews * 100) : 0;
+    const lv = m60Lv(c.boostTotal);
+    const days = Array.from({ length: 14 }, (_, i) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - 13 + i); return d; });
+    const dayIdx = ts => { const t = new Date(Number(ts) || 0); t.setHours(0, 0, 0, 0); return days.findIndex(d => d.getTime() === t.getTime()); };
+    const postsDay = days.map(() => 0), viewsDay = days.map(() => 0), cmDay = days.map(() => 0), growDay = days.map(() => 0);
+    msgs.forEach(m => { const i = dayIdx(m.createdAt); if (i >= 0) { postsDay[i]++; viewsDay[i] += viewsPost(m.id); } });
+    cmAll.forEach(x => { const i = dayIdx(x.at); if (i >= 0) cmDay[i]++; });
+    Object.entries(stats.growth || {}).forEach(([dk, map]) => {
+      const t = new Date(dk + 'T00:00:00').getTime(); const i = dayIdx(t); if (i >= 0) growDay[i] += Object.keys(map || {}).length;
+    });
+    const mx = Math.max(1, ...postsDay, ...cmDay, ...growDay);
+    const topPosts = msgs.map(m => ({ m, v: viewsPost(m.id), l: likesPost(m.id), c: m60Cc(stats, m.id) })).sort((a, b) => b.v - a.v).slice(0, 5);
+    const cmByUser = {};
+    cmAll.forEach(x => { if (x.uid) cmByUser[x.uid] = (cmByUser[x.uid] || 0) + 1; });
+    const topCm = Object.entries(cmByUser).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    const boosters = Object.entries(c.boosts || {}).filter(([, v]) => v && v.n).sort((a, b) => b[1].n - a[1].n).slice(0, 5);
+    await Promise.all([...new Set([...topCm.map(x => x[0]), ...boosters.map(x => x[0])])].map(u => fetchUserIfMissing(u).catch(() => null)));
+    body.innerHTML = `
+      <div class="mc60-kpis">
+        <div><small>Подписчики</small><b>${fmt6(subs)}</b></div><div><small>Публикации</small><b>${msgs.length}</b></div><div><small>Просмотры</small><b>${fmt6(totalViews)}</b></div>
+        <div><small>Комментарии</small><b>${fmt6(totalCm)}</b></div><div><small>Лайки</small><b>${fmt6(totalLikes)}</b></div><div><small>Вовлечённость</small><b>${er.toFixed(1)}%</b></div>
+        <div><small>Средний охват</small><b>${fmt6(avg)}</b></div><div><small>Бусты</small><b>⚡ ${lv}</b></div><div><small>Уровень</small><b>${LV_NAMES[lv]}</b></div>
+      </div>
+      <div class="mc60-sec"><h4>Активность за 14 дней</h4><p>Публикации — синие, комментарии — фиолетовые, новые подписчики — зелёные.</p>
+        <div class="mc60-bars">${days.map((d, i) => `<div title="${d.toLocaleDateString('ru-RU')}: публикаций ${postsDay[i]}, комментариев ${cmDay[i]}, подписчиков ${growDay[i]}"><i style="height:${postsDay[i] / mx * 100}%;background:linear-gradient(180deg,#398bff,#8955f6)"></i><i style="height:${cmDay[i] / mx * 100}%;background:linear-gradient(180deg,#ec4899,#8b5cf6)"></i><i style="height:${growDay[i] / mx * 100}%;background:linear-gradient(180deg,#22c55e,#0d9488)"></i><span>${d.getDate()}</span></div>`).join('')}</div>
+      </div>
+      <div class="mc60-sec"><h4>Топ публикаций</h4>${topPosts.length ? topPosts.map((x, i) => `<div class="mc60-row"><b style="width:18px;color:var(--text-2)">${i + 1}</b><span class="grow">${esc6(String(x.m.text || (x.m.poll && x.m.poll.question) || 'Медиа').slice(0, 78))}<br><small>${time6(x.m.createdAt)}</small></span><small>👁 ${x.v} · 💬 ${x.c} · ♥ ${x.l}</small></div>`).join('') : '<div class="mc60-empty">Публикаций пока нет</div>'}</div>
+      <div class="mc60-sec"><h4>Топ комментаторов</h4>${topCm.length ? topCm.map(([u, n], i) => `<div class="mc60-row"><b style="width:18px;color:var(--text-2)">${i + 1}</b>${avatarHTML({ name: nm6(u), avatar: prof6(u).avatar, size: 'small' })}<span class="grow">${esc6(nm6(u))}</span><small>${n} комм.</small></div>`).join('') : '<div class="mc60-empty">Комментариев пока нет</div>'}</div>
+      <div class="mc60-sec"><h4>Топ бустеров</h4>${boosters.length ? boosters.map(([u, v], i) => `<div class="mc60-row"><b style="width:18px;color:var(--text-2)">${i + 1}</b><span class="grow">${v.anon ? 'Аноним' : esc6(v.name || nm6(u))}</span><small>⚡ ${v.n}</small></div>`).join('') : '<div class="mc60-empty">Бустов ещё нет</div>'}<button type="button" class="mc60-btn g w" onclick="mcBoostOpen('${cid}')">🚀 Открыть бусты</button></div>
+      <div class="mc60-sec"><h4>Настройки канала</h4><div class="mc60-row"><span class="grow">Комментарии</span><b>${cfg.comments ? 'включены' : 'выключены'}</b></div><div class="mc60-row"><span class="grow">Кто комментирует</span><b>${cfg.commentPolicy === 'admins' ? 'только админы' : 'все подписчики'}</b></div><div class="mc60-row"><span class="grow">Медленный режим</span><b>${Number(cfg.slow) ? cfg.slow + ' сек' : 'нет'}</b></div><div class="mc60-row"><span class="grow">Приветствие</span><b>${cfg.welcome ? 'задано' : 'нет'}</b></div><div class="mc60-row"><span class="grow">Правила</span><b>${cfg.rules ? 'заданы' : 'нет'}</b></div></div>`;
+  }
+  function m60Cc(stats, mid) { return Number((stats.cc || {})[mid]) || 0; }
+
+  /* ------------------------------------------------ комментарии постов */
+  function mcChComments60(mid) {
+    const cid = state.chat && state.chat.id; const c = state.chat;
+    if (!cid || !c || c.type !== 'channel') return;
+    const cfg = m60Cfg(c); const isAdm = mgr6(c);
+    const canWrite = cfg.comments && mem6(cid, c) && (cfg.commentPolicy !== 'admins' || isAdm);
+    const m = (state.messages || []).find(x => x.id === mid);
+    MC60.cmCid = cid; MC60.cmMid = mid; MC60.cmReply = null; MC60.cmSort = 'new';
+    mcSheet('mcChCm60', `<div class="mc60-hub-head" style="min-height:auto;padding:14px 16px"><div class="mc60-cover" style="background:${m60Cover(cid, c)}"></div><div style="flex:1"><h2>Комментарии</h2><small>${esc6(c.name)}</small></div><button type="button" class="mc60-hub-x" onclick="mcCloseSheet('mcChCm60')">✕</button></div>
+      <div class="mc60-body">
+        <div class="mc60-sec" style="padding:11px 12px"><p style="margin:0;color:var(--text)">${esc6(String((m && (m.text || (m.poll && m.poll.question))) || 'Публикация').slice(0, 260))}</p></div>
+        <div style="display:flex;gap:6px;align-items:center;margin:0 0 8px"><div class="mc60-be" style="flex:1"><button type="button" id="m60SortNew" class="on" onclick="mc60CmSort('new')">Сначала новые</button><button type="button" id="m60SortTop" onclick="mc60CmSort('top')">По лайкам</button></div><span id="m60CmCount" class="mc60-badge">0</span></div>
+        <div id="m60CmList" class="mc60-list"><div class="mc60-empty">Загрузка комментариев…</div></div>
+        ${canWrite ? `<div id="m60ReplyChip" class="mc60-reply" hidden><span>Ответ <b id="m60ReplyName"></b></span><button type="button" onclick="mc60CmReplyCancel()">✕</button></div><div class="mc60-composer"><textarea id="m60CmText" maxlength="600" rows="1" placeholder="Написать комментарий…"></textarea><button type="button" id="m60CmSend" onclick="mc60CmSend()">➤</button></div><div class="mc60-hero-lvl" id="m60CmHint">${esc6(cfg.rules ? 'Правила канала: ' + cfg.rules.slice(0, 140) : 'Уважайте друг друга — комментарии видны всем.')}</div>` : `<div class="mc60-empty"><b>Комментарии недоступны</b>${cfg.comments ? 'Писать могут только администраторы канала.' : 'Владелец отключил комментарии.'}</div>`}
+      </div>`, { cls: 'mc60-sheet' });
+    if (MC60.cmUnsub) { try { MC60.cmUnsub(); } catch (_) {} MC60.cmUnsub = null; }
+    if (MC60.cmLikeUnsub) { try { MC60.cmLikeUnsub(); } catch (_) {} MC60.cmLikeUnsub = null; }
+    const stateCm = { comments: {}, likes: {} };
+    const paint = () => {
+      const box = $6('m60CmList'); if (!box) return;
+      const list = Object.entries(stateCm.comments).map(([k, v]) => Object.assign({ k }, v)).filter(x => x && x.text);
+      const cnt = $6('m60CmCount'); if (cnt) cnt.textContent = String(list.length);
+      if (!list.length) { box.innerHTML = '<div class="mc60-empty"><b>Комментариев пока нет</b>Начните обсуждение первым</div>'; return; }
+      const likesOf = k => Object.keys(stateCm.likes[k] || {}).length;
+      const isMine = k => !!(stateCm.likes[k] || {})[me6()];
+      const roots = list.filter(x => !x.replyTo);
+      const kids = {};
+      list.filter(x => x.replyTo).forEach(x => { (kids[x.replyTo] = kids[x.replyTo] || []).push(x); });
+      const sorter = (a, b) => MC60.cmSort === 'top' ? (likesOf(b.k) - likesOf(a.k) || (b.at || 0) - (a.at || 0)) : (b.at || 0) - (a.at || 0);
+      const row = (x, reply) => {
+        const mine = x.uid === me6(); const canDel = mine || isAdm || x.uid === c.ownerId;
+        const role = m60Role(c, x.uid);
+        return `<div class="mc60-cm" style="${reply ? 'margin-left:22px;border-left:2px solid var(--border);padding-left:10px' : ''}">
+          <div class="top">${avatarHTML({ name: nm6(x.uid) || x.name, avatar: prof6(x.uid).avatar, size: 'small' })}<b>${esc6(nm6(x.uid) || x.name || 'Пользователь')}</b>${role ? `<span class="mc60-badge ${role === 'владелец' ? 'o' : 'a'}">${role}</span>` : ''}<small>${ago6(x.at)}</small></div>
+          <p>${x.replyName ? `<span style="color:var(--accent);font-weight:650">@${esc6(x.replyName)}</span> ` : ''}${esc6(x.text)}</p>
+          <div class="acts"><button type="button" class="${isMine(x.k) ? 'on' : ''}" onclick="mc60CmLike('${x.k}')">${isMine(x.k) ? '♥' : '♡'} ${likesOf(x.k) || ''}</button><button type="button" onclick="mc60CmReply('${x.k}','${esc6((nm6(x.uid) || '').replace(/'/g, ''))}')">Ответить</button>${canDel ? `<button type="button" class="del" onclick="mc60CmDel('${x.k}')">Удалить</button>` : ''}</div>
+        </div>`;
+      };
+      box.innerHTML = roots.sort(sorter).map(r => row(r) + (kids[r.k] || []).sort((a, b) => (a.at || 0) - (b.at || 0)).map(x => row(x, true)).join('')).join('');
+    };
+    MC60.cmPaint = paint;
+    MC60.cmUnsub = onValue(query(ref(db, 'channel_comments/' + cid + '/' + mid), orderByChild('at'), limitToLast(300)), s => { stateCm.comments = s.val() || {}; paint(); }, () => { const box = $6('m60CmList'); if (box) box.innerHTML = '<div class="mc60-empty"><b>Нет доступа</b>Проверьте правила channel_comments</div>'; });
+    MC60.cmLikeUnsub = onValue(ref(db, 'channel_comment_likes/' + cid + '/' + mid), s => { stateCm.likes = s.val() || {}; paint(); }, () => {});
+    const ta = $6('m60CmText');
+    ta && ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(110, ta.scrollHeight) + 'px'; if (ta.value.length > 540) ta.title = 'Осталось ' + (600 - ta.value.length); });
+    ta && ta.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); mc60CmSend(); } });
+  }
+  function mc60CmSort(k) {
+    MC60.cmSort = k;
+    $6('m60SortNew') && $6('m60SortNew').classList.toggle('on', k === 'new');
+    $6('m60SortTop') && $6('m60SortTop').classList.toggle('on', k === 'top');
+    try { MC60.cmPaint && MC60.cmPaint(); } catch (_) {}
+  }
+  function mc60CmReply(key, name) {
+    MC60.cmReply = { key, name }; MC60.cmReplyName = name;
+    const chip = $6('m60ReplyChip'); if (chip) chip.hidden = false;
+    const n = $6('m60ReplyName'); if (n) n.textContent = name || 'комментарий';
+    const ta = $6('m60CmText'); if (ta) { ta.focus(); ta.placeholder = 'Ответ ' + (name || '') + '…'; }
+  }
+  function mc60CmReplyCancel() {
+    MC60.cmReply = null; const chip = $6('m60ReplyChip'); if (chip) chip.hidden = true;
+    const ta = $6('m60CmText'); if (ta) ta.placeholder = 'Написать комментарий…';
+  }
+  async function mc60CmLike(key) {
+    const cid = MC60.cmCid, mid = MC60.cmMid, uid = me6();
+    if (!cid || !mid || !uid) return;
+    const path = 'channel_comment_likes/' + cid + '/' + mid + '/' + key + '/' + uid;
+    try {
+      const snap = await get(ref(db, path));
+      if (snap.exists()) await remove(ref(db, path)); else await set(ref(db, path), true);
+    } catch (e) { console.warn(e); t6('Не удалось поставить лайк: проверьте правила channel_comment_likes', '⚠'); }
+  }
+  async function mc60CmDel(key) {
+    const cid = MC60.cmCid, mid = MC60.cmMid; if (!cid || !mid) return;
+    if (!(await mcConfirm('Удалить комментарий?', '', { danger: true, okText: 'Удалить' }))) return;
+    try {
+      await remove(ref(db, 'channel_comments/' + cid + '/' + mid + '/' + key));
+      await remove(ref(db, 'channel_comment_likes/' + cid + '/' + mid + '/' + key)).catch(() => {});
+      await runTransaction(ref(db, 'channel_stats/' + cid + '/cc/' + mid), v => Math.max(0, (Number(v) || 0) - 1)).catch(() => {});
+    } catch (_) { t6('Не удалось удалить комментарий', '⚠'); }
+  }
+  async function mc60CmSend() {
+    const cid = MC60.cmCid, mid = MC60.cmMid, ta = $6('m60CmText'), uid = me6();
+    const c = m60Ch(cid); const cfg = m60Cfg(c);
+    const text = (ta && ta.value || '').trim(); if (!text || !cid || !mid || !uid) return;
+    if (!cfg.comments) return t6('Комментарии отключены владельцем', '🔒');
+    if (!mem6(cid, c)) return t6('Подпишитесь на канал, чтобы комментировать', '🔔');
+    if (cfg.commentPolicy === 'admins' && !mgr6(c)) return t6('Писать могут только администраторы', '🔒');
+    if (Number(cfg.slow) > 0 && Date.now() - MC60.cmLast < Number(cfg.slow) * 1000) {
+      return t6('Медленный режим: ещё ' + Math.ceil((Number(cfg.slow) * 1000 - (Date.now() - MC60.cmLast)) / 1000) + ' сек', '⏳');
+    }
+    let muted = false; try { muted = (await get(ref(db, 'channel_mutes/' + cid + '/' + uid))).exists(); } catch (_) {}
+    if (muted) return t6('Вам запрещено комментировать этот канал', '🔇');
+    const btn = $6('m60CmSend'); if (btn) btn.disabled = true;
+    try {
+      const p = state.profile || {};
+      const payload = { uid, name: p.displayName || p.firstName || 'Пользователь', text: text.slice(0, 600), at: Date.now() };
+      if (MC60.cmReply) { payload.replyTo = MC60.cmReply.key; payload.replyName = String(MC60.cmReply.name || '').slice(0, 80); }
+      await set(push(ref(db, 'channel_comments/' + cid + '/' + mid)), payload);
+      await runTransaction(ref(db, 'channel_stats/' + cid + '/cc/' + mid), v => (Number(v) || 0) + 1).catch(() => {});
+      MC60.cmLast = Date.now(); MC60.cmReply = null;
+      if (ta) { ta.value = ''; ta.style.height = 'auto'; }
+      mc60CmReplyCancel(); try { mcEarnSfx('tap'); } catch (_) {}
+    } catch (e) { console.warn(e); t6('Комментарий не отправлен: проверьте правила channel_comments', '⚠'); }
+    finally { if (btn) btn.disabled = false; if (ta) ta.focus(); }
+  }
+
+  /* ------------------------------------------------------------- бусты */
+  const PK60 = [[1, 20], [3, 55], [10, 170], [25, 420]];
+  let m60Sel = 0, m60Anon = false;
+  async function mcBoostOpen60(id) {
+    const cid = id || (state.chat && state.chat.id);
+    if (!cid) return;
+    let c = m60Ch(cid);
+    try { const fresh = (await get(ref(db, 'channels/' + cid))).val(); if (fresh) { c = fresh; state.channels[cid] = Object.assign({}, state.channels[cid] || {}, fresh); } } catch (_) {}
+    if (!c) return t6('Канал не найден', '⚠');
+    const uid = me6(); if (!uid) return;
+    const tot = +c.boostTotal || 0, lv = m60Lv(tot), next = LV_TH[lv + 1];
+    const bal = await readGiftBalance().catch(() => 0);
+    const boosts = c.boosts || {};
+    const mine = boosts[uid] || { n: 0 };
+    const top = Object.entries(boosts).filter(([, v]) => v && v.n).sort((a, b) => b[1].n - a[1].n).slice(0, 8);
+    await Promise.all(top.map(([u]) => fetchUserIfMissing(u).catch(() => null)));
+    let log = {};
+    try { log = (await get(query(ref(db, 'channels/' + cid + '/boostLog'), orderByChild('at'), limitToLast(12)))).val() || {}; } catch (_) {}
+    const hist = Object.values(log).filter(x => x && x.n).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const perks = [
+      ['🎨', 'Свой цвет канала', 1], ['😀', 'Эмодзи-статус', 2], ['🌈', 'Градиент из двух цветов', 3],
+      ['🏅', 'Знак престижа у названия', 4], ['👑', 'Рамка и особый бейдж', 5], ['🚀', 'Приоритет в каталоге', 2]
+    ];
+    const isOwner = c.ownerId === uid || !!(c.admins && c.admins[uid]);
+    const sheet = `<div class="mc60-hub-head" style="min-height:auto;padding:14px 16px"><div class="mc60-cover" style="background:${m60Cover(cid, c)}"></div><div style="flex:1"><h2>🚀 Буст канала</h2><small>${esc6(c.name)} · ⚡ ${lv} уровень</small></div><button type="button" class="mc60-hub-x" onclick="mcCloseSheet('mcChBoost60')">✕</button></div>
+      <div class="mc60-body">
+      <div class="mc60-lvl"><span style="font-size:24px">⚡</span><div style="flex:1"><b>${tot} бустов · ${LV_NAMES[lv]}</b><small>${next ? 'До уровня ' + (lv + 1) + ' ещё ' + (next - tot) : 'Максимальный уровень достигнут'}</small><div class="mc60-bar"><i style="width:${next ? Math.min(100, (tot - LV_TH[lv]) / (next - LV_TH[lv]) * 100) : 100}%"></i></div></div></div>
+      <div class="mc60-sec"><h4>Бонусы уровня</h4>${perks.map(p => `<div class="mc60-perk ${lv >= p[2] ? '' : 'lock'}"><i>${p[0]}</i><span>${p[1]}</span><span style="margin-left:auto;font-size:10px;color:var(--text-2)">${lv >= p[2] ? 'открыто' : 'с ' + p[2] + ' ур.'}</span></div>`).join('')}</div>
+      <div class="mc60-sec"><h4>Поддержать канал</h4><p>Бусты покупаются за умы и идут в общий уровень канала. Ваш вклад: ⚡${mine.n || 0}.</p>
+        <div class="mc60-pkg" id="m60Pkg">${PK60.map(([n, p], i) => `<button type="button" class="${i === m60Sel ? 'on' : ''}" data-i="${i}" onclick="mc60BoostPick(${i},this)">⚡ ${n}<small>${p} УМ</small></button>`).join('')}</div>
+        <label class="mc60-sw"><div><b>Скрыть моё имя</b><small>В списке бустеров будет «Аноним»</small></div><input type="checkbox" id="m60Anon" ${m60Anon ? 'checked' : ''} onchange="m60Anon=this.checked"></label>
+        <p class="mc60-hero-lvl">Ваш баланс: <b>${mcFmtUm(bal)}</b> УМ</p>
+        <button type="button" class="mc60-btn w" id="m60BoostGo" onclick="mc60BoostGo('${cid}')">Забустить ⚡</button>
+      </div>
+      <div class="mc60-sec"><h4>Топ бустеров</h4>${top.length ? top.map(([u, v], i) => `<div class="mc60-row"><b style="width:18px;color:var(--text-2)">${i + 1}</b>${avatarHTML({ name: v.anon ? 'Аноним' : (v.name || nm6(u)), avatar: v.anon ? '' : prof6(u).avatar, size: 'small' })}<span class="grow">${v.anon ? 'Аноним' : esc6(v.name || nm6(u))}</span><small>⚡ ${v.n}</small></div>`).join('') : '<div class="mc60-empty">Станьте первым бустером</div>'}</div>
+      ${hist.length ? `<div class="mc60-sec"><h4>История бустов</h4>${hist.map(x => `<div class="mc60-row"><span class="grow">${x.anon ? 'Аноним' : esc6(x.name || 'Пользователь')}<br><small>${time6(x.at)}</small></span><b>⚡ +${x.n}</b></div>`).join('')}</div>` : ''}
+      ${isOwner ? `<div class="mc60-sec"><h4>Оформление за бусты</h4><p>Цвет — с 1 ур., эмодзи — со 2, градиент — с 3, знак — с 4.</p><button type="button" class="mc60-btn g w" onclick="mcCloseSheet('mcChBoost60');mcChHub('${cid}','design')">🎨 Открыть оформление</button></div>` : ''}
+      </div>`;
+    mcSheet('mcChBoost60', sheet, { cls: 'mc60-sheet' });
+  }
+  function mc60BoostPick(i, btn) {
+    m60Sel = i;
+    document.querySelectorAll('#m60Pkg [data-i]').forEach(b => b.classList.toggle('on', b === btn));
+  }
+  async function mc60BoostGo(cid) {
+    const uid = me6(); if (!uid) return;
+    const [n, price] = PK60[m60Sel] || PK60[0];
+    const btn = $6('m60BoostGo'); if (btn) btn.disabled = true;
+    try {
+      const bal = await readGiftBalance();
+      if (bal < price) { t6('Нужно ' + price + ' УМ, у вас ' + bal, '💎'); return; }
+      const c = m60Ch(cid) || {};
+      const prev = +((c.boosts || {})[uid] || {}).n || 0;
+      const anon = !!$6('m60Anon') && $6('m60Anon').checked;
+      m60Anon = anon;
+      const name = anon ? '' : ((state.profile && (state.profile.displayName || state.profile.username)) || '');
+      const logKey = push(ref(db, 'channels/' + cid + '/boostLog')).key;
+      await update(ref(db), {
+        ['gift_wallet/' + uid + '/balance']: bal - price,
+        ['channels/' + cid + '/boosts/' + uid]: { n: prev + n, at: Date.now(), anon, name },
+        ['channels/' + cid + '/boostTotal']: increment(n),
+        ['channels/' + cid + '/boostLog/' + logKey]: { by: uid, name, anon, n, at: Date.now() }
+      });
+      t6('Буст отправлен · +' + n, '🚀');
+      try { mcConfettiBurst(30); } catch (_) {}
+      mcCloseSheet('mcChBoost60');
+      setTimeout(() => mcBoostOpen(cid), 250);
+      m60RefreshChannelUI(cid);
+    } catch (e) {
+      console.warn(e);
+      t6('Не удалось забустить: проверьте правила channels/boostTotal и boostLog', '⚠');
+    } finally { if (btn) btn.disabled = false; }
+  }
+  function m60RefreshChannelUI(cid) {
+    try { if (state.chat && state.chat.id === cid) { renderChatHeader(); } } catch (_) {}
+    try { renderChannels(($6('sbSearch') ? $6('sbSearch').value : '') || ''); } catch (_) {}
+  }
+
+  /* --------------------------------------- истории: лайки и комментарии */
+  function m60StoryCur() { try { return mcSvCur(); } catch (_) { return null; } }
+  function m60StoryLikes(st) { return Object.values((st && st.likes) || {}).filter(Boolean).length; }
+
+  function mc60StoryPills() {
+    const cur = m60StoryCur(); if (!cur || !cur.st) return;
+    const st = cur.st; const me = me6(); const mine = st.uid === me;
+    const foot = $6('mcStoryViewer') && $6('mcStoryViewer').querySelector('.mc-sv-foot'); if (!foot) return;
+    const n = m60StoryLikes(st);
+    let pill = foot.querySelector('.mc60-likepill');
+    if (mine) { pill && pill.remove(); return; }
+    if (!pill) { pill = document.createElement('button'); pill.type = 'button'; pill.className = 'mc60-likepill'; pill.onclick = () => mcStoryLikeList(st.id); foot.appendChild(pill); }
+    pill.innerHTML = '♥ ' + n + (n ? ' · кто' : '');
+    pill.title = 'Кто оценил историю';
+  }
+  async function mcStoryLikeList(id) {
+    const st = (storiesCache || []).find(x => x.id === id); if (!st) return;
+    const ids = Object.keys(st.likes || {}).filter(u => st.likes[u]);
+    await Promise.all(ids.map(u => fetchUserIfMissing(u).catch(() => null)));
+    const sh = mcSvSheet(ids.length ? `<div class="mc60-likers">${ids.map(u => `<div class="r">${avatarHTML({ name: nm6(u), avatar: prof6(u).avatar, size: 'small' })}<b>${esc6(nm6(u))}</b>${u === me6() ? '<span class="mc60-badge" style="margin-left:auto">вы</span>' : ''}${st.uid === u ? '<span class="mc60-badge o">автор</span>' : ''}</div>`).join('')}</div>` : '<div class="stories-loading">Пока никто не оценил</div>');
+    if (sh) { const h = sh.querySelector('.mc-sv-sheet-head b'); if (h) h.textContent = 'Нравится · ' + ids.length; }
+  }
+  async function openStoryComments60(id) {
+    MC60.stId = id;
+    if (!$6('mcStoryViewer')) { try { await openStory(id); } catch (_) {} }
+    const st = (storiesCache || []).find(x => x.id === id) || { uid: '' };
+    const sh = mcSvSheet(`<div class="mc60-st-list" id="m60StList"><div class="stories-loading">Загрузка комментариев…</div></div>
+      <div id="m60StReply" class="mc60-reply" hidden style="background:rgba(255,255,255,.12);color:#fff"><span>Ответ <b id="m60StReplyName" style="color:#fff"></b></span><button type="button" onclick="mc60StReplyCancel()">✕</button></div>
+      <form class="mc60-st-form" onsubmit="event.preventDefault();mc60StSend()"><input id="storyCommentInput" maxlength="600" placeholder="Комментарий…" autocomplete="off"><button type="submit">➤</button></form>`);
+    if (!sh) return;
+    const h = sh.querySelector('.mc-sv-sheet-head b'); if (h) h.textContent = 'Комментарии · ' + (m60StoryLikes(st) ? '♥ ' + m60StoryLikes(st) : 'история');
+    if (MC60.stUnsub) { try { MC60.stUnsub(); } catch (_) {} MC60.stUnsub = null; }
+    if (MC60.stLikeUnsub) { try { MC60.stLikeUnsub(); } catch (_) {} MC60.stLikeUnsub = null; }
+    const data = { comments: {}, likes: {} };
+    const paint = () => {
+      const box = $6('m60StList'); if (!box) return;
+      const all = Object.entries(data.comments).map(([k, v]) => Object.assign({ k }, v)).filter(x => x && x.text);
+      if (!all.length) { box.innerHTML = '<div class="stories-loading">Комментариев пока нет — напишите первый</div>'; return; }
+      const roots = all.filter(x => !x.replyTo);
+      const kids = {}; all.filter(x => x.replyTo).forEach(x => { (kids[x.replyTo] = kids[x.replyTo] || []).push(x); });
+      const likesOf = k => Object.keys(data.likes[k] || {}).length;
+      const isMine = k => !!(data.likes[k] || {})[me6()];
+      const row = (x, reply) => {
+        const mine = x.uid === me6();
+        return `<div class="mc60-st-cm ${reply ? 'mc60-st-reply' : ''}">${avatarHTML({ name: nm6(x.uid) || x.name, avatar: prof6(x.uid).avatar, size: 'small' })}<div class="b"><b>${esc6(nm6(x.uid) || x.name || 'Пользователь')}</b>${st.uid === x.uid ? ' <span style="opacity:.7;font-size:10px">автор</span>' : ''}<p>${x.replyName ? `<span style="opacity:.8">@${esc6(x.replyName)}</span> ` : ''}${esc6(x.text)}</p><small>${ago6(x.createdAt)}</small><div class="acts"><button type="button" class="${isMine(x.k) ? 'on' : ''}" onclick="mc60StLike('${x.k}')">${isMine(x.k) ? '♥' : '♡'} ${likesOf(x.k) || ''}</button><button type="button" onclick="mc60StReply('${x.k}','${esc6(String(nm6(x.uid) || '').replace(/'/g, ''))}')">Ответить</button>${mine || st.uid === me6() ? `<button type="button" onclick="mc60StDel('${x.k}')">Удалить</button>` : ''}</div></div></div>`;
+      };
+      box.innerHTML = roots.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).map(r => row(r) + (kids[r.k] || []).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)).map(x => row(x, true)).join('')).join('');
+    };
+    MC60.stUnsub = onValue(ref(db, 'story_comments/' + id), s => { data.comments = s.val() || {}; paint(); }, err => { const box = $6('m60StList'); if (box) box.innerHTML = '<div class="stories-loading">Не удалось загрузить комментарии: ' + esc6(humanErr(err) || 'story_comments') + '</div>'; });
+    MC60.stLikeUnsub = onValue(ref(db, 'story_comment_likes/' + id), s => { data.likes = s.val() || {}; paint(); }, () => {});
+  }
+  function mc60StReply(key, name) {
+    MC60.stReply = { key, name };
+    const chip = $6('m60StReply'); if (chip) chip.hidden = false;
+    const n = $6('m60StReplyName'); if (n) n.textContent = name || 'комментарий';
+    const inp = $6('storyCommentInput'); if (inp) { inp.placeholder = 'Ответ ' + (name || '') + '…'; inp.focus(); }
+  }
+  function mc60StReplyCancel() {
+    MC60.stReply = null; const chip = $6('m60StReply'); if (chip) chip.hidden = true;
+    const inp = $6('storyCommentInput'); if (inp) inp.placeholder = 'Комментарий…';
+  }
+  async function mc60StLike(key) {
+    const id = MC60.stId, uid = me6(); if (!id || !uid) return;
+    const path = 'story_comment_likes/' + id + '/' + key + '/' + uid;
+    try { const s = await get(ref(db, path)); if (s.exists()) await remove(ref(db, path)); else await set(ref(db, path), true); }
+    catch (e) { console.warn(e); t6('Не удалось поставить лайк комментарию', '⚠'); }
+  }
+  async function mc60StDel(key) {
+    const id = MC60.stId; if (!id) return;
+    if (!(await mcConfirm('Удалить комментарий?', '', { danger: true, okText: 'Удалить' }))) return;
+    try { await remove(ref(db, 'story_comments/' + id + '/' + key)); await remove(ref(db, 'story_comment_likes/' + id + '/' + key)).catch(() => {}); }
+    catch (_) { t6('Не удалось удалить комментарий', '⚠'); }
+  }
+  async function mc60StSend() {
+    const id = MC60.stId, inp = $6('storyCommentInput'), uid = me6();
+    const text = (inp && inp.value || '').trim(); if (!id || !text || !uid) return;
+    try {
+      const p = { uid, name: (state.profile && (state.profile.displayName || state.profile.username)) || 'Пользователь', text: text.slice(0, 600), createdAt: Date.now() };
+      if (MC60.stReply) { p.replyTo = MC60.stReply.key; p.replyName = String(MC60.stReply.name || '').slice(0, 80); }
+      await set(push(ref(db, 'story_comments/' + id)), p);
+      await runTransaction(ref(db, 'story_stats/' + id + '/cc'), v => (Number(v) || 0) + 1).catch(() => {});
+      if (inp) inp.value = ''; mc60StReplyCancel();
+    } catch (e) { console.warn(e); t6('Комментарий не отправлен: проверьте правила story_comments', '⚠'); }
+  }
+
+  /* ------------------------------------- подключение к существующему UI */
+  try {
+    mcChComments = mcChComments60; window.mcChComments = mcChComments60;
+    mcChStatsOpen = mcChStatsOpen60; window.mcChStatsOpen = mcChStatsOpen60;
+    mcBoostOpen = mcBoostOpen60; window.mcBoostOpen = mcBoostOpen60;
+    openStoryComments = openStoryComments60; window.openStoryComments = openStoryComments60;
+  } catch (e) { console.warn('mc60 wire', e); }
+
+  // toggleStoryLike: сохраняем исходное поведение и обновляем счётчик в ленте.
+  try {
+    const _tsl = toggleStoryLike;
+    toggleStoryLike = async function () {
+      const out = await _tsl.apply(this, arguments);
+      try { mc60StoryPills(); } catch (_) {}
+      return out;
+    };
+    window.toggleStoryLike = toggleStoryLike;
+  } catch (_) {}
+  try {
+    const _sv = mcSvShow;
+    mcSvShow = function () {
+      const out = _sv.apply(this, arguments);
+      try { setTimeout(mc60StoryPills, 40); } catch (_) {}
+      return out;
+    };
+    window.mcSvShow = mcSvShow;
+  } catch (_) {}
+
+  // Кнопки управления каналом в шапке: шестерёнка + статистика.
+  try {
+    const obs = new MutationObserver(() => {
+      const a = $6('chatActions'); const c = state.chat;
+      if (!a || !c || c.type !== 'channel') return;
+      if (!mgr6(c)) return;
+      if (!a.querySelector('#m60Gear')) {
+        const g = document.createElement('button'); g.id = 'm60Gear'; g.className = 'chat-icon-btn'; g.type = 'button'; g.textContent = '⚙️'; g.title = 'Управление каналом'; g.onclick = () => mcChHub(c.id, 'overview'); a.prepend(g);
+      }
+      if (!a.querySelector('#m60Stat') && !a.querySelector('[onclick*="mcChStatsOpen"]')) {
+        const s = document.createElement('button'); s.id = 'm60Stat'; s.className = 'chat-icon-btn'; s.type = 'button'; s.textContent = '📊'; s.title = 'Статистика канала'; s.onclick = () => mcChStatsOpen(c.id); a.prepend(s);
+      }
+    });
+    if ($6('chatActions')) obs.observe($6('chatActions'), { childList: true, subtree: true });
+    else document.addEventListener('DOMContentLoaded', () => { if ($6('chatActions')) obs.observe($6('chatActions'), { childList: true, subtree: true }); });
+  } catch (e) { console.warn('mc60 header', e); }
+
+  // При подписке пишем событие роста — для графика статистики.
+  try {
+    const _join = mcChJoin;
+    mcChJoin = async function (id) {
+      const r = await _join.apply(this, arguments);
+      try {
+        if (state.channels && state.channels[id] && state.channels[id].members && state.channels[id].members[me6()]) {
+          await set(ref(db, 'channel_stats/' + id + '/growth/' + dateKey() + '/' + me6()), true).catch(() => {});
+        }
+      } catch (_) {}
+      return r;
+    };
+    window.mcChJoin = mcChJoin;
+  } catch (_) {}
+
+  /* --------------------------------------------------- версия и что нового */
+  try {
+    document.title = 'MetroChat ' + V60;
+    const t = document.querySelector('title'); if (t) t.textContent = 'MetroChat ' + V60;
+    if (typeof MC_WHATSNEW === 'object' && MC_WHATSNEW) {
+      MC_WHATSNEW.version = V60;
+      MC_WHATSNEW.slides = [
+        { title: 'MetroChat ' + V60, text: 'Каналы переехали на новую основу: управление, оформление, модерация и статистика — в одном экране.', emoji: '📡', bg: 'linear-gradient(160deg,#27d8f2,#397cff 55%,#8758f6)' },
+        { title: 'Каналы 2.0', text: 'Шестерёнка в шапке канала открывает центр управления: основные настройки, кто комментирует, медленный режим, приветствие, правила и ссылки.', emoji: '⚙️', bg: 'linear-gradient(160deg,#0ea5e9,#1d4ed8 55%,#312e81)' },
+        { title: 'Статистика без догадок', text: 'Охваты, вовлечённость, средний охват, активность за 14 дней, топ публикаций, топ комментаторов и топ бустеров — в одном отчёте.', emoji: '📊', bg: 'linear-gradient(160deg,#16a34a,#0891b2 55%,#4338ca)' },
+        { title: 'Комментарии по-новому', text: 'Ответы на комментарии, лайки, сортировка «новые / по лайкам», живые счётчики, удаление и запрет писать для нарушителей.', emoji: '💬', bg: 'linear-gradient(160deg,#14b8a6,#0d9488 55%,#155e75)' },
+        { title: 'Бусты, которые видно', text: 'Уровни с бонусами, пакеты бустов, история, топ бустеров, анонимность и оформление канала за уровни.', emoji: '🚀', bg: 'linear-gradient(160deg,#f59e0b,#ec4899 60%,#7c3aed)' },
+        { title: 'Истории: комментарии и лайки', text: 'Комментарии к историям с ответами и лайками, список тех, кому понравилось, и живое сердечко без перезагрузки.', emoji: '❤️', bg: 'linear-gradient(160deg,#f472b6,#be185d 60%,#831843)' }
+      ];
+      try { localStorage.setItem('mc_pending_changelog', '1'); } catch (_) {}
+    }
+    if (typeof MC_FAQ !== 'undefined' && Array.isArray(MC_FAQ)) {
+      const ch = MC_FAQ.find(x => x && x.cat === 'Чаты, истории и подарки');
+      if (ch && Array.isArray(ch.items)) ch.items.unshift(['Как управлять каналом?', 'Откройте канал и нажмите ⚙️ в шапке. Там настройки комментариев, медленного режима, приветствия, правил, подписчиков, оформления и полная статистика.']);
+    }
+  } catch (e) { console.warn('mc60 meta', e); }
+
+  // Экспорт обработчиков для inline-разметки.
+  Object.assign(window, {
+    mcChHub, mc60Set: m60Set, mc60SaveMain: m60SaveMain, mc60SaveText: m60SaveText,
+    mc60Design: m60Design, mc60SaveDesignText: m60SaveDesignText, mc60RoleSet: m60RoleSet,
+    mc60Kick: m60Kick, mc60ModDel: mc60ModDel, mc60Mute: mc60Mute, mc60Unmute: mc60Unmute,
+    mc60CmLike, mc60CmDel, mc60CmSend, mc60CmSort, mc60CmReply, mc60CmReplyCancel,
+    mc60BoostPick, mc60BoostGo, mcBoostOpen: mcBoostOpen60,
+    mcStoryLikeList, mc60StLike, mc60StDel, mc60StSend, mc60StReply, mc60StReplyCancel
+  });
+  console.info('MetroChat ' + V60 + ' channels/stories module loaded');
+})();
+
 })();
 </script>
 
