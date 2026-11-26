@@ -394,8 +394,8 @@
     "call_inbox": {
       "$uid": {
         ".read": "auth.uid === $uid",
-        ".write": "auth != null && (auth.uid === $uid || data.child('callerId').val() === auth.uid || newData.child('callerId').val() === auth.uid)",
         "$callId": {
+          ".write": "auth != null && (auth.uid === $uid || data.child('callerId').val() === auth.uid || newData.child('callerId').val() === auth.uid)",
           ".validate": "!newData.exists() || (newData.hasChildren(['callerId', 'createdAt']) && newData.child('callerId').val() === auth.uid)"
         }
       }
