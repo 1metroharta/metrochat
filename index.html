@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MetroChat">
-<title>MetroChat b5.1.3</title>
+<title>MetroChat b5.1.4</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://metrochatmetroharta-i89op-default-rtdb.firebaseio.com">
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com">
@@ -4165,7 +4165,7 @@ function renderItems(items, emptyKind = 'chats') {
     const isActive = state.chat && state.chat.id === it.id;
     return `<div class="list-item ${isActive ? 'active' : ''} ${it.pinned ? 'pinned' : ''}" data-chat-id="${esc(it.id)}" data-chat-type="${esc(it.type)}" onclick="openChat('${String(it.id).replace(/\\/g,'\\\\').replace(/'/g,'')}', '${String(it.type).replace(/'/g,'')}')" oncontextmenu="return chatCtxFromEvent(event, '${String(it.id).replace(/'/g,'')}')">
       ${it.type === 'group' && !it.avatar ? `<div class="avatar square" style="background:var(--header-grad);display:flex;align-items:center;justify-content:center;">👥</div>` : avatarHTML({ name: it.name, avatar: it.avatar, square: it.type !== 'dm', online: it.type === 'dm' && it.online })}
-      <div class="list-info"><div class="list-name">${it.pinned ? '📌' : ''}${esc(it.name)}${it.type === 'dm' ? verifiedMark(it.peerId) : ''}${it.muted ? '🔕' : ''}</div><div class="list-last">${author ? `<span class="author">${esc(author)}:</span>` : ''}${esc(preview || 'Нет сообщений')}</div></div>
+      <div class="list-info"><div class="list-name">${it.pinned ? '📌' : ''}${esc(it.name)}${it.type === 'dm' ? verifiedMark(it.peerId) : ''}${it.type === 'dm' && typeof window.mc51StatusTag === 'function' ? window.mc51StatusTag(it.peerId) : ''}${it.muted ? '🔕' : ''}</div><div class="list-last">${author ? `<span class="author">${esc(author)}:</span>` : ''}${esc(preview || 'Нет сообщений')}</div></div>
       <div class="list-meta"><div class="list-time">${it.lastTs ? timeList(it.lastTs) : ''}</div>${it.unread > 0 ? `<div class="list-unread">${it.unread > 99 ? '99+' : it.unread}</div>` : ''}</div>
     </div>`;
   }).join('');
@@ -4244,14 +4244,14 @@ function isSpamUser(uid) { const f = state.galochka?.[uid]; return !!(f && (f.sp
 function renderChatHeader() {
   if (!state.chat) return;
   const c = state.chat;
-  $('chatName').innerHTML = esc(c.name) + (c.type === 'dm' ? verifiedMark(c.peerId) : '');
+  $('chatName').innerHTML = esc(c.name) + (c.type === 'dm' ? verifiedMark(c.peerId) : '') + (c.type === 'dm' && typeof window.mc51StatusTag === 'function' ? window.mc51StatusTag(c.peerId) : '');
   const av = $('chatAvatar');
   let peerAvatar = null;
   if (c.type === 'dm') { const peer = getUser(c.peerId); peerAvatar = peer?.avatar; } else { peerAvatar = c.avatar; }
   if (peerAvatar) { av.style.background = `url('${peerAvatar}') center/cover`; av.textContent = ''; }
   else { av.style.background = c.type === 'group' ? 'var(--header-grad)' : avatarColor(c.name); av.textContent = c.type === 'group' ? '👥' : initials(c.name); }
   const sub = $('chatSub');
-  if (c.type === 'dm') { const peer = getUser(c.peerId); sub.innerHTML = peerStatusText(peer, c.peerId); }
+  if (c.type === 'dm') { const peer = getUser(c.peerId); sub.innerHTML = peerStatusText(peer, c.peerId) + (peer?.status && !/^в сети$/i.test(peer.status) ? ` · ${esc(peer.status)}` : ''); }
   else if (c.type === 'group') { sub.innerHTML = `<span>${Object.keys(c.members || {}).length} участников</span><span class="code" onclick="copyCode(event)">${c.code}</span>`; }
   else if (c.type === 'channel') { sub.innerHTML = `<span>📢 ${Object.keys(c.members || {}).length} подписчиков</span>`; }
   const actions = $('chatActions');
@@ -5495,7 +5495,7 @@ async function openPublicProfile(uid) {
   $('publicProfileContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><button class="group-info-back" onclick="closeModal('publicProfileModal')" aria-label="Закрыть профиль">←</button>${mcQrBtnHtml(`openQrFor('user','${uid}')`, mcCanQrUser(uid))}<h3 style="margin:0;">Профиль</h3></div>
     <div class="public-profile-avatar">${avatarHTML({name, avatar:user.avatar, size:'big'})}</div>
-    <h3 style="text-align:center;margin-bottom:4px;">${esc(name)}${verifiedMark(uid)}</h3>
+    <h3 style="text-align:center;margin-bottom:4px;">${esc(name)}${verifiedMark(uid)}${typeof window.mc51StatusTag === 'function' ? window.mc51StatusTag(uid) : ''}</h3>
     ${user.username ? `<p style="text-align:center;color:var(--accent);font-weight:700;margin:0 0 8px;">@${esc(user.username)}</p>` : ''}
     ${user.status ? `<p class="modal-desc" style="text-align:center;margin-bottom:12px;">${esc(user.status)}</p>` : ''}
     ${mcBirthdayRowHtml(user)}
@@ -6236,7 +6236,7 @@ function renderSettings() {
       <div class="settings-group">
         <h3>Другое</h3>
         <div class="set-row" onclick="mcClearCache()"><div class="set-icon">🧹</div><div class="set-info"><div class="set-label">Очистить кэш</div><div class="set-sub">Сообщения, вложения и оболочка скачаются заново</div></div><div class="set-arrow">›</div></div>
-        <div class="set-row" onclick="openVerificationModal()"><div class="set-icon">☑️</div><div class="set-info"><div class="set-label">Верификация аккаунта</div><div class="set-sub">${state.galochka?.[state.user?.uid]?.confirmed === true ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку на галочку'}</div></div><div class="set-arrow">›</div></div>
+        <div class="set-row" onclick="openVerificationModal()"><div class="set-icon">☑️</div><div class="set-info"><div class="set-label">Верификация аккаунта</div><div class="set-sub">${state.galochka?.[state.user?.uid]?.confirmed === true ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена · не рассмотрено' : 'Отправить заявку на галочку'}</div></div><div class="set-arrow">›</div></div>
       </div>
       <div class="settings-group">
         <h3>Аккаунт</h3>
@@ -7476,6 +7476,8 @@ const MC_STORY_BGS = {
 };
 const MC_STORY_FONTS = { sans: '700 1em system-ui,-apple-system,"Segoe UI",sans-serif', serif: '600 1em Georgia,"Times New Roman",serif', hand: '600 1.05em "Comic Sans MS","Segoe Print","Bradley Hand",cursive', mono: '600 .92em "SFMono-Regular",Consolas,"Courier New",monospace' };
 let storiesCache = [], mcStoryGroups = [], mcStoryDraft = { mode: 'text', bg: 'midnight', font: 'sans', aud: 'all', photo: null };
+// b5.1.4: подписки на комментарии и лайки текущей истории (снимаются при закрытии).
+var mcStoryCommentsUnsub = null, mcStoryLikeUnsub = null;
 const MC_STORY_SEEN_KEY = 'metrochat_story_seen_v2';
 function mcStorySeen() { try { return new Set(JSON.parse(localStorage.getItem(MC_STORY_SEEN_KEY) || '[]')); } catch (_) { return new Set(); } }
 function mcMarkStorySeen(id) { const s = mcStorySeen(); if (s.has(id)) return; s.add(id); try { localStorage.setItem(MC_STORY_SEEN_KEY, JSON.stringify([...s].slice(-400))); } catch (_) {} }
@@ -7629,6 +7631,8 @@ function mcStoryViewerClose() {
   v.classList.remove('open'); v.classList.add('closing'); setTimeout(() => v.remove(), 260);
   // Тап, закрывший историю, не должен «проваливаться» в чат под ней (pointerup → click / ghost-click на телефоне).
   mcSwallowClicks(450);
+  if (mcStoryCommentsUnsub) { try { mcStoryCommentsUnsub(); } catch (_) {} mcStoryCommentsUnsub = null; }
+  if (mcStoryLikeUnsub) { try { mcStoryLikeUnsub(); } catch (_) {} mcStoryLikeUnsub = null; }
   mcBuildStoryGroups(); mcRenderStoryBar();
 }
 function mcSvCur() { const g = mcStoryGroups[mcSV.gi]; return g ? { g, st: g.items[mcSV.si] } : null; }
@@ -7693,6 +7697,7 @@ async function mcSvShow() {
   v.querySelector('.mc-sv-foot').innerHTML = st.official ? `<span class="mc-sv-pill is-static">✨ Официальная история MetroChat</span>` : mine
     ? `<button type="button" class="mc-sv-pill" onclick="mcStoryViewers('${st.id}')">👁 ${views} ${views === 1 ? 'просмотр' : 'просмотров'}</button><button type="button" class="mc-sv-pill" onclick="openStoryComments('${st.id}')">💬 Комментарии</button><span class="mc-sv-pill is-static">♥ ${likes}</span>`
     : `<form class="mc-sv-reply" onsubmit="event.preventDefault();mcStoryReply('${st.id}')"><input id="mcSvReply" maxlength="500" placeholder="Ответить ${esc(name)}…" autocomplete="off"></form><button type="button" class="mc-sv-like ${liked ? 'on' : ''}" onclick="toggleStoryLike('${st.id}')" aria-label="Нравится">${liked ? '♥' : '♡'}<small>${likes || ''}</small></button><button type="button" class="mc-sv-ic" onclick="openStoryComments('${st.id}')" title="Комментарии">💬</button>`;
+  try { mc51StoryLikeWatch(st.id); } catch (_) {}
   const inp = v.querySelector('#mcSvReply'); if (inp) { inp.addEventListener('focus', () => mcSvPause(true)); inp.addEventListener('blur', () => setTimeout(() => { if (!v.querySelector('.mc-sv-sheet:not([hidden])')) mcSvPause(false); }, 120)); }
   mcSvTick();
   try { mcStoryMusicFor(st); } catch (_) {}
@@ -7705,15 +7710,48 @@ async function mcStoryReply(id) {
   try { await mcSendDirectText(st.uid, `↩️ Ответ на историю «${String(st.text || st.caption || 'фото').slice(0, 60)}»:\n${text}`); inp.value = ''; inp.blur(); toast('Ответ отправлен в личные сообщения', '✓'); }
   catch (e) { toast(humanErr(e) || 'Не удалось отправить ответ', '⚠'); }
 }
+let mcStoryLikeBusy = '';
+function mc51StoryLikeWatch(id) {
+  if (mcStoryLikeUnsub) { try { mcStoryLikeUnsub(); } catch (_) {} mcStoryLikeUnsub = null; }
+  if (!id) return;
+  try {
+    mcStoryLikeUnsub = onValue(ref(db, `stories/${id}/likes`), snap => {
+      const likes = snap.val() || {};
+      const st = storiesCache.find(s => s.id === id);
+      if (st) st.likes = likes;
+      const cur = mcSvCur();
+      if (!cur || cur.st.id !== id) return;
+      const me = state.user.uid;
+      const n = Object.values(likes).filter(Boolean).length;
+      const btn = $('mcStoryViewer')?.querySelector('.mc-sv-like');
+      if (btn) { const liked = !!likes[me]; btn.classList.toggle('on', liked); btn.innerHTML = `${liked ? '♥' : '♡'}<small>${n || ''}</small>`; }
+      else { const pill = $('mcStoryViewer')?.querySelector('.mc-sv-pill.is-static'); if (pill && cur.st.uid === me) pill.textContent = `♥ ${n}`; }
+    }, () => {});
+  } catch (e) { console.warn('b5.1.4 story likes', e); }
+}
 async function toggleStoryLike(id) {
   const me = state.user?.uid; const st = storiesCache.find(s => s.id === id); if (!me || !st) return;
   const path = `stories/${id}/likes/${me}`; const was = !!st.likes?.[me];
   st.likes = { ...(st.likes || {}) }; if (was) delete st.likes[me]; else st.likes[me] = true;
   const btn = $('mcStoryViewer')?.querySelector('.mc-sv-like'); if (btn) { const n = Object.values(st.likes).filter(Boolean).length; btn.classList.toggle('on', !was); btn.innerHTML = `${!was ? '♥' : '♡'}<small>${n || ''}</small>`; if (!was) { btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); } }
-  try { if (was) await remove(ref(db, path)); else await set(ref(db, path), true); } catch (e) { toast(humanErr(e) || 'Не удалось поставить отметку', '⚠'); }
+  if (mcStoryLikeBusy === id) return;
+  mcStoryLikeBusy = id;
+  try {
+    if (was) await remove(ref(db, path)); else await set(ref(db, path), true);
+  } catch (e) {
+    // Откатываем «оптимистичный» лайк: иначе сердечко врёт.
+    st.likes = { ...(st.likes || {}) };
+    if (was) st.likes[me] = true; else delete st.likes[me];
+    try { mcSvShow(); } catch (_) {}
+    toast(/permission|denied/i.test(String(e?.code || e?.message || '')) ? 'Не удалось поставить отметку: проверьте правила stories/likes' : (humanErr(e) || 'Не удалось поставить отметку'), '⚠');
+  } finally { mcStoryLikeBusy = ''; }
 }
 function mcSvSheet(html) { const v = $('mcStoryViewer'); if (!v) return null; const sh = v.querySelector('.mc-sv-sheet'); sh.innerHTML = `<div class="mc-sv-sheet-head"><b></b><button type="button" class="mc-sv-ic" onclick="mcSvSheetClose()">✕</button></div><div class="mc-sv-sheet-body">${html}</div>`; sh.hidden = false; mcSvPause(true); return sh; }
-function mcSvSheetClose() { const sh = $('mcStoryViewer')?.querySelector('.mc-sv-sheet'); if (sh) sh.hidden = true; mcSvPause(false); }
+function mcSvSheetClose() {
+  const sh = $('mcStoryViewer')?.querySelector('.mc-sv-sheet'); if (sh) sh.hidden = true;
+  if (mcStoryCommentsUnsub) { try { mcStoryCommentsUnsub(); } catch (_) {} mcStoryCommentsUnsub = null; }
+  mcSvPause(false);
+}
 async function mcStoryViewers(id) {
   const st = storiesCache.find(s => s.id === id); if (!st) return;
   const ids = Object.entries(st.views || {}).filter(([u]) => u !== state.user.uid).sort((a, b) => b[1] - a[1]);
@@ -7722,24 +7760,57 @@ async function mcStoryViewers(id) {
   if (sh) sh.querySelector('.mc-sv-sheet-head b').textContent = `Просмотры · ${ids.length}`;
 }
 let mcStoryCommentsFor = null;
+function mcStoryCommentRows(raw) {
+  return Object.entries(raw || {}).map(([k, v]) => ({ id: k, ...v }))
+    .sort((a, b) => (Number(a.createdAt) || 0) - (Number(b.createdAt) || 0)).slice(-80);
+}
+async function mcStoryCommentsPaint(sh, id, raw) {
+  const rows = mcStoryCommentRows(raw);
+  await Promise.all([...new Set(rows.map(r => r.uid))].map(u => fetchUserIfMissing(u).catch(() => null)));
+  if (mcStoryCommentsFor !== id) return;
+  const list = sh.querySelector('.mc-sv-comments');
+  if (!list) return;
+  list.innerHTML = rows.length ? rows.map(c => {
+    const us = c.uid === state.user.uid ? (state.profile || {}) : (getUser(c.uid) || {});
+    const nm = us.displayName || us.username || 'Пользователь';
+    const mine = c.uid === state.user.uid;
+    return `<div class="mc-sv-row">${avatarHTML({ name: nm, avatar: us.avatar, size: 'small' })}<div><b>${esc(nm)}</b><p>${esc(c.text || '')}</p><small>${esc(mcTimeAgo(Number(c.createdAt) || Date.now()))}</small></div>${mine ? `<button type="button" class="mc-sv-ic" data-delc="${esc(c.id)}" title="Удалить комментарий">✕</button>` : ''}</div>`;
+  }).join('') : '<div class="stories-loading">Комментариев пока нет — напишите первый</div>';
+  list.querySelectorAll('[data-delc]').forEach(b => b.onclick = async () => {
+    try { await remove(ref(db, `story_comments/${id}/${b.dataset.delc}`)); }
+    catch (_) { toast('Не удалось удалить комментарий', '⚠'); }
+  });
+  list.scrollTop = list.scrollHeight;
+}
 async function openStoryComments(id) {
   mcStoryCommentsFor = id;
   if (!$('mcStoryViewer')) { await openStory(id); }
   const sh = mcSvSheet('<div class="mc-sv-comments"><div class="stories-loading">Загрузка…</div></div><form class="mc-sv-comment-form" onsubmit="event.preventDefault();sendStoryComment()"><input id="storyCommentInput" maxlength="300" placeholder="Комментарий…" autocomplete="off"><button type="submit" class="btn btn-primary">➤</button></form>');
-  if (!sh) return; sh.querySelector('.mc-sv-sheet-head b').textContent = 'Комментарии';
+  if (!sh) return;
+  sh.querySelector('.mc-sv-sheet-head b').textContent = 'Комментарии';
+  if (mcStoryCommentsUnsub) { try { mcStoryCommentsUnsub(); } catch (_) {} mcStoryCommentsUnsub = null; }
   try {
-    const snap = await get(query(ref(db, `story_comments/${id}`), orderByChild('createdAt'), limitToLast(60)));
-    const rows = Object.entries(snap.val() || {}).map(([k, v]) => ({ id: k, ...v })).sort((a, b) => a.createdAt - b.createdAt);
-    await Promise.all([...new Set(rows.map(r => r.uid))].map(u => fetchUserIfMissing(u).catch(() => null)));
-    const list = sh.querySelector('.mc-sv-comments'); if (!list) return;
-    list.innerHTML = rows.length ? rows.map(c => { const us = c.uid === state.user.uid ? state.profile || {} : getUser(c.uid) || {}; const nm = us.displayName || us.username || 'Пользователь'; return `<div class="mc-sv-row">${avatarHTML({ name: nm, avatar: us.avatar, size: 'small' })}<div><b>${esc(nm)}</b><p>${esc(c.text || '')}</p><small>${esc(mcTimeAgo(c.createdAt))}</small></div></div>`; }).join('') : '<div class="stories-loading">Комментариев пока нет</div>';
-    list.scrollTop = list.scrollHeight;
-  } catch (e) { const l = sh.querySelector('.mc-sv-comments'); if (l) l.innerHTML = '<div class="stories-loading">Не удалось загрузить комментарии</div>'; }
+    // Живая подписка вместо разового запроса: комментарий появляется сразу и у всех.
+    mcStoryCommentsUnsub = onValue(ref(db, `story_comments/${id}`), snap => {
+      mcStoryCommentsPaint(sh, id, snap.val() || {}).catch(() => {});
+    }, err => {
+      const list = sh.querySelector('.mc-sv-comments');
+      if (list) list.innerHTML = '<div class="stories-loading">Не удалось загрузить комментарии: ' + esc(humanErr(err) || 'нет доступа к story_comments') + '</div>';
+    });
+  } catch (e) {
+    const list = sh.querySelector('.mc-sv-comments');
+    if (list) list.innerHTML = '<div class="stories-loading">Не удалось загрузить комментарии: ' + esc(humanErr(e) || 'ошибка') + '</div>';
+  }
 }
 async function sendStoryComment() {
   const id = mcStoryCommentsFor; const inp = $('storyCommentInput'); const text = (inp?.value || '').trim(); if (!id || !text) return;
-  try { await set(push(ref(db, `story_comments/${id}`)), { uid: state.user.uid, text: text.slice(0, 300), createdAt: Date.now() }); inp.value = ''; await openStoryComments(id); }
-  catch (e) { toast(humanErr(e) || 'Не удалось отправить комментарий', '⚠'); }
+  try {
+    await set(push(ref(db, `story_comments/${id}`)), { uid: state.user.uid, text: text.slice(0, 300), createdAt: Date.now() });
+    inp.value = '';
+    await mcStoryCommentsPaint($('mcStoryViewer'), id, (await get(ref(db, `story_comments/${id}`))).val() || {});
+  } catch (e) {
+    toast(/permission|denied/i.test(String(e?.code || e?.message || '')) ? 'Комментарий не отправлен: проверьте правила story_comments' : (humanErr(e) || 'Не удалось отправить комментарий'), '⚠');
+  }
 }
 async function deleteStory(id) {
   const st = storiesCache.find(s => s.id === id); if (!st || st.uid !== state.user?.uid) return toast('Удалить историю может только автор', '⚠');
@@ -8968,7 +9039,7 @@ async function mcOpenTableViewer(msgId) {
 // Round 3 · Поддержка на входе, обои тем, музыка в историях,
 // «Что нового» от MetroChat
 // =====================================================================
-const MC_VERSION = 'b5.1.3';
+const MC_VERSION = 'b5.1.4';
 
 /* b5.0.3: единый экран ошибки вместо молчания. Показываем только неожиданные сбои,
    сетевые и permission-ошибки Firebase остаются в консоли и обрабатываются точечно. */
@@ -11171,7 +11242,7 @@ function mcSetMain() {
     ])}
 
     ${sGroup('Другое', [
-      sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку', act: 'openVerificationModal()' }),
+      sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена · не рассмотрено' : 'Отправить заявку', act: 'openVerificationModal()' }),
       sRow({ ico: '❓', c: '#a855f7', label: 'Вопросы и ответы', act: 'mcOpenFaq()' }),
       sRow({ ico: '📄', c: '#64748b', label: 'Политика конфиденциальности', href: 'https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy' }),
     ])}
@@ -15261,7 +15332,7 @@ html[data-glass="on"] .msg.in{background:color-mix(in srgb,var(--surface) 76%,tr
       sGroup('Язык', [sRow({ ico: '🌐', c: '#8b5cf6', label: 'Язык приложения', sub: MC_LANG_NAME(), right: '', act: 'mcLangOpen()' })]) +
       sGroup('Другое', [
         sRow({ ico: '💼', c: '#16a34a', label: 'Для бизнеса', sub: 'Профиль компании, магазин и быстрые ответы', act: 'mcBizOpen()' }),
-        sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена' : 'Отправить заявку', act: 'openVerificationModal()' }),
+        sRow({ ico: '☑️', c: '#2563eb', label: 'Верификация аккаунта', sub: verified ? 'Аккаунт подтверждён' : state.galochka?.[state.user?.uid]?.requestedAt ? 'Заявка отправлена · не рассмотрено' : 'Отправить заявку', act: 'openVerificationModal()' }),
         sRow({ ico: '❓', c: '#a855f7', label: 'Вопросы и ответы', act: 'mcOpenFaq()' }),
         sRow({ ico: '📄', c: '#64748b', label: 'Политика конфиденциальности', href: 'https://github.com/1metroharta/metrochat/blob/main/Privacy%20Policy' }),
       ]) +
@@ -16476,7 +16547,7 @@ console.info('MetroChat ' + V + ' patch loaded');
 (function mc50(){
 'use strict';
 const $id = id => document.getElementById(id);
-const V50 = 'b5.1.3';
+const V50 = 'b5.1.4';
 const now50 = () => Date.now();
 const LSget = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
 const LSset = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
@@ -17532,7 +17603,7 @@ function addHubCards50(){ return; // b5.1: магазин убран из «Пр
   const shopCard = mk(`<button type="button" class="other-hub-card" data-mc50-shop="1"><span class="other-hub-icon">🛍️</span><b>Магазин</b><small>Товары, категории, корзина и оплата в умах</small><span class="other-hub-arrow">Открыть →</span></button>`);
   shopCard.onclick = () => openShop50();
   grid.insertBefore(shopCard, grid.children[1] || null);
-  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.1.3</small><span class="other-hub-arrow">Смотреть →</span></button>`);
+  const histCard = mk(`<button type="button" class="other-hub-card" data-mc50-hist="1"><span class="other-hub-icon">📜</span><b>История версий</b><small>Что было раньше и что нового в b5.1.4</small><span class="other-hub-arrow">Смотреть →</span></button>`);
   histCard.onclick = () => renderHistory50();
   grid.appendChild(histCard);
   isAdmin50().then(adm => {
@@ -17600,7 +17671,17 @@ function renderHistory50(){
   ];
   wrap.innerHTML = `<div class="settings-header"><button class="settings-back-btn" onclick="renderOtherHome()">← Прочее</button><div class="settings-title">История версий</div></div>
   <div class="settings-wrap mc50-hist">
-    <div class="ver"><h3>MetroChat b5.1.3 <span class="tag">сейчас</span></h3><small class="set-sub">26 ноября 2026 · правила Firebase</small>
+    <div class="ver"><h3>MetroChat b5.1.4 <span class="tag">сейчас</span></h3><small class="set-sub">26 ноября 2026 · статусы, истории, верификация</small>
+      <ul>
+        <li>Статусы (эмодзи у имени) теперь видны другим: приложение подписывается на статусы всех пользователей и показывает их в списке чатов, в шапке диалога и в профиле.</li>
+        <li>Комментарии к историям работают: список обновляется в реальном времени, без «Не удалось загрузить комментарии», а отправленный комментарий сразу появляется.</li>
+        <li>Лайки историй работают и обновляются у всех: сердечко синхронизируется с базой, ошибка больше не оставляет «фальшивый» лайк.</li>
+        <li>Верификация за 1249 УМ: добавлен прогресс-бар «Оплата → Не рассмотрено → Рассмотрено». Пока заявка на рассмотрении, кнопка заблокирована — повторно списать умы нельзя ни из приложения, ни через базу.</li>
+        <li>После отказа заявка получает статус «рассмотрено: отклонено», умы возвращаются, и только тогда можно отправить новую заявку.</li>
+        <li>Исправлено: статус больше не стирает галочку верификации рядом с вашим именем в боковой панели.</li>
+        <li>Правила Firebase: чтение статусов, защита от повторной оплаты верификации, индексы комментариев.</li>
+      </ul></div>
+    <div class="ver"><h3>MetroChat b5.1.3</h3><small class="set-sub">26 ноября 2026 · правила Firebase</small>
       <ul>
         <li>Истории, сообщения, комментарии, реакции и звонки снова записываются: из правил убраны сравнения с несуществующим узлом бана — из-за них Firebase отклонял запись у всех, у кого нет бана.</li>
         <li>Профиль сохраняется без поля <b>verified</b>: раньше проверка подписи могла отклонить обычное сохранение имени и фото.</li>
@@ -17672,7 +17753,7 @@ try {
 } catch (e) { console.warn('whatsnew b5', e); }
 
 window.mc5IsAdmin = isAdmin50;
-document.title = 'MetroChat b5.1.3';
+document.title = 'MetroChat b5.1.4';
 console.info('MetroChat b5.1 patch loaded');
 })();
 
@@ -18954,7 +19035,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
    ===================================================================== */
 (function mc51(){
   'use strict';
-  const V51 = 'b5.1.3';
+  const V51 = 'b5.1.4';
   const $i = id => document.getElementById(id);
   const q = (s, r) => (r || document).querySelector(s);
   const qa = (s, r) => [...(r || document).querySelectorAll(s)];
@@ -19231,7 +19312,13 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     }
     const chip = $i('mc51StatusChip');
     if (chip) chip.textContent = s || '';
-    document.querySelectorAll('#sbMeName').forEach(n => n.textContent = (state.profile && (state.profile.displayName || state.profile.firstName)) || 'MetroChat');
+    const okMark = !!(state.galochka && state.galochka[uid] && state.galochka[uid].confirmed === true);
+    const markHtml = okMark ? ' <span title="Подтверждённый аккаунт" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#2788f5;color:white;font-size:11px;font-weight:900;vertical-align:middle;">✓</span>' : '';
+    document.querySelectorAll('#sbMeName').forEach(n => {
+      const nm = (state.profile && (state.profile.displayName || state.profile.firstName)) || 'MetroChat';
+      // b5.1.4: сохраняем галочку верификации — раньше textContent её стирал.
+      n.innerHTML = esc51(nm) + markHtml;
+    });
   }
   async function mc51LoadStatus() {
     const uid = me51(); if (!uid) return;
@@ -19273,6 +19360,38 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       toast51(emoji ? 'Статус обновлён' : 'Статус убран', emoji || '✓');
     } catch (e) { toast51('Не удалось сохранить статус. Проверьте правила Firebase (user_status)', '⚠'); }
   }
+
+  function mc51StatusOf(uid) { const m = state.status51 || {}; const v = m[uid]; return typeof v === 'string' ? v : ''; }
+  function mc51StatusTag(uid) {
+    const s = mc51StatusOf(uid);
+    if (!s) return '';
+    return `<span class="mc51-status-tag" title="Статус" style="display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;margin-left:5px;padding:0 4px;border-radius:10px;background:rgba(127,127,127,.16);font-size:12px;line-height:1;vertical-align:middle">${esc51(s)}</span>`;
+  }
+  window.mc51StatusTag = mc51StatusTag;
+  window.mc51StatusOf = mc51StatusOf;
+  let mc51StatusUnsub = null, mc51StatusTimer = 0;
+  function mc51StatusSubscribe() {
+    if (mc51StatusUnsub) { try { mc51StatusUnsub(); } catch (_) {} mc51StatusUnsub = null; }
+    if (!me51()) return;
+    try {
+      mc51StatusUnsub = onValue(ref(db, 'user_status'), snap => {
+        const raw = snap.val() || {};
+        state.status51 = state.status51 || {};
+        for (const [uid, v] of Object.entries(raw)) {
+          const e = (v && v.emoji) || '';
+          if (e) state.status51[uid] = e;
+          else { delete state.status51[uid]; if (uid === me51() && state.profile) state.profile.statusEmoji = ''; }
+        }
+        mc51PaintStatus();
+        clearTimeout(mc51StatusTimer);
+        mc51StatusTimer = setTimeout(() => {
+          try { renderList(); } catch (_) {}
+          try { if (state.chat) renderChatHeader(); } catch (_) {}
+        }, 40);
+      }, () => {});
+    } catch (e) { console.warn('b5.1.4 statuses', e); }
+  }
+  window.mc51StatusSubscribe = mc51StatusSubscribe;
 
   function mc51BuildHeader() {
     const top = q('#sidebar .sb-top'); if (!top || top.dataset.mc51) return;
@@ -19326,6 +19445,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     }
     mc51PaintStatus();
     mc51LoadStatus();
+    mc51StatusSubscribe();
   }
 
   window.mc51BuildHeader = mc51BuildHeader;
@@ -19639,12 +19759,53 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
      6. ВЕРИФИКАЦИЯ ЗА 1249 УМ
      ============================================================ */
   const VERIFY_PRICE = 1249;
+  let mc51VerifyBusy = false;
+  let mc51VerifyOrder = null;
+  function mc51VerifyProgress(confirmed, pending, rejected) {
+    const pct = confirmed || rejected ? 100 : pending ? 55 : 0;
+    const chip = (cls, text, color) => `<span style="flex:1;text-align:center;font-size:10.5px;font-weight:800;padding:6px 4px;border-radius:9px;border:1px solid ${color || 'var(--border)'};background:var(--surface-2);color:${cls === 'is-done' || cls === 'is-ok' ? '#16a34a' : cls === 'is-bad' ? '#dc2626' : 'var(--text-2)'}">${text}</span>`;
+    const note = confirmed ? 'Рассмотрено: аккаунт подтверждён — галочка уже в профиле.'
+      : pending ? 'Не рассмотрено: заявка оплачена и ждёт проверки администратора. Повторная оплата заблокирована.'
+      : rejected ? 'Рассмотрено: заявку отклонили, ' + VERIFY_PRICE + ' УМ вернулись на баланс. Можно отправить новую заявку.'
+      : 'Заявка ещё не отправлена.';
+    return `<div style="margin:12px 0 2px">
+      <div style="height:6px;border-radius:999px;background:rgba(127,127,127,.2);overflow:hidden"><i style="display:block;height:100%;width:${pct}%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#3b82f6);transition:width .35s"></i></div>
+      <div style="display:flex;gap:6px;margin-top:8px">${chip('is-done', 'Оплата', pending || confirmed || rejected ? 'rgba(22,163,74,.5)' : '')}${chip(pending ? 'is-wait' : (confirmed || rejected ? 'is-done' : ''), 'Не рассмотрено')}${chip(confirmed ? 'is-ok' : rejected ? 'is-bad' : '', confirmed ? 'Рассмотрено: ✓' : rejected ? 'Рассмотрено: ✕' : 'Рассмотрено')}</div>
+      <p style="margin:8px 0 0;font-size:11.5px;line-height:1.45;color:var(--text-2)">${note}</p></div>`;
+  }
+  async function mc51VerifySync(btn) {
+    const uid = me51();
+    if (!uid) return { confirmed: false, pending: false, rejected: false, order: null };
+    let order = null;
+    try { const s = await get(ref(db, 'verification_orders/' + uid)); order = s.exists() ? (s.val() || {}) : null; } catch (_) {}
+    mc51VerifyOrder = order;
+    const req = (state.galochka && state.galochka[uid]) || {};
+    const confirmed = req.confirmed === true || (!!order && order.status === 'approved');
+    const pending = !confirmed && !!order && order.status === 'pending';
+    const rejected = !confirmed && !pending && !!order && order.status === 'rejected';
+    const box = $i('mc51VState');
+    if (box) box.innerHTML = mc51VerifyProgress(confirmed, pending, rejected);
+    if (btn) {
+      if (confirmed) { btn.disabled = true; btn.textContent = 'Аккаунт подтверждён ✓'; }
+      else if (pending) { btn.disabled = true; btn.textContent = 'Заявка на рассмотрении · не рассмотрено'; }
+      else { btn.disabled = false; btn.textContent = 'Оплатить ' + VERIFY_PRICE + ' УМ и отправить'; }
+    }
+    return { confirmed, pending, rejected, order };
+  }
+  async function mc51VerifyRefreshBalance(btn) {
+    try {
+      const b = Number(await readGiftBalance()) || 0;
+      const el = $i('mc51VBal'); if (el) el.textContent = 'Баланс: ' + b + ' УМ';
+      if (btn && !btn.disabled && b < VERIFY_PRICE) { btn.disabled = true; btn.textContent = 'Недостаточно умов (нужно ' + VERIFY_PRICE + ')'; }
+      return b;
+    } catch (_) { const el = $i('mc51VBal'); if (el) el.textContent = 'Не удалось узнать баланс'; return null; }
+  }
   function mc51VerifyOpen() {
     const uid = me51(); if (!uid) return toast51('Сначала войдите в аккаунт', '⚠');
     const req = (state.galochka && state.galochka[uid]) || {};
     if (req.confirmed === true) return toast51('Аккаунт уже подтверждён', '✓');
     const links = Array.isArray(req.socialLinks) ? req.socialLinks : [];
-    const sheet = mcSheet('mc51Verify', `${mcSheetHead('Верификация аккаунта', 'mc51Verify')}
+    mcSheet('mc51Verify', `${mcSheetHead('Верификация аккаунта', 'mc51Verify')}
       <p class="mc9-note">Укажите ссылки на профили в соцсетях. Префикс https:// не обязателен — мы добавим его сами. После оплаты заявку проверит администратор.</p>
       <div class="mcb51-link-row"><span>🔗</span><input id="mc51V1" maxlength="300" placeholder="t.me/username" value="${esc51(links[0] || '')}" autocomplete="off"></div>
       <div class="mcb51-link-row"><span>🔗</span><input id="mc51V2" maxlength="300" placeholder="instagram.com/username" value="${esc51(links[1] || '')}" autocomplete="off"></div>
@@ -19655,38 +19816,59 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
       <button type="button" class="mc11-btn" id="mc51VGo" style="width:100%;margin-top:14px">Оплатить ${VERIFY_PRICE} УМ и отправить</button>`,
       { cls: 'mcb51-verify' });
     const btn = $i('mc51VGo');
-    (async () => {
-      try { const b = await readGiftBalance(); $i('mc51VBal').textContent = 'Баланс: ' + (Number(b) || 0) + ' УМ'; btn.disabled = (Number(b) || 0) < VERIFY_PRICE; if (btn.disabled) btn.textContent = 'Недостаточно умов'; } catch (_) { $i('mc51VBal').textContent = 'Не удалось узнать баланс'; }
-    })();
+    if (!btn) return;
     btn.onclick = async () => {
+      if (mc51VerifyBusy) return;
+      if (mc51VerifyOrder && mc51VerifyOrder.status === 'pending') { await mc51VerifySync(btn); return toast51('Заявка уже на рассмотрении — повторно оплатить нельзя', '⏳'); }
       const raw = [1, 2, 3].map(i => (($i('mc51V' + i) || {}).value || '').trim()).filter(Boolean);
       if (raw.length < 2) return toast51('Укажите минимум две ссылки', '⚠');
       const norm = raw.map(v => /^https?:\/\//i.test(v) ? v : 'https://' + v.replace(/^\/+/, ''));
       if (norm.some(v => { try { return !new URL(v).hostname.includes('.'); } catch (_) { return true; } })) return toast51('Проверьте ссылки — похоже, там ошибка', '⚠');
+      mc51VerifyBusy = true;
       btn.disabled = true; btn.textContent = 'Отправляем…';
       try {
+        const check = await mc51VerifySync(btn);
+        if (check.confirmed) throw new Error('already');
+        if (check.pending) throw new Error('pending');
         const bal = Number(await readGiftBalance()) || 0;
         if (bal < VERIFY_PRICE) throw new Error('no-balance');
+        const at = Date.now();
+        // Атомарная запись: если заявка уже есть, правила отклонят ВСЮ запись — умы не спишутся.
         await update(ref(db), {
-          ['gift_wallet/' + me51() + '/balance']: bal - VERIFY_PRICE,
-          ['galochka/' + me51() + '/socialLinks']: norm,
-          ['galochka/' + me51() + '/requestedAt']: Date.now(),
-          ['galochka/' + me51() + '/confirmed']: false
+          ['gift_wallet/' + uid + '/balance']: bal - VERIFY_PRICE,
+          ['galochka/' + uid + '/socialLinks']: norm,
+          ['galochka/' + uid + '/requestedAt']: at,
+          ['galochka/' + uid + '/confirmed']: false
         });
-        await set(ref(db, 'verification_orders/' + me51()), {
-          uid: me51(), name: displayName51(), links: norm, price: VERIFY_PRICE,
-          status: 'pending', at: Date.now(), refunded: false
+        await set(ref(db, 'verification_orders/' + uid), {
+          uid, name: displayName51(), links: norm, price: VERIFY_PRICE,
+          status: 'pending', at, refunded: false
         });
         state.galochka = state.galochka || {};
-        state.galochka[me51()] = { ...(state.galochka[me51()] || {}), socialLinks: norm, requestedAt: Date.now(), confirmed: false, paid: VERIFY_PRICE };
-        mcCloseSheet('mc51Verify');
-        toast51('Заявка оплачена и отправлена на проверку', '☑️');
+        state.galochka[uid] = { ...(state.galochka[uid] || {}), socialLinks: norm, requestedAt: at, confirmed: false, paid: VERIFY_PRICE };
+        mc51VerifyOrder = { status: 'pending', at };
+        await mc51VerifySync(btn);
+        await mc51VerifyRefreshBalance(btn);
+        try { renderSettings(); } catch (_) {}
+        toast51('Оплата прошла: заявка отправлена, статус — не рассмотрено', '☑️');
       } catch (e) {
-        console.warn('b5.1 verify', e);
-        btn.disabled = false; btn.textContent = 'Оплатить ' + VERIFY_PRICE + ' УМ и отправить';
-        toast51(e.message === 'no-balance' ? 'Недостаточно умов на балансе' : 'Не удалось отправить заявку. Проверьте правила Firebase (galochka, verification_orders)', '⚠');
+        console.warn('b5.1.4 verify', e);
+        const code = String((e && (e.message || e.code)) || '');
+        if (code === 'already') toast51('Аккаунт уже подтверждён', '✓');
+        else if (code === 'pending') toast51('Заявка уже на рассмотрении', '⏳');
+        else if (code === 'no-balance') toast51('Недостаточно умов на балансе', '⚠');
+        else if (/permission|denied/i.test(code)) toast51('Firebase отклонил заявку — оплата не списана. Опубликуйте новые правила galochka и verification_orders', '⚠');
+        else toast51('Не удалось отправить заявку — оплата не списана', '⚠');
+      } finally {
+        mc51VerifyBusy = false;
+        const st = await mc51VerifySync(btn).catch(() => null);
+        if (st && !st.confirmed && !st.pending) await mc51VerifyRefreshBalance(btn);
       }
     };
+    (async () => {
+      await mc51VerifySync(btn);
+      await mc51VerifyRefreshBalance(btn);
+    })();
   }
   window.mc51Verify = mc51VerifyOpen;
   try {
@@ -19890,6 +20072,7 @@ html:not([data-theme="dark"]) .mc-pcard-status{color:#475569!important}
     mc51NavStyle();
     mc51PaintStatus();
     mc51LoadStatus();
+    mc51StatusSubscribe();
     const uid = me51();
     if (uid) {
       const name = displayName51();
