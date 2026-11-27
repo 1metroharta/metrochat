@@ -1,30 +1,17 @@
-// MetroChat service worker — офлайн-оболочка и контролируемое обновление.
-// Версия кэша берётся из URL регистрации (index.html передаёт MC_VERSION),
-// поэтому версия приложения и версия оболочки больше не расходятся.
+// MetroChat service worker — офлайн-оболочка и внедрение фильтра слов.
 const MC_SW_BUILD = new URL(self.location.href).searchParams.get('v') || 'dev';
 const MC_SHELL_CACHE = 'metrochat-shell-' + MC_SW_BUILD;
 const MC_RUNTIME_CACHE = 'metrochat-runtime-' + MC_SW_BUILD;
-const MC_SHELL_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
+const MC_SHELL_ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './metro-guard.js'];
 const MC_NETWORK_ONLY = [
-  'firebaseio.com',
-  'firebasedatabase.app',
-  'googleapis.com',
-  'firebaseapp.com',
-  'identitytoolkit',
-  'securetoken',
-  'api.openai.com'
+  'firebaseio.com', 'firebasedatabase.app', 'googleapis.com', 'firebaseapp.com',
+  'identitytoolkit', 'securetoken', 'api.openai.com'
 ];
+const MC_GUARD_TAG = '<script src="./metro-guard.js" defer></script>';
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(MC_SHELL_CACHE);
-    // Кэшируем каждый файл отдельно: один недоступный ресурс не ломает установку.
     await Promise.all(MC_SHELL_ASSETS.map(url =>
       cache.add(new Request(url, { cache: 'reload' })).catch(() => {})
     ));
@@ -53,17 +40,39 @@ function mcIsNetworkOnly(url) {
   return MC_NETWORK_ONLY.some(part => url.indexOf(part) !== -1);
 }
 
+// Добавляем тег фильтра в HTML. Любая ошибка — отдаём страницу как есть.
+async function mcWithGuard(response) {
+  try {
+    if (!response || !response.ok) return response;
+    const type = response.headers.get('content-type') || '';
+    if (type.indexOf('text/html') === -1) return response;
+    let text = await response.text();
+    if (text.indexOf('metro-guard.js') !== -1) {
+      return new Response(text, { status: response.status, statusText: response.statusText, headers: response.headers });
+    }
+    text = text.indexOf('</body>') !== -1
+      ? text.replace('</body>', MC_GUARD_TAG + '</body>')
+      : text + MC_GUARD_TAG;
+    const headers = new Headers(response.headers);
+    headers.delete('content-length');
+    headers.delete('content-encoding');
+    return new Response(text, { status: response.status, statusText: response.statusText, headers });
+  } catch (_) {
+    return response;
+  }
+}
+
 async function mcNetworkFirst(request) {
   const cache = await caches.open(MC_SHELL_CACHE);
   try {
     const fresh = await fetch(request);
     if (fresh && fresh.ok) cache.put(request, fresh.clone()).catch(() => {});
-    return fresh;
+    return await mcWithGuard(fresh);
   } catch (_) {
     const cached = await cache.match(request, { ignoreSearch: true });
-    if (cached) return cached;
+    if (cached) return await mcWithGuard(cached);
     const shell = await cache.match('./index.html');
-    if (shell) return shell;
+    if (shell) return await mcWithGuard(shell);
     return new Response(
       '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>MetroChat — нет сети</title>' +
@@ -99,13 +108,12 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  if (mcIsNetworkOnly(url.href)) return; // Firebase и внешние API — только сеть.
+  if (mcIsNetworkOnly(url.href)) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(mcNetworkFirst(request));
     return;
   }
-  // Firebase SDK нужен для запуска приложения офлайн — его кэшируем навсегда.
   if (url.hostname === 'www.gstatic.com' && url.pathname.indexOf('/firebasejs/') === 0) {
     event.respondWith(mcCacheFirst(request).catch(() => Response.error()));
     return;
